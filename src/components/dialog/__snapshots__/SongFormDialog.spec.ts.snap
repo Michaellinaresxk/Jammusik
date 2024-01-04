@@ -1,0 +1,5 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`testing the playlist form dialog component > testing the playlist form dialog UI 1`] = `""`;
+
+exports[`testing the song form dialog component > testing the playlist form dialog UI 1`] = `""`;
