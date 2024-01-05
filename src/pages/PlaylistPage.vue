@@ -17,7 +17,7 @@
 <script lang="ts" setup>
 // import TheFooter from '../../components/base/TheFooter.vue';
 // import TheGreenBorder from '../../components/base/TheGreenBorder.vue';
-// import PlaylistContent from '../../components/PlaylistContent.vue';
+import PlaylistContent from '../components/PlaylistContent.vue';
 import { ref } from 'vue';
 // import TheToggleMenu2 from '@/components/base/TheToggleMenu2.vue';
 

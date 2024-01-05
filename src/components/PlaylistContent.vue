@@ -17,7 +17,7 @@
 import { inject, onMounted, ref, watch } from 'vue';
 import PlaylistCard from '../components/cards/PlaylistCard.vue';
 import type { Playlist } from '../types/songTypes';
-import PlaylistFilter from '@/components/PlaylistFilter.vue';
+import PlaylistFilter from './PlaylistFilter.vue';
 import { getAuth } from 'firebase/auth';
 import { auth } from '../infra/api/firebaseConfig';
 import { playlistServiceKey } from '../services/playlistService';

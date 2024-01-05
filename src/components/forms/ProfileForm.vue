@@ -18,28 +18,28 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-form
+    <q-form
       class="d-flex flex-column justify-center align-center mx-auto"
       @submit.prevent="handlerSubmit"
       ref="settingsForm"
     >
       <v-sheet class="form d-flex flex-column p-10 mb-10" width="100%">
-        <v-text-field
+        <q-input
           type="text"
           variant="underlined"
           required
           v-model="formDataSettings.name"
           label="Name"
-        ></v-text-field>
-        <v-text-field
+        ></q-input>
+        <q-input
           type="email"
           variant="underlined"
           required
           v-model="formDataSettings.email"
           class="mt-1"
           label="E-mail address"
-        ></v-text-field>
-        <v-text-field
+        ></q-input>
+        <q-input
           type="text"
           variant="underlined"
           required
@@ -48,16 +48,16 @@
           label="User Id"
           append-inner-icon="mdi-content-copy"
           @click:append-inner="copyToClipboard(userId)"
-        ></v-text-field>
-        <v-text-field
+        ></q-input>
+        <q-input
           type="text"
           variant="underlined"
           required
           v-model="formDataSettings.location"
           class="mt-1"
           label="Location"
-        ></v-text-field>
-        <v-radio-group
+        ></q-input>
+        <q-radio-group
           inline
           type="radio"
           class="mt-3 mx-auto"
@@ -65,34 +65,34 @@
           color="secondary"
           v-model="formDataSettings.skills"
         >
-          <v-radio inline label="Musician" value="Musician"></v-radio>
-          <v-radio inline label="Dj" value="Dj"></v-radio>
-          <v-radio inline label="Producer" value="Producer"></v-radio>
-        </v-radio-group>
-        <v-select
+          <q-radio inline label="Musician" value="Musician"></q-radio>
+          <q-radio inline label="Dj" value="Dj"></q-radio>
+          <q-radio inline label="Producer" value="Producer"></q-radio>
+        </q-radio-group>
+        <q-select
           variant="underlined"
           class="w-100 mx-auto"
           required
           label="Instrument"
           :items="instruments"
           v-model="formDataSettings.instrument"
-        ></v-select>
+        ></q-select>
         <v-sheets class="d-flex d-flex justify-space-between">
-          <v-btn
+          <q-btn
             class="mt-10"
             color="red"
             size="small"
             variant="tonal"
             @click="handlerUserDelete"
             type="button"
-            >Delete account</v-btn
+            >Delete account</q-btn
           >
-          <v-btn class="mt-10" color="secondary" size="small" type="submit"
-            >SaveChanges</v-btn
+          <q-btn class="mt-10" color="secondary" size="small" type="submit"
+            >SaveChanges</q-btn
           >
         </v-sheets>
       </v-sheet>
-    </v-form>
+    </q-form>
   </v-container>
 </template>
 

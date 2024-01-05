@@ -5,12 +5,12 @@ import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_APIKEY,
-  authDomain: 'jammusik-dc856.firebaseapp.com',
-  projectId: 'jammusik-dc856',
-  storageBucket: 'jammusik-dc856.appspot.com',
-  messagingSenderId: '952211103393',
-  appId: '1:952211103393:web:0aee3f8f7fcc8f62c05ae0',
-  measurementId: 'G-591ZJQ8TPY',
+  authDomain: 'jammusikapp.firebaseapp.com',
+  projectId: 'jammusikapp',
+  storageBucket: 'jammusikapp.appspot.com',
+  messagingSenderId: '1094014992696',
+  appId: '1:1094014992696:web:6201a6d688c5cb06af01cd',
+  measurementId: 'G-PP0BVZML2S',
 };
 
 // init firebase

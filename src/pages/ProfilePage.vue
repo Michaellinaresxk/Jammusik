@@ -1,6 +1,4 @@
 <template>
-  <TheGreenBorder />
-  <TheToggleMenu2 />
   <v-row class="mt-5">
     <div class="d-flex flex-column w-100 mt-10 justify-center align-center">
       <UseAvatar :userName="userName" />

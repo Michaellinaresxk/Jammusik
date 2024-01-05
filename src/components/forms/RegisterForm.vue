@@ -1,11 +1,11 @@
 <template>
-  <v-form
+  <q-form
     class="form-group mt-5"
     @submit.prevent="handlerRegisterSubmit"
     ref="registerForm"
     data-test="register-form"
   >
-    <v-text-field
+    <q-input
       required
       clearable
       color="secondary"
@@ -15,8 +15,8 @@
       type="email"
       variant="underlined"
       v-model="formDataRegister.email"
-    ></v-text-field>
-    <v-text-field
+    ></q-input>
+    <q-input
       required
       clearable
       color="secondary"
@@ -26,8 +26,8 @@
       type="text"
       variant="underlined"
       v-model="formDataRegister.userName"
-    ></v-text-field>
-    <v-text-field
+    ></q-input>
+    <q-input
       required
       clearable
       color="secondary"
@@ -37,17 +37,17 @@
       type="password"
       variant="underlined"
       v-model="formDataRegister.password"
-    ></v-text-field>
-    <v-btn
+    ></q-input>
+    <q-btn
       type="submit"
       size="large"
       width="100%"
       :disabled="isSumbitDisabled"
       class="mx-auto mt-5 mb-10"
       color="secondary"
-      >Sign up</v-btn
+      >Sign up</q-btn
     >
-  </v-form>
+  </q-form>
 </template>
 <script setup lang="ts">
 import { type Register } from '../../types/formTypes';
