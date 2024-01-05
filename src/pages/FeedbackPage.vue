@@ -19,21 +19,22 @@
       </p>
     </v-col>
     <v-col>
-      <v-form data-test="login-form">
+      <q-form data-test="login-form">
         <v-textarea
           clearable
           label="Place your feedback here..."
-          variant="solo"
+          type="textarea"
+          filled
         ></v-textarea>
-        <v-btn
+        <q-btn
           type="submit"
           size="large"
           width="100%"
           class="mx-auto mt-5 mb-10"
           color="secondary"
-          >Send Feedback</v-btn
+          >Send Feedback</q-btn
         >
-      </v-form>
+      </q-form>
     </v-col>
   </v-row>
   <TheGreenBorder />

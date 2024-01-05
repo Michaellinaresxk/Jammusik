@@ -1,9 +1,9 @@
 <!-- eslint-disable vue/no-v-text-v-html-on-component -->
 <template>
   <v-container data-test="category-card">
-    <v-row class="d-flex category-card-content">
+    <div class="row category-card-content">
       <v-col cols="6">
-        <v-card
+        <q-card
           class="ma-1 d-flex justify-center align-center category-card"
           gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.8)"
           height="100px"
@@ -14,7 +14,7 @@
           <v-card-subtitle class="text-white text-subtitle-1 font-weight-bold"
             >All
           </v-card-subtitle>
-        </v-card>
+        </q-card>
       </v-col>
       <v-col cols="6" v-for="category in categories" :key="category.id" md="4">
         <router-link
@@ -23,7 +23,7 @@
             params: { id: category.id, title: category.title },
           }"
         >
-          <v-card
+          <q-card
             class="ma-1 d-flex justify-center align-center category-card"
             gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.8)"
             height="100px"
@@ -35,10 +35,10 @@
               v-text="category.title"
             >
             </v-card-subtitle>
-          </v-card>
+          </q-card>
         </router-link>
       </v-col>
-    </v-row>
+    </div>
   </v-container>
   <image src="../../assets/bg/bg-home.png"></image>
 </template>

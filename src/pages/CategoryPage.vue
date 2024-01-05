@@ -1,7 +1,5 @@
 <template>
   <v-container data-test="category-page" tag="div">
-    <TheGreenBorder />
-    <TheToggleMenu2 />
     <v-container class="d-flex flex-column items-center category__wrapper">
       <p
         class="d-flex justify-center align-center mt-10 mb-10 text-h6 text-white"
@@ -36,7 +34,7 @@ onMounted(async () => {
 <style lang="scss" scoped>
 .category__wrapper {
   background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
-    url(../../assets/bg/bg-category.png);
+    url(../assets/bg/bg-category.png);
   background-size: cover;
   background-position: center;
   position: absolute;

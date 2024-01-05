@@ -1,16 +1,15 @@
 <template>
-  <v-form @submit.prevent="handlerLoginSubmit" data-test="login-form">
-    <v-text-field
+  <q-form @submit.prevent="handlerLoginSubmit" data-test="login-form">
+    <q-input
       clearable
       color="secondary"
       :rules="formLoginRules.emailRules"
       label="Email"
       class="text-field"
       type="email"
-      variant="underlined"
       v-model="formdataLogin.email"
-    ></v-text-field>
-    <v-text-field
+    ></q-input>
+    <q-input
       clearable
       color="secondary"
       :rules="formLoginRules.passwordRules"
@@ -19,17 +18,16 @@
       type="password"
       variant="underlined"
       v-model="formdataLogin.password"
-    ></v-text-field>
-    <v-btn
+    ></q-input>
+    <q-btn
       type="submit"
       size="large"
-      width="100%"
       :disabled="isSumbitDisabled"
       class="mx-auto mt-5 mb-10"
       color="secondary"
-      >Sign in</v-btn
+      >Sign in</q-btn
     >
-  </v-form>
+  </q-form>
 </template>
 <script setup lang="ts">
 import { reactive, computed } from 'vue';
@@ -84,7 +82,7 @@ const handlerLoginSubmit = (): void => {
 };
 </script>
 <style lang="scss" scoped>
-.text-field {
+.q-input {
   color: #fff;
 }
 </style>
