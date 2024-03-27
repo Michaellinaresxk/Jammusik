@@ -1,35 +1,38 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from "react-native";
 
 export const globalColors = {
-  primary: '#82B2A',
-  primaryAlt1: '#184945',
-  primaryAlt2: '#186D65',
+  primary: "#18998B",
+  primaryDark: "#184945",
+  primaryDark1: "#186D65",
+  primaryaryAlt1: "#22AA98",
+  primaryaryAlt2: "#6ADEC9",
+  primaryaryAlt3: "#A1EEDD",
+  primaryaryAlt4: "#F0F7EE",
 
-  secondary: '#18998B',
-  $secondaryAlt1: '#22AA98',
-  $secondaryAlt2: '#6ADEC9',
-  $secondaryAlt3: '#A1EEDD',
-  $secondaryAlt4: '#F0F7EE',
+  secondary: "#82B2A",
 
-  light: '#F1FCF9',
+  warning: "#fca311",
+  danger: "#e71d36",
+
+  light: "#F1FCF9",
 };
 
 export const globalStyles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: globalColors.primary,
   },
   primaryButton: {
     backgroundColor: globalColors.primary,
     borderRadius: 5,
     padding: 10,
     margin: 10,
-    width: '100%',
-    alignItems: 'center',
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
   },
   buttonText: {
-    color: globalColors.background,
-    fontSize: 18,
+    color: globalColors.light,
+    fontSize: 20,
   },
 });
