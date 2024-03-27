@@ -1,25 +1,24 @@
 export interface SongProperties {
-  playlistId: string
-  id: string
-  title: string
-  artist: string
-  categoryId: string
+  playlistId: string;
+  id: string;
+  title: string;
+  artist: string;
+  categoryId: string;
 }
 
 export interface SongDetailsProperties {
-  songId: string
-  key?: string
-  chordList?: string[]
-  notes?: string
-  lyricLink?: string
-  tabLink?: string
+  songId: string;
+  key?: string;
+  chordList?: string[];
+  notes?: string;
+  lyricLink?: string;
+  tabLink?: string;
 }
 
 export type ModeProperties = {
-  id: string,
+  id: string;
   title: string;
 };
-
 
 export type PlaylistProperties = {
   id: string;
@@ -30,7 +29,7 @@ export type PlaylistProperties = {
 export type CategoryProperties = {
   id: string;
   title: string;
-}
+};
 
 export type UserProperties = {
   id: string;
@@ -39,10 +38,10 @@ export type UserProperties = {
 };
 
 export type UserInfoProperties = {
-  userId: string,
-  name: string,
-  email: string,
-  location?: string,
-  skills?: string,
-  instrument?: string,
+  userId: string;
+  name: string;
+  email: string;
+  location?: string;
+  skills?: string;
+  instrument?: string;
 };
