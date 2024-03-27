@@ -12,7 +12,6 @@ export const globalColors = {
   $secondaryAlt4: '#F0F7EE',
 
   light: '#F1FCF9',
-  lightAlt: '#F1FCF9',
 };
 
 export const globalStyles = StyleSheet.create({
