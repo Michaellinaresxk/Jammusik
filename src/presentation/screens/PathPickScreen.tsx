@@ -3,10 +3,13 @@ import { PrimaryButton } from "../components/shared/PrimaryButton";
 import { globalColors } from "../theme/Theme";
 import { images } from "../../assets/img/Images";
 import { BrandLogo } from "../components/shared/BrandLogo";
+import { type NavigationProp, useNavigation } from "@react-navigation/native";
+import { RootStackParamsList } from "../routes/StackNavigator";
 
 const backgroundImage = { uri: images.pathpickBackground };
 
 export const PathPickScreen = () => {
+  const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -14,11 +17,20 @@ export const PathPickScreen = () => {
         resizeMode="cover"
         style={styles.image}>
         <BrandLogo />
-        <PrimaryButton label="REGISTER" bgColor={globalColors.primary} />
+        <PrimaryButton
+          label="REGISTER"
+          bgColor={globalColors.primary}
+          onPress={() => navigation.navigate("RegisterScreen")}
+        />
         <PrimaryButton label="Facebook" bgColor={globalColors.info} />
         <PrimaryButton label="Google" bgColor={globalColors.warning} />
         <Text style={styles.text}>
-          Already have an account? <Text style={styles.link}>LOGIN</Text>
+          Already have an account?{" "}
+          <Text
+            style={styles.link}
+            onPress={() => navigation.navigate("LoginScreen")}>
+            LOGIN
+          </Text>
         </Text>
       </ImageBackground>
     </View>
@@ -30,7 +42,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   image: {
-    flex: 1,
     justifyContent: "center",
     width: "100%",
     height: "100%",
