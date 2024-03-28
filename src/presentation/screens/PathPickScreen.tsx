@@ -2,6 +2,7 @@ import { ImageBackground, StyleSheet, Text, View } from "react-native";
 import { PrimaryButton } from "../components/shared/PrimaryButton";
 import { globalColors } from "../theme/Theme";
 import { images } from "../../assets/img/Images";
+import { BrandLogo } from "../components/shared/BrandLogo";
 
 const backgroundImage = { uri: images.pathpickBackground };
 
@@ -12,9 +13,10 @@ export const PathPickScreen = () => {
         source={backgroundImage}
         resizeMode="cover"
         style={styles.image}>
-        <PrimaryButton label="REGISTER" />
-        <PrimaryButton label="Facebook" />
-        <PrimaryButton label="Google" />
+        <BrandLogo />
+        <PrimaryButton label="REGISTER" bgColor={globalColors.primary} />
+        <PrimaryButton label="Facebook" bgColor={globalColors.info} />
+        <PrimaryButton label="Google" bgColor={globalColors.warning} />
         <Text style={styles.text}>
           Already have an account? <Text style={styles.link}>LOGIN</Text>
         </Text>
