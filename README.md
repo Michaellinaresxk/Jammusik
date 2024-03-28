@@ -1,5 +1,25 @@
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
+# Project Name 
+**Jammusik**
+
+## Description
+
+### We are a useful and well thought out tool for musicians. Offering a number of features focused on the organization and management of playlists and songs, both for rehearsals and live performances.
+
+1. Playlist Creation and Management:
+Allows users to create custom playlists and add songs to them. These songs are displayed on cards that facilitate the visualization and tracking of played and pending songs.
+
+2. Marking Songs:
+Song cards can be marked as they are played, which helps musicians keep clear track of their setlist during a performance or rehearsal.
+
+4. Detailed Information by Song:
+For each selected song, users can add useful information such as chords, key, notes, tablature links and lyrics. This is particularly useful during rehearsals.
+
+6. Categorization by Music Genre:
+The application includes a categories section that allows users to filter songs by musical genre, making it easy to search for songs by musical category or genre.
+It is important to note that, in this version, the app does not play music; its main focus is the management and organization of playlists for musicians.
+
 # Getting Started
 
 >**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
