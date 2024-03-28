@@ -16,7 +16,7 @@ export const PrimaryButton = ({ label, bgColor, onPress }: Props) => {
         backgroundColor: bgColor,
         opacity: pressed ? 0.8 : 1,
       })}
-      onPress={() => console.log(onPress)}>
+      onPress={() => onPress()}>
       <Text style={globalStyles.buttonText}>{label}</Text>
     </Pressable>
   );
