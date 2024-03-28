@@ -1,7 +1,7 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { PrimaryButton } from "../components/shared/PrimaryButton";
 import { PrimaryIcon } from "../components/shared/PrimaryIcon";
-import { globalStyles } from "../../config/theme/Theme";
+import { globalStyles } from "../theme/Theme";
 
 export const LoginScreen = () => {
   return (
