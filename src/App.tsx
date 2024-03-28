@@ -6,15 +6,15 @@
  */
 
 import React from 'react';
-import {SafeAreaView, Text, View} from 'react-native';
+import 'react-native-gesture-handler';
+import {NavigationContainer} from '@react-navigation/native';
+import {StackNavigator} from './presentation/routes/StackNavigator';
 
 function App(): React.JSX.Element {
   return (
-    <SafeAreaView>
-      <View>
-        <Text>Jammusik</Text>
-      </View>
-    </SafeAreaView>
+    <NavigationContainer>
+      <StackNavigator />
+    </NavigationContainer>
   );
 }
 
