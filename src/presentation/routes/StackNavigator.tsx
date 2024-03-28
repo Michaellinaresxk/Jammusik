@@ -1,8 +1,10 @@
-import {createStackNavigator} from '@react-navigation/stack';
-import {LoginScreen} from '../screens/LoginScreen';
-import {RegisterScreen} from '../screens/RegisterScreen';
+import { createStackNavigator } from "@react-navigation/stack";
+import { PathPickScreen } from "../screens/PathPickScreen";
+import { LoginScreen } from "../screens/LoginScreen";
+import { RegisterScreen } from "../screens/RegisterScreen";
 
 export type RootStackParamsList = {
+  PathPickScreen: undefined;
   LoginScreen: undefined;
   // Playlists: {id: number; name: string};
   RegisterScreen: undefined;
@@ -17,9 +19,10 @@ export const StackNavigator = () => {
         headerShown: true,
         headerStyle: {
           elevation: 0,
-          shadowColor: 'transparent',
+          shadowColor: "transparent",
         },
       }}>
+      <Stack.Screen name="PathPickScreen" component={PathPickScreen} />
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
       <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
     </Stack.Navigator>
