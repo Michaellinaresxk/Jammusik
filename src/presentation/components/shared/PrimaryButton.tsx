@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, Pressable } from "react-native";
-import { globalStyles } from "../../../config/theme/Theme";
+import { globalStyles } from "../../theme/Theme";
 
 interface Props {
   label: string;
