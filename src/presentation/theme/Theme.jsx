@@ -13,7 +13,7 @@ export const globalColors = {
 
   warning: "#fca311",
   danger: "#e71d36",
-
+  info: "#167bda",
   light: "#F1FCF9",
 };
 
@@ -23,7 +23,6 @@ export const globalStyles = StyleSheet.create({
     padding: 20,
   },
   primaryButton: {
-    backgroundColor: globalColors.primary,
     borderRadius: 5,
     padding: 10,
     margin: 10,
