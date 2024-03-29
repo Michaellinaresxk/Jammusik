@@ -1,6 +1,6 @@
 import { ImageBackground, StyleSheet, Text, View } from "react-native";
 import { PrimaryButton } from "../components/shared/PrimaryButton";
-import { globalColors } from "../theme/Theme";
+import { globalColors, globalStyles } from "../theme/Theme";
 import { images } from "../../assets/img/Images";
 import { BrandLogo } from "../components/shared/BrandLogo";
 import { type NavigationProp, useNavigation } from "@react-navigation/native";
@@ -16,22 +16,29 @@ export const PathPickScreen = () => {
         source={backgroundImage}
         resizeMode="cover"
         style={styles.image}>
-        <BrandLogo />
-        <PrimaryButton
-          label="REGISTER"
-          bgColor={globalColors.primary}
-          onPress={() => navigation.navigate("RegisterScreen")}
-        />
-        <PrimaryButton label="Facebook" bgColor={globalColors.info} />
-        <PrimaryButton label="Google" bgColor={globalColors.warning} />
-        <Text style={styles.text}>
-          Already have an account?{" "}
+        <View style={globalStyles.overlay}>
+          <BrandLogo />
+          <PrimaryButton
+            label="REGISTER"
+            bgColor={globalColors.primary}
+            onPress={() => navigation.navigate("RegisterScreen")}
+          />
+          <PrimaryButton label="Facebook" bgColor={globalColors.info} />
+          <PrimaryButton label="Google" bgColor={globalColors.warning} />
+          <Text style={styles.text}>
+            Already have an account?{" "}
+            <Text
+              style={styles.link}
+              onPress={() => navigation.navigate("LoginScreen")}>
+              LOGIN
+            </Text>
+          </Text>
           <Text
             style={styles.link}
-            onPress={() => navigation.navigate("LoginScreen")}>
-            LOGIN
+            onPress={() => navigation.navigate("CategoriesScreen")}>
+            category
           </Text>
-        </Text>
+        </View>
       </ImageBackground>
     </View>
   );
