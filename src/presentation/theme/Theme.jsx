@@ -13,14 +13,20 @@ export const globalColors = {
 
   warning: "#fca311",
   danger: "#e71d36",
-  info: "#167bda",
+  info: "#1372cb",
   light: "#F1FCF9",
 };
 
 export const globalStyles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  overlay: {
     padding: 20,
+    width: "100%",
+    height: "100%",
+    opacity: 0.8,
+    backgroundColor: "black",
   },
   primaryButton: {
     borderRadius: 5,
@@ -31,7 +37,7 @@ export const globalStyles = StyleSheet.create({
     justifyContent: "center",
   },
   buttonText: {
-    color: globalColors.light,
+    color: globalColors.secondary,
     fontSize: 20,
   },
 });
