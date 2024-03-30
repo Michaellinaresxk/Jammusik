@@ -7,6 +7,6 @@ interface Props {
   color?: string;
 }
 
-export const PrimaryIcon = ({ name, size = 20, color = "black" }: Props) => {
+export const PrimaryIcon = ({ name, size = 30, color = "black" }: Props) => {
   return <Icon name={name} size={size} color={color} />;
 };

@@ -23,8 +23,16 @@ export const PathPickScreen = () => {
             bgColor={globalColors.primary}
             onPress={() => navigation.navigate("RegisterScreen")}
           />
-          <PrimaryButton label="Facebook" bgColor={globalColors.info} />
-          <PrimaryButton label="Google" bgColor={globalColors.warning} />
+          <PrimaryButton
+            label="Facebook"
+            bgColor={globalColors.info}
+            onPress={() => console.log("facebook")}
+          />
+          <PrimaryButton
+            label="Google"
+            bgColor={globalColors.warning}
+            onPress={() => console.log("google")}
+          />
           <Text style={styles.text}>
             Already have an account?{" "}
             <Text

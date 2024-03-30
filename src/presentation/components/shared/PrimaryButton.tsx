@@ -6,18 +6,32 @@ interface Props {
   label: string;
   bgColor: string;
   onPress: () => void;
+  borderRadius?: number;
+  colorText?: string;
 }
 
-export const PrimaryButton = ({ label, bgColor, onPress }: Props) => {
+export const PrimaryButton = ({
+  label,
+  bgColor,
+  onPress,
+  borderRadius,
+  colorText,
+}: Props) => {
   return (
     <Pressable
       style={({ pressed }) => ({
         ...globalStyles.primaryButton,
         backgroundColor: bgColor,
         opacity: pressed ? 0.8 : 1,
+        borderRadius: borderRadius ? borderRadius : 0,
       })}
       onPress={() => onPress()}>
-      <Text style={globalStyles.buttonText}>{label}</Text>
+      <Text
+        style={
+          colorText ? globalStyles.buttonTextSecundary : globalStyles.buttonText
+        }>
+        {label}
+      </Text>
     </Pressable>
   );
 };

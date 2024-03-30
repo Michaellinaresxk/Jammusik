@@ -10,7 +10,8 @@ import { HomeScreen } from "../screens/HomeScreen";
 import { PathPickScreen } from "../screens/PathPickScreen";
 import { globalColors } from "../theme/Theme";
 import { BrandLogo } from "../components/shared/BrandLogo";
-import { Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
+import { PrimaryIcon } from "../components/shared/PrimaryIcon";
 
 const Drawer = createDrawerNavigator();
 
@@ -33,11 +34,24 @@ export const SideMenuNavigator = () => {
 const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   return (
     <DrawerContentScrollView>
-      <View>
-        <Text>Hola</Text>
+      <View style={styles.userIconContent}>
+        <PrimaryIcon
+          name="person-circle-outline"
+          color={globalColors.primary}
+        />
+        <Text>User Name:</Text>
       </View>
       <DrawerItemList {...props} />
       <BrandLogo />
     </DrawerContentScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  userIconContent: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 10,
+  },
+});
