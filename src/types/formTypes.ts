@@ -28,12 +28,3 @@ export interface Category {
   id: string;
   name: string;
 }
-
-export interface FormValidationRules {
-  emailRules?: any[];
-  passwordRules?: any[];
-  userNameRules?: any[];
-  titleRules?: any[];
-  categoryRules?: any[];
-  artistRules?: any[];
-}
