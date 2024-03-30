@@ -13,7 +13,7 @@ export type RootStackParamsList = {
   RegisterScreen: undefined;
   HomeScreen: undefined;
   CategoriesScreen: undefined;
-  CategoryScreen: undefined;
+  CategoryScreen: { id: number; title: string };
 };
 
 const Stack = createStackNavigator<RootStackParamsList>();
