@@ -6,6 +6,7 @@ import {
 } from "@react-navigation/drawer";
 
 import { CategoriesScreen } from "../screens/CategoriesScreen";
+import { CategoryScreen } from "../screens/CategoryScreen";
 import { HomeScreen } from "../screens/HomeScreen";
 import { PathPickScreen } from "../screens/PathPickScreen";
 import { globalColors } from "../theme/Theme";
@@ -29,6 +30,7 @@ export const SideMenuNavigator = () => {
       <Drawer.Screen name="PickPathScreen" component={PathPickScreen} />
       <Drawer.Screen name="HomeScreen" component={HomeScreen} />
       <Drawer.Screen name="CategoriesScreen" component={CategoriesScreen} />
+      <Drawer.Screen name="CategoryScreen" component={CategoryScreen} />
       <Drawer.Screen name="LoginScreen" component={LoginScreen} />
       <Drawer.Screen name="RegisterScreen" component={RegisterScreen} />
     </Drawer.Navigator>

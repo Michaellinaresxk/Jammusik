@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Text,
   View,
@@ -13,19 +13,23 @@ import { useNavigation } from "@react-navigation/native";
 
 export const Formlogin = () => {
   const navigation = useNavigation();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   return (
     <View style={style.containerForm}>
       <Text style={style.labelTitle}>Login</Text>
 
       <View style={style.form}>
         <View>
-          <Text style={style.labelText}>User name</Text>
-          <TextInput style={style.inputLogin} />
-          <Text style={style.labelText}>Password</Text>
-
-          <TextInput style={style.inputLogin} />
+          <TextInput style={style.inputLogin} placeholder="Name" value={name} />
+          <TextInput
+            style={style.inputLogin}
+            placeholder="Email"
+            value={email}
+            keyboardType="email-address" // Sets a suitable keyboard for email input
+          />
         </View>
-        <View style={{ marginTop: 50 }}>
+        <View style={{ marginTop: 20 }}>
           <PrimaryButton
             label="SIGN IN"
             bgColor={globalColors.primary}
@@ -53,14 +57,14 @@ const style = StyleSheet.create({
     color: "white",
   },
   labelTitle: {
-    fontSize: 44,
+    fontSize: 30,
     textAlign: "center",
     marginBottom: 20,
     color: globalColors.light,
   },
 
   form: {
-    width: "80%",
+    width: "100%",
     padding: 10,
     alignSelf: "center",
   },
@@ -69,12 +73,13 @@ const style = StyleSheet.create({
     fontSize: 24,
     color: globalColors.light,
   },
+
   inputLogin: {
     borderWidth: 1,
     borderBottomColor: "white",
-    borderTopColor: "transparent",
-    borderRightColor: "transparent",
-    borderLeftColor: "transparent",
+    color: globalColors.light,
+    fontSize: 25,
+    marginBottom: 40,
   },
   link: {
     fontWeight: "bold",
