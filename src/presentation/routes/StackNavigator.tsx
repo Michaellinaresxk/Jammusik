@@ -22,8 +22,8 @@ export const StackNavigator = () => {
           shadowColor: "transparent",
         },
       }}>
-      <Stack.Screen name="PathPickScreen" component={PathPickScreen} />
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
+      <Stack.Screen name="PathPickScreen" component={PathPickScreen} />
       <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
     </Stack.Navigator>
   );

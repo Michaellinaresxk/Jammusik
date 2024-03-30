@@ -26,7 +26,7 @@ const style = StyleSheet.create({
 
   form: {},
   inputLogin: {
-    border: "12px",
+    borderColor:'red',
     borderBottomColor: "black",
   },
 });
