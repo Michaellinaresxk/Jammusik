@@ -31,7 +31,7 @@ export const CategoriesScreen = () => {
     <ImageBackground source={backgroundImage} resizeMode="cover">
       <View style={globalStyles.overlay}>
         <FlatList
-          data={categories} 
+          data={categories}
           keyExtractor={item => item.id}
           renderItem={({ item }) => (
             <View style={styles.categoryCardContainer}>
@@ -61,6 +61,5 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
     alignItems: "center",
     flexDirection: "row",
-    
   },
 });
