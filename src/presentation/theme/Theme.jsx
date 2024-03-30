@@ -4,6 +4,7 @@ export const globalColors = {
   primary: "#18998B",
   primaryDark: "#184945",
   primaryDark1: "#186D65",
+  primaryDark2: "#000",
   primaryaryAlt1: "#22AA98",
   primaryaryAlt2: "#6ADEC9",
   primaryaryAlt3: "#A1EEDD",
@@ -38,6 +39,10 @@ export const globalStyles = StyleSheet.create({
   },
   buttonText: {
     color: globalColors.secondary,
+    fontSize: 20,
+  },
+  buttonTextSecundary: {
+    color: globalColors.primaryDark2,
     fontSize: 20,
   },
 });
