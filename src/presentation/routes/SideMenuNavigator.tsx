@@ -12,6 +12,8 @@ import { globalColors } from "../theme/Theme";
 import { BrandLogo } from "../components/shared/BrandLogo";
 import { StyleSheet, Text, View } from "react-native";
 import { PrimaryIcon } from "../components/shared/PrimaryIcon";
+import { LoginScreen } from "../screens/LoginScreen";
+import { RegisterScreen } from "../screens/RegisterScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -27,6 +29,8 @@ export const SideMenuNavigator = () => {
       <Drawer.Screen name="PickPathScreen" component={PathPickScreen} />
       <Drawer.Screen name="HomeScreen" component={HomeScreen} />
       <Drawer.Screen name="CategoriesScreen" component={CategoriesScreen} />
+      <Drawer.Screen name="LoginScreen" component={LoginScreen} />
+      <Drawer.Screen name="RegisterScreen" component={RegisterScreen} />
     </Drawer.Navigator>
   );
 };
