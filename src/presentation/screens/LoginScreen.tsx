@@ -1,14 +1,13 @@
 import { ImageBackground, StyleSheet, View } from "react-native";
-import { PrimaryButton } from "../components/shared/PrimaryButton";
-import { PrimaryIcon } from "../components/shared/PrimaryIcon";
-import { globalColors, globalStyles } from "../theme/Theme";
+import {  globalStyles } from "../theme/Theme";
 import { Formlogin } from "../components/shared/FormLogin";
-import {images} from '../../assets/img/Images'
+import { images } from "../../assets/img/Images";
+import { BrandLogo } from "../components/shared/BrandLogo";
 
 export const LoginScreen = () => {
   const image = {
-    uri:images.loginBackground
-  }
+    uri: images.loginBackground,
+  };
 
   return (
     <ImageBackground
@@ -16,12 +15,14 @@ export const LoginScreen = () => {
       style={styles.containerImage}
       resizeMode="cover"
       alt="Imagen de fondo">
-      <View style={styles.containerLoginScreen}>
-        <View style={styles.containerLogo}>
-          <PrimaryIcon name="rocket-outline" size={200} color={globalColors.primary}/>
-        </View>
-        <View style={styles.containerForm}>
-          <Formlogin />
+      <View style={globalStyles.overlay}>
+        <View style={styles.containerLoginScreen}>
+          <View style={styles.containerLogo}>
+            <BrandLogo  model=""/>
+          </View>
+          <View style={styles.containerForm}>
+            <Formlogin  text="Login"/>
+          </View>
         </View>
       </View>
     </ImageBackground>
@@ -35,14 +36,13 @@ const styles = StyleSheet.create({
   },
   containerLoginScreen: {
     flex: 1,
-
   },
   containerLogo: {
-    flex: 1,
-
+    flex: 1.5,
+    justifyContent: "center",
+    alignItems: "center",
   },
   containerForm: {
-    flex: 2,
-
+    flex: 3,
   },
 });
