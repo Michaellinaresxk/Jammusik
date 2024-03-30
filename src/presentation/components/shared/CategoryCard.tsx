@@ -1,16 +1,17 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import { globalColors } from "../../theme/Theme";
 
 type Props = {
   title: string;
+  onPress: () => void;
 };
 
-export const CategoryCard = ({ title }: Props) => {
+export const CategoryCard = ({ title, onPress }: Props) => {
   return (
-    <View style={styles.categoryCard}>
+    <TouchableOpacity style={styles.categoryCard} onPress={onPress}>
       <Text style={styles.categoryCardText}>{title}</Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -20,13 +21,13 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     justifyContent: "center",
     alignItems: "center",
-    height: 140,
-    width: 135,
+    height: 135,
+    width: 150,
     margin: 10,
   },
   categoryCardText: {
     color: globalColors.light,
-    fontSize: 25,
+    fontSize: 23,
     paddingHorizontal: 5,
   },
 });
