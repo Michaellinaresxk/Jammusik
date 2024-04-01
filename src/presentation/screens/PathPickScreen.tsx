@@ -1,10 +1,11 @@
-import { ImageBackground, StyleSheet, Text, View } from "react-native";
+import { ImageBackground, StyleSheet, View } from "react-native";
 import { PrimaryButton } from "../components/shared/PrimaryButton";
 import { globalColors, globalStyles } from "../theme/Theme";
 import { images } from "../../assets/img/Images";
 import { BrandLogo } from "../components/shared/BrandLogo";
 import { type NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamsList } from "../routes/StackNavigator";
+import { LinkLoginRegister } from "../components/shared/LinkLoginRegister";
 
 const backgroundImage = { uri: images.pathpickBackground };
 
@@ -22,6 +23,7 @@ export const PathPickScreen = () => {
             label="REGISTER"
             bgColor={globalColors.primary}
             onPress={() => navigation.navigate("RegisterScreen")}
+            colorText="white"
           />
           <PrimaryButton
             label="Facebook"
@@ -33,19 +35,7 @@ export const PathPickScreen = () => {
             bgColor={globalColors.warning}
             onPress={() => console.log("google")}
           />
-          <Text style={styles.text}>
-            Already have an account?{" "}
-            <Text
-              style={styles.link}
-              onPress={() => navigation.navigate("LoginScreen")}>
-              LOGIN
-            </Text>
-          </Text>
-          <Text
-            style={styles.link}
-            onPress={() => navigation.navigate("CategoriesScreen")}>
-            category
-          </Text>
+          <LinkLoginRegister text="Login" goTo="LoginScreen" />
         </View>
       </ImageBackground>
     </View>

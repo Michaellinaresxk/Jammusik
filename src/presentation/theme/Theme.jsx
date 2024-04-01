@@ -9,8 +9,9 @@ export const globalColors = {
   primaryaryAlt3: "#A1EEDD",
   primaryaryAlt4: "#F0F7EE",
 
-  secondary: "#82B2A",
+  secondary: "#070c0d",
   secondaryDark: "#000",
+  terceary: "#838282",
 
   warning: "#fca311",
   danger: "#e71d36",

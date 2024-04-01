@@ -1,18 +1,9 @@
 import React, { useState } from "react";
-import {
-  Text,
-  View,
-  TextInput,
-  StyleSheet,
-  Alert,
-  Pressable,
-} from "react-native";
+import { Text, View, TextInput, StyleSheet, Alert } from "react-native";
 import { PrimaryButton } from "./PrimaryButton";
 import { globalColors } from "../../theme/Theme";
-import { useNavigation } from "@react-navigation/native";
 
 export const FormRegister = () => {
-  const navigation = useNavigation();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   return (
@@ -44,13 +35,6 @@ export const FormRegister = () => {
             colorText="#0000"
           />
         </View>
-
-        <View style={style.containerLink}>
-          <Text> Already have an account? </Text>
-          <Pressable onPress={() => navigation.navigate("LoginScreen")}>
-            <Text style={style.link}>Login</Text>
-          </Pressable>
-        </View>
       </View>
     </View>
   );
@@ -58,13 +42,13 @@ export const FormRegister = () => {
 
 const style = StyleSheet.create({
   containerForm: {
-    flex: 1,
     height: "auto",
   },
   labelTitle: {
-    fontSize: 30,
+    fontSize: 25,
+    fontWeight: "bold",
     textAlign: "center",
-    marginBottom: 20,
+    marginBottom: 30,
     color: globalColors.light,
   },
 
@@ -72,6 +56,7 @@ const style = StyleSheet.create({
     width: "100%",
     padding: 10,
     alignSelf: "center",
+    marginTop: 20,
   },
 
   labelText: {

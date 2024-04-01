@@ -1,18 +1,9 @@
 import React, { useState } from "react";
-import {
-  Text,
-  View,
-  TextInput,
-  StyleSheet,
-  Pressable,
-  Alert,
-} from "react-native";
+import { Text, View, TextInput, StyleSheet, Alert } from "react-native";
 import { PrimaryButton } from "./PrimaryButton";
 import { globalColors } from "../../theme/Theme";
-import { useNavigation } from "@react-navigation/native";
 
 export const Formlogin = () => {
-  const navigation = useNavigation();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   return (
@@ -38,13 +29,6 @@ export const Formlogin = () => {
             onPress={() => Alert.alert("Registrado correctamente")}
           />
         </View>
-
-        <View style={style.containerLink}>
-          <Text>Not a member yet? </Text>
-          <Pressable onPress={() => navigation.navigate("RegisterScreen")}>
-            <Text style={style.link}>REGISTER</Text>
-          </Pressable>
-        </View>
       </View>
     </View>
   );
@@ -52,14 +36,14 @@ export const Formlogin = () => {
 
 const style = StyleSheet.create({
   containerForm: {
-    flex: 1,
     height: "auto",
     color: "white",
   },
   labelTitle: {
-    fontSize: 30,
+    fontSize: 25,
+    fontWeight: "bold",
     textAlign: "center",
-    marginBottom: 20,
+    marginBottom: 30,
     color: globalColors.light,
   },
 
@@ -67,6 +51,7 @@ const style = StyleSheet.create({
     width: "100%",
     padding: 10,
     alignSelf: "center",
+    marginTop: 20,
   },
 
   labelText: {
@@ -80,14 +65,5 @@ const style = StyleSheet.create({
     color: globalColors.light,
     fontSize: 25,
     marginBottom: 40,
-  },
-  link: {
-    fontWeight: "bold",
-    color: globalColors.primary,
-  },
-  containerLink: {
-    display: "flex",
-    flexDirection: "row",
-    marginTop: 10,
   },
 });

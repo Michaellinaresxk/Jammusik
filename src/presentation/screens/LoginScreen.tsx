@@ -4,6 +4,7 @@ import { Formlogin } from "../components/shared/FormLogin";
 import { images } from "../../assets/img/Images";
 import { BrandLogo } from "../components/shared/BrandLogo";
 import React from "react";
+import { LinkLoginRegister } from "../components/shared/LinkLoginRegister";
 export const LoginScreen = () => {
   const image = {
     uri: images.loginBackground,
@@ -22,6 +23,7 @@ export const LoginScreen = () => {
           </View>
           <View style={styles.containerForm}>
             <Formlogin />
+            <LinkLoginRegister text="Register" />
           </View>
         </View>
       </View>

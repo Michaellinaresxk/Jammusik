@@ -30,23 +30,25 @@ export const CategoriesScreen = () => {
   return (
     <ImageBackground source={backgroundImage} resizeMode="cover">
       <View style={globalStyles.overlay}>
-        <FlatList
-          data={categories}
-          keyExtractor={item => item.id}
-          renderItem={({ item }) => (
-            <View style={styles.categoryCardContainer}>
-              <CategoryCard
-                title={item.title}
-                onPress={() =>
-                  navigation.navigate("CategoryScreen", {
-                    id: item.id,
-                    title: item.title,
-                  })
-                }
-              />
-            </View>
-          )}
-        />
+        <View style={{ marginTop: 50 }}>
+          <FlatList
+            data={categories}
+            keyExtractor={item => item.id}
+            renderItem={({ item }) => (
+              <View style={styles.categoryCardContainer}>
+                <CategoryCard
+                  title={item.title}
+                  onPress={() =>
+                    navigation.navigate("CategoryScreen", {
+                      id: item.id,
+                      title: item.title,
+                    })
+                  }
+                />
+              </View>
+            )}
+          />
+        </View>
       </View>
     </ImageBackground>
   );
@@ -58,8 +60,7 @@ const styles = StyleSheet.create({
   },
   categoryCardContainer: {
     width: "100%",
-    justifyContent: "space-evenly",
-    alignItems: "center",
+    justifyContent: "center",
     flexDirection: "row",
   },
 });
