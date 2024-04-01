@@ -25,7 +25,13 @@ export const SideMenuNavigator = () => {
       screenOptions={{
         drawerType: "slide",
         drawerActiveBackgroundColor: globalColors.primary,
-        drawerActiveTintColor: globalColors.light,
+        drawerActiveTintColor: globalColors.secondary,
+        drawerInactiveTintColor: globalColors.terceary,
+        drawerStyle: {
+          backgroundColor: globalColors.secondary,
+          flex: 1,
+          borderEndColor: globalColors.danger,
+        },
       }}>
       <Drawer.Screen name="PickPathScreen" component={PathPickScreen} />
       <Drawer.Screen name="HomeScreen" component={HomeScreen} />
@@ -45,7 +51,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
           name="person-circle-outline"
           color={globalColors.primary}
         />
-        <Text>User Name:</Text>
+        <Text style={styles.userName}>User Name:</Text>
       </View>
       <DrawerItemList {...props} />
       <BrandLogo />
@@ -59,5 +65,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     gap: 10,
+    marginTop: 30,
+    marginBottom: 30,
+  },
+  userName: {
+    color: globalColors.terceary,
+    fontSize: 20,
+  },
+  brandLogo: {
+    position: "relative",
+    bottom: 0,
   },
 });

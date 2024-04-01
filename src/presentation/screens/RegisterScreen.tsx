@@ -4,6 +4,7 @@ import { images } from "../../assets/img/Images";
 import { BrandLogo } from "../components/shared/BrandLogo";
 import { FormRegister } from "../components/shared/FormRegister";
 import React from "react";
+import { LinkLoginRegister } from "../components/shared/LinkLoginRegister";
 
 export const RegisterScreen = () => {
   const image = {
@@ -23,6 +24,7 @@ export const RegisterScreen = () => {
           </View>
           <View style={styles.containerForm}>
             <FormRegister />
+            <LinkLoginRegister text="Login" />
           </View>
         </View>
       </View>
