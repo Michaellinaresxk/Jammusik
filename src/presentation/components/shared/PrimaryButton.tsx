@@ -4,7 +4,7 @@ import { globalStyles } from "../../theme/Theme";
 
 interface Props {
   label: string;
-  bgColor: string;
+  bgColor?: string;
   onPress: () => void;
   borderRadius?: number;
   colorText?: string;

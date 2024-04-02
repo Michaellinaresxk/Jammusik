@@ -23,7 +23,7 @@ export const LoginScreen = () => {
           </View>
           <View style={styles.containerForm}>
             <Formlogin />
-            <LinkLoginRegister text="Register" />
+            <LinkLoginRegister text="Register" goTo={"RegisterScreen"} />
           </View>
         </View>
       </View>
