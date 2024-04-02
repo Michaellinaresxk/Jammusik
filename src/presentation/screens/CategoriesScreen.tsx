@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   categoryCardContainer: {
+    flex: 1,
     width: "100%",
     justifyContent: "center",
     flexDirection: "row",

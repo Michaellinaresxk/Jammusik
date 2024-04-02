@@ -15,6 +15,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { PrimaryIcon } from "../components/shared/PrimaryIcon";
 import { LoginScreen } from "../screens/LoginScreen";
 import { RegisterScreen } from "../screens/RegisterScreen";
+import Icon from "react-native-vector-icons/Ionicons";
 
 const Drawer = createDrawerNavigator();
 
@@ -34,8 +35,24 @@ export const SideMenuNavigator = () => {
         },
       }}>
       <Drawer.Screen name="PickPathScreen" component={PathPickScreen} />
-      <Drawer.Screen name="HomeScreen" component={HomeScreen} />
-      <Drawer.Screen name="CategoriesScreen" component={CategoriesScreen} />
+      <Drawer.Screen
+        options={{
+          drawerIcon: () => (
+            <Icon name="home-sharp" color={globalColors.light} size={20} />
+          ),
+        }}
+        name="Home"
+        component={HomeScreen}
+      />
+      <Drawer.Screen
+        options={{
+          drawerIcon: () => (
+            <Icon name="grid-sharp" color={globalColors.light} size={20} />
+          ),
+        }}
+        name="Categories"
+        component={CategoriesScreen}
+      />
       <Drawer.Screen name="CategoryScreen" component={CategoryScreen} />
       <Drawer.Screen name="LoginScreen" component={LoginScreen} />
       <Drawer.Screen name="RegisterScreen" component={RegisterScreen} />
