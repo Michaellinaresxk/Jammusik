@@ -17,16 +17,16 @@ export const Formlogin = () => {
             style={style.inputLogin}
             placeholder="Email"
             value={email}
-            keyboardType="email-address" // Sets a suitable keyboard for email input
+            keyboardType="email-address"
           />
         </View>
         <View style={{ marginTop: 20 }}>
           <PrimaryButton
             label="SIGN IN"
             bgColor={globalColors.primary}
-            borderRadius={35}
+            borderRadius={5}
             colorText="#0000"
-            onPress={() => Alert.alert("Registrado correctamente")}
+            onPress={() => Alert.alert("Logueado correctamente")}
           />
         </View>
       </View>

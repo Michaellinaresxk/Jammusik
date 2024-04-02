@@ -16,6 +16,7 @@ import { PrimaryIcon } from "../components/shared/PrimaryIcon";
 import { LoginScreen } from "../screens/LoginScreen";
 import { RegisterScreen } from "../screens/RegisterScreen";
 import Icon from "react-native-vector-icons/Ionicons";
+import { Separator } from "../components/shared/Separator";
 
 const Drawer = createDrawerNavigator();
 
@@ -26,7 +27,7 @@ export const SideMenuNavigator = () => {
       screenOptions={{
         drawerType: "slide",
         drawerActiveBackgroundColor: globalColors.primary,
-        drawerActiveTintColor: globalColors.secondary,
+        drawerActiveTintColor: globalColors.light,
         drawerInactiveTintColor: globalColors.terceary,
         drawerStyle: {
           backgroundColor: globalColors.secondary,
@@ -70,6 +71,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
         />
         <Text style={styles.userName}>User Name:</Text>
       </View>
+      <Separator color="white" />
       <DrawerItemList {...props} />
       <BrandLogo />
     </DrawerContentScrollView>
@@ -88,9 +90,5 @@ const styles = StyleSheet.create({
   userName: {
     color: globalColors.terceary,
     fontSize: 20,
-  },
-  brandLogo: {
-    position: "relative",
-    bottom: 0,
   },
 });

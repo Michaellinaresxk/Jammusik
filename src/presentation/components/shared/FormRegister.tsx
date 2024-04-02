@@ -31,7 +31,7 @@ export const FormRegister = () => {
             label="REGISTER"
             bgColor={globalColors.primary}
             onPress={() => Alert.alert("Registrado correctamente")}
-            borderRadius={35}
+            borderRadius={5}
             colorText="#0000"
           />
         </View>
@@ -66,7 +66,7 @@ const style = StyleSheet.create({
 
   inputLogin: {
     borderWidth: 1,
-    borderBottomColor: "white",
+    borderBottomColor: globalColors.terceary,
     color: globalColors.light,
     fontSize: 20,
     marginBottom: 40,

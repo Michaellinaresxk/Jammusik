@@ -5,15 +5,15 @@ import { globalColors } from "../../theme/Theme";
 
 type LinkText = {
   text: string;
-  goTo: string;
+  goTo: never;
 };
 
-export const LinkLoginRegister = ({ text }: LinkText) => {
+export const LinkLoginRegister = ({ text, goTo }: LinkText) => {
   const navigation = useNavigation();
   return (
     <View style={styles.containerLink}>
       <Text style={styles.text}>Not a member yet? </Text>
-      <Pressable onPress={() => navigation.navigate("LoginScreen")}>
+      <Pressable onPress={() => navigation.navigate(goTo)}>
         <Text style={styles.link}>{text}</Text>
       </Pressable>
     </View>
