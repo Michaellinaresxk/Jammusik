@@ -36,6 +36,7 @@ export const PathPickScreen = () => {
             onPress={() => console.log("google")}
           />
           <LinkLoginRegister text="Login" goTo="LoginScreen" />
+          <LinkLoginRegister text="home" goTo="HomeScreen" />
         </View>
       </ImageBackground>
     </View>

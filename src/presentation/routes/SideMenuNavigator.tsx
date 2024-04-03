@@ -13,10 +13,9 @@ import { globalColors } from "../theme/Theme";
 import { BrandLogo } from "../components/shared/BrandLogo";
 import { StyleSheet, Text, View } from "react-native";
 import { PrimaryIcon } from "../components/shared/PrimaryIcon";
-import { LoginScreen } from "../screens/LoginScreen";
-import { RegisterScreen } from "../screens/RegisterScreen";
 import Icon from "react-native-vector-icons/Ionicons";
 import { Separator } from "../components/shared/Separator";
+import { BottomTabNavigator } from "./BottomTabNavigator";
 
 const Drawer = createDrawerNavigator();
 
@@ -54,9 +53,15 @@ export const SideMenuNavigator = () => {
         name="Categories"
         component={CategoriesScreen}
       />
-      <Drawer.Screen name="CategoryScreen" component={CategoryScreen} />
-      <Drawer.Screen name="LoginScreen" component={LoginScreen} />
-      <Drawer.Screen name="RegisterScreen" component={RegisterScreen} />
+      <Drawer.Screen
+        options={{
+          drawerIcon: () => (
+            <Icon name="grid-sharp" color={globalColors.light} size={20} />
+          ),
+        }}
+        name="Tab"
+        component={BottomTabNavigator}
+      />
     </Drawer.Navigator>
   );
 };

@@ -14,6 +14,7 @@ export type RootStackParamsList = {
   HomeScreen: undefined;
   CategoriesScreen: undefined;
   CategoryScreen: { id: number; title: string };
+  Tab: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamsList>();

@@ -4,8 +4,9 @@ import { PrimaryButton } from "./PrimaryButton";
 import { globalColors } from "../../theme/Theme";
 
 export const FormRegister = () => {
-  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+  const [userName, setUserName] = useState("");
   return (
     <View style={style.containerForm}>
       <Text style={style.labelTitle}>Register</Text>
@@ -14,16 +15,26 @@ export const FormRegister = () => {
         <View>
           <TextInput
             style={style.inputLogin}
-            placeholder="Name"
-            value={name}
-            onChangeText={setName} // Automatically updates the name state
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            placeholderTextColor="#838282"
           />
           <TextInput
             style={style.inputLogin}
-            placeholder="Email"
-            value={email}
-            onChangeText={setEmail} // Automatically updates the email state
-            keyboardType="email-address" // Sets a suitable keyboard for email input
+            placeholder="User name"
+            value={userName}
+            onChangeText={setUserName}
+            placeholderTextColor="#838282"
+          />
+          <TextInput
+            style={style.inputLogin}
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
+            placeholderTextColor="#838282"
+            secureTextEntry={true}
           />
         </View>
         <View style={{ marginTop: 20 }}>
