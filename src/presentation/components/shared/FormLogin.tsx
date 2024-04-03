@@ -4,7 +4,7 @@ import { PrimaryButton } from "./PrimaryButton";
 import { globalColors } from "../../theme/Theme";
 
 export const Formlogin = () => {
-  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   return (
     <View style={style.containerForm}>
@@ -12,12 +12,21 @@ export const Formlogin = () => {
 
       <View style={style.form}>
         <View>
-          <TextInput style={style.inputLogin} placeholder="Name" value={name} />
           <TextInput
             style={style.inputLogin}
+            placeholderTextColor="#838282"
+            keyboardType="email-address"
             placeholder="Email"
             value={email}
-            keyboardType="email-address"
+            onChangeText={setEmail}
+          />
+          <TextInput
+            style={style.inputLogin}
+            placeholder="Password"
+            value={password}
+            secureTextEntry={true}
+            placeholderTextColor="#838282"
+            onChangeText={setPassword}
           />
         </View>
         <View style={{ marginTop: 20 }}>
@@ -61,9 +70,9 @@ const style = StyleSheet.create({
 
   inputLogin: {
     borderWidth: 1,
-    borderBottomColor: "white",
+    borderBottomColor: globalColors.terceary,
     color: globalColors.light,
-    fontSize: 25,
+    fontSize: 20,
     marginBottom: 40,
   },
 });
