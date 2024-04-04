@@ -1,12 +1,11 @@
 import { ImageBackground, StyleSheet, View } from "react-native";
-import { globalStyles } from "../theme/Theme";
-import { images } from "../../assets/img/Images";
-import { BrandLogo } from "../components/shared/BrandLogo";
-import { FormRegister } from "../components/shared/FormRegister";
+import { globalStyles } from "../../theme/Theme";
+import { Formlogin } from "../../components/shared/FormLogin";
+import { images } from "../../../assets/img/Images";
+import { BrandLogo } from "../../components/shared/BrandLogo";
 import React from "react";
-import { LinkLoginRegister } from "../components/shared/LinkLoginRegister";
-
-export const RegisterScreen = () => {
+import { LinkLoginRegister } from "../../components/shared/LinkLoginRegister";
+export const LoginScreen = () => {
   const image = {
     uri: images.loginBackground,
   };
@@ -23,8 +22,8 @@ export const RegisterScreen = () => {
             <BrandLogo />
           </View>
           <View style={styles.containerForm}>
-            <FormRegister />
-            <LinkLoginRegister text="Login" goTo="LoginScreen" />
+            <Formlogin />
+            <LinkLoginRegister text="Register" goTo={"RegisterScreen"} />
           </View>
         </View>
       </View>
