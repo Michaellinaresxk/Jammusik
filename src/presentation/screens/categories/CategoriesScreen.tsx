@@ -40,7 +40,7 @@ export const CategoriesScreen = () => {
                 <CategoryCard
                   title={item.title}
                   onPress={() =>
-                    navigation.navigate("CategoryScreen", {
+                    navigation.navigate("CategorySelectedScreen", {
                       id: item.id,
                       title: item.title,
                     })

@@ -2,16 +2,16 @@ import React from "react";
 import { View, Text } from "react-native";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { RootStackParamsList } from "../../routes/StackNavigator";
+import { GlobalHeader } from "../../components/shared/GlobalHeader";
 
 export const PlaylistSelectedScreen = () => {
   const params =
-    useRoute<RouteProp<RootStackParamsList, "CategoryScreen">>().params;
+    useRoute<RouteProp<RootStackParamsList, "PlaylistScreen">>().params;
 
   return (
     <View>
-      <Text>
-        Playlist Selected: {params.title} - {params.id}{" "}
-      </Text>
+      <GlobalHeader headerTitle={params.title} />
+      <Text>Playlist Selected id: - {params.id}</Text>
     </View>
   );
 };
