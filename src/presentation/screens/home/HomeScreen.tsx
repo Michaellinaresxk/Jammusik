@@ -2,6 +2,7 @@ import { FlatList, StyleSheet, Text, View } from "react-native";
 import { CategoryCard } from "../../components/shared/cards/CategoryCard";
 import { type NavigationProp, useNavigation } from "@react-navigation/native";
 import { type RootStackParamsList } from "../../routes/StackNavigator";
+import { GlobalHeader } from "../../components/shared/GlobalHeader";
 const categories = [
   {
     id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
@@ -25,9 +26,8 @@ export const HomeScreen = () => {
   return (
     <>
       <View style={styles.container}>
-        <View>
-          <Text style={styles.subTitle}>Categories:</Text>
-        </View>
+        <GlobalHeader headerTitle="Home" />
+        <Text style={styles.subTitle}>Categories:</Text>
         <FlatList
           data={categories}
           keyExtractor={item => item.id}
@@ -51,8 +51,6 @@ export const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 30,
-    marginTop: 30,
   },
   subTitle: {
     marginBottom: 5,

@@ -50,7 +50,7 @@ export const PlaylistScreen = () => {
                     : globalColors.secondary
                 }
                 onPress={() =>
-                  navigation.navigate("CategoryScreen", {
+                  navigation.navigate("PlaylistSelectedScreen", {
                     id: item.id,
                     title: item.title,
                   })
