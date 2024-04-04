@@ -1,17 +1,16 @@
 import React from "react";
+import { View, Text } from "react-native";
 import { RouteProp, useRoute } from "@react-navigation/native";
-import { RootStackParamsList } from "../routes/StackNavigator";
-import { Text, View } from "react-native";
+import { RootStackParamsList } from "../../routes/StackNavigator";
 
-export const CategoryScreen = () => {
+export const PlaylistSelectedScreen = () => {
   const params =
     useRoute<RouteProp<RootStackParamsList, "CategoryScreen">>().params;
 
   return (
     <View>
       <Text>
-        {" "}
-        {params.title} - {params.id}{" "}
+        Playlist Selected: {params.title} - {params.id}{" "}
       </Text>
     </View>
   );

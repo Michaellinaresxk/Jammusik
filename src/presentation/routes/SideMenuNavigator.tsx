@@ -5,9 +5,8 @@ import {
   DrawerItemList,
 } from "@react-navigation/drawer";
 
-import { CategoriesScreen } from "../screens/CategoriesScreen";
-import { CategoryScreen } from "../screens/CategoryScreen";
-import { HomeScreen } from "../screens/HomeScreen";
+import { CategoriesScreen } from "../screens/categories/CategoriesScreen";
+import { HomeScreen } from "../screens/home/HomeScreen";
 import { PathPickScreen } from "../screens/PathPickScreen";
 import { globalColors } from "../theme/Theme";
 import { BrandLogo } from "../components/shared/BrandLogo";
@@ -16,6 +15,7 @@ import { PrimaryIcon } from "../components/shared/PrimaryIcon";
 import Icon from "react-native-vector-icons/Ionicons";
 import { Separator } from "../components/shared/Separator";
 import { BottomTabNavigator } from "./BottomTabNavigator";
+import { PlaylistScreen } from "../screens/playlists/PlaylistScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -43,6 +43,15 @@ export const SideMenuNavigator = () => {
         }}
         name="Home"
         component={HomeScreen}
+      />
+      <Drawer.Screen
+        options={{
+          drawerIcon: () => (
+            <Icon name="options-sharp" color={globalColors.light} size={20} />
+          ),
+        }}
+        name="Playlist"
+        component={PlaylistScreen}
       />
       <Drawer.Screen
         options={{

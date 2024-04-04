@@ -1,9 +1,9 @@
 import { View, ImageBackground, StyleSheet, FlatList } from "react-native";
-import { globalStyles } from "../theme/Theme";
-import { images } from "../../assets/img/Images";
-import { CategoryCard } from "../components/shared/CategoryCard";
+import { globalStyles } from "../../theme/Theme";
+import { images } from "../../../assets/img/Images";
+import { CategoryCard } from "../../components/shared/cards/CategoryCard";
 import { type NavigationProp, useNavigation } from "@react-navigation/native";
-import { type RootStackParamsList } from "../routes/StackNavigator";
+import { type RootStackParamsList } from "../../routes/StackNavigator";
 
 const backgroundImage = { uri: images.image3 };
 const categories = [
@@ -34,6 +34,7 @@ export const CategoriesScreen = () => {
           <FlatList
             data={categories}
             keyExtractor={item => item.id}
+            numColumns={2}
             renderItem={({ item }) => (
               <View style={styles.categoryCardContainer}>
                 <CategoryCard

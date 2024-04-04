@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
-import { globalColors } from "../../theme/Theme";
+import { globalColors } from "../../../theme/Theme";
 
 type Props = {
   title: string;

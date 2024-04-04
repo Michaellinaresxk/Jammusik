@@ -1,15 +1,17 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import { PathPickScreen } from "../screens/PathPickScreen";
-import { LoginScreen } from "../screens/LoginScreen";
-import { RegisterScreen } from "../screens/RegisterScreen";
-import { HomeScreen } from "../screens/HomeScreen";
-import { CategoriesScreen } from "../screens/CategoriesScreen";
-import { CategoryScreen } from "../screens/CategoryScreen";
+import { LoginScreen } from "../screens/login/LoginScreen";
+import { RegisterScreen } from "../screens/register/RegisterScreen";
+import { HomeScreen } from "../screens/home/HomeScreen";
+import { CategoriesScreen } from "../screens/categories/CategoriesScreen";
+import { CategoryScreen } from "../screens/categories/CategorySelectedScreen";
+import { PlaylistScreen } from "../screens/playlists/PlaylistScreen";
 
 export type RootStackParamsList = {
   PathPickScreen: undefined;
   LoginScreen: undefined;
   // Playlists: {id: number; name: string};
+  PlaylistScreen: undefined;
   RegisterScreen: undefined;
   HomeScreen: undefined;
   CategoriesScreen: undefined;
@@ -34,6 +36,7 @@ export const StackNavigator = () => {
       <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="CategoriesScreen" component={CategoriesScreen} />
+      <Stack.Screen name="PlaylistScreen" component={PlaylistScreen} />
       <Stack.Screen name="CategoryScreen" component={CategoryScreen} />
     </Stack.Navigator>
   );
