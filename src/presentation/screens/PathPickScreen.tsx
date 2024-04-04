@@ -3,9 +3,9 @@ import { PrimaryButton } from "../components/shared/PrimaryButton";
 import { globalColors, globalStyles } from "../theme/Theme";
 import { images } from "../../assets/img/Images";
 import { BrandLogo } from "../components/shared/BrandLogo";
-import { type NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamsList } from "../routes/StackNavigator";
 import { LinkLoginRegister } from "../components/shared/LinkLoginRegister";
+import { type NavigationProp, useNavigation } from "@react-navigation/native";
 
 const backgroundImage = { uri: images.pathpickBackground };
 
@@ -18,25 +18,31 @@ export const PathPickScreen = () => {
         resizeMode="cover"
         style={styles.image}>
         <View style={globalStyles.overlay}>
-          <BrandLogo />
-          <PrimaryButton
-            label="REGISTER"
-            bgColor={globalColors.primary}
-            onPress={() => navigation.navigate("RegisterScreen")}
-            colorText="white"
-          />
-          <PrimaryButton
-            label="Facebook"
-            bgColor={globalColors.info}
-            onPress={() => console.log("facebook")}
-          />
-          <PrimaryButton
-            label="Google"
-            bgColor={globalColors.warning}
-            onPress={() => console.log("google")}
-          />
-          <LinkLoginRegister text="Login" goTo="LoginScreen" />
-          <LinkLoginRegister text="home" goTo="HomeScreen" />
+          <View style={styles.layoutContent}>
+            <BrandLogo />
+            <View>
+              <PrimaryButton
+                label="REGISTER"
+                bgColor={globalColors.primary}
+                onPress={() => navigation.navigate("RegisterScreen")}
+                colorText="white"
+              />
+              <PrimaryButton
+                label="Facebook"
+                bgColor={globalColors.info}
+                onPress={() => console.log("facebook")}
+              />
+              <PrimaryButton
+                label="Google"
+                bgColor={globalColors.warning}
+                onPress={() => console.log("google")}
+              />
+              <LinkLoginRegister text="Login" goTo="LoginScreen" />
+              <LinkLoginRegister text="home" goTo="HomeScreen" />
+              <LinkLoginRegister text="Categories" goTo="CategoriesScreen" />
+              <LinkLoginRegister text="Playlists" goTo="PlaylistScreen" />
+            </View>
+          </View>
         </View>
       </ImageBackground>
     </View>
@@ -51,6 +57,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: "100%",
     height: "100%",
+  },
+  layoutContent: {
+    flex: 1,
+    justifyContent: "space-evenly",
   },
   text: {
     color: "white",

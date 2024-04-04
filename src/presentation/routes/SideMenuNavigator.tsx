@@ -37,8 +37,12 @@ export const SideMenuNavigator = () => {
       <Drawer.Screen name="PickPathScreen" component={PathPickScreen} />
       <Drawer.Screen
         options={{
-          drawerIcon: () => (
-            <Icon name="home-sharp" color={globalColors.light} size={20} />
+          drawerIcon: ({ focused }) => (
+            <Icon
+              name="home-sharp"
+              color={focused ? globalColors.light : globalColors.terceary}
+              size={20}
+            />
           ),
         }}
         name="Home"
@@ -46,8 +50,12 @@ export const SideMenuNavigator = () => {
       />
       <Drawer.Screen
         options={{
-          drawerIcon: () => (
-            <Icon name="options-sharp" color={globalColors.light} size={20} />
+          drawerIcon: ({ focused }) => (
+            <Icon
+              name="options-sharp"
+              color={focused ? globalColors.light : globalColors.terceary}
+              size={20}
+            />
           ),
         }}
         name="Playlist"
@@ -55,8 +63,12 @@ export const SideMenuNavigator = () => {
       />
       <Drawer.Screen
         options={{
-          drawerIcon: () => (
-            <Icon name="grid-sharp" color={globalColors.light} size={20} />
+          drawerIcon: ({ focused }) => (
+            <Icon
+              name="grid-sharp"
+              color={focused ? globalColors.light : globalColors.terceary}
+              size={20}
+            />
           ),
         }}
         name="Categories"
@@ -64,8 +76,12 @@ export const SideMenuNavigator = () => {
       />
       <Drawer.Screen
         options={{
-          drawerIcon: () => (
-            <Icon name="grid-sharp" color={globalColors.light} size={20} />
+          drawerIcon: ({ focused }) => (
+            <Icon
+              name="grid-sharp"
+              color={focused ? globalColors.light : globalColors.terceary}
+              size={20}
+            />
           ),
         }}
         name="Tab"
@@ -104,5 +120,9 @@ const styles = StyleSheet.create({
   userName: {
     color: globalColors.terceary,
     fontSize: 20,
+  },
+  brandLogo: {
+    position: "absolute",
+    bottom: 0,
   },
 });

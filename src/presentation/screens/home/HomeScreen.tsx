@@ -1,5 +1,4 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
-import { globalColors, globalStyles } from "../../theme/Theme";
 import { CategoryCard } from "../../components/shared/cards/CategoryCard";
 import { type NavigationProp, useNavigation } from "@react-navigation/native";
 import { type RootStackParamsList } from "../../routes/StackNavigator";
