@@ -9,8 +9,6 @@ export const FormRegister = () => {
   const [userName, setUserName] = useState("");
   return (
     <View style={style.containerForm}>
-      <Text style={style.labelTitle}>Register</Text>
-
       <View style={style.form}>
         <View>
           <TextInput
@@ -54,13 +52,6 @@ export const FormRegister = () => {
 const style = StyleSheet.create({
   containerForm: {
     height: "auto",
-  },
-  labelTitle: {
-    fontSize: 25,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 30,
-    color: globalColors.light,
   },
 
   form: {
