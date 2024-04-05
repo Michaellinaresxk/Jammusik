@@ -34,7 +34,7 @@ export const Formlogin = () => {
             label="SIGN IN"
             bgColor={globalColors.primary}
             borderRadius={5}
-            colorText="#0000"
+            colorText={globalColors.secondary}
             onPress={() => Alert.alert("Logueado correctamente")}
           />
         </View>

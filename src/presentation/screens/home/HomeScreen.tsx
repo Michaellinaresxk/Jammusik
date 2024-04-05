@@ -36,7 +36,7 @@ export const HomeScreen = () => {
             <CategoryCard
               title={item.title}
               onPress={() =>
-                navigation.navigate("CategoryScreen", {
+                navigation.navigate("CategorySelectedScreen", {
                   id: item.id,
                   title: item.title,
                 })

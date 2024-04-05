@@ -37,10 +37,10 @@ export const PathPickScreen = () => {
                 bgColor={globalColors.warning}
                 onPress={() => console.log("google")}
               />
-              <LinkLoginRegister text="Login" goTo="LoginScreen" />
-              <LinkLoginRegister text="home" goTo="HomeScreen" />
-              <LinkLoginRegister text="Categories" goTo="CategoriesScreen" />
-              <LinkLoginRegister text="Playlists" goTo="PlaylistScreen" />
+              <LinkLoginRegister link="Login" goTo="LoginScreen" />
+              <LinkLoginRegister link="home" goTo="HomeScreen" />
+              <LinkLoginRegister link="Categories" goTo="CategoriesScreen" />
+              <LinkLoginRegister link="Playlists" goTo="PlaylistScreen" />
             </View>
           </View>
         </View>
