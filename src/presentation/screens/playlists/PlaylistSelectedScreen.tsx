@@ -1,11 +1,12 @@
 import React from "react";
-import { View, Text, FlatList, StyleSheet } from "react-native";
+import { View, Text, FlatList, StyleSheet, Alert } from "react-native";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { GlobalHeader } from "../../components/shared/GlobalHeader";
 import { SongCard } from "../../components/shared/cards/SongCard";
 import { type NavigationProp, useNavigation } from "@react-navigation/native";
 import { type RootStackParamsList } from "../../routes/StackNavigator";
 import { globalColors } from "../../theme/Theme";
+import { FloatingActionButton } from "../../components/shared/FloatingActionButton";
 
 const songList = [
   {
@@ -38,7 +39,9 @@ export const PlaylistSelectedScreen = () => {
   return (
     <View>
       <GlobalHeader headerTitle={params.title} />
-      <Text>Playlist Selected id: - {params.id}</Text>
+      <FloatingActionButton
+        onPress={() => Alert.alert("Registrado correctamente")}
+      />
       <View style={styles.songCardContainer}>
         <FlatList
           data={songList}
@@ -69,5 +72,8 @@ export const PlaylistSelectedScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  songCardContainer: {},
+  songCardContainer: {
+    marginTop: 100,
+    alignItems: "center",
+  },
 });

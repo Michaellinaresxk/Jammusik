@@ -34,7 +34,8 @@ const styles = StyleSheet.create({
   songCard: {
     borderRadius: 10,
     height: 85,
-    maxWidth: "80%",
+    width: 350,
+    maxWidth: "100%",
     margin: 10,
     paddingHorizontal: 20,
   },
