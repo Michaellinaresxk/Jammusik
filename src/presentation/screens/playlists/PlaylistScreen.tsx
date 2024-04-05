@@ -1,5 +1,5 @@
 import React from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { Alert, FlatList, StyleSheet, Text, View } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { globalColors } from "../../theme/Theme";
 import { type NavigationProp, useNavigation } from "@react-navigation/native";
@@ -7,6 +7,7 @@ import { type RootStackParamsList } from "../../routes/StackNavigator";
 
 import { PlaylistCard } from "../../components/shared/cards/PlaylistCard";
 import { TheGreenBorder } from "../../components/shared/TheGreenBorder";
+import { PrimaryButton } from "../../components/shared/PrimaryButton";
 
 const playlists = [
   {
@@ -60,6 +61,16 @@ export const PlaylistScreen = () => {
             </View>
           )}
         />
+        <View style={styles.buttonContainer}>
+          <PrimaryButton
+            btnFontSize={18}
+            borderRadius={5}
+            bgColor={globalColors.primaryAlt}
+            colorText={globalColors.primary}
+            label="CREATE A NEW PLAYLIST"
+            onPress={() => Alert.alert("Playlist creado correctamente")}
+          />
+        </View>
       </View>
     </>
   );
@@ -85,5 +96,11 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "center",
     flexDirection: "row",
+  },
+  buttonContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 30,
+    padding: 30,
   },
 });
