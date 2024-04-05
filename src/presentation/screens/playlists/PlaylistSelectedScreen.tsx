@@ -8,6 +8,7 @@ import { type RootStackParamsList } from "../../routes/StackNavigator";
 import { globalColors } from "../../theme/Theme";
 import { FloatingActionButton } from "../../components/shared/FloatingActionButton";
 import { TheGreenBorder } from "../../components/shared/TheGreenBorder";
+import { SongCounter } from "../../components/shared/SongCounter";
 
 const songList = [
   {
@@ -45,6 +46,7 @@ export const PlaylistSelectedScreen = () => {
         onPress={() => Alert.alert("Registrado correctamente")}
       />
       <View style={styles.songCardContainer}>
+        <SongCounter songCounter={4} />
         <FlatList
           data={songList}
           keyExtractor={item => item.id}
