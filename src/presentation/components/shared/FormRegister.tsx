@@ -41,7 +41,8 @@ export const FormRegister = () => {
             bgColor={globalColors.primary}
             onPress={() => Alert.alert("Registrado correctamente")}
             borderRadius={5}
-            colorText="#0000"
+            colorText={globalColors.secondary}
+            btnFontSize={20}
           />
         </View>
       </View>

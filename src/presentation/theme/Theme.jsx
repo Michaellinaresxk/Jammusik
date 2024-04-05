@@ -46,5 +46,6 @@ export const globalStyles = StyleSheet.create({
   buttonTextSecundary: {
     color: globalColors.primaryDark2,
     fontSize: 20,
+    padding: 3,
   },
 });

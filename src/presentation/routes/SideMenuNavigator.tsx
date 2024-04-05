@@ -31,7 +31,6 @@ export const SideMenuNavigator = () => {
         drawerStyle: {
           backgroundColor: globalColors.secondary,
           flex: 1,
-          borderEndColor: globalColors.danger,
         },
       }}>
       <Drawer.Screen name="PickPathScreen" component={PathPickScreen} />
