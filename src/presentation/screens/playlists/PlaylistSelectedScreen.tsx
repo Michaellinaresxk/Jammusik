@@ -7,6 +7,7 @@ import { type NavigationProp, useNavigation } from "@react-navigation/native";
 import { type RootStackParamsList } from "../../routes/StackNavigator";
 import { globalColors } from "../../theme/Theme";
 import { FloatingActionButton } from "../../components/shared/FloatingActionButton";
+import { TheGreenBorder } from "../../components/shared/TheGreenBorder";
 
 const songList = [
   {
@@ -37,7 +38,8 @@ export const PlaylistSelectedScreen = () => {
     useRoute<RouteProp<RootStackParamsList, "PlaylistScreen">>().params;
 
   return (
-    <View>
+    <>
+      <TheGreenBorder />
       <GlobalHeader headerTitle={params.title} />
       <FloatingActionButton
         onPress={() => Alert.alert("Registrado correctamente")}
@@ -68,7 +70,7 @@ export const PlaylistSelectedScreen = () => {
           )}
         />
       </View>
-    </View>
+    </>
   );
 };
 
