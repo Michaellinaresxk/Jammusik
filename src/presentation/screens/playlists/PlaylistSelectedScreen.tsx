@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, FlatList, StyleSheet, Alert } from "react-native";
+import { View, FlatList, StyleSheet, Alert } from "react-native";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { GlobalHeader } from "../../components/shared/GlobalHeader";
 import { SongCard } from "../../components/shared/cards/SongCard";
@@ -11,17 +11,17 @@ import { FloatingActionButton } from "../../components/shared/FloatingActionButt
 const songList = [
   {
     id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-    title: "Rock",
+    title: "Stix",
     artist: "Michael Linares",
   },
   {
     id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-    title: "Jazz",
+    title: "Ruby pool",
     artist: "Vola",
   },
   {
     id: "58694a0f-3da1-471f-bd96-145571e29d72",
-    title: "Latin",
+    title: "hoal",
     artist: "Mana",
   },
   {
@@ -57,9 +57,10 @@ export const PlaylistSelectedScreen = () => {
                     : globalColors.secondary
                 }
                 onPress={() =>
-                  navigation.navigate("PlaylistSelectedScreen", {
+                  navigation.navigate("SongSelectedScreen", {
                     id: item.id,
                     title: item.title,
+                    artist: item.artist,
                   })
                 }
               />

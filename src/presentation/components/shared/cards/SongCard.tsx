@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     height: 85,
     width: 350,
     maxWidth: "100%",
-    margin: 10,
+    marginBottom: 10,
     paddingHorizontal: 20,
   },
   containerCard: {
