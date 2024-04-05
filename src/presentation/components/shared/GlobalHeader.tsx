@@ -9,9 +9,10 @@ const image = {
 
 type Props = {
   headerTitle: string;
+  artist?: string;
 };
 
-export const GlobalHeader = ({ headerTitle }: Props) => {
+export const GlobalHeader = ({ headerTitle, artist }: Props) => {
   return (
     <>
       <ImageBackground
@@ -22,6 +23,7 @@ export const GlobalHeader = ({ headerTitle }: Props) => {
         <View style={globalStyles.overlay}>
           <View style={styles.container}>
             <Text style={styles.title}>{headerTitle}</Text>
+            <Text style={styles.artist}>{artist}</Text>
           </View>
         </View>
       </ImageBackground>
@@ -44,5 +46,11 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: "bold",
     textAlign: "center",
+  },
+  artist: {
+    color: globalColors.light,
+    fontSize: 18,
+    fontWeight: "300",
+    marginTop: 5,
   },
 });

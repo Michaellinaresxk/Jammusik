@@ -7,6 +7,7 @@ import { CategoriesScreen } from "../screens/categories/CategoriesScreen";
 import { CategorySelectedScreen } from "../screens/categories/CategorySelectedScreen";
 import { PlaylistScreen } from "../screens/playlists/PlaylistScreen";
 import { PlaylistSelectedScreen } from "../screens/playlists/PlaylistSelectedScreen";
+import { SongSelectedScreen } from "../screens/songs/SongSelectedScreen";
 
 export type RootStackParamsList = {
   PathPickScreen: undefined;
@@ -17,6 +18,7 @@ export type RootStackParamsList = {
   HomeScreen: undefined;
   CategoriesScreen: undefined;
   CategorySelectedScreen: undefined;
+  SongSelectedScreen: undefined;
   Tab: undefined;
 };
 
@@ -46,6 +48,7 @@ export const StackNavigator = () => {
         name="PlaylistSelectedScreen"
         component={PlaylistSelectedScreen}
       />
+      <Stack.Screen name="SongSelectedScreen" component={SongSelectedScreen} />
     </Stack.Navigator>
   );
 };
