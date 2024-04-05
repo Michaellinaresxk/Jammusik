@@ -1,8 +1,9 @@
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, Text, View, ViewStyle } from "react-native";
 import { CategoryCard } from "../../components/shared/cards/CategoryCard";
 import { type NavigationProp, useNavigation } from "@react-navigation/native";
 import { type RootStackParamsList } from "../../routes/StackNavigator";
 import { GlobalHeader } from "../../components/shared/GlobalHeader";
+import { TheGreenBorder } from "../../components/shared/TheGreenBorder";
 const categories = [
   {
     id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
@@ -27,23 +28,26 @@ export const HomeScreen = () => {
     <>
       <View style={styles.container}>
         <GlobalHeader headerTitle="Home" />
-        <Text style={styles.subTitle}>Categories:</Text>
-        <FlatList
-          data={categories}
-          keyExtractor={item => item.id}
-          horizontal={true}
-          renderItem={({ item }) => (
-            <CategoryCard
-              title={item.title}
-              onPress={() =>
-                navigation.navigate("CategoryScreen", {
-                  id: item.id,
-                  title: item.title,
-                })
-              }
-            />
-          )}
-        />
+        <TheGreenBorder />
+        <View style={styles.categoryCardContainer}>
+          <Text style={styles.subTitle}>Categories:</Text>
+          <FlatList
+            data={categories}
+            keyExtractor={item => item.id}
+            horizontal={true}
+            renderItem={({ item }) => (
+              <CategoryCard
+                title={item.title}
+                onPress={() =>
+                  navigation.navigate("CategorySelectedScreen", {
+                    id: item.id,
+                    title: item.title,
+                  })
+                }
+              />
+            )}
+          />
+        </View>
       </View>
     </>
   );
@@ -54,5 +58,8 @@ const styles = StyleSheet.create({
   },
   subTitle: {
     marginBottom: 5,
+  },
+  categoryCardContainer: {
+    padding: 30,
   },
 });

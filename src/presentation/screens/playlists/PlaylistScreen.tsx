@@ -6,6 +6,7 @@ import { type NavigationProp, useNavigation } from "@react-navigation/native";
 import { type RootStackParamsList } from "../../routes/StackNavigator";
 
 import { PlaylistCard } from "../../components/shared/cards/PlaylistCard";
+import { TheGreenBorder } from "../../components/shared/TheGreenBorder";
 
 const playlists = [
   {
@@ -34,7 +35,7 @@ export const PlaylistScreen = () => {
         <Icon name="options-sharp" color={globalColors.primary} size={30} />
         <Text style={styles.title}>Playlists</Text>
       </View>
-
+      <TheGreenBorder />
       <View style={styles.container}>
         <FlatList
           data={playlists}
