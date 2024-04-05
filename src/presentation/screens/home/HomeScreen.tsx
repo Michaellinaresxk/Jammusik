@@ -9,7 +9,7 @@ const categories = [
     title: "Rock",
   },
   {
-    id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
+    id: "3ac68afc-c605-48d3-a4f8-fbd91afa97f63",
     title: "Jazz",
   },
   {
