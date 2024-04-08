@@ -1,8 +1,6 @@
-
-import type UserInfo from "@/domain/user/UserInfo";
+import type UserInfo from "../domain/user/UserInfo";
 
 export class UserInfoView {
-
   private constructor(
     public readonly userId: string,
     public readonly name: string,
@@ -13,14 +11,7 @@ export class UserInfoView {
   ) {}
 
   static fromDomain(userInfo: UserInfo): UserInfoView {
-    const { userId, name, email, location, skills, instrument } = userInfo
-    return new UserInfoView(
-      userId,
-      name,
-      email,
-      location,
-      skills,
-      instrument
-    );
+    const { userId, name, email, location, skills, instrument } = userInfo;
+    return new UserInfoView(userId, name, email, location, skills, instrument);
   }
 }

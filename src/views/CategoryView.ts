@@ -1,4 +1,4 @@
-import type Category from "@/domain/category/Category";
+import type Category from "../domain/category/Category";
 
 export class CategoryView {
   private constructor(
