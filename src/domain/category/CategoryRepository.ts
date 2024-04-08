@@ -1,4 +1,4 @@
-import type { Song } from "@/types/songTypes";
+import type { Song } from "../../types/songTypes";
 import type Category from "./Category";
 
 export default interface CategoryRepository {

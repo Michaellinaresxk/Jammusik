@@ -1,4 +1,4 @@
-import type { SongProperties } from "@/types/properties";
+import type { SongProperties } from "../../types/properties";
 
 class Song {
   constructor(

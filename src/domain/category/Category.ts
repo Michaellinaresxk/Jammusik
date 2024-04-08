@@ -1,4 +1,4 @@
-import type { CategoryProperties } from "@/types/properties";
+import type { CategoryProperties } from "../../types/properties";
 
 class Category {
   constructor(public readonly id: string, public readonly title: string) {}
