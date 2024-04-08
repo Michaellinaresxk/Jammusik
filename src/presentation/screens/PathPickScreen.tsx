@@ -45,6 +45,11 @@ export const PathPickScreen = () => {
                 btnFontSize={20}
               />
               <LinkLoginRegister
+                text="Have an account?"
+                link="Playlists"
+                goTo="PlaylistScreen"
+              />
+              <LinkLoginRegister
                 text="Already have an account?"
                 link="Login"
                 goTo="LoginScreen"
@@ -58,11 +63,6 @@ export const PathPickScreen = () => {
                 text="Have an account?"
                 link="Categories"
                 goTo="CategoriesScreen"
-              />
-              <LinkLoginRegister
-                text="Have an account?"
-                link="Playlists"
-                goTo="PlaylistScreen"
               />
             </View>
           </View>

@@ -1,4 +1,4 @@
-import type { UserInfoProperties } from "@/types/properties";
+import type { UserInfoProperties } from "../../types/properties";
 
 class UserInfo {
   private constructor(
