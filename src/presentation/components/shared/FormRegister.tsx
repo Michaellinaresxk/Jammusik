@@ -1,12 +1,28 @@
-import React, { useState } from "react";
-import { Text, View, TextInput, StyleSheet, Alert } from "react-native";
+import React from "react";
+import { View, TextInput, StyleSheet } from "react-native";
 import { PrimaryButton } from "./PrimaryButton";
 import { globalColors } from "../../theme/Theme";
+import { type Register } from "../../../types/formTypes";
 
-export const FormRegister = () => {
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
-  const [userName, setUserName] = useState("");
+interface FormRegisterProps {
+  email: string;
+  setEmail: React.Dispatch<React.SetStateAction<string>>;
+  userName: string;
+  setUserName: React.Dispatch<React.SetStateAction<string>>;
+  password: string;
+  setPassword: React.Dispatch<React.SetStateAction<string>>;
+  onRegister: () => Promise<Register>;
+}
+
+export const FormRegister = ({
+  email,
+  setEmail,
+  userName,
+  setUserName,
+  password,
+  setPassword,
+  onRegister,
+}: FormRegisterProps) => {
   return (
     <View style={style.containerForm}>
       <View style={style.form}>
@@ -39,10 +55,10 @@ export const FormRegister = () => {
           <PrimaryButton
             label="REGISTER"
             bgColor={globalColors.primary}
-            onPress={() => Alert.alert("Registrado correctamente")}
             borderRadius={5}
             colorText={globalColors.secondary}
             btnFontSize={20}
+            onPress={onRegister}
           />
         </View>
       </View>

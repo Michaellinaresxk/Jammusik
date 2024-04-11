@@ -8,7 +8,7 @@ import type {
 import { addDoc, collection } from "@firebase/firestore";
 import { auth, db } from "../api/firebaseConfig";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import type { ApiUser, ApiUserInfo } from "./ApiUser";
+import type { ApiUser } from "./ApiUser";
 export class UserCaller {
   constructor(
     public readonly collection: (

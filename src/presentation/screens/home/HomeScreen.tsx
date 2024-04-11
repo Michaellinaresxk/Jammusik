@@ -1,9 +1,11 @@
-import { FlatList, StyleSheet, Text, View, ViewStyle } from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 import { CategoryCard } from "../../components/shared/cards/CategoryCard";
 import { type NavigationProp, useNavigation } from "@react-navigation/native";
 import { type RootStackParamsList } from "../../routes/StackNavigator";
 import { GlobalHeader } from "../../components/shared/GlobalHeader";
 import { TheGreenBorder } from "../../components/shared/TheGreenBorder";
+import { API_URL } from "@env";
+
 const categories = [
   {
     id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
@@ -23,6 +25,8 @@ const categories = [
   },
 ];
 export const HomeScreen = () => {
+  console.log({ apiUrl: API_URL });
+
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
   return (
     <>
