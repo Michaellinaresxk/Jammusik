@@ -1,11 +1,24 @@
-import React, { useState } from "react";
-import { Text, View, TextInput, StyleSheet, Alert } from "react-native";
+import { Text, View, TextInput, StyleSheet } from "react-native";
 import { PrimaryButton } from "./PrimaryButton";
 import { globalColors } from "../../theme/Theme";
 
-export const Formlogin = () => {
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
+interface FormLoginProps {
+  email: string;
+  setEmail: React.Dispatch<React.SetStateAction<string>>;
+  userName: string;
+  setUserName: React.Dispatch<React.SetStateAction<string>>;
+  password: string;
+  setPassword: React.Dispatch<React.SetStateAction<string>>;
+  onLogin: () => Promise<void>;
+}
+
+export const Formlogin = ({
+  email,
+  setEmail,
+  password,
+  setPassword,
+  onLogin,
+}: FormLoginProps) => {
   return (
     <View style={style.containerForm}>
       <Text style={style.labelTitle}>Login</Text>
@@ -36,7 +49,7 @@ export const Formlogin = () => {
             borderRadius={5}
             colorText={globalColors.secondary}
             btnFontSize={20}
-            onPress={() => Alert.alert("Logueado correctamente")}
+            onPress={onLogin}
           />
         </View>
       </View>
