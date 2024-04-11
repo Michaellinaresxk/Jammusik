@@ -70,4 +70,7 @@ export class UserCaller {
       throw error;
     }
   }
+  async logout(): Promise<void> {
+    await auth.signOut();
+  }
 }
