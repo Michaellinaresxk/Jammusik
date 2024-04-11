@@ -5,6 +5,8 @@ import { type RootStackParamsList } from "../../routes/StackNavigator";
 import { GlobalHeader } from "../../components/shared/GlobalHeader";
 import { TheGreenBorder } from "../../components/shared/TheGreenBorder";
 import { API_URL } from "@env";
+import { globalColors } from "../../theme/Theme";
+import { PrimaryButton } from "../../components/shared/PrimaryButton";
 
 const categories = [
   {
@@ -28,12 +30,29 @@ export const HomeScreen = () => {
   console.log({ apiUrl: API_URL });
 
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
+
+  const logoutUser = async () => {
+    try {
+      // await userService.logout();
+      // router.push({ path: "/login" });
+      console.log("login");
+      navigation.navigate("LoginScreen");
+    } catch (error) {
+      console.error("Error al cerrar sesión: ", error);
+    }
+  };
+
   return (
     <>
       <View style={styles.container}>
         <GlobalHeader headerTitle="Home" />
         <TheGreenBorder />
         <View style={styles.categoryCardContainer}>
+          <PrimaryButton
+            label="Logout"
+            bgColor={globalColors.danger}
+            onPress={() => logoutUser()}
+          />
           <Text style={styles.subTitle}>Categories:</Text>
           <FlatList
             data={categories}
