@@ -1,14 +1,33 @@
+import React, { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 import { ImageBackground, StyleSheet, Text, View } from "react-native";
 import { globalColors, globalStyles } from "../../theme/Theme";
 import { images } from "../../../assets/img/Images";
 import { BrandLogo } from "../../components/shared/BrandLogo";
 import { FormRegister } from "../../components/shared/FormRegister";
-import React from "react";
 import { LinkLoginRegister } from "../../components/shared/LinkLoginRegister";
+import { useUserService } from "../../../services/userService";
 
 export const RegisterScreen = () => {
+  const [email, setEmail] = useState("");
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+  const userService = useUserService();
+
+  const navigation = useNavigation();
+
   const image = {
     uri: images.loginBackground,
+  };
+
+  // Function to handle registration logic
+  const handleRegister = async () => {
+    console.log(email, password, userName);
+    await userService.registerUser(email, password, userName);
+    setEmail("");
+    setUserName("");
+    setPassword("");
+    navigation.navigate("HomeScreen");
   };
 
   return (
@@ -24,7 +43,15 @@ export const RegisterScreen = () => {
           </View>
           <Text style={styles.labelTitle}>Register</Text>
           <View style={styles.containerForm}>
-            <FormRegister />
+            <FormRegister
+              email={email}
+              setEmail={setEmail}
+              userName={userName}
+              setUserName={setUserName}
+              password={password}
+              setPassword={setPassword}
+              onRegister={() => handleRegister()}
+            />
             <LinkLoginRegister
               text="Have an account?"
               link="Login"
