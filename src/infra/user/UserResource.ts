@@ -13,4 +13,8 @@ export class UserResource implements UserRepository {
     const apiUser = await this.userCaller.createUser(email, password, userName);
     return User.fromProperties(apiUser);
   }
+  async loginUser(email: string, password: string): Promise<User> {
+    const user = await this.userCaller.loginUser(email, password);
+    return User.fromProperties(user);
+  }
 }

@@ -6,7 +6,7 @@ import type {
   CollectionReference,
 } from "@firebase/firestore";
 import { addDoc, collection } from "@firebase/firestore";
-import { auth, db } from "../api/firebaseConfig";
+import { auth, db, signInWithEmailAndPassword } from "../api/firebaseConfig";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import type { ApiUser } from "./ApiUser";
 export class UserCaller {
@@ -50,6 +50,24 @@ export class UserCaller {
     } catch (err) {
       console.log(err);
       throw err;
+    }
+  }
+  async loginUser(email: string, password: string): Promise<ApiUser> {
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
+      const user = userCredential.user;
+      return {
+        id: user.uid,
+        name: user.displayName!,
+        email: user.email!,
+      };
+    } catch (error) {
+      console.error("Error signing in:", error);
+      throw error;
     }
   }
 }

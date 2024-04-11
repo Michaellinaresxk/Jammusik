@@ -3,11 +3,28 @@ import { globalStyles } from "../../theme/Theme";
 import { Formlogin } from "../../components/shared/FormLogin";
 import { images } from "../../../assets/img/Images";
 import { BrandLogo } from "../../components/shared/BrandLogo";
-import React from "react";
+import React, { useState } from "react";
 import { LinkLoginRegister } from "../../components/shared/LinkLoginRegister";
+import { useUserService } from "../../../services/userService";
+import { useNavigation } from "@react-navigation/native";
+
 export const LoginScreen = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const userService = useUserService();
+  const navigation = useNavigation();
+
   const image = {
     uri: images.loginBackground,
+  };
+
+  const handleLogin = async () => {
+    console.log(email, password);
+    await userService.loginUser(email, password);
+    setEmail("");
+    setPassword("");
+    navigation.navigate("HomeScreen");
   };
 
   return (
@@ -22,7 +39,13 @@ export const LoginScreen = () => {
             <BrandLogo />
           </View>
           <View style={styles.containerForm}>
-            <Formlogin />
+            <Formlogin
+              email={email}
+              setEmail={setEmail}
+              password={password}
+              setPassword={setPassword}
+              onLogin={() => handleLogin()}
+            />
             <LinkLoginRegister
               text="Not a member yet?"
               link="Register"

@@ -5,4 +5,5 @@ export default interface UserRepository {
     password: string,
     userName: string,
   ): Promise<User>;
+  loginUser(email: string, password: string): Promise<User>;
 }
