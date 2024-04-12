@@ -9,11 +9,12 @@ import React from "react";
 import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { StackNavigator } from "./presentation/routes/StackNavigator";
-import { UserServiceProvider } from "./services/userService";
+import { UserServiceProvider } from "./context/UserServiceContext";
+import { userService } from "./services/userService";
 
 function App(): React.JSX.Element {
   return (
-    <UserServiceProvider>
+    <UserServiceProvider userService={userService}>
       <NavigationContainer>
         <StackNavigator />
       </NavigationContainer>

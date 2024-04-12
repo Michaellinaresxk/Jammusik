@@ -5,7 +5,7 @@ import { images } from "../../../assets/img/Images";
 import { BrandLogo } from "../../components/shared/BrandLogo";
 import React, { useState } from "react";
 import { LinkLoginRegister } from "../../components/shared/LinkLoginRegister";
-import { useUserService } from "../../../services/userService";
+import { useUserService } from "../../../context/UserServiceContext";
 import { useNavigation } from "@react-navigation/native";
 
 export const LoginScreen = () => {

@@ -1,14 +1,30 @@
-import React, { createContext } from "react";
-import { UserService } from "../primary/user/useCases";
-// import { UserResource } from "../services/userService";
+import React, { createContext, useContext } from "react";
+import { UserService } from "../primary/user/useCases/index";
 
-export const UserServiceContext = createContext(null);
+type UserServiceContextType = {
+  userService: UserService;
+};
 
-export const UserServiceProvider = ({ children }: any) => {
-  // const userService = new UserService(userResource);
+export const UserServiceContext = createContext<
+  UserServiceContextType | undefined
+>(undefined);
+
+// Context Provider Component
+export const UserServiceProvider: React.FC<{ userService: UserService }> = ({
+  children,
+  userService,
+}) => {
   return (
-    // <UserServiceContext.Provider value={userSerService}>
-    //   {children}
-    // </UserServiceContext.Provider>
+    <UserServiceContext.Provider value={{ userService }}>
+      {children}
+    </UserServiceContext.Provider>
   );
+};
+
+// Custom hook to use the user service context
+export const useUserService = (): UserService => {
+  const context = useContext(UserServiceContext);
+  if (!context)
+    throw new Error("useUserService must be used within a UserServiceProvider");
+  return context.userService;
 };

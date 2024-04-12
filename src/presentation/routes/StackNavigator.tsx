@@ -8,6 +8,7 @@ import { CategorySelectedScreen } from "../screens/categories/CategorySelectedSc
 import { PlaylistScreen } from "../screens/playlists/PlaylistScreen";
 import { PlaylistSelectedScreen } from "../screens/playlists/PlaylistSelectedScreen";
 import { SongSelectedScreen } from "../screens/songs/SongSelectedScreen";
+import { ProfileScreen } from "../screens/profile/ProfileScreen";
 
 export type RootStackParamsList = {
   PathPickScreen: undefined;
@@ -20,6 +21,7 @@ export type RootStackParamsList = {
   CategorySelectedScreen: undefined;
   SongSelectedScreen: undefined;
   Tab: undefined;
+  ProfileScreen: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamsList>();
@@ -39,6 +41,7 @@ export const StackNavigator = () => {
       <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="CategoriesScreen" component={CategoriesScreen} />
+      <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
       <Stack.Screen
         name="CategorySelectedScreen"
         component={CategorySelectedScreen}

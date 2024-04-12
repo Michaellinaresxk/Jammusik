@@ -7,7 +7,11 @@ import type {
 } from "@firebase/firestore";
 import { addDoc, collection } from "@firebase/firestore";
 import { auth, db, signInWithEmailAndPassword } from "../api/firebaseConfig";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  updateProfile,
+} from "firebase/auth";
 import type { ApiUser } from "./ApiUser";
 export class UserCaller {
   constructor(
@@ -68,6 +72,20 @@ export class UserCaller {
     } catch (error) {
       console.error("Error signing in:", error);
       throw error;
+    }
+  }
+  async getCurrentUser(userId: string): Promise<ApiUser | null> {
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (user && user.uid === userId) {
+      return {
+        id: user.uid,
+        email: user.email!,
+        name: user.displayName!,
+      };
+    } else {
+      return null;
     }
   }
   async logout(): Promise<void> {
