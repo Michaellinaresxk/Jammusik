@@ -6,7 +6,7 @@ import { images } from "../../../assets/img/Images";
 import { BrandLogo } from "../../components/shared/BrandLogo";
 import { FormRegister } from "../../components/shared/FormRegister";
 import { LinkLoginRegister } from "../../components/shared/LinkLoginRegister";
-import { useUserService } from "../../../services/userService";
+import { useUserService } from "../../../context/UserServiceContext";
 
 export const RegisterScreen = () => {
   const [email, setEmail] = useState("");
@@ -27,7 +27,7 @@ export const RegisterScreen = () => {
     setEmail("");
     setUserName("");
     setPassword("");
-    navigation.navigate("HomeScreen");
+    navigation.navigate("ProfileScreen");
   };
 
   return (

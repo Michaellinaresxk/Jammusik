@@ -4,9 +4,9 @@ import { type NavigationProp, useNavigation } from "@react-navigation/native";
 import { type RootStackParamsList } from "../../routes/StackNavigator";
 import { GlobalHeader } from "../../components/shared/GlobalHeader";
 import { TheGreenBorder } from "../../components/shared/TheGreenBorder";
-import { API_URL } from "@env";
 import { globalColors } from "../../theme/Theme";
 import { PrimaryButton } from "../../components/shared/PrimaryButton";
+import { useUserService } from "../../../context/UserServiceContext";
 
 const categories = [
   {
@@ -27,15 +27,13 @@ const categories = [
   },
 ];
 export const HomeScreen = () => {
-  console.log({ apiUrl: API_URL });
-
+  const userService = useUserService();
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
 
   const logoutUser = async () => {
     try {
-      // await userService.logout();
-      // router.push({ path: "/login" });
-      console.log("login");
+      console.log("logout");
+      await userService.logout();
       navigation.navigate("LoginScreen");
     } catch (error) {
       console.error("Error al cerrar sesión: ", error);
@@ -78,6 +76,10 @@ export const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  text: {
+    color: "red",
+    fontSize: 30,
   },
   subTitle: {
     marginBottom: 5,
