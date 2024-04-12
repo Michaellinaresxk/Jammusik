@@ -7,6 +7,7 @@ import { TheGreenBorder } from "../../components/shared/TheGreenBorder";
 import { globalColors } from "../../theme/Theme";
 import { PrimaryButton } from "../../components/shared/PrimaryButton";
 import { useUserService } from "../../../context/UserServiceContext";
+import { LinkLoginRegister } from "../../components/shared/LinkLoginRegister";
 
 const categories = [
   {
@@ -50,6 +51,11 @@ export const HomeScreen = () => {
             label="Logout"
             bgColor={globalColors.danger}
             onPress={() => logoutUser()}
+          />
+          <LinkLoginRegister
+            text="Have an account?"
+            link="Profile"
+            goTo="ProfileScreen"
           />
           <Text style={styles.subTitle}>Categories:</Text>
           <FlatList

@@ -12,10 +12,10 @@ import { globalColors } from "../theme/Theme";
 import { BrandLogo } from "../components/shared/BrandLogo";
 import { StyleSheet, Text, View } from "react-native";
 import { PrimaryIcon } from "../components/shared/PrimaryIcon";
-import Icon from "react-native-vector-icons/Ionicons";
 import { Separator } from "../components/shared/Separator";
 import { BottomTabNavigator } from "./BottomTabNavigator";
 import { PlaylistScreen } from "../screens/playlists/PlaylistScreen";
+import Icon from "react-native-vector-icons/Ionicons";
 
 const Drawer = createDrawerNavigator();
 
