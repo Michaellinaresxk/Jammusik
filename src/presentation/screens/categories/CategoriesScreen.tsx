@@ -4,29 +4,27 @@ import { images } from "../../../assets/img/Images";
 import { CategoryCard } from "../../components/shared/cards/CategoryCard";
 import { type NavigationProp, useNavigation } from "@react-navigation/native";
 import { type RootStackParamsList } from "../../routes/StackNavigator";
+import { useCategoryService } from "../../../context/CategoryServiceContext";
+import { useEffect, useState } from "react";
+import { CategoryView } from "../../../views/CategoryView";
 
 const backgroundImage = { uri: images.image3 };
-const categories = [
-  {
-    id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-    title: "Rock",
-  },
-  {
-    id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-    title: "Jazz",
-  },
-  {
-    id: "58694a0f-3da1-471f-bd96-145571e29d72",
-    title: "Latin",
-  },
-  {
-    id: "58694a0f-3da1-471f-bd96-1fsfdsfdsfsd2",
-    title: "Balads",
-  },
-];
 
 export const CategoriesScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
+
+  const categoryService = useCategoryService();
+  const [categories, setCategories] = useState<CategoryView[]>([]);
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      const fetchedCategories = await categoryService.getCategories();
+      setCategories(fetchedCategories);
+    };
+
+    loadCategories();
+  }, [categoryService]);
+
   return (
     <ImageBackground source={backgroundImage} resizeMode="cover">
       <View style={globalStyles.overlay}>
