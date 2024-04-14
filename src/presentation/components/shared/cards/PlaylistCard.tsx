@@ -7,17 +7,41 @@ type Props = {
   title: string;
   onPress: () => void;
   color: string;
+  onShare: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  onDelete: (playlistId: string) => void;
 };
 
-export const PlaylistCard = ({ title, onPress, color }: Props) => {
+export const PlaylistCard = ({
+  title,
+  onPress,
+  onDelete,
+  onShare,
+  color,
+}: Props) => {
   return (
     <TouchableOpacity
       style={[styles.playlistCard, { backgroundColor: color }]}
       onPress={onPress}>
       <Text style={styles.playlistCardText}>{title}</Text>
       <View style={styles.containerIcons}>
-        <Icon name="share-social-sharp" color={globalColors.light} size={20} />
-        <Icon name="trash-sharp" color={globalColors.light} size={20} />
+        <Icon
+          name="share-social-sharp"
+          color={globalColors.light}
+          onPress={event => {
+            event.stopPropagation();
+            onShare(event);
+          }}
+          size={20}
+        />
+        <Icon
+          name="trash-sharp"
+          color={globalColors.light}
+          onPress={event => {
+            event.stopPropagation();
+            onDelete(event);
+          }}
+          size={20}
+        />
       </View>
     </TouchableOpacity>
   );

@@ -8,4 +8,5 @@ export default interface PlaylistRepository {
     title: string,
     modeId: string,
   ): Promise<Playlist>;
+  deletePlaylist(playlistId: string): Promise<void>;
 }

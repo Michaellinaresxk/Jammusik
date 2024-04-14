@@ -17,4 +17,8 @@ export class PlaylistResource implements PlaylistRepository {
         new Playlist(apiPlaylist.id, apiPlaylist.title, apiPlaylist.modeId),
     );
   }
+
+  async deletePlaylist(playlistId: string) {
+    return await this.playlistCaller.deletePlaylist(playlistId);
+  }
 }

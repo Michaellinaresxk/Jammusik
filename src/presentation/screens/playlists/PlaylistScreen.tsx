@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, FlatList, StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { globalColors } from "../../theme/Theme";
 import { type NavigationProp, useNavigation } from "@react-navigation/native";
@@ -47,6 +47,12 @@ export const PlaylistScreen = () => {
     setTriggerUpdate(prev => !prev);
   };
 
+  const handleDeletePlaylist = async (playlistId: string) => {
+    console.log("Deleting playlist", playlistId);
+    await playlistService.deletePlaylist(playlistId);
+    setTriggerUpdate(prev => !prev);
+  };
+
   return (
     <>
       <View style={styles.titleContent}>
@@ -74,6 +80,8 @@ export const PlaylistScreen = () => {
                     title: item.title,
                   })
                 }
+                onShare={() => console.log("Compartiendo playlist")}
+                onDelete={() => handleDeletePlaylist(item.id)}
               />
             </View>
           )}
