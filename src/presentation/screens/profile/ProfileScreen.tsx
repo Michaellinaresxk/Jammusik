@@ -6,7 +6,7 @@ import { getAuth } from "firebase/auth";
 import { ApiUser } from "../../../infra/user/ApiUser";
 import { globalColors } from "../../theme/Theme";
 import { PrimaryIcon } from "../../components/shared/PrimaryIcon";
-import { FormProfile } from "../../components/shared/FormProfile";
+import { FormProfile } from "../../components/shared/forms/FormProfile";
 
 export const ProfileScreen = () => {
   const userService = useUserService();

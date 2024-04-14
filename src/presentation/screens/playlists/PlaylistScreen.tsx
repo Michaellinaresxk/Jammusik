@@ -12,12 +12,16 @@ import { usePlaylistService } from "../../../context/PlaylistServiceContext";
 import { useEffect, useState } from "react";
 import { PlaylistView } from "../../../views/PlaylistView";
 import { getAuth } from "firebase/auth";
+import { FormCreatePlaylist } from "../../components/shared/forms/FormCreatePlaylist";
 
 export const PlaylistScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
   const auth = getAuth();
   const playlistService = usePlaylistService();
   const [playlists, setPlaylists] = useState<PlaylistView[]>([]);
+
+  const [title, setTitle] = useState("");
+  const [mode, setMode] = useState("");
 
   useEffect(() => {
     const loadPlaylists = async () => {
@@ -34,7 +38,14 @@ export const PlaylistScreen = () => {
 
     loadPlaylists();
   }, [auth.currentUser, playlistService]);
-  console.log(playlists);
+
+  const handleCreatePlaylist = async () => {
+    console.log("creando playlist");
+    await playlistService.createPlaylist(title, mode);
+    setTitle("");
+    setMode("");
+  };
+
   return (
     <>
       <View style={styles.titleContent}>
@@ -66,7 +77,7 @@ export const PlaylistScreen = () => {
             </View>
           )}
         />
-        <View style={styles.buttonContainer}>
+        {/* <View style={styles.buttonContainer}>
           <PrimaryButton
             btnFontSize={18}
             borderRadius={5}
@@ -75,7 +86,15 @@ export const PlaylistScreen = () => {
             label="CREATE A NEW PLAYLIST"
             onPress={() => Alert.alert("Playlist creado correctamente")}
           />
-        </View>
+        </View> */}
+
+        <FormCreatePlaylist
+          title={title}
+          setTitle={setTitle}
+          mode={mode}
+          setMode={setMode}
+          onCreatePlaylist={handleCreatePlaylist}
+        />
       </View>
     </>
   );

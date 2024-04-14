@@ -1,7 +1,34 @@
+import { addDoc } from "firebase/firestore";
+import { auth } from "../api/firebaseConfig";
 import type { ApiPlaylist } from "./ApiPlaylist";
 import { getFirestore, collection, getDocs } from "@firebase/firestore";
 
 export class PlaylistCaller {
+  private db = getFirestore();
+  async createPlaylist(title: string, modeId: string): Promise<ApiPlaylist> {
+    const userId = auth.currentUser?.uid;
+    if (!userId) {
+      throw new Error("userId is undefined!");
+    }
+
+    const playlistData = {
+      title,
+      modeId,
+      userId,
+    };
+
+    // Save data in firestore
+    const playlistRef = await addDoc(
+      collection(this.db, "playlists"),
+      playlistData,
+    );
+
+    return {
+      id: playlistRef.id,
+      ...playlistData,
+    };
+  }
+
   async getPlaylists(): Promise<ApiPlaylist[]> {
     const db = getFirestore();
     const querySnapshot = await getDocs(collection(db, "playlists"));
