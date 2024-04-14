@@ -14,6 +14,8 @@ import { userService } from "./services/userService";
 import { ProviderComposer } from "./context/ProviderComposer";
 import { categoryService } from "./services/categoryService";
 import { CategoryServiceProvider } from "./context/CategoryServiceContext";
+import { playlistService } from "./services/playlistService";
+import { PlaylistServiceProvider } from "./context/PlaylistServiceContext";
 
 function App(): React.JSX.Element {
   return (
@@ -21,6 +23,7 @@ function App(): React.JSX.Element {
       contexts={[
         <UserServiceProvider userService={userService} />,
         <CategoryServiceProvider categoryService={categoryService} />,
+        <PlaylistServiceProvider playlistService={playlistService} />,
         // Add other providers here as you create them
       ]}>
       <NavigationContainer>

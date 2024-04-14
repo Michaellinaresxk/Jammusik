@@ -53,6 +53,16 @@ export const HomeScreen = () => {
             link="Profile"
             goTo="ProfileScreen"
           />
+          <LinkLoginRegister
+            text="Already have an account?"
+            link="Playlists"
+            goTo="PlaylistScreen"
+          />
+          <LinkLoginRegister
+            text="Already have an account?"
+            link="Categories"
+            goTo="CategoriesScreen"
+          />
           <Text style={styles.subTitle}>Categories:</Text>
           <FlatList
             data={categories}
