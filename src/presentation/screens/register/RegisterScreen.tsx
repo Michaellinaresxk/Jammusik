@@ -4,7 +4,7 @@ import { ImageBackground, StyleSheet, Text, View } from "react-native";
 import { globalColors, globalStyles } from "../../theme/Theme";
 import { images } from "../../../assets/img/Images";
 import { BrandLogo } from "../../components/shared/BrandLogo";
-import { FormRegister } from "../../components/shared/FormRegister";
+import { FormRegister } from "../../components/shared/forms/FormRegister";
 import { LinkLoginRegister } from "../../components/shared/LinkLoginRegister";
 import { useUserService } from "../../../context/UserServiceContext";
 

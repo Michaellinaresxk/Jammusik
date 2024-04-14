@@ -1,8 +1,8 @@
 import React from "react";
 import { View, TextInput, StyleSheet } from "react-native";
-import { PrimaryButton } from "./PrimaryButton";
-import { globalColors } from "../../theme/Theme";
-import { type Register } from "../../../types/formTypes";
+import { PrimaryButton } from "../PrimaryButton";
+import { globalColors } from "../../../theme/Theme";
+import { type Register } from "../../../../types/formTypes";
 
 interface FormRegisterProps {
   email: string;

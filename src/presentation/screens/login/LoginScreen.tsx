@@ -1,6 +1,6 @@
 import { ImageBackground, StyleSheet, View } from "react-native";
 import { globalStyles } from "../../theme/Theme";
-import { Formlogin } from "../../components/shared/FormLogin";
+import { Formlogin } from "../../components/shared/forms/FormLogin";
 import { images } from "../../../assets/img/Images";
 import { BrandLogo } from "../../components/shared/BrandLogo";
 import React, { useState } from "react";

@@ -1,6 +1,6 @@
 import { Text, View, TextInput, StyleSheet } from "react-native";
-import { PrimaryButton } from "./PrimaryButton";
-import { globalColors } from "../../theme/Theme";
+import { PrimaryButton } from "../PrimaryButton";
+import { globalColors } from "../../../theme/Theme";
 
 interface FormLoginProps {
   email: string;

@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
-import { globalColors } from "../../theme/Theme";
-import { PrimaryButton } from "./PrimaryButton";
+import { globalColors } from "../../../theme/Theme";
+import { PrimaryButton } from "../PrimaryButton";
 
 type ProfileForm = {
   email: string;
