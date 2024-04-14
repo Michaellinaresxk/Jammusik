@@ -41,9 +41,9 @@ export const FormCreatePlaylist = ({
         <View style={{ marginTop: 20 }}>
           <PrimaryButton
             label="Create A New Playlist"
-            bgColor={globalColors.primary}
+            bgColor={globalColors.primaryAlt}
             borderRadius={5}
-            colorText={globalColors.secondary}
+            colorText={globalColors.primary}
             btnFontSize={20}
             onPress={onCreatePlaylist}
           />

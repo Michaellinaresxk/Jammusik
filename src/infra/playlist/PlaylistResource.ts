@@ -10,19 +10,11 @@ export class PlaylistResource implements PlaylistRepository {
     return new Playlist(apiPlaylist.id, apiPlaylist.title, apiPlaylist.modeId);
   }
 
-  async getPlaylists(): Promise<Playlist[]> {
-    const apiPlaylists = await this.playlistCaller.getPlaylists();
+  async getPlaylists(userId: string): Promise<Playlist[]> {
+    const apiPlaylists = await this.playlistCaller.getPlaylists(userId);
     return apiPlaylists.map(
       apiPlaylist =>
         new Playlist(apiPlaylist.id, apiPlaylist.title, apiPlaylist.modeId),
     );
   }
 }
-
-// async getPlaylists(userId: string): Promise<Playlist[]> {
-//   const apiPlaylists = await this.playlistCaller.getPlaylists(userId);
-//   return apiPlaylists.map(
-//     apiPlaylist =>
-//       new Playlist(apiPlaylist.id, apiPlaylist.title, apiPlaylist.modeId),
-//   );
-// }

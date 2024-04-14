@@ -19,6 +19,7 @@ export const PlaylistScreen = () => {
   const auth = getAuth();
   const playlistService = usePlaylistService();
   const [playlists, setPlaylists] = useState<PlaylistView[]>([]);
+  const [triggerUpdate, setTriggerUpdate] = useState(false);
 
   const [title, setTitle] = useState("");
   const [mode, setMode] = useState("");
@@ -27,7 +28,6 @@ export const PlaylistScreen = () => {
     const loadPlaylists = async () => {
       const user = auth.currentUser;
       const userId = user?.uid as string;
-      console.log(userId);
       try {
         const fetchedPlaylists = await playlistService.getPlaylists(userId);
         setPlaylists(fetchedPlaylists);
@@ -37,13 +37,14 @@ export const PlaylistScreen = () => {
     };
 
     loadPlaylists();
-  }, [auth.currentUser, playlistService]);
+  }, [auth.currentUser, playlistService, triggerUpdate]);
 
   const handleCreatePlaylist = async () => {
     console.log("creando playlist");
     await playlistService.createPlaylist(title, mode);
     setTitle("");
     setMode("");
+    setTriggerUpdate(prev => !prev);
   };
 
   return (
