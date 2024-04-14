@@ -8,28 +8,33 @@ import { type RootStackParamsList } from "../../routes/StackNavigator";
 import { PlaylistCard } from "../../components/shared/cards/PlaylistCard";
 import { TheGreenBorder } from "../../components/shared/TheGreenBorder";
 import { PrimaryButton } from "../../components/shared/PrimaryButton";
-
-const playlists = [
-  {
-    id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-    title: "Rock",
-  },
-  {
-    id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-    title: "Jazz",
-  },
-  {
-    id: "58694a0f-3da1-471f-bd96-145571e29d72",
-    title: "Latin",
-  },
-  {
-    id: "58694a0f-3da1-471f-bd96-1fsfdsfdsfsd2",
-    title: "Balads",
-  },
-];
+import { usePlaylistService } from "../../../context/PlaylistServiceContext";
+import { useEffect, useState } from "react";
+import { PlaylistView } from "../../../views/PlaylistView";
+import { getAuth } from "firebase/auth";
 
 export const PlaylistScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
+  const auth = getAuth();
+  const playlistService = usePlaylistService();
+  const [playlists, setPlaylists] = useState<PlaylistView[]>([]);
+
+  useEffect(() => {
+    const loadPlaylists = async () => {
+      const user = auth.currentUser;
+      const userId = user?.uid as string;
+      console.log(userId);
+      try {
+        const fetchedPlaylists = await playlistService.getPlaylists(userId);
+        setPlaylists(fetchedPlaylists);
+      } catch (error) {
+        console.error("Failed to fetch playlists:", error);
+      }
+    };
+
+    loadPlaylists();
+  }, [auth.currentUser, playlistService]);
+  console.log(playlists);
   return (
     <>
       <View style={styles.titleContent}>
