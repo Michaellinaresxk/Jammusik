@@ -31,11 +31,15 @@ export const Formlogin = ({
             keyboardType="email-address"
             placeholder="Email"
             value={email}
+            autoCorrect={false}
+            autoCapitalize="none"
             onChangeText={setEmail}
           />
           <TextInput
             style={style.inputLogin}
             placeholder="Password"
+            autoCorrect={false}
+            autoCapitalize="none"
             value={password}
             secureTextEntry={true}
             placeholderTextColor="#838282"

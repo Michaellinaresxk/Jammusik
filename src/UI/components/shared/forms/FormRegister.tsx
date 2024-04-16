@@ -34,10 +34,14 @@ export const FormRegister = ({
             onChangeText={setEmail}
             keyboardType="email-address"
             placeholderTextColor="#838282"
+            autoCorrect={false}
+            autoCapitalize="none"
           />
           <TextInput
             style={style.inputLogin}
             placeholder="User name"
+            autoCorrect={false}
+            autoCapitalize="none"
             value={userName}
             onChangeText={setUserName}
             placeholderTextColor="#838282"
@@ -46,6 +50,8 @@ export const FormRegister = ({
             style={style.inputLogin}
             placeholder="Password"
             value={password}
+            autoCorrect={false}
+            autoCapitalize="none"
             onChangeText={setPassword}
             placeholderTextColor="#838282"
             secureTextEntry={true}

@@ -8,7 +8,6 @@ type ProfileForm = {
   setTitle: React.Dispatch<React.SetStateAction<string>>;
   mode: string;
   setMode: React.Dispatch<React.SetStateAction<string>>;
-  location: string;
   onCreatePlaylist: () => Promise<void>;
 };
 
@@ -38,16 +37,14 @@ export const FormCreatePlaylist = ({
             onChangeText={setMode}
           />
         </View>
-        <View style={{ marginTop: 20 }}>
-          <PrimaryButton
-            label="Create A New Playlist"
-            bgColor={globalColors.primaryAlt}
-            borderRadius={5}
-            colorText={globalColors.primary}
-            btnFontSize={20}
-            onPress={onCreatePlaylist}
-          />
-        </View>
+        <PrimaryButton
+          label="Create Playlist"
+          bgColor={globalColors.primary}
+          borderRadius={5}
+          colorText={globalColors.light}
+          btnFontSize={20}
+          onPress={onCreatePlaylist}
+        />
       </View>
     </View>
   );
@@ -57,6 +54,7 @@ const style = StyleSheet.create({
   containerForm: {
     height: "auto",
     color: "white",
+    marginTop: 50,
   },
   labelTitle: {
     fontSize: 18,

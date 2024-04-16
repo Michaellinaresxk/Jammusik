@@ -1,14 +1,14 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import { PathPickScreen } from "../screens/PathPickScreen";
-import { LoginScreen } from "../screens/login/LoginScreen";
-import { RegisterScreen } from "../screens/register/RegisterScreen";
-import { HomeScreen } from "../screens/home/HomeScreen";
-import { CategoriesScreen } from "../screens/categories/CategoriesScreen";
-import { CategorySelectedScreen } from "../screens/categories/CategorySelectedScreen";
-import { PlaylistScreen } from "../screens/playlists/PlaylistScreen";
-import { PlaylistSelectedScreen } from "../screens/playlists/PlaylistSelectedScreen";
-import { SongSelectedScreen } from "../screens/songs/SongSelectedScreen";
-import { ProfileScreen } from "../screens/profile/ProfileScreen";
+import { PathPickScreen } from "../pages/PathPickScreen";
+import { LoginScreen } from "../pages/login/LoginScreen";
+import { RegisterScreen } from "../pages/register/RegisterScreen";
+import { HomeScreen } from "../pages/home/HomeScreen";
+import { CategoriesScreen } from "../pages/categories/CategoriesScreen";
+import { CategorySelectedScreen } from "../pages/categories/CategorySelectedScreen";
+import { PlaylistScreen } from "../pages/playlists/PlaylistScreen";
+import { PlaylistSelectedScreen } from "../pages/playlists/PlaylistSelectedScreen";
+import { SongSelectedScreen } from "../pages/songs/SongSelectedScreen";
+import { ProfileScreen } from "../pages/profile/ProfileScreen";
 
 export type RootStackParamsList = {
   PathPickScreen: undefined;

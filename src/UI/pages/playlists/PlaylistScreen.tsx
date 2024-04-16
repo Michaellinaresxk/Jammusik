@@ -1,5 +1,15 @@
 import React from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import {
+  Alert,
+  FlatList,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { globalColors } from "../../theme/Theme";
 import { type NavigationProp, useNavigation } from "@react-navigation/native";
@@ -23,6 +33,7 @@ export const PlaylistScreen = () => {
 
   const [title, setTitle] = useState("");
   const [mode, setMode] = useState("");
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     const loadPlaylists = async () => {
@@ -39,12 +50,17 @@ export const PlaylistScreen = () => {
     loadPlaylists();
   }, [auth.currentUser, playlistService, triggerUpdate]);
 
+  const closeModal = () => {
+    setIsVisible(!isVisible);
+  };
+
   const handleCreatePlaylist = async () => {
     console.log("creando playlist");
     await playlistService.createPlaylist(title, mode);
     setTitle("");
     setMode("");
     setTriggerUpdate(prev => !prev);
+    closeModal();
   };
 
   const handleDeletePlaylist = async (playlistId: string) => {
@@ -54,58 +70,75 @@ export const PlaylistScreen = () => {
   };
 
   return (
-    <>
-      <View style={styles.titleContent}>
-        <Icon name="options-sharp" color={globalColors.primary} size={30} />
-        <Text style={styles.title}>Playlists</Text>
-      </View>
-      <TheGreenBorder />
-      <View style={styles.container}>
-        <FlatList
-          data={playlists}
-          keyExtractor={item => item.id}
-          numColumns={2}
-          renderItem={({ item, index }) => (
-            <View style={styles.playlistCardContainer}>
-              <PlaylistCard
-                title={item.title}
-                color={
-                  index % 2 === 0
-                    ? globalColors.primary
-                    : globalColors.secondary
-                }
-                onPress={() =>
-                  navigation.navigate("PlaylistSelectedScreen", {
-                    id: item.id,
-                    title: item.title,
-                  })
-                }
-                onShare={() => console.log("Compartiendo playlist")}
-                onDelete={() => handleDeletePlaylist(item.id)}
-              />
-            </View>
-          )}
-        />
-        {/* <View style={styles.buttonContainer}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      style={styles.container}>
+      <ScrollView>
+        <View style={styles.titleContent}>
+          <Icon name="options-sharp" color={globalColors.primary} size={30} />
+          <Text style={styles.title}>Playlists</Text>
+        </View>
+        <TheGreenBorder />
+        <View style={styles.container}>
+          <FlatList
+            data={playlists}
+            keyExtractor={item => item.id}
+            numColumns={2}
+            renderItem={({ item, index }) => (
+              <View style={styles.playlistCardContainer}>
+                <PlaylistCard
+                  title={item.title}
+                  color={
+                    index % 2 === 0
+                      ? globalColors.primary
+                      : globalColors.secondary
+                  }
+                  onPress={() =>
+                    navigation.navigate("PlaylistSelectedScreen", {
+                      id: item.id,
+                      title: item.title,
+                    })
+                  }
+                  onShare={() => Alert.alert("Compartiendo playlist")}
+                  onDelete={() => handleDeletePlaylist(item.id)}
+                />
+              </View>
+            )}
+          />
+        </View>
+        <View style={styles.buttonContainer}>
           <PrimaryButton
             btnFontSize={18}
             borderRadius={5}
             bgColor={globalColors.primaryAlt}
             colorText={globalColors.primary}
-            label="CREATE A NEW PLAYLIST"
-            onPress={() => Alert.alert("Playlist creado correctamente")}
+            label="open modal"
+            onPress={() => setIsVisible(true)}
           />
-        </View> */}
-
-        <FormCreatePlaylist
-          title={title}
-          setTitle={setTitle}
-          mode={mode}
-          setMode={setMode}
-          onCreatePlaylist={handleCreatePlaylist}
-        />
-      </View>
-    </>
+        </View>
+        <Modal
+          visible={isVisible}
+          animationType="slide"
+          presentationStyle="formSheet">
+          <View style={styles.modalBtnContainer}>
+            <Text style={styles.modalFormHeaderTitle}>Add Playlist Info</Text>
+            <PrimaryButton
+              label="Close"
+              btnFontSize={20}
+              colorText={globalColors.light}
+              onPress={() => closeModal()}
+            />
+          </View>
+          <FormCreatePlaylist
+            title={title}
+            setTitle={setTitle}
+            mode={mode}
+            setMode={setMode}
+            onCreatePlaylist={handleCreatePlaylist}
+          />
+        </Modal>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -135,5 +168,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 30,
     padding: 30,
+  },
+  modalBtnContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: globalColors.primary,
+    paddingLeft: 22,
+  },
+  modalFormHeaderTitle: {
+    fontSize: 20,
+    color: globalColors.light,
   },
 });
