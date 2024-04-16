@@ -1,6 +1,9 @@
 import type Category from "../domain/category/Category";
 
 export class CategoryView {
+  categoryId: any;
+  label: any;
+  value: any;
   private constructor(
     public readonly id: string,
     public readonly title: string,
