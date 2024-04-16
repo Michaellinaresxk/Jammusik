@@ -19,6 +19,7 @@ export class SongResource implements SongRepository {
       playlistId,
     );
     return new Song(
+      apiSong.id,
       apiSong.title,
       apiSong.artist,
       apiSong.categoryId,

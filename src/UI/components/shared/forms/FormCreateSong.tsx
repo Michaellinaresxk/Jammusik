@@ -96,6 +96,7 @@ export const FormCreateSong = ({
 const style = StyleSheet.create({
   containerForm: {
     height: "auto",
+    marginTop: 50,
   },
   form: {
     width: "90%",

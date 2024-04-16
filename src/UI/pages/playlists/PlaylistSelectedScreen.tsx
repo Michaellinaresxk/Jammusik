@@ -70,7 +70,6 @@ export const PlaylistSelectedScreen = () => {
     const loadSongList = async () => {
       try {
         const fetchedSongs = await songService.getSongs(playlistId);
-        // console.log("obteniendo cancion playlist id es:", playlistId);
         setSongList(fetchedSongs);
       } catch (error) {
         console.error("Failed to fetch songList:", error);
@@ -93,7 +92,7 @@ export const PlaylistSelectedScreen = () => {
         behavior={Platform.OS === "ios" ? "padding" : undefined}>
         <ScrollView>
           <View style={styles.songCardContainer}>
-            <SongCounter songCounter={4} />
+            <SongCounter songCounter={songList.length} />
             <FlatList
               data={songList}
               keyExtractor={item => item.id}
@@ -112,6 +111,7 @@ export const PlaylistSelectedScreen = () => {
                         id: item.id,
                         title: item.title,
                         artist: item.artist,
+                        categoryId: item.categoryId,
                       })
                     }
                   />
