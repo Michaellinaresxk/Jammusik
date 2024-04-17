@@ -1,6 +1,7 @@
 import {
   FlatList,
   KeyboardAvoidingView,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -68,10 +69,9 @@ export const HomeScreen = () => {
   return (
     <>
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-        style={styles.container}>
+        behavior={Platform.OS === "ios" ? "padding" : undefined}>
         <ScrollView>
-          <View style={styles.container}>
+          <View>
             <GlobalHeader headerTitle="Home" />
             <TheGreenBorder />
             <View style={styles.categoryCardContainer}>
