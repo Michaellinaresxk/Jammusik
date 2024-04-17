@@ -1,5 +1,11 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { useUserService } from "../../../context/UserServiceContext";
 import { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
@@ -34,26 +40,32 @@ export const ProfileScreen = () => {
   }, [auth.currentUser, userService]);
 
   return (
-    <View>
-      <View style={styles.userIconContent}>
-        <PrimaryIcon
-          name="person-circle-outline"
-          color={globalColors.primary}
-        />
-        <Text style={styles.userName}> {user?.name}</Text>
-      </View>
-      <FormProfile
-        email={user?.email}
-        setEmail={setEmail}
-        name={user?.name}
-        setName={setName}
-        userId={user?.id}
-        setUserId={setUserId}
-        location={location}
-        setLocation={setLocation}
-        onProfile={() => console.log("user created")}
-      />
-    </View>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      style={styles.container}>
+      <ScrollView>
+        <View>
+          <View style={styles.userIconContent}>
+            <PrimaryIcon
+              name="person-circle-outline"
+              color={globalColors.primary}
+            />
+            <Text style={styles.userName}> {user?.name}</Text>
+          </View>
+          <FormProfile
+            email={user?.email}
+            setEmail={setEmail}
+            name={user?.name}
+            setName={setName}
+            userId={user?.id}
+            setUserId={setUserId}
+            location={location}
+            setLocation={setLocation}
+            onProfile={() => console.log("user created")}
+          />
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

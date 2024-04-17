@@ -159,6 +159,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: globalColors.primary,
     paddingLeft: 35,
+    marginTop: 10,
   },
   modalFormHeaderTitle: {
     fontSize: 20,

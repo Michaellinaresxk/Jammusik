@@ -60,5 +60,6 @@ const styles = StyleSheet.create({
   },
   dropdownStyle: {
     backgroundColor: "#fafafa",
+    zIndex: 1,
   },
 });
