@@ -7,7 +7,7 @@ import { type RootStackParamsList } from "../../routes/StackNavigator";
 import { useCategoryService } from "../../../context/CategoryServiceContext";
 import { useEffect, useState } from "react";
 import { CategoryView } from "../../../views/CategoryView";
-
+import { HamburgerMenu } from "../../components/shared/HamburgerMenu";
 const backgroundImage = { uri: images.image3 };
 
 export const CategoriesScreen = () => {
@@ -26,30 +26,33 @@ export const CategoriesScreen = () => {
   }, [categoryService]);
 
   return (
-    <ImageBackground source={backgroundImage} resizeMode="cover">
-      <View style={globalStyles.overlay}>
-        <View style={{ marginTop: 50 }}>
-          <FlatList
-            data={categories}
-            keyExtractor={item => item.id}
-            numColumns={2}
-            renderItem={({ item }) => (
-              <View style={styles.categoryCardContainer}>
-                <CategoryCard
-                  title={item.title}
-                  onPress={() =>
-                    navigation.navigate("CategorySelectedScreen", {
-                      id: item.id,
-                      title: item.title,
-                    })
-                  }
-                />
-              </View>
-            )}
-          />
+    <>
+      <HamburgerMenu />
+      <ImageBackground source={backgroundImage} resizeMode="cover">
+        <View style={globalStyles.overlay}>
+          <View style={{ marginTop: 50 }}>
+            <FlatList
+              data={categories}
+              keyExtractor={item => item.id}
+              numColumns={2}
+              renderItem={({ item }) => (
+                <View style={styles.categoryCardContainer}>
+                  <CategoryCard
+                    title={item.title}
+                    onPress={() =>
+                      navigation.navigate("CategorySelectedScreen", {
+                        id: item.id,
+                        title: item.title,
+                      })
+                    }
+                  />
+                </View>
+              )}
+            />
+          </View>
         </View>
-      </View>
-    </ImageBackground>
+      </ImageBackground>
+    </>
   );
 };
 

@@ -12,8 +12,8 @@ import { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
 import { ApiUser } from "../../../infra/user/ApiUser";
 import { globalColors } from "../../theme/Theme";
-import { PrimaryIcon } from "../../components/shared/PrimaryIcon";
 import { FormProfile } from "../../components/shared/forms/FormProfile";
+import { UserAvatar } from "../../components/shared/UserAvatar";
 
 export const ProfileScreen = () => {
   const userService = useUserService();
@@ -45,13 +45,7 @@ export const ProfileScreen = () => {
       behavior={Platform.OS === "ios" ? "padding" : undefined}>
       <ScrollView>
         <View>
-          <View style={styles.userIconContent}>
-            <PrimaryIcon
-              name="person-circle-outline"
-              color={globalColors.primary}
-            />
-            <Text style={styles.userName}> {user?.name}</Text>
-          </View>
+          <UserAvatar userName={user?.name} />
           <FormProfile
             email={user?.email}
             setEmail={setEmail}

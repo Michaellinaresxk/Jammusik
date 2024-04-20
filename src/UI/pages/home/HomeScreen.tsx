@@ -23,6 +23,7 @@ import { usePlaylistService } from "../../../context/PlaylistServiceContext";
 import { auth } from "../../../infra/api/firebaseConfig";
 import { PlaylistView } from "../../../views/PlaylistView";
 import { PlaylistCard } from "../../components/shared/cards/PlaylistCard";
+import { HamburgerMenu } from "../../components/shared/HamburgerMenu";
 
 export const HomeScreen = () => {
   const userService = useUserService();
@@ -71,6 +72,7 @@ export const HomeScreen = () => {
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : undefined}>
         <ScrollView>
+          <HamburgerMenu />
           <View>
             <GlobalHeader headerTitle="Home" />
             <TheGreenBorder />
@@ -86,14 +88,14 @@ export const HomeScreen = () => {
                 goTo="ProfileScreen"
               />
               <LinkLoginRegister
-                text="Already have an account?"
-                link="Playlists"
+                text="Have an account?"
+                link="Playlist"
                 goTo="PlaylistScreen"
               />
               <LinkLoginRegister
-                text="Already have an account?"
-                link="Categories"
-                goTo="CategoriesScreen"
+                text="Have an account?"
+                link="HelpScreen"
+                goTo="HelpScreen"
               />
               <Text style={styles.subTitle}>Categories:</Text>
               <FlatList

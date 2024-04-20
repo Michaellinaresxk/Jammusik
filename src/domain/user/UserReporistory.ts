@@ -6,6 +6,4 @@ export default interface UserRepository {
     userName: string,
   ): Promise<User>;
   loginUser(email: string, password: string): Promise<User>;
-  getCurrentUser(userId: string): Promise<User>;
-  logout(): Promise<void>;
 }

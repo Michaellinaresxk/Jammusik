@@ -1,8 +1,9 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { CategoriesScreen } from "../pages/categories/CategoriesScreen";
 import { HomeScreen } from "../pages/home/HomeScreen";
 import { globalColors } from "../theme/Theme";
 import Icon from "react-native-vector-icons/Ionicons";
+import { HelpScreen } from "../pages/help/HelpScreen";
+// import { HelpTopTabNavigator } from "./HelpTopTabNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -18,7 +19,8 @@ export const BottomTabNavigator = () => {
         name="Home"
         component={HomeScreen}
       />
-      <Tab.Screen name="Categories" component={CategoriesScreen} />
+      <Tab.Screen name="HelpScreen" component={HelpScreen} />
+      {/* <Tab.Screen name="HelpTopTabNavigator" component={HelpTopTabNavigator} /> */}
     </Tab.Navigator>
   );
 };

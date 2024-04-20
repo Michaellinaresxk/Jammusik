@@ -23,6 +23,7 @@ import { useEffect, useState } from "react";
 import { PlaylistView } from "../../../views/PlaylistView";
 import { getAuth } from "firebase/auth";
 import { FormCreatePlaylist } from "../../components/shared/forms/FormCreatePlaylist";
+import { HamburgerMenu } from "../../components/shared/HamburgerMenu";
 
 export const PlaylistScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
@@ -74,6 +75,7 @@ export const PlaylistScreen = () => {
       behavior={Platform.OS === "ios" ? "padding" : undefined}
       style={styles.container}>
       <ScrollView>
+        <HamburgerMenu />
         <View style={styles.titleContent}>
           <Icon name="options-sharp" color={globalColors.primary} size={30} />
           <Text style={styles.title}>Playlists</Text>

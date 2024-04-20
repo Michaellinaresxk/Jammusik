@@ -9,13 +9,9 @@ import { Text } from "react-native";
 import { PrimaryIcon } from "../../components/shared/PrimaryIcon";
 import { globalColors } from "../../theme/Theme";
 
-type Props = {
-  category: string;
-};
-
-export const SongSelectedScreen = ({ category }: Props) => {
+export const SongSelectedScreen = () => {
   const params =
-    useRoute<RouteProp<RootStackParamsList, "PlaylistSelected">>().params;
+    useRoute<RouteProp<RootStackParamsList, "PlaylistSelectedScreen">>().params;
 
   return (
     <>
@@ -35,7 +31,7 @@ export const SongSelectedScreen = ({ category }: Props) => {
               size={22}
               color={globalColors.primary}
             />
-            <Text style={styles.category}> {category}</Text>
+            <Text style={styles.category}> Rock</Text>
           </View>
         </View>
         <View style={styles.container}>

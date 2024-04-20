@@ -7,8 +7,12 @@ import { CategoriesScreen } from "../pages/categories/CategoriesScreen";
 import { CategorySelectedScreen } from "../pages/categories/CategorySelectedScreen";
 import { PlaylistScreen } from "../pages/playlists/PlaylistScreen";
 import { PlaylistSelectedScreen } from "../pages/playlists/PlaylistSelectedScreen";
+import { HelpScreen } from "../pages/help/HelpScreen";
 import { SongSelectedScreen } from "../pages/songs/SongSelectedScreen";
 import { ProfileScreen } from "../pages/profile/ProfileScreen";
+import { SideMenuNavigator } from "./SideMenuNavigator";
+import { BottomTabNavigator } from "./BottomTabNavigator";
+import { HelpTopTabNavigator } from "./HelpTopTabNavigator";
 
 export type RootStackParamsList = {
   PathPickScreen: undefined;
@@ -22,6 +26,9 @@ export type RootStackParamsList = {
   SongSelectedScreen: undefined;
   Tab: undefined;
   ProfileScreen: undefined;
+  BottomTabNavigator: undefined;
+  SideMenuNavigator: undefined;
+  HelpScreen: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamsList>();
@@ -36,12 +43,19 @@ export const StackNavigator = () => {
           shadowColor: "transparent",
         },
       }}>
+      <Stack.Screen name="BottomTabNavigator" component={BottomTabNavigator} />
+      <Stack.Screen
+        name="HelpTopTabNavigator"
+        component={HelpTopTabNavigator}
+      />
+      <Stack.Screen name="SideMenuNavigator" component={SideMenuNavigator} />
       <Stack.Screen name="PathPickScreen" component={PathPickScreen} />
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
       <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="CategoriesScreen" component={CategoriesScreen} />
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+      <Stack.Screen name="HelpScreen" component={HelpScreen} />
       <Stack.Screen
         name="CategorySelectedScreen"
         component={CategorySelectedScreen}
