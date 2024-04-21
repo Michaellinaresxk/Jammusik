@@ -48,6 +48,7 @@ export const CategoriesScreen = () => {
                   navigation.navigate("CategorySelectedScreen", {
                     id: item.id,
                     title: item.title,
+                    categoryId: item.categoryId,
                   })
                 }
               />

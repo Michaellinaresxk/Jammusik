@@ -40,6 +40,15 @@ export const CategorySelectedScreen = () => {
         setSongList(fetchedSongs);
       };
       fetchSongList();
+    } else {
+      const fetchSongsById = async () => {
+        const fetchSongListByid = await categoryService.getSongListByCategory(
+          categoryId,
+          userId,
+        );
+        setSongList(fetchSongListByid);
+      };
+      fetchSongsById();
     }
   }, [categoryId, categoryService, userId]);
 
