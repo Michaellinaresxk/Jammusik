@@ -15,7 +15,7 @@ type Props = {
 
 export const SongSelectedScreen = ({ category }: Props) => {
   const params =
-    useRoute<RouteProp<RootStackParamsList, "PlaylistSelected">>().params;
+    useRoute<RouteProp<RootStackParamsList, "PlaylistSelectedScreen">>().params;
 
   return (
     <>

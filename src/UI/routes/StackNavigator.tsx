@@ -9,17 +9,18 @@ import { PlaylistScreen } from "../pages/playlists/PlaylistScreen";
 import { PlaylistSelectedScreen } from "../pages/playlists/PlaylistSelectedScreen";
 import { SongSelectedScreen } from "../pages/songs/SongSelectedScreen";
 import { ProfileScreen } from "../pages/profile/ProfileScreen";
+import type { Song } from "../../types/songTypes";
 
 export type RootStackParamsList = {
   PathPickScreen: undefined;
   LoginScreen: undefined;
   PlaylistScreen: undefined;
-  PlaylistSelectedScreen: { id: number; title: string };
+  PlaylistSelectedScreen: Song;
   RegisterScreen: undefined;
   HomeScreen: undefined;
-  CategoriesScreen: undefined;
-  CategorySelectedScreen: undefined;
-  SongSelectedScreen: undefined;
+  CategoriesScreen: { id: string; title: string };
+  CategorySelectedScreen: Song;
+  SongSelectedScreen: { title: string; artist: string };
   Tab: undefined;
   ProfileScreen: undefined;
 };
