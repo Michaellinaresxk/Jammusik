@@ -1,9 +1,9 @@
 export interface Song {
-  playlistId: string;
   id: string;
   title: string;
   artist: string;
   categoryId: string;
+  playlistId: string;
 }
 
 export interface SongCard {
