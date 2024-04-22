@@ -15,7 +15,6 @@ export const CategoriesScreen = () => {
 
   const categoryService = useCategoryService();
   const [categories, setCategories] = useState<CategoryView[]>([]);
-
   useEffect(() => {
     const loadCategories = async () => {
       const fetchedCategories = await categoryService.getCategories();
@@ -28,23 +27,31 @@ export const CategoriesScreen = () => {
   return (
     <ImageBackground source={backgroundImage} resizeMode="cover">
       <View style={globalStyles.overlay}>
-        <View style={{ marginTop: 50 }}>
+        <View style={{ marginTop: 50, justifyContent: "center" }}>
+          <CategoryCard
+            title="All"
+            onPress={() =>
+              navigation.navigate("CategorySelectedScreen", {
+                id: "All",
+                title: "All",
+              })
+            }
+          />
           <FlatList
             data={categories}
             keyExtractor={item => item.id}
             numColumns={2}
             renderItem={({ item }) => (
-              <View style={styles.categoryCardContainer}>
-                <CategoryCard
-                  title={item.title}
-                  onPress={() =>
-                    navigation.navigate("CategorySelectedScreen", {
-                      id: item.id,
-                      title: item.title,
-                    })
-                  }
-                />
-              </View>
+              <CategoryCard
+                title={item.title}
+                onPress={() =>
+                  navigation.navigate("CategorySelectedScreen", {
+                    id: item.id,
+                    title: item.title,
+                    categoryId: item.categoryId,
+                  })
+                }
+              />
             )}
           />
         </View>

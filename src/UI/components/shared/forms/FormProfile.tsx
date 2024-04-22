@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { globalColors } from "../../../theme/Theme";
 import { PrimaryButton } from "../PrimaryButton";
+import { CustomDropdown } from "../CustomDropdown";
+import RadioButton from "../RadioButton";
 
 type ProfileForm = {
   email: string;
@@ -26,6 +28,32 @@ export const FormProfile = ({
   setLocation,
   onProfile,
 }: ProfileForm) => {
+  const instruments = [
+    { name: "Bass", id: "1" },
+    { name: "Drums", id: "2" },
+    { name: "Vocals", id: "3" },
+    { name: "Guitar", id: "4" },
+    { name: "Keyboard", id: "5" },
+    { name: "DJ Controller", id: "6" },
+  ];
+  const options = [
+    { label: "Musician", value: "musician" },
+    { label: "Dj", value: "dj" },
+    { label: "Producer", value: "producer" },
+  ];
+  const dropdownInstruments = instruments.map(instrument => ({
+    label: instrument.name,
+    value: instrument.id,
+  }));
+
+  const [selectedInstrumentId, setSelectedInstrumentId] = useState(
+    dropdownInstruments[0].value,
+  );
+
+  const onSelect = value => {
+    console.log("Selected:", value);
+  };
+
   return (
     <View style={style.containerForm}>
       <Text style={style.labelTitle}>General Information:</Text>
@@ -61,13 +89,23 @@ export const FormProfile = ({
             placeholderTextColor="#838282"
             onChangeText={setLocation}
           />
+          <View style={style.radioButtonContainer}>
+            <Text style={style.radioButtonTitle}>Skills</Text>
+            <RadioButton options={options} onSelect={onSelect} />
+          </View>
+          <CustomDropdown
+            items={dropdownInstruments}
+            defaultValue={selectedInstrumentId}
+            placeholder="Choose an instrument"
+            onChange={setSelectedInstrumentId}
+          />
         </View>
         <View style={{ marginTop: 20 }}>
           <PrimaryButton
             label="Save Changes"
             bgColor={globalColors.primary}
             borderRadius={5}
-            colorText={globalColors.secondary}
+            colorText={globalColors.light}
             btnFontSize={20}
             onPress={onProfile}
           />
@@ -107,5 +145,14 @@ const style = StyleSheet.create({
     fontSize: 20,
     marginBottom: 30,
     padding: 10,
+  },
+  radioButtonContainer: {
+    marginTop: 10,
+    marginBottom: 40,
+  },
+  radioButtonTitle: {
+    fontSize: 20,
+    color: globalColors.terceary,
+    marginBottom: 30,
   },
 });

@@ -39,13 +39,6 @@ export const PlaylistSelectedScreen = () => {
   const [triggerUpdate, setTriggerUpdate] = useState(false);
 
   const handleCreateSong = async () => {
-    console.log("Creating song with:", {
-      title,
-      artist,
-      categoryId,
-      playlistId,
-    });
-
     if (!title || !artist || !categoryId || !playlistId) {
       Alert.alert("Error", "All fields must be filled!");
       return;
@@ -58,7 +51,6 @@ export const PlaylistSelectedScreen = () => {
       setCategoryId("");
       setTriggerUpdate(prev => !prev);
 
-      // Assuming closeModal is a function to close the modal
       closeModal();
     } catch (error) {
       console.error("Failed to create song:", error);
