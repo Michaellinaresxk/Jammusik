@@ -36,6 +36,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   text: {
-    color: globalColors.light,
+    color: globalColors.primary,
   },
 });

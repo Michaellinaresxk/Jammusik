@@ -48,4 +48,8 @@ export const globalStyles = StyleSheet.create({
     fontSize: 20,
     padding: 3,
   },
+  title:{
+    fontSize:18,
+    color:globalColors.light
+  }
 });

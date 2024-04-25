@@ -10,6 +10,7 @@ import { PlaylistSelectedScreen } from "../pages/playlists/PlaylistSelectedScree
 import { SongSelectedScreen } from "../pages/songs/SongSelectedScreen";
 import { ProfileScreen } from "../pages/profile/ProfileScreen";
 import type { Song } from "../../types/songTypes";
+import { FeedbackScreen } from "../pages/feedback/FeedbackScreen";
 
 export type RootStackParamsList = {
   PathPickScreen: undefined;
@@ -23,6 +24,7 @@ export type RootStackParamsList = {
   SongSelectedScreen: { title: string; artist: string };
   Tab: undefined;
   ProfileScreen: undefined;
+  FeedbackScreen:undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamsList>();
@@ -43,6 +45,7 @@ export const StackNavigator = () => {
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="CategoriesScreen" component={CategoriesScreen} />
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+      <Stack.Screen name="FeedbackScreen" component={FeedbackScreen} />
       <Stack.Screen
         name="CategorySelectedScreen"
         component={CategorySelectedScreen}

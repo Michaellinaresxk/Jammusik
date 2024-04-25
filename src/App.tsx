@@ -21,7 +21,7 @@ import { SongServiceProvider } from "./context/SongServiceContext";
 
 function App(): React.JSX.Element {
   return (
-    <ProviderComposer
+    <ProviderComposer 
       contexts={[
         <UserServiceProvider userService={userService} />,
         <CategoryServiceProvider categoryService={categoryService} />,

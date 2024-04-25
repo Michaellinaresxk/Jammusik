@@ -48,7 +48,7 @@ export const ProfileScreen = () => {
           <View style={styles.userIconContent}>
             <PrimaryIcon
               name="person-circle-outline"
-              color={globalColors.primary}
+              color={globalColors.primary} 
             />
             <Text style={styles.userName}> {user?.name}</Text>
           </View>

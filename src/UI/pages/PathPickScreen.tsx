@@ -22,12 +22,12 @@ export const PathPickScreen = () => {
             <BrandLogo />
             <View>
               <PrimaryButton
-                label="REGISTER"
-                bgColor={globalColors.primary}
+                label="Register"
+                bgColor={globalColors.primaryDark}
                 onPress={() => navigation.navigate("RegisterScreen")}
-                colorText={globalColors.secondary}
+              
                 borderRadius={5}
-                btnFontSize={25}
+                btnFontSize={20}
                 marginBottom={30}
               />
               <PrimaryButton
