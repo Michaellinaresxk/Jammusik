@@ -21,7 +21,9 @@ export const LoginScreen = () => {
 
   const handleLogin = async () => {
     console.log(email, password);
-    await userService.loginUser(email, password);
+    const res = await userService.loginUser(email, password);
+
+    console.log(res)
     setEmail("");
     setPassword("");
     navigation.navigate("HomeScreen");
