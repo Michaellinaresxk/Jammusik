@@ -23,7 +23,6 @@ import { usePlaylistService } from "../../../context/PlaylistServiceContext";
 import { auth } from "../../../infra/api/firebaseConfig";
 import { PlaylistView } from "../../../views/PlaylistView";
 import { PlaylistCard } from "../../components/shared/cards/PlaylistCard";
-import LinkFeedback from "../../components/shared/LinkFeedback";
 
 export const HomeScreen = () => {
   const userService = useUserService();
@@ -72,7 +71,7 @@ export const HomeScreen = () => {
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : undefined}>
         <ScrollView>
-          <View style={{backgroundColor:'black'}}>
+          <View>
             <GlobalHeader headerTitle="Home" />
             <TheGreenBorder />
             <View style={styles.categoryCardContainer}>
@@ -80,11 +79,6 @@ export const HomeScreen = () => {
                 label="Logout"
                 bgColor={globalColors.danger}
                 onPress={() => logoutUser()}
-              />
-               <LinkFeedback
-                text="Link to Feedback"
-                link="FeedbackScreen"
-                goTo="FeedbackScreen"
               />
               <LinkLoginRegister
                 text="Have an account?"
@@ -96,7 +90,6 @@ export const HomeScreen = () => {
                 link="Playlists"
                 goTo="PlaylistScreen"
               />
-             
               <LinkLoginRegister
                 text="Already have an account?"
                 link="Categories"
@@ -119,7 +112,6 @@ export const HomeScreen = () => {
                   />
                 )}
               />
-              
               <View style={styles.playlistContainer}>
                 <Text style={styles.subTitle}>Playlists:</Text>
                 <FlatList
@@ -161,7 +153,7 @@ export const HomeScreen = () => {
 };
 const styles = StyleSheet.create({
   text: {
-    color: "green",
+    color: "red",
     fontSize: 30,
   },
   subTitle: {
