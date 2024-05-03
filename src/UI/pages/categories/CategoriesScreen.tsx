@@ -1,4 +1,4 @@
-import { View, ImageBackground, StyleSheet, FlatList } from "react-native";
+import { View, ImageBackground, FlatList } from "react-native";
 import { globalStyles } from "../../theme/Theme";
 import { images } from "../../../assets/img/Images";
 import { CategoryCard } from "../../components/shared/cards/CategoryCard";
@@ -59,15 +59,3 @@ export const CategoriesScreen = () => {
     </ImageBackground>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  categoryCardContainer: {
-    flex: 1,
-    width: "100%",
-    justifyContent: "center",
-    flexDirection: "row",
-  },
-});

@@ -20,6 +20,54 @@ export const globalColors = {
   light: "#F1FCF9",
 };
 
+export const globalFormStyles = StyleSheet.create({
+  containerForm: {
+    height: "auto",
+    color: "white",
+  },
+  labelTitle: {
+    fontSize: 18,
+    textAlign: "center",
+    marginBottom: 30,
+    color: globalColors.secondary,
+  },
+
+  form: {
+    width: "90%",
+    padding: 10,
+    alignSelf: "center",
+    marginTop: 20,
+  },
+
+  labelText: {
+    fontSize: 24,
+  },
+
+  inputLogin: {
+    borderWidth: 0.2,
+    borderBottomColor: globalColors.terceary,
+    color: globalColors.terceary,
+    fontSize: 20,
+    marginBottom: 30,
+    padding: 10,
+  },
+
+  radioButtonContainer: {
+    marginTop: 10,
+    marginBottom: 40,
+  },
+  radioButtonTitle: {
+    fontSize: 20,
+    color: globalColors.terceary,
+    marginBottom: 30,
+  },
+  containerLink: {
+    display: "flex",
+    flexDirection: "row",
+    marginTop: 10,
+  },
+});
+
 export const globalStyles = StyleSheet.create({
   container: {
     flex: 1,
@@ -47,5 +95,14 @@ export const globalStyles = StyleSheet.create({
     color: globalColors.primaryDark2,
     fontSize: 20,
     padding: 3,
+  },
+  containerLink: {
+    display: "flex",
+    flexDirection: "row",
+    marginTop: 10,
+  },
+  link: {
+    fontWeight: "bold",
+    color: globalColors.primary,
   },
 });

@@ -1,7 +1,7 @@
 import React from "react";
-import { View, TextInput, StyleSheet } from "react-native";
+import { View, TextInput } from "react-native";
 import { PrimaryButton } from "../PrimaryButton";
-import { globalColors } from "../../../theme/Theme";
+import { globalColors, globalFormStyles } from "../../../theme/Theme";
 import { type Register } from "../../../../types/formTypes";
 
 interface FormRegisterProps {
@@ -24,11 +24,11 @@ export const FormRegister = ({
   onRegister,
 }: FormRegisterProps) => {
   return (
-    <View style={style.containerForm}>
-      <View style={style.form}>
+    <View style={globalFormStyles.containerForm}>
+      <View style={globalFormStyles.form}>
         <View>
           <TextInput
-            style={style.inputLogin}
+            style={globalFormStyles.inputLogin}
             placeholder="Email"
             value={email}
             onChangeText={setEmail}
@@ -38,7 +38,7 @@ export const FormRegister = ({
             autoCapitalize="none"
           />
           <TextInput
-            style={style.inputLogin}
+            style={globalFormStyles.inputLogin}
             placeholder="User name"
             autoCorrect={false}
             autoCapitalize="none"
@@ -47,7 +47,7 @@ export const FormRegister = ({
             placeholderTextColor="#838282"
           />
           <TextInput
-            style={style.inputLogin}
+            style={globalFormStyles.inputLogin}
             placeholder="Password"
             value={password}
             autoCorrect={false}
@@ -71,39 +71,3 @@ export const FormRegister = ({
     </View>
   );
 };
-
-const style = StyleSheet.create({
-  containerForm: {
-    height: "auto",
-  },
-
-  form: {
-    width: "100%",
-    padding: 10,
-    alignSelf: "center",
-    marginTop: 20,
-  },
-
-  labelText: {
-    fontSize: 24,
-    color: globalColors.light,
-  },
-
-  inputLogin: {
-    borderWidth: 1,
-    borderBottomColor: globalColors.terceary,
-    color: globalColors.light,
-    fontSize: 20,
-    marginBottom: 40,
-  },
-
-  containerLink: {
-    display: "flex",
-    flexDirection: "row",
-    marginTop: 10,
-  },
-  link: {
-    fontWeight: "bold",
-    color: globalColors.primary,
-  },
-});

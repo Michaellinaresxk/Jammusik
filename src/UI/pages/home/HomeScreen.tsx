@@ -72,7 +72,7 @@ export const HomeScreen = () => {
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : undefined}>
         <ScrollView>
-          <View style={{backgroundColor:'black'}}>
+          <View>
             <GlobalHeader headerTitle="Home" />
             <TheGreenBorder />
             <View style={styles.categoryCardContainer}>
@@ -81,7 +81,7 @@ export const HomeScreen = () => {
                 bgColor={globalColors.danger}
                 onPress={() => logoutUser()}
               />
-               <LinkFeedback
+              <LinkFeedback
                 text="Link to Feedback"
                 link="FeedbackScreen"
                 goTo="FeedbackScreen"
@@ -96,7 +96,7 @@ export const HomeScreen = () => {
                 link="Playlists"
                 goTo="PlaylistScreen"
               />
-             
+
               <LinkLoginRegister
                 text="Already have an account?"
                 link="Categories"
@@ -119,7 +119,7 @@ export const HomeScreen = () => {
                   />
                 )}
               />
-              
+
               <View style={styles.playlistContainer}>
                 <Text style={styles.subTitle}>Playlists:</Text>
                 <FlatList
