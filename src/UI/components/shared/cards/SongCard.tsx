@@ -16,7 +16,7 @@ export const SongCard = ({ title, artist, color, onPress }: Props) => {
       style={[styles.songCard, { backgroundColor: color }]}
       onPress={onPress}>
       <View style={styles.containerCard}>
-        <View style={styles.textContent}>
+        <View>
           <Text style={styles.songCardTitle}>{title}</Text>
           <Text style={styles.songCardArtist}>- {artist}</Text>
         </View>
@@ -44,7 +44,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
-  textContent: {},
   songCardTitle: {
     color: globalColors.light,
     fontSize: 20,

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
-import { globalColors } from "../../../theme/Theme";
+import { globalColors, globalFormStyles } from "../../../theme/Theme";
 import { PrimaryButton } from "../PrimaryButton";
 import { CustomDropdown } from "../CustomDropdown";
 import RadioButton from "../RadioButton";
@@ -55,20 +55,20 @@ export const FormProfile = ({
   };
 
   return (
-    <View style={style.containerForm}>
-      <Text style={style.labelTitle}>General Information:</Text>
+    <View style={globalFormStyles.containerForm}>
+      <Text style={globalFormStyles.labelTitle}>General Information:</Text>
 
-      <View style={style.form}>
+      <View style={globalFormStyles.form}>
         <View>
           <TextInput
-            style={style.inputLogin}
+            style={globalFormStyles.inputLogin}
             placeholderTextColor="#838282"
             placeholder="Name"
             value={name}
             onChangeText={setName}
           />
           <TextInput
-            style={style.inputLogin}
+            style={globalFormStyles.inputLogin}
             placeholderTextColor="#838282"
             keyboardType="email-address"
             placeholder="Email"
@@ -76,21 +76,21 @@ export const FormProfile = ({
             onChangeText={setEmail}
           />
           <TextInput
-            style={style.inputLogin}
+            style={globalFormStyles.inputLogin}
             placeholder="userId"
             value={userId}
             placeholderTextColor="#838282"
             onChangeText={setUserId}
           />
           <TextInput
-            style={style.inputLogin}
+            style={globalFormStyles.inputLogin}
             placeholder="Location"
             value={location}
             placeholderTextColor="#838282"
             onChangeText={setLocation}
           />
-          <View style={style.radioButtonContainer}>
-            <Text style={style.radioButtonTitle}>Skills</Text>
+          <View style={globalFormStyles.radioButtonContainer}>
+            <Text style={globalFormStyles.radioButtonTitle}>Skills</Text>
             <RadioButton options={options} onSelect={onSelect} />
           </View>
           <CustomDropdown
@@ -114,45 +114,3 @@ export const FormProfile = ({
     </View>
   );
 };
-
-const style = StyleSheet.create({
-  containerForm: {
-    height: "auto",
-    color: "white",
-  },
-  labelTitle: {
-    fontSize: 18,
-    textAlign: "center",
-    marginBottom: 30,
-    color: globalColors.secondary,
-  },
-
-  form: {
-    width: "90%",
-    padding: 10,
-    alignSelf: "center",
-    marginTop: 20,
-  },
-
-  labelText: {
-    fontSize: 24,
-  },
-
-  inputLogin: {
-    borderWidth: 0.2,
-    borderBottomColor: globalColors.terceary,
-    color: globalColors.terceary,
-    fontSize: 20,
-    marginBottom: 30,
-    padding: 10,
-  },
-  radioButtonContainer: {
-    marginTop: 10,
-    marginBottom: 40,
-  },
-  radioButtonTitle: {
-    fontSize: 20,
-    color: globalColors.terceary,
-    marginBottom: 30,
-  },
-});

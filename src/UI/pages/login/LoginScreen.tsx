@@ -23,7 +23,7 @@ export const LoginScreen = () => {
     console.log(email, password);
     const res = await userService.loginUser(email, password);
 
-    console.log(res)
+    console.log(res);
     setEmail("");
     setPassword("");
     navigation.navigate("HomeScreen");

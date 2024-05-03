@@ -24,7 +24,7 @@ export type RootStackParamsList = {
   SongSelectedScreen: { title: string; artist: string };
   Tab: undefined;
   ProfileScreen: undefined;
-  FeedbackScreen:undefined;
+  FeedbackScreen: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamsList>();

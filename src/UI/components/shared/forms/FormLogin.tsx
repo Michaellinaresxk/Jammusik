@@ -1,6 +1,6 @@
-import { Text, View, TextInput, StyleSheet } from "react-native";
+import { Text, View, TextInput } from "react-native";
 import { PrimaryButton } from "../PrimaryButton";
-import { globalColors } from "../../../theme/Theme";
+import { globalColors, globalFormStyles } from "../../../theme/Theme";
 
 interface FormLoginProps {
   email: string;
@@ -20,13 +20,13 @@ export const Formlogin = ({
   onLogin,
 }: FormLoginProps) => {
   return (
-    <View style={style.containerForm}>
-      <Text style={style.labelTitle}>Login</Text>
+    <View style={globalFormStyles.containerForm}>
+      <Text style={globalFormStyles.labelTitle}>Login</Text>
 
-      <View style={style.form}>
+      <View style={globalFormStyles.form}>
         <View>
           <TextInput
-            style={style.inputLogin}
+            style={globalFormStyles.inputLogin}
             placeholderTextColor="#838282"
             keyboardType="email-address"
             placeholder="Email"
@@ -36,7 +36,7 @@ export const Formlogin = ({
             onChangeText={setEmail}
           />
           <TextInput
-            style={style.inputLogin}
+            style={globalFormStyles.inputLogin}
             placeholder="Password"
             autoCorrect={false}
             autoCapitalize="none"
@@ -60,37 +60,3 @@ export const Formlogin = ({
     </View>
   );
 };
-
-const style = StyleSheet.create({
-  containerForm: {
-    height: "auto",
-    color: "white",
-  },
-  labelTitle: {
-    fontSize: 25,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 30,
-    color: globalColors.light,
-  },
-
-  form: {
-    width: "100%",
-    padding: 10,
-    alignSelf: "center",
-    marginTop: 20,
-  },
-
-  labelText: {
-    fontSize: 24,
-    color: globalColors.light,
-  },
-
-  inputLogin: {
-    borderWidth: 1,
-    borderBottomColor: globalColors.terceary,
-    color: globalColors.light,
-    fontSize: 20,
-    marginBottom: 40,
-  },
-});

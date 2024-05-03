@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, TextInput, View } from "react-native";
-import { globalColors } from "../../../theme/Theme";
+import { TextInput, View } from "react-native";
+import { globalColors, globalFormStyles } from "../../../theme/Theme";
 import { PrimaryButton } from "../PrimaryButton";
 import { CustomDropdown } from "../CustomDropdown";
 import { useCategoryService } from "../../../../context/CategoryServiceContext";
@@ -53,10 +53,10 @@ export const FormCreateSong = ({
   };
 
   return (
-    <View style={style.containerForm}>
-      <View style={style.form}>
+    <View style={globalFormStyles.containerForm}>
+      <View style={globalFormStyles.form}>
         <TextInput
-          style={style.inputLogin}
+          style={globalFormStyles.inputLogin}
           placeholderTextColor="#838282"
           placeholder="Title"
           autoCorrect={false}
@@ -65,7 +65,7 @@ export const FormCreateSong = ({
           onChangeText={setTitle}
         />
         <TextInput
-          style={style.inputLogin}
+          style={globalFormStyles.inputLogin}
           placeholder="Artist"
           autoCapitalize="words"
           autoCorrect={false}
@@ -92,22 +92,3 @@ export const FormCreateSong = ({
     </View>
   );
 };
-
-const style = StyleSheet.create({
-  containerForm: {
-    height: "auto",
-    marginTop: 50,
-  },
-  form: {
-    width: "90%",
-    padding: 10,
-    alignSelf: "center",
-    marginTop: 20,
-  },
-  inputLogin: {
-    borderWidth: 0.2,
-    borderBottomColor: "#ccc",
-    marginBottom: 30,
-    padding: 10,
-  },
-});
