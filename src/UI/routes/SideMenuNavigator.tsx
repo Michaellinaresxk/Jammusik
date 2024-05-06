@@ -27,6 +27,7 @@ export const SideMenuNavigator = () => {
   return (
     <Drawer.Navigator
       drawerContent={props => <CustomDrawerContent {...props} />}
+      initialRouteName="HomeScreen"
       screenOptions={{
         drawerType: "slide",
         drawerActiveBackgroundColor: globalColors.primary,
@@ -54,9 +55,9 @@ export const SideMenuNavigator = () => {
         options={{
           drawerIcon: ({ focused }) => (
             <Icon
-              name="options-sharp"
+              name="musical-notes-sharp"
               color={focused ? globalColors.light : globalColors.terceary}
-              size={20}
+              size={22}
             />
           ),
         }}
@@ -80,13 +81,13 @@ export const SideMenuNavigator = () => {
         options={{
           drawerIcon: ({ focused }) => (
             <Icon
-              name="id-card-sharp"
+              name="settings-sharp"
               color={focused ? globalColors.light : globalColors.terceary}
               size={23}
             />
           ),
         }}
-        name="Profile"
+        name="Settings"
         component={ProfileScreen}
       />
       <Drawer.Screen
