@@ -1,9 +1,8 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { CategoriesScreen } from "../pages/categories/CategoriesScreen";
-import { HomeScreen } from "../pages/home/HomeScreen";
+import { PlaylistScreen } from "../pages/playlists/PlaylistScreen";
 import { globalColors } from "../theme/Theme";
 import Icon from "react-native-vector-icons/Ionicons";
-
+import { SideMenuNavigator } from "./SideMenuNavigator";
 const Tab = createBottomTabNavigator();
 
 export const BottomTabNavigator = () => {
@@ -11,14 +10,15 @@ export const BottomTabNavigator = () => {
     <Tab.Navigator>
       <Tab.Screen
         options={{
+          headerShown: false,
           drawerIcon: () => (
             <Icon name="home-sharp" color={globalColors.light} size={20} />
           ),
         }}
         name="Home"
-        component={HomeScreen}
+        component={SideMenuNavigator}
       />
-      <Tab.Screen name="Categories" component={CategoriesScreen} />
+      <Tab.Screen name="Playlists" component={PlaylistScreen} />
     </Tab.Navigator>
   );
 };

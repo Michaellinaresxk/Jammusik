@@ -113,8 +113,9 @@ export const PlaylistScreen = () => {
             bgColor={globalColors.primaryAlt}
             colorText={globalColors.primary}
             label="open modal"
-            onPress={() => setIsVisible(true)}
-          />
+            onPress={() => setIsVisible(true)}>
+            {/* <Icon name="id-card-sharp" color={globalColors.primary} size={23} /> */}
+          </PrimaryButton>
         </View>
         <Modal
           visible={isVisible}
