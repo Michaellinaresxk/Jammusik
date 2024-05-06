@@ -11,6 +11,7 @@ export const BottomTabNavigator = () => {
       initialRouteName="HomeScreen"
       screenOptions={{
         tabBarStyle: { backgroundColor: globalColors.secondary },
+        tabBarActiveTintColor: globalColors.primary,
       }}>
       <Tab.Screen name="SideMenuNavigator" component={SideMenuNavigator} />
 

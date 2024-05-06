@@ -8,6 +8,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -23,6 +24,7 @@ import { useEffect, useState } from "react";
 import { PlaylistView } from "../../../views/PlaylistView";
 import { getAuth } from "firebase/auth";
 import { FormCreatePlaylist } from "../../components/shared/forms/FormCreatePlaylist";
+import { FloatingActionButton } from "../../components/shared/FloatingActionButton";
 
 export const PlaylistScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
@@ -74,6 +76,7 @@ export const PlaylistScreen = () => {
       behavior={Platform.OS === "ios" ? "padding" : undefined}
       style={styles.container}>
       <ScrollView>
+        <TheGreenBorder />
         <View style={styles.titleContent}>
           <Icon
             name="musical-notes-sharp"
@@ -82,7 +85,7 @@ export const PlaylistScreen = () => {
           />
           <Text style={styles.title}>Playlists</Text>
         </View>
-        <TheGreenBorder />
+
         <View style={styles.container}>
           <FlatList
             data={playlists}
@@ -111,15 +114,12 @@ export const PlaylistScreen = () => {
           />
         </View>
         <View style={styles.buttonContainer}>
-          <PrimaryButton
-            btnFontSize={18}
-            borderRadius={5}
-            bgColor={globalColors.primaryAlt}
-            colorText={globalColors.primary}
-            label="open modal"
-            onPress={() => setIsVisible(true)}>
+          <TouchableOpacity
+            onPress={() => setIsVisible(true)}
+            style={styles.openModalBtn}>
             {/* <Icon name="id-card-sharp" color={globalColors.primary} size={23} /> */}
-          </PrimaryButton>
+            <Text style={styles.openModalBtnText}>CREATE PLAYLIST</Text>
+          </TouchableOpacity>
         </View>
         <Modal
           visible={isVisible}
@@ -183,5 +183,15 @@ const styles = StyleSheet.create({
   modalFormHeaderTitle: {
     fontSize: 20,
     color: globalColors.light,
+  },
+  openModalBtn: {
+    backgroundColor: globalColors.primaryAlt,
+    padding: 10,
+    paddingHorizontal: 20,
+    marginBottom: 20,
+    borderRadius: 5,
+  },
+  openModalBtnText: {
+    color: globalColors.primary,
   },
 });

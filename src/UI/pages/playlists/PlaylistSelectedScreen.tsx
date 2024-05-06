@@ -79,17 +79,17 @@ export const PlaylistSelectedScreen = () => {
   const [resetToggle, setResetToggle] = useState(false);
 
   const handleResetSongs = () => {
-    setResetToggle(prev => !prev); // Cambia el estado para forzar a los SongCards a reiniciar
+    setResetToggle(prev => !prev);
   };
 
   return (
     <>
-      <TheGreenBorder />
-      <GlobalHeader headerTitle={params.title} />
-      <FloatingActionButton onPress={() => setIsVisible(true)} />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : undefined}>
         <ScrollView>
+          <GlobalHeader headerTitle={params.title} />
+          <TheGreenBorder />
+          <FloatingActionButton onPress={() => setIsVisible(true)} />
           <View style={styles.songCardContainer}>
             <SongCounter songCounter={songList.length} />
             <FlatList
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingHorizontal: 20,
     marginTop: 30,
-    marginBottom: 20,
+    marginBottom: 300,
     borderRadius: 5,
     width: "50%",
   },
