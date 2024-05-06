@@ -13,8 +13,6 @@ import { type RootStackParamsList } from "../../routes/StackNavigator";
 import { GlobalHeader } from "../../components/shared/GlobalHeader";
 import { TheGreenBorder } from "../../components/shared/TheGreenBorder";
 import { globalColors } from "../../theme/Theme";
-import { PrimaryButton } from "../../components/shared/PrimaryButton";
-import { useUserService } from "../../../context/UserServiceContext";
 import { useCategoryService } from "../../../context/CategoryServiceContext";
 import { MouseEvent, useEffect, useState } from "react";
 import { CategoryView } from "../../../views/CategoryView";
@@ -23,10 +21,8 @@ import { usePlaylistService } from "../../../context/PlaylistServiceContext";
 import { auth } from "../../../infra/api/firebaseConfig";
 import { PlaylistView } from "../../../views/PlaylistView";
 import { PlaylistCard } from "../../components/shared/cards/PlaylistCard";
-import LinkFeedback from "../../components/shared/LinkFeedback";
 
 export const HomeScreen = () => {
-  const userService = useUserService();
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
   const categoryService = useCategoryService();
   const playlistService = usePlaylistService();
@@ -57,16 +53,6 @@ export const HomeScreen = () => {
     loadPlaylists();
   }, [playlistService]);
 
-  const logoutUser = async () => {
-    try {
-      console.log("logout");
-      await userService.logout();
-      navigation.navigate("LoginScreen");
-    } catch (error) {
-      console.error("Error al cerrar sesión: ", error);
-    }
-  };
-
   return (
     <>
       <KeyboardAvoidingView
@@ -76,32 +62,6 @@ export const HomeScreen = () => {
             <GlobalHeader headerTitle="Home" />
             <TheGreenBorder />
             <View style={styles.categoryCardContainer}>
-              <PrimaryButton
-                label="Logout"
-                bgColor={globalColors.danger}
-                onPress={() => logoutUser()}
-              />
-              <LinkFeedback
-                text="Link to Feedback"
-                link="FeedbackScreen"
-                goTo="FeedbackScreen"
-              />
-              <LinkLoginRegister
-                text="Have an account?"
-                link="Profile"
-                goTo="ProfileScreen"
-              />
-              <LinkLoginRegister
-                text="Already have an account?"
-                link="Playlists"
-                goTo="PlaylistScreen"
-              />
-
-              <LinkLoginRegister
-                text="Already have an account?"
-                link="Categories"
-                goTo="CategoriesScreen"
-              />
               <Text style={styles.subTitle}>Categories:</Text>
               <FlatList
                 data={categories}

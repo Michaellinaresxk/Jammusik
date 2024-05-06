@@ -5,17 +5,21 @@ import {
   DrawerItemList,
 } from "@react-navigation/drawer";
 
-import { CategoriesScreen } from "../screens/categories/CategoriesScreen";
-import { HomeScreen } from "../screens/home/HomeScreen";
-import { PathPickScreen } from "../screens/PathPickScreen";
+import { CategoriesScreen } from "../pages/categories/CategoriesScreen";
+import { HomeScreen } from "../pages/home/HomeScreen";
 import { globalColors } from "../theme/Theme";
 import { BrandLogo } from "../components/shared/BrandLogo";
 import { StyleSheet, Text, View } from "react-native";
 import { PrimaryIcon } from "../components/shared/PrimaryIcon";
 import { Separator } from "../components/shared/Separator";
-import { BottomTabNavigator } from "./BottomTabNavigator";
-import { PlaylistScreen } from "../screens/playlists/PlaylistScreen";
+import { PlaylistScreen } from "../pages/playlists/PlaylistScreen";
 import Icon from "react-native-vector-icons/Ionicons";
+import { PrimaryButton } from "../components/shared/PrimaryButton";
+import { useUserService } from "../../context/UserServiceContext";
+import { type NavigationProp, useNavigation } from "@react-navigation/native";
+import { type RootStackParamsList } from "../routes/StackNavigator";
+import { ProfileScreen } from "../pages/profile/ProfileScreen";
+import { FeedbackScreen } from "../pages/feedback/FeedbackScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -33,7 +37,6 @@ export const SideMenuNavigator = () => {
           flex: 1,
         },
       }}>
-      <Drawer.Screen name="PickPathScreen" component={PathPickScreen} />
       <Drawer.Screen
         options={{
           drawerIcon: ({ focused }) => (
@@ -77,20 +80,45 @@ export const SideMenuNavigator = () => {
         options={{
           drawerIcon: ({ focused }) => (
             <Icon
-              name="grid-sharp"
+              name="id-card-sharp"
               color={focused ? globalColors.light : globalColors.terceary}
-              size={20}
+              size={23}
             />
           ),
         }}
-        name="Tab"
-        component={BottomTabNavigator}
+        name="Profile"
+        component={ProfileScreen}
+      />
+      <Drawer.Screen
+        options={{
+          drawerIcon: ({ focused }) => (
+            <Icon
+              name="chatbox-ellipses-sharp"
+              color={focused ? globalColors.light : globalColors.terceary}
+              size={22}
+            />
+          ),
+        }}
+        name="Feedback"
+        component={FeedbackScreen}
       />
     </Drawer.Navigator>
   );
 };
 
 const CustomDrawerContent = (props: DrawerContentComponentProps) => {
+  const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
+
+  const userService = useUserService();
+  const logoutUser = async () => {
+    try {
+      console.log("logout");
+      await userService.logout();
+      navigation.navigate("LoginScreen");
+    } catch (error) {
+      console.error("Error al cerrar sesión: ", error);
+    }
+  };
   return (
     <DrawerContentScrollView>
       <View style={styles.userIconContent}>
@@ -102,6 +130,15 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
       </View>
       <Separator color="white" />
       <DrawerItemList {...props} />
+      <View style={styles.buttonContainer}>
+        <PrimaryButton
+          label="Logout"
+          onPress={() => logoutUser()}
+          borderRadius={5}
+          colorText={globalColors.primary}
+          btnFontSize={17}
+        />
+      </View>
       <BrandLogo />
     </DrawerContentScrollView>
   );
@@ -119,6 +156,10 @@ const styles = StyleSheet.create({
   userName: {
     color: globalColors.terceary,
     fontSize: 20,
+  },
+  buttonContainer: {
+    marginTop: 30,
+    marginBottom: 50,
   },
   brandLogo: {
     position: "absolute",
