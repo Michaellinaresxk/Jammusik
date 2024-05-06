@@ -8,7 +8,7 @@ type Props = {
   artist: string;
   onPress: () => void;
   color: string;
-  resetToggle: () => void;
+  resetToggle: boolean;
 };
 
 export const SongCard = ({

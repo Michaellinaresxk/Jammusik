@@ -7,7 +7,7 @@ import {
   Text,
   View,
 } from "react-native";
-import { CategoryCard } from "../../components/shared/cards/CategoryCard";
+import { CategoryCardLight } from "../../components/shared/cards/CategoryCardLight";
 import { type NavigationProp, useNavigation } from "@react-navigation/native";
 import { type RootStackParamsList } from "../../routes/StackNavigator";
 import { GlobalHeader } from "../../components/shared/GlobalHeader";
@@ -16,7 +16,6 @@ import { globalColors } from "../../theme/Theme";
 import { useCategoryService } from "../../../context/CategoryServiceContext";
 import { MouseEvent, useEffect, useState } from "react";
 import { CategoryView } from "../../../views/CategoryView";
-import { LinkLoginRegister } from "../../components/shared/LinkLoginRegister";
 import { usePlaylistService } from "../../../context/PlaylistServiceContext";
 import { auth } from "../../../infra/api/firebaseConfig";
 import { PlaylistView } from "../../../views/PlaylistView";
@@ -68,7 +67,7 @@ export const HomeScreen = () => {
                 keyExtractor={item => item.id}
                 horizontal={true}
                 renderItem={({ item }) => (
-                  <CategoryCard
+                  <CategoryCardLight
                     title={item.title}
                     onPress={() =>
                       navigation.navigate("CategorySelectedScreen", {

@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { globalColors } from "../../../theme/Theme";
 import Icon from "react-native-vector-icons/Ionicons";
 
@@ -27,10 +27,7 @@ export const PlaylistCard = ({
         <Icon
           name="share-social-sharp"
           color={globalColors.light}
-          onPress={event => {
-            event.stopPropagation();
-            onShare(event);
-          }}
+          onPress={() => Alert.alert("Share functionality is comming soon...")}
           size={20}
         />
         <Icon
