@@ -27,7 +27,6 @@ export type RootStackParamsList = {
   ProfileScreen: undefined;
   FeedbackScreen: undefined;
   BottomTabNavigator: undefined;
-  SideMenuNavigator: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamsList>();
@@ -37,7 +36,6 @@ export const StackNavigator = () => {
     <Stack.Navigator
       screenOptions={{
         headerShown: true,
-
         headerStyle: {
           elevation: 0,
           shadowColor: "transparent",

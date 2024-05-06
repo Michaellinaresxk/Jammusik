@@ -75,7 +75,11 @@ export const PlaylistScreen = () => {
       style={styles.container}>
       <ScrollView>
         <View style={styles.titleContent}>
-          <Icon name="options-sharp" color={globalColors.primary} size={30} />
+          <Icon
+            name="musical-notes-sharp"
+            color={globalColors.primary}
+            size={30}
+          />
           <Text style={styles.title}>Playlists</Text>
         </View>
         <TheGreenBorder />
