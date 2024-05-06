@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { globalColors } from "../../../theme/Theme";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -8,20 +8,30 @@ type Props = {
   artist: string;
   onPress: () => void;
   color: string;
+  resetToggle: () => void;
 };
 
-export const SongCard = ({ title, artist, color, onPress }: Props) => {
+export const SongCard = ({
+  title,
+  artist,
+  color,
+  onPress,
+  resetToggle,
+}: Props) => {
   const [isDone, setIsDone] = useState(false);
+
+  useEffect(() => {
+    setIsDone(false); // Resetear cuando resetToggle cambie
+  }, [resetToggle]);
 
   const handlePressIcon = () => {
     setIsDone(!isDone);
-    // Aquí podrías invocar onPress si aún necesitas realizar alguna acción adicional cuando se cambia el estado a 'done'.
   };
 
   return (
     <TouchableOpacity
       style={[styles.songCard, { backgroundColor: isDone ? "#cccccc" : color }]}
-      onPress={onPress} // Este onPress es solo para el card
+      onPress={onPress}
       disabled={isDone}>
       <View style={styles.containerCard}>
         <View style={isDone ? styles.lineThrough : null}>
@@ -33,7 +43,7 @@ export const SongCard = ({ title, artist, color, onPress }: Props) => {
             name={isDone ? "checkmark-done-sharp" : "power-sharp"}
             color={globalColors.light}
             size={30}
-            onPress={handlePressIcon} // Solo el Icon maneja este onPress
+            onPress={handlePressIcon}
           />
         </View>
       </View>

@@ -9,6 +9,7 @@ import {
   Platform,
   Modal,
   Text,
+  TouchableOpacity,
 } from "react-native";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { GlobalHeader } from "../../components/shared/GlobalHeader";
@@ -75,6 +76,12 @@ export const PlaylistSelectedScreen = () => {
     setIsVisible(!isVisible);
   };
 
+  const [resetToggle, setResetToggle] = useState(false);
+
+  const handleResetSongs = () => {
+    setResetToggle(prev => !prev); // Cambia el estado para forzar a los SongCards a reiniciar
+  };
+
   return (
     <>
       <TheGreenBorder />
@@ -91,6 +98,7 @@ export const PlaylistSelectedScreen = () => {
               renderItem={({ item, index }) => (
                 <View>
                   <SongCard
+                    resetToggle={resetToggle}
                     title={item.title}
                     artist={item.artist}
                     color={
@@ -110,6 +118,13 @@ export const PlaylistSelectedScreen = () => {
                 </View>
               )}
             />
+            <View>
+              <TouchableOpacity
+                style={styles.resetBtn}
+                onPress={handleResetSongs}>
+                <Text style={styles.resetBtnText}>RESET SONGS</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -155,5 +170,17 @@ const styles = StyleSheet.create({
   modalFormHeaderTitle: {
     fontSize: 20,
     color: globalColors.light,
+  },
+  resetBtn: {
+    backgroundColor: globalColors.primaryAlt,
+    padding: 10,
+    paddingHorizontal: 20,
+    marginTop: 30,
+    marginBottom: 20,
+    borderRadius: 5,
+    width: "50%",
+  },
+  resetBtnText: {
+    color: globalColors.primary,
   },
 });
