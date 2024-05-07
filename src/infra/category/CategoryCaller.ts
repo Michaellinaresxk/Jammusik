@@ -1,9 +1,34 @@
-import { query, where } from "firebase/firestore";
+import { addDoc, query, where } from "firebase/firestore";
+import { auth } from "../api/firebaseConfig";
 import { ApiSong } from "../song/ApiSong";
 import type { ApiCategory } from "./ApiCategory";
 import { getFirestore, collection, getDocs } from "@firebase/firestore";
 
 export class CategoryCaller {
+  private db = getFirestore();
+  async createCategory(title: string): Promise<ApiCategory> {
+    const userId = auth.currentUser?.uid;
+    if (!userId) {
+      throw new Error("userId is undefined!");
+    }
+
+    const categoryData = {
+      title,
+      userId,
+    };
+
+    // Save data in firestore
+    const categoryRef = await addDoc(
+      collection(this.db, "categories"),
+      categoryData,
+    );
+
+    return {
+      id: categoryRef.id,
+      ...categoryData,
+    };
+  }
+
   async getCategories(): Promise<ApiCategory[]> {
     const db = getFirestore();
     const querySnapshot = await getDocs(collection(db, "categories"));

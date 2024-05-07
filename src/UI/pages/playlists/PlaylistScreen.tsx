@@ -24,7 +24,6 @@ import { useEffect, useState } from "react";
 import { PlaylistView } from "../../../views/PlaylistView";
 import { getAuth } from "firebase/auth";
 import { FormCreatePlaylist } from "../../components/shared/forms/FormCreatePlaylist";
-import { FloatingActionButton } from "../../components/shared/FloatingActionButton";
 
 export const PlaylistScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
