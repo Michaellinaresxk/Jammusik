@@ -6,6 +6,11 @@ import Song from "../../domain/song/Song";
 export class CategoryResource implements CategoryRepository {
   constructor(public readonly categoryCaller: CategoryCaller) {}
 
+  async createCategory(userId: string, title: string): Promise<Category> {
+    const apiCategory = await this.categoryCaller.createCategory(userId, title);
+    return new Category(apiCategory.userId, apiCategory.title);
+  }
+
   async getCategories(): Promise<Category[]> {
     const apiCategory = await this.categoryCaller.getCategories();
     return apiCategory.map(
