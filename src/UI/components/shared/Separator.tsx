@@ -17,7 +17,8 @@ export const Separator = ({ style, color }: Props) => {
           height: 1,
           backgroundColor: color,
           opacity: 0.1,
-          marginVertical: 8,
+
+          marginBottom: 30,
         },
         style,
       ]}

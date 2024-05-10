@@ -1,5 +1,5 @@
-import { ImageBackground, StyleSheet, View } from "react-native";
-import { globalStyles } from "../../theme/Theme";
+import { ImageBackground, StyleSheet, Text, View } from "react-native";
+import { globalColors, globalStyles } from "../../theme/Theme";
 import { Formlogin } from "../../components/shared/forms/FormLogin";
 import { images } from "../../../assets/img/Images";
 import { BrandLogo } from "../../components/shared/BrandLogo";
@@ -40,6 +40,7 @@ export const LoginScreen = () => {
           <View style={styles.containerLogo}>
             <BrandLogo />
           </View>
+          <Text style={styles.labelTitle}>Log In</Text>
           <View style={styles.containerForm}>
             <Formlogin
               email={email}
@@ -69,9 +70,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   containerLogo: {
-    flex: 1.5,
+    flex: 2,
     justifyContent: "center",
     alignItems: "center",
+  },
+  labelTitle: {
+    fontSize: 25,
+    fontWeight: "bold",
+    textAlign: "center",
+    color: globalColors.light,
   },
   containerForm: {
     flex: 3,

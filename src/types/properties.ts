@@ -39,8 +39,6 @@ export type UserProperties = {
 
 export type UserInfoProperties = {
   userId: string;
-  name: string;
-  email: string;
   location?: string;
   skills?: string;
   instrument?: string;

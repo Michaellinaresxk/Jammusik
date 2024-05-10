@@ -8,6 +8,8 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
+  Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { GlobalHeader } from "../../components/shared/GlobalHeader";
@@ -32,6 +34,12 @@ export const CategorySelectedScreen = () => {
 
   const categoryId = params.id as string;
   const categoryAll = "All";
+
+  const [resetToggle, setResetToggle] = useState(false);
+
+  const handleResetSongs = () => {
+    setResetToggle(prev => !prev);
+  };
 
   useEffect(() => {
     if (categoryId === categoryAll) {
@@ -59,10 +67,10 @@ export const CategorySelectedScreen = () => {
 
   return (
     <>
+      <TheGreenBorder />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : undefined}>
         <ScrollView>
-          <TheGreenBorder />
           <View>
             <GlobalHeader headerTitle={params.title} />
             <View style={styles.songCardContainer}>
@@ -73,6 +81,7 @@ export const CategorySelectedScreen = () => {
                 renderItem={({ item, index }) => (
                   <View>
                     <SongCard
+                      resetToggle={resetToggle}
                       title={item.title}
                       artist={item.artist}
                       color={
@@ -92,6 +101,13 @@ export const CategorySelectedScreen = () => {
                   </View>
                 )}
               />
+              <View>
+                <TouchableOpacity
+                  style={styles.resetBtn}
+                  onPress={handleResetSongs}>
+                  <Text style={styles.resetBtnText}>RESET SONGS</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </ScrollView>
@@ -104,5 +120,17 @@ const styles = StyleSheet.create({
   songCardContainer: {
     marginTop: 100,
     alignItems: "center",
+  },
+  resetBtn: {
+    backgroundColor: globalColors.primaryAlt,
+    padding: 10,
+    paddingHorizontal: 20,
+    marginTop: 30,
+    marginBottom: 300,
+    borderRadius: 5,
+    width: "50%",
+  },
+  resetBtnText: {
+    color: globalColors.primary,
   },
 });
