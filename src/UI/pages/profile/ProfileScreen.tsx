@@ -8,22 +8,28 @@ import {
   Platform,
 } from "react-native";
 import { useUserService } from "../../../context/UserServiceContext";
+import { useUserInfoService } from "../../../context/UserInfoServiceContext";
 import { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
 import { ApiUser } from "../../../infra/user/ApiUser";
 import { globalColors } from "../../theme/Theme";
 import { PrimaryIcon } from "../../components/shared/PrimaryIcon";
 import { FormProfile } from "../../components/shared/forms/FormProfile";
+import { UserInfo } from "../../../types/formTypes";
 
 export const ProfileScreen = () => {
   const userService = useUserService();
+  const userInfoService = useUserInfoService();
+
   const [user, setUser] = useState<ApiUser | null>(null);
   const auth = getAuth();
 
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
   const [userId, setUserId] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [location, setLocation] = useState("");
+  const [selectedSkill, setSelectedSkill] = useState("");
+  const [selectedInstrumentId, setSelectedInstrumentId] = useState("");
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -39,6 +45,27 @@ export const ProfileScreen = () => {
 
     fetchUser();
   }, [auth.currentUser, userService]);
+
+  useEffect(() => {
+    console.log("Selected Instrument ID:", selectedInstrumentId);
+  }, [selectedInstrumentId]);
+
+  const updateUserInfoProfile = async (userInfo: UserInfo) => {
+    const { location, skills, instrument } = userInfo;
+
+    try {
+      await userInfoService.setCurrentUserInfo(
+        userId,
+        location as string,
+        skills as string,
+        instrument as string,
+      );
+
+      console.log(location, skills);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
+  };
 
   return (
     <KeyboardAvoidingView
@@ -61,7 +88,18 @@ export const ProfileScreen = () => {
             setUserId={setUserId}
             location={location}
             setLocation={setLocation}
-            onProfile={() => console.log("user created")}
+            selectedSkill={selectedSkill}
+            setSelectedSkill={setSelectedSkill}
+            selectedInstrumentId={selectedInstrumentId}
+            setSelectedInstrumentId={setSelectedInstrumentId}
+            onProfile={() =>
+              updateUserInfoProfile({
+                userId,
+                location,
+                skills: selectedSkill,
+                instrument: selectedInstrumentId,
+              })
+            }
           />
         </View>
       </ScrollView>

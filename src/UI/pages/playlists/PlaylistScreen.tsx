@@ -24,6 +24,7 @@ import { useEffect, useState } from "react";
 import { PlaylistView } from "../../../views/PlaylistView";
 import { getAuth } from "firebase/auth";
 import { FormCreatePlaylist } from "../../components/shared/forms/FormCreatePlaylist";
+import { Separator } from "../../components/shared/Separator";
 
 export const PlaylistScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
@@ -71,82 +72,103 @@ export const PlaylistScreen = () => {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-      style={styles.container}>
-      <ScrollView>
-        <TheGreenBorder />
-        <View style={styles.titleContent}>
-          <Icon
-            name="musical-notes-sharp"
-            color={globalColors.primary}
-            size={30}
-          />
-          <Text style={styles.title}>Playlists</Text>
-        </View>
+    <>
+      <TheGreenBorder />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
+        style={styles.container}>
+        <ScrollView>
+          <View style={styles.containerHeader}>
+            <View style={styles.titleContent}>
+              <Icon
+                name="musical-notes-sharp"
+                color={globalColors.primary}
+                size={30}
+              />
+              <Text style={styles.title}>Playlists</Text>
+            </View>
+            <TouchableOpacity
+              onPress={() => setIsVisible(true)}
+              style={styles.openModalBtn}>
+              {/* <Icon name="id-card-sharp" color={globalColors.primary} size={23} /> */}
+              <Text style={styles.openModalBtnText}>+</Text>
+            </TouchableOpacity>
+          </View>
+          <Separator color={globalColors.terceary} />
 
-        <View style={styles.container}>
-          <FlatList
-            data={playlists}
-            keyExtractor={item => item.id}
-            numColumns={2}
-            renderItem={({ item, index }) => (
-              <View style={styles.playlistCardContainer}>
-                <PlaylistCard
-                  title={item.title}
-                  color={
-                    index % 2 === 0
-                      ? globalColors.primary
-                      : globalColors.secondary
-                  }
-                  onPress={() =>
-                    navigation.navigate("PlaylistSelectedScreen", {
-                      id: item.id,
-                      title: item.title,
-                    })
-                  }
-                  onShare={() => Alert.alert("Compartiendo playlist")}
-                  onDelete={() => handleDeletePlaylist(item.id)}
-                />
-              </View>
-            )}
-          />
-        </View>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            onPress={() => setIsVisible(true)}
-            style={styles.openModalBtn}>
-            {/* <Icon name="id-card-sharp" color={globalColors.primary} size={23} /> */}
-            <Text style={styles.openModalBtnText}>CREATE PLAYLIST</Text>
-          </TouchableOpacity>
-        </View>
-        <Modal
-          visible={isVisible}
-          animationType="slide"
-          presentationStyle="formSheet">
-          <View style={styles.modalBtnContainer}>
-            <Text style={styles.modalFormHeaderTitle}>Add Playlist Info</Text>
-            <PrimaryButton
-              label="Close"
-              btnFontSize={20}
-              colorText={globalColors.light}
-              onPress={() => closeModal()}
+          <View style={styles.container}>
+            <FlatList
+              data={playlists}
+              keyExtractor={item => item.id}
+              numColumns={2}
+              renderItem={({ item, index }) => (
+                <View style={styles.playlistCardContainer}>
+                  <PlaylistCard
+                    title={item.title}
+                    color={
+                      index % 2 === 0
+                        ? globalColors.primary
+                        : globalColors.secondary
+                    }
+                    onPress={() =>
+                      navigation.navigate("PlaylistSelectedScreen", {
+                        id: item.id,
+                        title: item.title,
+                      })
+                    }
+                    onShare={() => Alert.alert("Compartiendo playlist")}
+                    onDelete={() => handleDeletePlaylist(item.id)}
+                  />
+                </View>
+              )}
             />
           </View>
-          <FormCreatePlaylist
-            title={title}
-            setTitle={setTitle}
-            mode={mode}
-            setMode={setMode}
-            onCreatePlaylist={handleCreatePlaylist}
-          />
-        </Modal>
-      </ScrollView>
-    </KeyboardAvoidingView>
+          <Modal
+            visible={isVisible}
+            animationType="slide"
+            presentationStyle="formSheet">
+            <View style={styles.modalBtnContainer}>
+              <Text style={styles.modalFormHeaderTitle}>Add Playlist Info</Text>
+              <PrimaryButton
+                label="Close"
+                btnFontSize={20}
+                colorText={globalColors.light}
+                onPress={() => closeModal()}
+              />
+            </View>
+            <FormCreatePlaylist
+              title={title}
+              setTitle={setTitle}
+              mode={mode}
+              setMode={setMode}
+              onCreatePlaylist={handleCreatePlaylist}
+            />
+          </Modal>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
+  containerHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 20,
+  },
+  openModalBtn: {
+    backgroundColor: globalColors.primaryAlt,
+    padding: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginRight: 10,
+  },
+  openModalBtnText: {
+    color: globalColors.primary,
+    fontSize: 30,
+    fontWeight: "300",
+  },
   titleContent: {
     flexDirection: "row",
     padding: 15,
@@ -182,15 +204,5 @@ const styles = StyleSheet.create({
   modalFormHeaderTitle: {
     fontSize: 20,
     color: globalColors.light,
-  },
-  openModalBtn: {
-    backgroundColor: globalColors.primaryAlt,
-    padding: 10,
-    paddingHorizontal: 20,
-    marginBottom: 20,
-    borderRadius: 5,
-  },
-  openModalBtnText: {
-    color: globalColors.primary,
   },
 });

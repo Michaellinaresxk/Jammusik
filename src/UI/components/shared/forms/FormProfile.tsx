@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { Text, TextInput, View } from "react-native";
 import { globalColors, globalFormStyles } from "../../../theme/Theme";
 import { PrimaryButton } from "../PrimaryButton";
 import { CustomDropdown } from "../CustomDropdown";
 import RadioButton from "../RadioButton";
+import { UserInfo } from "../../../../types/formTypes";
 
 type ProfileForm = {
   email: string;
@@ -14,7 +15,9 @@ type ProfileForm = {
   setUserId: React.Dispatch<React.SetStateAction<string>>;
   location: string;
   setLocation: React.Dispatch<React.SetStateAction<string>>;
-  onProfile: () => Promise<void>;
+  selectedSkill: string;
+  setSelectedSkill: React.Dispatch<React.SetStateAction<string>>;
+  onProfile: (userInfo: UserInfo) => Promise<void>;
 };
 
 export const FormProfile = ({
@@ -26,6 +29,8 @@ export const FormProfile = ({
   setUserId,
   location,
   setLocation,
+  selectedSkill,
+  setSelectedSkill,
   onProfile,
 }: ProfileForm) => {
   const instruments = [
@@ -91,7 +96,11 @@ export const FormProfile = ({
           />
           <View style={globalFormStyles.radioButtonContainer}>
             <Text style={globalFormStyles.radioButtonTitle}>Skills</Text>
-            <RadioButton options={options} onSelect={onSelect} />
+            <RadioButton
+              options={options}
+              setSelectedSkill={setSelectedSkill}
+              selectedSkill={selectedSkill}
+            />
           </View>
           <CustomDropdown
             items={dropdownInstruments}

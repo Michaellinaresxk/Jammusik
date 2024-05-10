@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   containerLoginScreen: {
+    marginTop: 100,
     flex: 1,
   },
   containerLogo: {

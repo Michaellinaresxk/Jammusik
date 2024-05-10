@@ -11,60 +11,63 @@ import { SongSelectedScreen } from "../pages/songs/SongSelectedScreen";
 import { ProfileScreen } from "../pages/profile/ProfileScreen";
 import type { Song } from "../../types/songTypes";
 import { FeedbackScreen } from "../pages/feedback/FeedbackScreen";
-import { BottomTabNavigator } from "./BottomTabNavigator";
+import useAuthStatus from "../../hooks/useAuthStatus";
 
 export type RootStackParamsList = {
   PathPickScreen: undefined;
   LoginScreen: undefined;
-  PlaylistScreen: undefined;
-  PlaylistSelectedScreen: Song;
   RegisterScreen: undefined;
   HomeScreen: undefined;
+  PlaylistScreen: undefined;
+  PlaylistSelectedScreen: Song;
+  SongSelectedScreen: { title: string; artist: string };
   CategoriesScreen: { id: string; title: string };
   CategorySelectedScreen: Song;
-  SongSelectedScreen: { title: string; artist: string };
-  Tab: undefined;
   ProfileScreen: undefined;
   FeedbackScreen: undefined;
-  BottomTabNavigator: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamsList>();
 
 export const StackNavigator = () => {
+  const { isLoggedIn } = useAuthStatus();
+
   return (
     <Stack.Navigator
       screenOptions={{
-        headerShown: true,
+        headerShown: false,
         headerStyle: {
           elevation: 0,
           shadowColor: "transparent",
         },
       }}>
-      <Stack.Screen
-        name="Home"
-        component={BottomTabNavigator}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen name="PathPickScreen" component={PathPickScreen} />
-      <Stack.Screen name="LoginScreen" component={LoginScreen} />
-      <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-      <Stack.Screen name="HomeScreen" component={HomeScreen} />
-      <Stack.Screen name="CategoriesScreen" component={CategoriesScreen} />
-      <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
-      <Stack.Screen name="FeedbackScreen" component={FeedbackScreen} />
-      <Stack.Screen
-        name="CategorySelectedScreen"
-        component={CategorySelectedScreen}
-      />
-      <Stack.Screen name="PlaylistScreen" component={PlaylistScreen} />
-      <Stack.Screen
-        name="PlaylistSelectedScreen"
-        component={PlaylistSelectedScreen}
-      />
-      <Stack.Screen name="SongSelectedScreen" component={SongSelectedScreen} />
+      {isLoggedIn ? (
+        <Stack.Group>
+          <Stack.Screen name="HomeScreen" component={HomeScreen} />
+          <Stack.Screen name="CategoriesScreen" component={CategoriesScreen} />
+          <Stack.Screen
+            name="CategorySelectedScreen"
+            component={CategorySelectedScreen}
+          />
+          <Stack.Screen name="PlaylistScreen" component={PlaylistScreen} />
+          <Stack.Screen
+            name="PlaylistSelectedScreen"
+            component={PlaylistSelectedScreen}
+          />
+          <Stack.Screen
+            name="SongSelectedScreen"
+            component={SongSelectedScreen}
+          />
+          <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+          <Stack.Screen name="FeedbackScreen" component={FeedbackScreen} />
+        </Stack.Group>
+      ) : (
+        <Stack.Group screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="PathPickScreen" component={PathPickScreen} />
+          <Stack.Screen name="LoginScreen" component={LoginScreen} />
+          <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
+        </Stack.Group>
+      )}
     </Stack.Navigator>
   );
 };

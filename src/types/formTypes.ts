@@ -17,8 +17,6 @@ export interface Login {
 
 export interface UserInfo {
   userId: string;
-  name: string;
-  email: string;
   location?: string;
   skills?: string;
   instrument?: string;

@@ -6,7 +6,6 @@ import {
 } from "@react-navigation/drawer";
 
 import { CategoriesScreen } from "../pages/categories/CategoriesScreen";
-import { HomeScreen } from "../pages/home/HomeScreen";
 import { globalColors } from "../theme/Theme";
 import { BrandLogo } from "../components/shared/BrandLogo";
 import { StyleSheet, Text, View } from "react-native";
@@ -17,13 +16,21 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { PrimaryButton } from "../components/shared/PrimaryButton";
 import { useUserService } from "../../context/UserServiceContext";
 import { type NavigationProp, useNavigation } from "@react-navigation/native";
-import { type RootStackParamsList } from "../routes/StackNavigator";
+import {
+  StackNavigator,
+  type RootStackParamsList,
+} from "../routes/StackNavigator";
 import { ProfileScreen } from "../pages/profile/ProfileScreen";
 import { FeedbackScreen } from "../pages/feedback/FeedbackScreen";
+import useAuthStatus from "../../hooks/useAuthStatus";
+import PathPickScreen from "../pages/PathPickScreen";
+import { LoginScreen } from "../pages/login/LoginScreen";
+import { RegisterScreen } from "../pages/register/RegisterScreen";
 
 const Drawer = createDrawerNavigator();
 
 export const SideMenuNavigator = () => {
+  const { isLoggedIn } = useAuthStatus();
   return (
     <Drawer.Navigator
       drawerContent={props => <CustomDrawerContent {...props} />}
@@ -38,71 +45,81 @@ export const SideMenuNavigator = () => {
           flex: 1,
         },
       }}>
-      <Drawer.Screen
-        options={{
-          drawerIcon: ({ focused }) => (
-            <Icon
-              name="home-sharp"
-              color={focused ? globalColors.light : globalColors.terceary}
-              size={20}
-            />
-          ),
-        }}
-        name="Home"
-        component={HomeScreen}
-      />
-      <Drawer.Screen
-        options={{
-          drawerIcon: ({ focused }) => (
-            <Icon
-              name="musical-notes-sharp"
-              color={focused ? globalColors.light : globalColors.terceary}
-              size={22}
-            />
-          ),
-        }}
-        name="Playlist"
-        component={PlaylistScreen}
-      />
-      <Drawer.Screen
-        options={{
-          drawerIcon: ({ focused }) => (
-            <Icon
-              name="grid-sharp"
-              color={focused ? globalColors.light : globalColors.terceary}
-              size={20}
-            />
-          ),
-        }}
-        name="Categories"
-        component={CategoriesScreen}
-      />
-      <Drawer.Screen
-        options={{
-          drawerIcon: ({ focused }) => (
-            <Icon
-              name="settings-sharp"
-              color={focused ? globalColors.light : globalColors.terceary}
-              size={23}
-            />
-          ),
-        }}
-        name="Settings"
-        component={ProfileScreen}
-      />
-      <Drawer.Screen
-        options={{
-          drawerIcon: ({ focused }) => (
-            <Icon
-              name="chatbox-ellipses-sharp"
-              color={focused ? globalColors.light : globalColors.terceary}
-              size={22}
-            />
-          ),
-        }}
-        name="Feedback"
-        component={FeedbackScreen}
-      />
+      {isLoggedIn ? (
+        <>
+          <Drawer.Screen
+            options={{
+              drawerIcon: ({ focused }) => (
+                <Icon
+                  name="home-sharp"
+                  color={focused ? globalColors.light : globalColors.terceary}
+                  size={20}
+                />
+              ),
+            }}
+            name="Home"
+            component={StackNavigator}
+          />
+          <Drawer.Screen
+            options={{
+              drawerIcon: ({ focused }) => (
+                <Icon
+                  name="musical-notes-sharp"
+                  color={focused ? globalColors.light : globalColors.terceary}
+                  size={22}
+                />
+              ),
+            }}
+            name="Playlist"
+            component={PlaylistScreen}
+          />
+          <Drawer.Screen
+            options={{
+              drawerIcon: ({ focused }) => (
+                <Icon
+                  name="grid-sharp"
+                  color={focused ? globalColors.light : globalColors.terceary}
+                  size={20}
+                />
+              ),
+            }}
+            name="Categories"
+            component={CategoriesScreen}
+          />
+          <Drawer.Screen
+            options={{
+              drawerIcon: ({ focused }) => (
+                <Icon
+                  name="settings-sharp"
+                  color={focused ? globalColors.light : globalColors.terceary}
+                  size={23}
+                />
+              ),
+            }}
+            name="Settings"
+            component={ProfileScreen}
+          />
+          <Drawer.Screen
+            options={{
+              drawerIcon: ({ focused }) => (
+                <Icon
+                  name="chatbox-ellipses-sharp"
+                  color={focused ? globalColors.light : globalColors.terceary}
+                  size={22}
+                />
+              ),
+            }}
+            name="Feedback"
+            component={FeedbackScreen}
+          />
+        </>
+      ) : (
+        <Drawer.Group screenOptions={{ headerShown: false }}>
+          <Drawer.Screen name="PathPickScreen" component={PathPickScreen} />
+          <Drawer.Screen name="LoginScreen" component={LoginScreen} />
+          <Drawer.Screen name="RegisterScreen" component={RegisterScreen} />
+        </Drawer.Group>
+      )}
     </Drawer.Navigator>
   );
 };

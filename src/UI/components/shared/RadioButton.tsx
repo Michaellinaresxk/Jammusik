@@ -2,12 +2,22 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { globalColors } from "../../theme/Theme";
 
-const RadioButton = ({ options, onSelect }) => {
+type RadioButtonProps = {
+  options: { label: string; value: string }[];
+  setSelectedSkill: (value: string) => void;
+  selectedSkill: string;
+};
+
+const RadioButton = ({
+  options,
+  setSelectedSkill,
+  selectedSkill,
+}: RadioButtonProps) => {
   const [value, setValue] = useState(null);
 
   const handlePress = selectedValue => {
     setValue(selectedValue);
-    onSelect(selectedValue);
+    setSelectedSkill(selectedValue);
   };
 
   return (
