@@ -20,6 +20,7 @@ import { usePlaylistService } from "../../../context/PlaylistServiceContext";
 import { auth } from "../../../infra/api/firebaseConfig";
 import { PlaylistView } from "../../../views/PlaylistView";
 import { PlaylistCard } from "../../components/shared/cards/PlaylistCard";
+import { HamburgerMenu } from "../../components/shared/HamburgerMenu";
 
 export const HomeScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
@@ -58,6 +59,7 @@ export const HomeScreen = () => {
         behavior={Platform.OS === "ios" ? "padding" : undefined}>
         <ScrollView>
           <View>
+            <HamburgerMenu />
             <GlobalHeader headerTitle="Home" />
             <TheGreenBorder />
             <View style={styles.categoryCardContainer}>

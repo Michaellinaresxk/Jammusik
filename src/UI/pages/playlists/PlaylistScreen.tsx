@@ -25,6 +25,7 @@ import { PlaylistView } from "../../../views/PlaylistView";
 import { getAuth } from "firebase/auth";
 import { FormCreatePlaylist } from "../../components/shared/forms/FormCreatePlaylist";
 import { Separator } from "../../components/shared/Separator";
+import { HamburgerMenu } from "../../components/shared/HamburgerMenu";
 
 export const PlaylistScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
@@ -79,6 +80,7 @@ export const PlaylistScreen = () => {
         style={styles.container}>
         <ScrollView>
           <View style={styles.containerHeader}>
+            <HamburgerMenu />
             <View style={styles.titleContent}>
               <Icon
                 name="musical-notes-sharp"

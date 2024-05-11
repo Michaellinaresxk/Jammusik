@@ -16,6 +16,7 @@ import { globalColors } from "../../theme/Theme";
 import { PrimaryIcon } from "../../components/shared/PrimaryIcon";
 import { FormProfile } from "../../components/shared/forms/FormProfile";
 import { UserInfo } from "../../../types/formTypes";
+import { HamburgerMenu } from "../../components/shared/HamburgerMenu";
 
 export const ProfileScreen = () => {
   const userService = useUserService();
@@ -72,6 +73,7 @@ export const ProfileScreen = () => {
       behavior={Platform.OS === "ios" ? "padding" : undefined}>
       <ScrollView>
         <View>
+          <HamburgerMenu />
           <View style={styles.userIconContent}>
             <PrimaryIcon
               name="person-circle-outline"

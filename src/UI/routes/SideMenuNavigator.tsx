@@ -44,6 +44,7 @@ export const SideMenuNavigator = () => {
           backgroundColor: globalColors.secondary,
           flex: 1,
         },
+        headerShown: false,
       }}>
       {isLoggedIn ? (
         <>
@@ -132,7 +133,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
     try {
       console.log("logout");
       await userService.logout();
-      navigation.navigate("LoginScreen");
+      navigation.navigate("PathPickScreen");
     } catch (error) {
       console.error("Error al cerrar sesión: ", error);
     }
