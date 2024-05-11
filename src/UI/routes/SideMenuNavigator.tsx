@@ -20,12 +20,12 @@ import {
   StackNavigator,
   type RootStackParamsList,
 } from "../routes/StackNavigator";
-import { ProfileScreen } from "../pages/profile/ProfileScreen";
 import { FeedbackScreen } from "../pages/feedback/FeedbackScreen";
 import useAuthStatus from "../../hooks/useAuthStatus";
 import PathPickScreen from "../pages/PathPickScreen";
 import { LoginScreen } from "../pages/login/LoginScreen";
 import { RegisterScreen } from "../pages/register/RegisterScreen";
+import { SettingsScreen } from "../pages/settings/SettingsScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -93,12 +93,12 @@ export const SideMenuNavigator = () => {
                 <Icon
                   name="settings-sharp"
                   color={focused ? globalColors.light : globalColors.terceary}
-                  size={23}
+                  size={22}
                 />
               ),
             }}
             name="Settings"
-            component={ProfileScreen}
+            component={SettingsScreen}
           />
           <Drawer.Screen
             options={{
