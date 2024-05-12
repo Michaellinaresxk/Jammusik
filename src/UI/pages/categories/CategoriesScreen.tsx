@@ -9,6 +9,7 @@ import {
   ScrollView,
   Platform,
   Modal,
+  Pressable,
 } from "react-native";
 import { globalColors, globalStyles } from "../../theme/Theme";
 import { images } from "../../../assets/img/Images";
@@ -68,28 +69,38 @@ export const CategoriesScreen = () => {
           <ScrollView>
             <View
               style={{
-                ...styles.containerHeader,
                 flex: 1,
-                paddingHorizontal: 20,
-                marginTop: top,
+                paddingHorizontal: 10,
               }}>
-              <View style={styles.titleContent}>
+              <Pressable
+                style={styles.goBackContent}
+                onPress={() => navigation.navigate("HomeScreen")}>
                 <Icon
-                  name="musical-notes-sharp"
+                  name="chevron-back-sharp"
                   color={globalColors.primary}
-                  size={30}
+                  size={25}
                 />
-                <Text style={styles.title}>Categories</Text>
+                <Text style={styles.goBackLabel}>Back</Text>
+              </Pressable>
+              <View style={styles.containerHeader}>
+                <View style={styles.titleContent}>
+                  <Icon
+                    name="musical-notes-sharp"
+                    color={globalColors.primary}
+                    size={30}
+                  />
+                  <Text style={styles.title}>Categories</Text>
+                </View>
+                <TouchableOpacity
+                  onPress={() => setIsVisible(true)}
+                  style={styles.openModalBtn}>
+                  {/* <Icon name="id-card-sharp" color={globalColors.primary} size={23} /> */}
+                  <Text style={styles.openModalBtnText}>+</Text>
+                </TouchableOpacity>
               </View>
-              <TouchableOpacity
-                onPress={() => setIsVisible(true)}
-                style={styles.openModalBtn}>
-                {/* <Icon name="id-card-sharp" color={globalColors.primary} size={23} /> */}
-                <Text style={styles.openModalBtnText}>+</Text>
-              </TouchableOpacity>
             </View>
             <Separator color={globalColors.terceary} />
-            <View style={{ marginTop: 50, justifyContent: "center" }}>
+            <View style={{ marginTop: 30, justifyContent: "center" }}>
               <CategoryCard
                 title="All"
                 onPress={() =>
@@ -153,7 +164,20 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 10,
+    marginTop: 30,
+  },
+  goBackContent: {
+    fontSize: 15,
+    fontWeight: "bold",
+    margin: "auto",
+    marginTop: 40,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  goBackLabel: {
+    fontSize: 20,
+    color: globalColors.terceary,
+    fontWeight: "bold",
   },
   titleContent: {
     flexDirection: "row",
