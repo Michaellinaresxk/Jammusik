@@ -189,7 +189,6 @@ const styles = StyleSheet.create({
   goBackLabel: {
     fontSize: 20,
     color: globalColors.terceary,
-    fontWeight: "bold",
   },
   openModalBtn: {
     backgroundColor: globalColors.primaryAlt,
