@@ -112,7 +112,7 @@ export const SettingsScreen = () => {
             label="Logout"
             onPress={() => logoutUser()}
             borderRadius={5}
-            colorText={globalColors.primary}
+            colorText={globalColors.danger}
             btnFontSize={17}
           />
         </View>

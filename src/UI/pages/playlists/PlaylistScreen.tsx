@@ -5,6 +5,7 @@ import {
   KeyboardAvoidingView,
   Modal,
   Platform,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -82,25 +83,36 @@ export const PlaylistScreen = () => {
         <ScrollView>
           <View
             style={{
-              ...styles.containerHeader,
               flex: 1,
-              paddingHorizontal: 20,
-              marginTop: top,
+              paddingHorizontal: 15,
+              marginTop: 40,
             }}>
-            <View style={styles.titleContent}>
+            <Pressable
+              style={styles.goBackContent}
+              onPress={() => navigation.navigate("HomeScreen")}>
               <Icon
-                name="musical-notes-sharp"
+                name="chevron-back-sharp"
                 color={globalColors.primary}
-                size={30}
+                size={25}
               />
-              <Text style={styles.title}>Playlists</Text>
+              <Text style={styles.goBackLabel}>Back</Text>
+            </Pressable>
+            <View style={styles.containerHeader}>
+              <View style={styles.titleContent}>
+                <Icon
+                  name="musical-notes-sharp"
+                  color={globalColors.primary}
+                  size={30}
+                />
+                <Text style={styles.title}>Playlists</Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => setIsVisible(true)}
+                style={styles.openModalBtn}>
+                {/* <Icon name="id-card-sharp" color={globalColors.primary} size={23} /> */}
+                <Text style={styles.openModalBtnText}>+</Text>
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              onPress={() => setIsVisible(true)}
-              style={styles.openModalBtn}>
-              {/* <Icon name="id-card-sharp" color={globalColors.primary} size={23} /> */}
-              <Text style={styles.openModalBtnText}>+</Text>
-            </TouchableOpacity>
           </View>
           <Separator color={globalColors.terceary} />
 
@@ -163,7 +175,21 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 20,
+    paddingHorizontal: 5,
+  },
+  goBackContent: {
+    fontSize: 15,
+    fontWeight: "bold",
+    margin: "auto",
+    marginTop: 40,
+    flexDirection: "row",
+    alignItems: "center",
+    marginLeft: 20,
+  },
+  goBackLabel: {
+    fontSize: 20,
+    color: globalColors.terceary,
+    fontWeight: "bold",
   },
   openModalBtn: {
     backgroundColor: globalColors.primaryAlt,
