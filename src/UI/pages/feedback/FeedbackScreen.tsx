@@ -6,12 +6,21 @@ import {
   TextInput,
   Alert,
   StyleSheet,
+  Pressable,
 } from "react-native";
 import { globalColors, globalStyles } from "../../theme/Theme";
 import { images } from "../../../assets/img/Images";
 import { BrandLogo } from "../../components/shared/BrandLogo";
 import { PrimaryButton } from "../../components/shared/PrimaryButton";
+import Icon from "react-native-vector-icons/Ionicons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { RootStackParamsList } from "../../routes/StackNavigator";
+
 export const FeedbackScreen = () => {
+  const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
+
+  const { top } = useSafeAreaInsets();
   const image = {
     uri: images.loginBackground,
   };
@@ -23,6 +32,16 @@ export const FeedbackScreen = () => {
       resizeMode="cover"
       alt="Imagen de fondo">
       <View style={globalStyles.overlay}>
+        <Pressable
+          style={styles.goBackContent}
+          onPress={() => navigation.navigate("HomeScreen")}>
+          <Icon
+            name="chevron-back-sharp"
+            color={globalColors.primary}
+            size={25}
+          />
+          <Text style={styles.goBackLabel}>Back</Text>
+        </Pressable>
         <View style={{ flex: 1, justifyContent: "center" }}>
           <BrandLogo />
 
@@ -50,7 +69,7 @@ export const FeedbackScreen = () => {
                 color: "black",
               }}
               placeholderTextColor="black"
-              placeholder="Place your feedback here"
+              placeholder="Place your feedback here..."
             />
             <PrimaryButton
               label="SEND FEEDBACK"
@@ -66,9 +85,23 @@ export const FeedbackScreen = () => {
   );
 };
 const styles = StyleSheet.create({
+  goBackContent: {
+    fontSize: 15,
+    fontWeight: "bold",
+    margin: "auto",
+    marginTop: 40,
+    marginBottom: 30,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  goBackLabel: {
+    fontSize: 20,
+    color: globalColors.terceary,
+  },
   text: {
     color: globalColors.light,
     fontSize: 18,
+    lineHeight: 30,
     fontWeight: "300",
   },
   subTitle: {
