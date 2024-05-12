@@ -5,7 +5,10 @@ import { MenuItem } from "../../components/shared/MenuItem";
 import { BrandLogo } from "../../components/shared/BrandLogo";
 import Icon from "react-native-vector-icons/Ionicons";
 import { globalColors } from "../../theme/Theme";
-import { useNavigation } from "@react-navigation/native";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { PrimaryButton } from "../../components/shared/PrimaryButton";
+import { useUserService } from "../../../context/UserServiceContext";
+import { RootStackParamsList } from "../../routes/StackNavigator";
 
 export const SettingsScreen = () => {
   const { top } = useSafeAreaInsets();
@@ -44,7 +47,19 @@ export const SettingsScreen = () => {
     },
   ];
 
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
+
+  const userService = useUserService();
+  const logoutUser = async () => {
+    try {
+      console.log("logout");
+      await userService.logout();
+      navigation.navigate("PathPickScreen");
+    } catch (error) {
+      console.error("Error al cerrar sesión: ", error);
+    }
+  };
+
   return (
     <View
       style={{
@@ -92,6 +107,15 @@ export const SettingsScreen = () => {
           />
         ))}
         <View style={{ marginTop: 30 }} />
+        <View style={styles.buttonContainer}>
+          <PrimaryButton
+            label="Logout"
+            onPress={() => logoutUser()}
+            borderRadius={5}
+            colorText={globalColors.primary}
+            btnFontSize={17}
+          />
+        </View>
         <View style={{ marginTop: 100 }}>
           <BrandLogo />
         </View>
@@ -118,5 +142,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: globalColors.terceary,
     fontWeight: "bold",
+  },
+  buttonContainer: {
+    marginTop: 30,
+    marginBottom: 50,
   },
 });

@@ -21,10 +21,13 @@ import { CategoryView } from "../../../views/CategoryView";
 import { PrimaryButton } from "../../components/shared/PrimaryButton";
 import { FormCreateCategory } from "../../components/shared/forms/FormCreateCategory";
 import { getAuth } from "firebase/auth";
-
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Separator } from "../../components/shared/Separator";
+import Icon from "react-native-vector-icons/Ionicons";
 const backgroundImage = { uri: images.image3 };
 
 export const CategoriesScreen = () => {
+  const { top } = useSafeAreaInsets();
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
   const auth = getAuth();
   const categoryService = useCategoryService();
@@ -63,6 +66,29 @@ export const CategoriesScreen = () => {
           behavior={Platform.OS === "ios" ? "padding" : undefined}
           style={styles.container}>
           <ScrollView>
+            <View
+              style={{
+                ...styles.containerHeader,
+                flex: 1,
+                paddingHorizontal: 20,
+                marginTop: top,
+              }}>
+              <View style={styles.titleContent}>
+                <Icon
+                  name="musical-notes-sharp"
+                  color={globalColors.primary}
+                  size={30}
+                />
+                <Text style={styles.title}>Categories</Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => setIsVisible(true)}
+                style={styles.openModalBtn}>
+                {/* <Icon name="id-card-sharp" color={globalColors.primary} size={23} /> */}
+                <Text style={styles.openModalBtnText}>+</Text>
+              </TouchableOpacity>
+            </View>
+            <Separator color={globalColors.terceary} />
             <View style={{ marginTop: 50, justifyContent: "center" }}>
               <CategoryCard
                 title="All"
@@ -90,17 +116,6 @@ export const CategoriesScreen = () => {
                   />
                 )}
               />
-
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                  onPress={() => setIsVisible(true)}
-                  style={styles.openModalBtn}>
-                  {/* <Icon name="id-card-sharp" color={globalColors.primary} size={23} /> */}
-                  <Text style={styles.openModalBtnText}>
-                    CREATE A NEW CATEGORY
-                  </Text>
-                </TouchableOpacity>
-              </View>
               <Modal
                 visible={isVisible}
                 animationType="slide"
@@ -134,10 +149,27 @@ const styles = StyleSheet.create({
   container: {
     marginBottom: 100,
   },
+  containerHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 10,
+  },
+  titleContent: {
+    flexDirection: "row",
+    gap: 5,
+    marginTop: 30,
+    marginBottom: 30,
+  },
+  title: {
+    fontSize: 25,
+    fontWeight: "bold",
+    color: globalColors.light,
+  },
   buttonContainer: {
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 30,
+    marginTop: 50,
     padding: 30,
   },
   modalBtnContainer: {
@@ -154,10 +186,10 @@ const styles = StyleSheet.create({
     backgroundColor: globalColors.primaryAlt,
     padding: 10,
     paddingHorizontal: 20,
-    marginBottom: 20,
     borderRadius: 5,
   },
   openModalBtnText: {
     color: globalColors.primary,
+    fontSize: 25,
   },
 });

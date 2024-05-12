@@ -25,9 +25,10 @@ import { PlaylistView } from "../../../views/PlaylistView";
 import { getAuth } from "firebase/auth";
 import { FormCreatePlaylist } from "../../components/shared/forms/FormCreatePlaylist";
 import { Separator } from "../../components/shared/Separator";
-import { HamburgerMenu } from "../../components/shared/HamburgerMenu";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export const PlaylistScreen = () => {
+  const { top } = useSafeAreaInsets();
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
   const auth = getAuth();
   const playlistService = usePlaylistService();
@@ -79,8 +80,13 @@ export const PlaylistScreen = () => {
         behavior={Platform.OS === "ios" ? "padding" : undefined}
         style={styles.container}>
         <ScrollView>
-          <View style={styles.containerHeader}>
-            <HamburgerMenu />
+          <View
+            style={{
+              ...styles.containerHeader,
+              flex: 1,
+              paddingHorizontal: 20,
+              marginTop: top,
+            }}>
             <View style={styles.titleContent}>
               <Icon
                 name="musical-notes-sharp"
