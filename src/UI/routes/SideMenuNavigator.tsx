@@ -20,7 +20,6 @@ import {
   StackNavigator,
   type RootStackParamsList,
 } from "../routes/StackNavigator";
-import { FeedbackScreen } from "../pages/feedback/FeedbackScreen";
 import useAuthStatus from "../../hooks/useAuthStatus";
 import PathPickScreen from "../pages/PathPickScreen";
 import { LoginScreen } from "../pages/login/LoginScreen";
@@ -99,19 +98,6 @@ export const SideMenuNavigator = () => {
             }}
             name="Settings"
             component={SettingsScreen}
-          />
-          <Drawer.Screen
-            options={{
-              drawerIcon: ({ focused }) => (
-                <Icon
-                  name="chatbox-ellipses-sharp"
-                  color={focused ? globalColors.light : globalColors.terceary}
-                  size={22}
-                />
-              ),
-            }}
-            name="Feedback"
-            component={FeedbackScreen}
           />
         </>
       ) : (

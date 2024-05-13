@@ -21,6 +21,7 @@ import { auth } from "../../../infra/api/firebaseConfig";
 import { PlaylistView } from "../../../views/PlaylistView";
 import { PlaylistCard } from "../../components/shared/cards/PlaylistCard";
 import { HamburgerMenu } from "../../components/shared/HamburgerMenu";
+import { SliderQuotes } from "../../components/shared/SliderQuotes";
 
 export const HomeScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
@@ -80,7 +81,7 @@ export const HomeScreen = () => {
                   />
                 )}
               />
-
+              <SliderQuotes />
               <View style={styles.playlistContainer}>
                 <Text style={styles.subTitle}>Playlists:</Text>
                 <FlatList
