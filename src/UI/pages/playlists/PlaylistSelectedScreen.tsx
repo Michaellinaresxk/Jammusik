@@ -24,6 +24,7 @@ import { FormCreateSong } from "../../components/shared/forms/FormCreateSong";
 import { useSongService } from "../../../context/SongServiceContext";
 import { SongView } from "../../../views/SongView";
 import { PrimaryButton } from "../../components/shared/PrimaryButton";
+import { useResetSongsState } from "../../store/useResetSongsState";
 
 export const PlaylistSelectedScreen = () => {
   const songService = useSongService();
@@ -76,11 +77,11 @@ export const PlaylistSelectedScreen = () => {
     setIsVisible(!isVisible);
   };
 
-  const [resetToggle, setResetToggle] = useState(false);
+  const { resetToggle, resetAllSongs } = useResetSongsState();
 
-  const handleResetSongs = () => {
-    setResetToggle(prev => !prev);
-  };
+  // const handleResetSongs = () => {
+  //   setResetToggle(prev => !prev);
+  // };
 
   return (
     <>
@@ -119,9 +120,7 @@ export const PlaylistSelectedScreen = () => {
               )}
             />
             <View>
-              <TouchableOpacity
-                style={styles.resetBtn}
-                onPress={handleResetSongs}>
+              <TouchableOpacity style={styles.resetBtn} onPress={resetAllSongs}>
                 <Text style={styles.resetBtnText}>RESET SONGS</Text>
               </TouchableOpacity>
             </View>
