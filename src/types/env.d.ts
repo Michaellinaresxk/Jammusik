@@ -1,7 +1,9 @@
 declare module "@env" {
-  export const API_BASE: string;
-  export const STAGE: string;
-  export const API_URL: string;
-  export const API_URL_IOS: string;
-  export const API_URL_ANDROID: string;
+  export const APIKEY: string;
+  export const AUTH_DOMAIN: string;
+  export const PROJECT_ID: string;
+  export const STORAGE_BUCKET: string;
+  export const MESSAGING_SENDER_ID: string;
+  export const APP_ID: string;
+  export const MEASUREMENT_ID: string;
 }
