@@ -8,7 +8,7 @@ import {
 import { CategoriesScreen } from "../pages/categories/CategoriesScreen";
 import { globalColors } from "../theme/Theme";
 import { BrandLogo } from "../components/shared/BrandLogo";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, StyleProp } from "react-native";
 import { PrimaryIcon } from "../components/shared/PrimaryIcon";
 import { Separator } from "../components/shared/Separator";
 import { PlaylistScreen } from "../pages/playlists/PlaylistScreen";
@@ -144,7 +144,9 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
           btnFontSize={17}
         />
       </View>
-      <BrandLogo />
+      <View style={{ marginTop: 100 }}>
+        <BrandLogo />
+      </View>
     </DrawerContentScrollView>
   );
 };
@@ -163,7 +165,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   buttonContainer: {
-    marginTop: 30,
+    marginTop: 100,
     marginBottom: 50,
   },
   brandLogo: {
