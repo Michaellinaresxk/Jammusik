@@ -114,6 +114,7 @@ export const SettingsScreen = () => {
             borderRadius={5}
             colorText={globalColors.danger}
             btnFontSize={17}
+            bgColor={globalColors.dangerAlt}
           />
         </View>
         <View style={{ marginTop: 100 }}>
@@ -144,6 +145,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   buttonContainer: {
+    alignItems: "center",
     marginTop: 30,
     marginBottom: 50,
   },
