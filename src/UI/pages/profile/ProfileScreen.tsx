@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Platform,
+  Pressable,
 } from "react-native";
 import { useUserService } from "../../../context/UserServiceContext";
 import { useUserInfoService } from "../../../context/UserInfoServiceContext";
@@ -16,8 +17,13 @@ import { globalColors } from "../../theme/Theme";
 import { PrimaryIcon } from "../../components/shared/PrimaryIcon";
 import { FormProfile } from "../../components/shared/forms/FormProfile";
 import { UserInfo } from "../../../types/formTypes";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { RootStackParamsList } from "../../routes/StackNavigator";
+import Icon from "react-native-vector-icons/Ionicons";
 
 export const ProfileScreen = () => {
+  const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
+
   const userService = useUserService();
   const userInfoService = useUserInfoService();
 
@@ -72,6 +78,16 @@ export const ProfileScreen = () => {
       behavior={Platform.OS === "ios" ? "padding" : undefined}>
       <ScrollView>
         <View>
+          <Pressable
+            style={styles.goBackContent}
+            onPress={() => navigation.navigate("HomeScreen")}>
+            <Icon
+              name="chevron-back-sharp"
+              color={globalColors.primary}
+              size={25}
+            />
+            <Text style={styles.goBackLabel}>Back</Text>
+          </Pressable>
           <View style={styles.userIconContent}>
             <PrimaryIcon
               name="person-circle-outline"
@@ -113,7 +129,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     gap: 10,
-    marginTop: 50,
+    marginTop: 30,
     marginBottom: 30,
   },
   userName: {
@@ -123,5 +139,16 @@ const styles = StyleSheet.create({
   brandLogo: {
     position: "absolute",
     bottom: 0,
+  },
+  goBackContent: {
+    fontSize: 15,
+    margin: "auto",
+    marginTop: 40,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  goBackLabel: {
+    fontSize: 20,
+    color: globalColors.terceary,
   },
 });

@@ -13,14 +13,17 @@ import { images } from "../../../assets/img/Images";
 import { BrandLogo } from "../../components/shared/BrandLogo";
 import { PrimaryButton } from "../../components/shared/PrimaryButton";
 import Icon from "react-native-vector-icons/Ionicons";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import {
+  NavigationProp,
+  StackActions,
+  useNavigation,
+} from "@react-navigation/native";
 import { RootStackParamsList } from "../../routes/StackNavigator";
 
 export const FeedbackScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
+  const popAction = StackActions.pop(1);
 
-  const { top } = useSafeAreaInsets();
   const image = {
     uri: images.loginBackground,
   };
