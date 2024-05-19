@@ -135,6 +135,6 @@ const styles = StyleSheet.create({
     padding: 30,
   },
   playlistContainer: {
-    marginTop: 50,
+    marginTop: 60,
   },
 });
