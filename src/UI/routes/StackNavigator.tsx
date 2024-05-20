@@ -66,7 +66,9 @@ export const StackNavigator = () => {
           />
           <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
           <Stack.Screen name="FeedbackScreen" component={FeedbackScreen} />
-          <Stack.Screen name="AboutUsScreen" component={AboutUsScreen} />
+          <Stack.Screen name="AboutUsScreen" component={AboutUsScreen} options={{
+            headerShown: false
+          }} />
           <Stack.Screen name="GuideScreen" component={GuideScreen} />
           <Stack.Screen name="FaqsScreen" component={FaqsScreen} />
         </Stack.Group>

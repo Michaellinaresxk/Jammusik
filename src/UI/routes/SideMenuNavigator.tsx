@@ -25,6 +25,7 @@ import PathPickScreen from "../pages/PathPickScreen";
 import { LoginScreen } from "../pages/login/LoginScreen";
 import { RegisterScreen } from "../pages/register/RegisterScreen";
 import { SettingsScreen } from "../pages/settings/SettingsScreen";
+import { AboutUsScreen } from "../pages/aboutUs/AboutUsScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -43,7 +44,7 @@ export const SideMenuNavigator = () => {
           backgroundColor: globalColors.secondary,
           flex: 1,
         },
-        headerShown: false,
+        headerShown: true,
       }}>
       {isLoggedIn ? (
         <>
@@ -99,6 +100,7 @@ export const SideMenuNavigator = () => {
             name="Settings"
             component={SettingsScreen}
           />
+
         </>
       ) : (
         <Drawer.Group screenOptions={{ headerShown: false }}>
