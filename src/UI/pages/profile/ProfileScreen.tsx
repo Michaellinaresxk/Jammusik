@@ -7,6 +7,7 @@ import {
   ScrollView,
   Platform,
   Pressable,
+  RefreshControl,
 } from "react-native";
 import { useUserService } from "../../../context/UserServiceContext";
 import { useUserInfoService } from "../../../context/UserInfoServiceContext";
@@ -20,6 +21,7 @@ import { UserInfo } from "../../../types/formTypes";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamsList } from "../../routes/StackNavigator";
 import Icon from "react-native-vector-icons/Ionicons";
+import { usePullRefresh } from "../../../hooks/usePullRefresing";
 
 export const ProfileScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
@@ -56,6 +58,8 @@ export const ProfileScreen = () => {
     console.log("Selected Instrument ID:", selectedInstrumentId);
   }, [selectedInstrumentId]);
 
+  const { isRefreshing, refresh, top } = usePullRefresh();
+
   const updateUserInfoProfile = async (userInfo: UserInfo) => {
     const { location, skills, instrument } = userInfo;
 
@@ -76,7 +80,19 @@ export const ProfileScreen = () => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : undefined}>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            progressViewOffset={top}
+            colors={[
+              globalColors.primary,
+              globalColors.terceary,
+              globalColors.primary,
+            ]}
+            onRefresh={refresh}
+          />
+        }>
         <View>
           <Pressable
             style={styles.goBackContent}

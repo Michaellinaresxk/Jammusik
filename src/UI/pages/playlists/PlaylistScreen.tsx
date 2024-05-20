@@ -6,6 +6,7 @@ import {
   Modal,
   Platform,
   Pressable,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
@@ -26,10 +27,9 @@ import { PlaylistView } from "../../../views/PlaylistView";
 import { getAuth } from "firebase/auth";
 import { FormCreatePlaylist } from "../../components/shared/forms/FormCreatePlaylist";
 import { Separator } from "../../components/shared/Separator";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { usePullRefresh } from "../../../hooks/usePullRefresing";
 
 export const PlaylistScreen = () => {
-  const { top } = useSafeAreaInsets();
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
   const auth = getAuth();
   const playlistService = usePlaylistService();
@@ -74,13 +74,26 @@ export const PlaylistScreen = () => {
     setTriggerUpdate(prev => !prev);
   };
 
+  const { isRefreshing, refresh, top } = usePullRefresh();
+
   return (
     <>
       <TheGreenBorder />
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-        style={styles.container}>
-        <ScrollView>
+        behavior={Platform.OS === "ios" ? "padding" : undefined}>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              progressViewOffset={top}
+              colors={[
+                globalColors.primary,
+                globalColors.terceary,
+                globalColors.primary,
+              ]}
+              onRefresh={refresh}
+            />
+          }>
           <View
             style={{
               flex: 1,
@@ -212,9 +225,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 25,
     fontWeight: "bold",
-  },
-  container: {
-    marginBottom: 100,
   },
   playlistCardContainer: {
     flex: 1,

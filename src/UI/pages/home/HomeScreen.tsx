@@ -2,6 +2,7 @@ import {
   FlatList,
   KeyboardAvoidingView,
   Platform,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
@@ -22,6 +23,7 @@ import { PlaylistView } from "../../../views/PlaylistView";
 import { PlaylistCard } from "../../components/shared/cards/PlaylistCard";
 import { HamburgerMenu } from "../../components/shared/HamburgerMenu";
 import { SliderQuotes } from "../../components/shared/SliderQuotes";
+import { usePullRefresh } from "../../../hooks/usePullRefresing";
 
 export const HomeScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
@@ -54,13 +56,25 @@ export const HomeScreen = () => {
     loadPlaylists();
   }, [playlistService]);
 
+  const { isRefreshing, refresh, top } = usePullRefresh();
+
   return (
     <>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : undefined}>
-        <ScrollView 
-        
-        >
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              progressViewOffset={top}
+              colors={[
+                globalColors.primary,
+                globalColors.terceary,
+                globalColors.primary,
+              ]}
+              onRefresh={refresh}
+            />
+          }>
           <View>
             <HamburgerMenu />
             <GlobalHeader headerTitle="Home" />
