@@ -10,6 +10,7 @@ import {
   Modal,
   Text,
   TouchableOpacity,
+  RefreshControl,
 } from "react-native";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { GlobalHeader } from "../../components/shared/GlobalHeader";
@@ -25,6 +26,7 @@ import { useSongService } from "../../../context/SongServiceContext";
 import { SongView } from "../../../views/SongView";
 import { PrimaryButton } from "../../components/shared/PrimaryButton";
 import { useResetSongsState } from "../../store/useResetSongsState";
+import { usePullRefresh } from "../../../hooks/usePullRefresing";
 
 export const PlaylistSelectedScreen = () => {
   const songService = useSongService();
@@ -39,6 +41,8 @@ export const PlaylistSelectedScreen = () => {
   const [songList, setSongList] = useState<SongView[]>([]);
   const [isVisible, setIsVisible] = useState(false);
   const [triggerUpdate, setTriggerUpdate] = useState(false);
+
+  const { isRefreshing, refresh, top } = usePullRefresh();
 
   const handleCreateSong = async () => {
     if (!title || !artist || !categoryId || !playlistId) {
@@ -79,15 +83,23 @@ export const PlaylistSelectedScreen = () => {
 
   const { resetToggle, resetAllSongs } = useResetSongsState();
 
-  // const handleResetSongs = () => {
-  //   setResetToggle(prev => !prev);
-  // };
-
   return (
     <>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : undefined}>
-        <ScrollView>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              progressViewOffset={top}
+              colors={[
+                globalColors.primary,
+                globalColors.terceary,
+                globalColors.primary,
+              ]}
+              onRefresh={refresh}
+            />
+          }>
           <GlobalHeader headerTitle={params.title} />
           <TheGreenBorder />
           <FloatingActionButton onPress={() => setIsVisible(true)} />

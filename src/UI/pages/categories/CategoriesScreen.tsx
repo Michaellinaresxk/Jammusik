@@ -10,6 +10,7 @@ import {
   Platform,
   Modal,
   Pressable,
+  RefreshControl,
 } from "react-native";
 import { globalColors, globalStyles } from "../../theme/Theme";
 import { images } from "../../../assets/img/Images";
@@ -22,13 +23,12 @@ import { CategoryView } from "../../../views/CategoryView";
 import { PrimaryButton } from "../../components/shared/PrimaryButton";
 import { FormCreateCategory } from "../../components/shared/forms/FormCreateCategory";
 import { getAuth } from "firebase/auth";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Separator } from "../../components/shared/Separator";
 import Icon from "react-native-vector-icons/Ionicons";
+import { usePullRefresh } from "../../../hooks/usePullRefresing";
 const backgroundImage = { uri: images.image3 };
 
 export const CategoriesScreen = () => {
-  const { top } = useSafeAreaInsets();
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
   const auth = getAuth();
   const categoryService = useCategoryService();
@@ -60,13 +60,26 @@ export const CategoriesScreen = () => {
     closeModal();
   };
 
+  const { isRefreshing, refresh, top } = usePullRefresh();
+
   return (
     <ImageBackground source={backgroundImage} resizeMode="cover">
       <View style={globalStyles.overlay}>
         <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : undefined}
-          style={styles.container}>
-          <ScrollView>
+          behavior={Platform.OS === "ios" ? "padding" : undefined}>
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={isRefreshing}
+                progressViewOffset={top}
+                colors={[
+                  globalColors.primary,
+                  globalColors.terceary,
+                  globalColors.primary,
+                ]}
+                onRefresh={refresh}
+              />
+            }>
             <View
               style={{
                 flex: 1,
@@ -157,9 +170,6 @@ export const CategoriesScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    marginBottom: 100,
-  },
   containerHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
