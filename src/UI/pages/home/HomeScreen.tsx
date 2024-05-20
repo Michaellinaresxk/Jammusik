@@ -58,7 +58,9 @@ export const HomeScreen = () => {
     <>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : undefined}>
-        <ScrollView>
+        <ScrollView 
+        
+        >
           <View>
             <HamburgerMenu />
             <GlobalHeader headerTitle="Home" />
