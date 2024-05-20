@@ -30,11 +30,7 @@ export const LoginScreen = () => {
   };
 
   return (
-    <ImageBackground
-      source={image}
-      style={styles.containerImage}
-      resizeMode="cover"
-      alt="Imagen de fondo">
+    <ImageBackground source={image} resizeMode="cover" alt="Imagen de fondo">
       <View style={globalStyles.overlay}>
         <View style={styles.containerLoginScreen}>
           <View style={styles.containerLogo}>
@@ -62,10 +58,6 @@ export const LoginScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  containerImage: {
-    flex: 1,
-    justifyContent: "center",
-  },
   containerLoginScreen: {
     flex: 1,
   },
@@ -79,6 +71,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     color: globalColors.light,
+    marginTop: -100,
   },
   containerForm: {
     flex: 3,

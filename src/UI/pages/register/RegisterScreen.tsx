@@ -42,7 +42,7 @@ export const RegisterScreen = () => {
             <BrandLogo />
           </View>
           <Text style={styles.labelTitle}>Register</Text>
-          <View style={styles.containerForm}>
+          <View>
             <FormRegister
               email={email}
               setEmail={setEmail}
@@ -70,11 +70,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   containerLoginScreen: {
-    marginTop: 100,
+    marginTop: 90,
     flex: 1,
   },
   containerLogo: {
-    paddingTop: 50,
+    paddingTop: 20,
     marginBottom: 80,
     justifyContent: "center",
     alignItems: "center",
@@ -88,9 +88,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 30,
+    marginTop: -30,
     color: globalColors.light,
-  },
-  containerForm: {
-    flex: 3,
   },
 });
