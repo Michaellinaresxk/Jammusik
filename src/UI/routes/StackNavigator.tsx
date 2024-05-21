@@ -26,7 +26,10 @@ export type RootStackParamsList = {
   SongSelectedScreen: { title: string; artist: string };
   CategoriesScreen: { id: string; title: string };
   CategorySelectedScreen: Song;
-
+  ProfileScreen: undefined;
+  AboutUsScreen: undefined;
+  FeedbackScreen: undefined;
+  FaqsScreen: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamsList>();
@@ -36,15 +39,16 @@ export const StackNavigator = () => {
 
   return (
     <Stack.Navigator
+      initialRouteName="HomeScreen"
       screenOptions={{
-        headerShown: true,
+        headerShown: false,
         headerStyle: {
           elevation: 0,
           shadowColor: "transparent",
         },
       }}>
       {isLoggedIn ? (
-        <Stack.Group >
+        <Stack.Group>
           <Stack.Screen name="HomeScreen" component={HomeScreen} />
           <Stack.Screen name="CategoriesScreen" component={CategoriesScreen} />
           <Stack.Screen
@@ -60,7 +64,11 @@ export const StackNavigator = () => {
             name="SongSelectedScreen"
             component={SongSelectedScreen}
           />
-
+          <Stack.Screen name="FaqsScreen" component={FaqsScreen} />
+          <Stack.Screen name="AboutUsScreen" component={AboutUsScreen} />
+          <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+          <Stack.Screen name="FeedbackScreen" component={FeedbackScreen} />
+          <Stack.Screen name="GuideScreen" component={GuideScreen} />
         </Stack.Group>
       ) : (
         <Stack.Group screenOptions={{ headerShown: false }}>

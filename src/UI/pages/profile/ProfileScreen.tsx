@@ -96,7 +96,7 @@ export const ProfileScreen = () => {
         <View>
           <Pressable
             style={styles.goBackContent}
-            onPress={() => navigation.navigate("HomeScreen")}>
+            onPress={() => navigation.goBack()}>
             <Icon
               name="chevron-back-sharp"
               color={globalColors.primary}

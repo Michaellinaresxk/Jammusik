@@ -2,6 +2,8 @@ import React from "react";
 import { ImageBackground, StyleSheet, Text, View } from "react-native";
 import { globalColors, globalStyles } from "../../theme/Theme";
 import { images } from "../../../assets/img/Images";
+import { HamburgerMenu } from "./HamburgerMenu";
+import { GoBackButton } from "./GoBackButton";
 
 const image = {
   uri: images.homeBackground,
@@ -21,6 +23,8 @@ export const GlobalHeader = ({ headerTitle, artist }: Props) => {
         alt="Imagen de fondo"
         style={styles.headerImage}>
         <View style={globalStyles.overlay}>
+          <GoBackButton />
+          <HamburgerMenu />
           <View style={styles.container}>
             <Text style={styles.title}>{headerTitle}</Text>
             <Text style={styles.artist}>{artist}</Text>
@@ -40,6 +44,7 @@ const styles = StyleSheet.create({
     height: "100%",
     alignItems: "center",
     justifyContent: "center",
+    marginTop: 30,
   },
   title: {
     color: globalColors.light,

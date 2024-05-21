@@ -21,7 +21,6 @@ import { usePlaylistService } from "../../../context/PlaylistServiceContext";
 import { auth } from "../../../infra/api/firebaseConfig";
 import { PlaylistView } from "../../../views/PlaylistView";
 import { PlaylistCard } from "../../components/shared/cards/PlaylistCard";
-import { HamburgerMenu } from "../../components/shared/HamburgerMenu";
 import { SliderQuotes } from "../../components/shared/SliderQuotes";
 import { usePullRefresh } from "../../../hooks/usePullRefresing";
 
@@ -63,10 +62,6 @@ export const HomeScreen = () => {
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : undefined}>
         <ScrollView
-<<<<<<< HEAD
-
-        >
-=======
           refreshControl={
             <RefreshControl
               refreshing={isRefreshing}
@@ -79,9 +74,7 @@ export const HomeScreen = () => {
               onRefresh={refresh}
             />
           }>
->>>>>>> develop
           <View>
-            <HamburgerMenu />
             <GlobalHeader headerTitle="Home" />
             <TheGreenBorder />
             <View style={styles.categoryCardContainer}>
@@ -103,6 +96,7 @@ export const HomeScreen = () => {
                 )}
               />
               <SliderQuotes />
+
               <View style={styles.playlistContainer}>
                 <Text style={styles.subTitle}>Playlists:</Text>
                 <FlatList

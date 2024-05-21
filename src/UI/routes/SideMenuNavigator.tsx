@@ -8,7 +8,7 @@ import {
 import { CategoriesScreen } from "../pages/categories/CategoriesScreen";
 import { globalColors } from "../theme/Theme";
 import { BrandLogo } from "../components/shared/BrandLogo";
-import { StyleSheet, Text, View, StyleProp } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { PrimaryIcon } from "../components/shared/PrimaryIcon";
 import { Separator } from "../components/shared/Separator";
 import { PlaylistScreen } from "../pages/playlists/PlaylistScreen";
@@ -24,17 +24,13 @@ import useAuthStatus from "../../hooks/useAuthStatus";
 import PathPickScreen from "../pages/PathPickScreen";
 import { LoginScreen } from "../pages/login/LoginScreen";
 import { RegisterScreen } from "../pages/register/RegisterScreen";
-import { SettingsScreen } from "../pages/settings/SettingsScreen";
 import { StackSettingNavigator } from "./StackSettingNavigator";
+import { SettingsScreen } from "../pages/settings/SettingsScreen";
 
 const Drawer = createDrawerNavigator();
 
 export const SideMenuNavigator = () => {
   const { isLoggedIn } = useAuthStatus();
-
-
-
-
 
   return (
     <Drawer.Navigator
@@ -103,9 +99,8 @@ export const SideMenuNavigator = () => {
               ),
             }}
             name="Settings"
-            component={StackSettingNavigator}
+            component={SettingsScreen}
           />
-
         </>
       ) : (
         <Drawer.Group screenOptions={{ headerShown: false }}>
