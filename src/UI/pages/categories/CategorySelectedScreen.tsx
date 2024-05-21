@@ -62,6 +62,7 @@ export const CategorySelectedScreen = () => {
       };
       fetchSongsById();
     }
+
   }, [categoryId, categoryService, userId]);
 
   if (!categoryId) {

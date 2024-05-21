@@ -63,6 +63,10 @@ export const HomeScreen = () => {
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : undefined}>
         <ScrollView
+<<<<<<< HEAD
+
+        >
+=======
           refreshControl={
             <RefreshControl
               refreshing={isRefreshing}
@@ -75,6 +79,7 @@ export const HomeScreen = () => {
               onRefresh={refresh}
             />
           }>
+>>>>>>> develop
           <View>
             <HamburgerMenu />
             <GlobalHeader headerTitle="Home" />

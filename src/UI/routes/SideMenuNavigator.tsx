@@ -25,11 +25,17 @@ import PathPickScreen from "../pages/PathPickScreen";
 import { LoginScreen } from "../pages/login/LoginScreen";
 import { RegisterScreen } from "../pages/register/RegisterScreen";
 import { SettingsScreen } from "../pages/settings/SettingsScreen";
+import { StackSettingNavigator } from "./StackSettingNavigator";
 
 const Drawer = createDrawerNavigator();
 
 export const SideMenuNavigator = () => {
   const { isLoggedIn } = useAuthStatus();
+
+
+
+
+
   return (
     <Drawer.Navigator
       drawerContent={props => <CustomDrawerContent {...props} />}
@@ -97,8 +103,9 @@ export const SideMenuNavigator = () => {
               ),
             }}
             name="Settings"
-            component={SettingsScreen}
+            component={StackSettingNavigator}
           />
+
         </>
       ) : (
         <Drawer.Group screenOptions={{ headerShown: false }}>

@@ -15,11 +15,11 @@ export const HamburgerMenu = () => {
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Pressable
+        <Pressable style={{ marginRight: 10 }}
           onPress={() => navigation.dispatch(DrawerActions.toggleDrawer)}>
           <PrimaryIcon
             name="menu-sharp"
-            color={globalColors.danger}></PrimaryIcon>
+            color={globalColors.primary}></PrimaryIcon>
         </Pressable>
       ),
     });

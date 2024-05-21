@@ -10,7 +10,6 @@ import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { UserServiceProvider } from "./context/UserServiceContext";
 import { UserInfoServiceProvider } from "./context/UserInfoServiceContext";
-import { userService } from "./services/userService";
 import { userInfoService } from "./services/userInfoService";
 import { ProviderComposer } from "./context/ProviderComposer";
 import { categoryService } from "./services/categoryService";
@@ -20,6 +19,7 @@ import { PlaylistServiceProvider } from "./context/PlaylistServiceContext";
 import { songService } from "./services/songService";
 import { SongServiceProvider } from "./context/SongServiceContext";
 import { SideMenuNavigator } from "./UI/routes/SideMenuNavigator";
+import { userService } from "./services/userService";
 function App(): React.JSX.Element {
   return (
     <ProviderComposer
