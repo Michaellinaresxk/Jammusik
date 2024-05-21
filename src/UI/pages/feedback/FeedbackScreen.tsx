@@ -10,6 +10,7 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Platform,
+  RefreshControl,
 } from "react-native";
 import { globalColors, globalStyles } from "../../theme/Theme";
 import { images } from "../../../assets/img/Images";
@@ -18,6 +19,7 @@ import { PrimaryButton } from "../../components/shared/PrimaryButton";
 import Icon from "react-native-vector-icons/Ionicons";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamsList } from "../../routes/StackNavigator";
+import { usePullRefresh } from "../../../hooks/usePullRefresing";
 
 export const FeedbackScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
@@ -25,6 +27,8 @@ export const FeedbackScreen = () => {
   const image = {
     uri: images.loginBackground,
   };
+
+  const { isRefreshing, refresh, top } = usePullRefresh();
 
   return (
     <ImageBackground
@@ -35,7 +39,19 @@ export const FeedbackScreen = () => {
       <View style={globalStyles.overlay}>
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : undefined}>
-          <ScrollView>
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={isRefreshing}
+                progressViewOffset={top}
+                colors={[
+                  globalColors.primary,
+                  globalColors.terceary,
+                  globalColors.primary,
+                ]}
+                onRefresh={refresh}
+              />
+            }>
             <Pressable
               style={styles.goBackContent}
               onPress={() => navigation.navigate("HomeScreen")}>

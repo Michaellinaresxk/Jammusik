@@ -6,6 +6,7 @@ import {
   FlatList,
   KeyboardAvoidingView,
   Platform,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
@@ -21,6 +22,7 @@ import { getAuth } from "firebase/auth";
 import { globalColors } from "../../theme/Theme";
 import { SongCounter } from "../../components/shared/SongCounter";
 import { SongCard } from "../../components/shared/cards/SongCard";
+import { usePullRefresh } from "../../../hooks/usePullRefresing";
 
 export const CategorySelectedScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
@@ -40,6 +42,8 @@ export const CategorySelectedScreen = () => {
   const handleResetSongs = () => {
     setResetToggle(prev => !prev);
   };
+
+  const { isRefreshing, refresh, top } = usePullRefresh();
 
   useEffect(() => {
     if (categoryId === categoryAll) {
@@ -71,7 +75,19 @@ export const CategorySelectedScreen = () => {
       <TheGreenBorder />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : undefined}>
-        <ScrollView>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              progressViewOffset={top}
+              colors={[
+                globalColors.primary,
+                globalColors.terceary,
+                globalColors.primary,
+              ]}
+              onRefresh={refresh}
+            />
+          }>
           <View>
             <GlobalHeader headerTitle={params.title} />
             <View style={styles.songCardContainer}>
