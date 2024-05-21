@@ -16,40 +16,64 @@ export type RootStackParamsList = {
   AboutUsScreen: undefined;
   GuideScreen: undefined;
   FaqsScreen: undefined;
+  SettingsScreen: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamsList>();
 
 export const StackSettingNavigator = () => {
-
   return (
     <Stack.Navigator
       screenOptions={{
-        headerShown: true,
+        headerShown: false,
         headerStyle: {
           elevation: 0,
           shadowColor: "transparent",
         },
-        headerTitle: "Settings"
+        headerTitle: "Settings",
       }}>
-      <Stack.Screen name="SettingScreen" component={SettingsScreen} options={{
-        headerShown: false
-      }} />
-      <Stack.Screen name="ProfileScreen" component={ProfileScreen} options={{
-        headerTitle: "Profile"
-      }} />
-      <Stack.Screen name="FeedbackScreen" component={FeedbackScreen} options={{
-        headerTitle: "Feedback"
-      }} />
-      <Stack.Screen name="AboutUsScreen" component={AboutUsScreen} options={{
-        headerTitle: "About"
-      }} />
-      <Stack.Screen name="GuideScreen" component={GuideScreen} options={{
-        headerTitle: "Guide"
-      }} />
-      <Stack.Screen name="FaqsScreen" component={FaqsScreen} options={{
-        headerTitle: "Faq"
-      }} />
+      <Stack.Screen
+        name="SettingScreen"
+        component={SettingsScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="ProfileScreen"
+        component={ProfileScreen}
+        options={{
+          headerTitle: "Profile",
+        }}
+      />
+      <Stack.Screen
+        name="FeedbackScreen"
+        component={FeedbackScreen}
+        options={{
+          headerTitle: "Feedback",
+        }}
+      />
+      <Stack.Screen
+        name="AboutUsScreen"
+        component={AboutUsScreen}
+        options={{
+          headerTitle: "About",
+        }}
+      />
+      <Stack.Screen
+        name="GuideScreen"
+        component={GuideScreen}
+        options={{
+          headerTitle: "Guide",
+        }}
+      />
+      <Stack.Screen
+        name="FaqsScreen"
+        component={FaqsScreen}
+        options={{
+          headerTitle: "Faq",
+        }}
+      />
     </Stack.Navigator>
   );
 };

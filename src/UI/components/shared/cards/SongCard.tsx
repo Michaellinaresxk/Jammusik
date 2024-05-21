@@ -21,7 +21,7 @@ export const SongCard = ({
   const [isDone, setIsDone] = useState(false);
 
   useEffect(() => {
-    setIsDone(false); // Resetear cuando resetToggle cambie
+    setIsDone(false);
   }, [resetToggle]);
 
   const handlePressIcon = () => {
