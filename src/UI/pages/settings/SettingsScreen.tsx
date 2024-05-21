@@ -72,7 +72,7 @@ export const SettingsScreen = () => {
         onPress={() => navigation.navigate("HomeScreen")}>
         <Icon
           name="chevron-back-sharp"
-          color={globalColors.primary}
+          color={globalColors.primaryDark1}
           size={25}
         />
         <Text style={styles.goBackLabel}>Back</Text>
@@ -117,7 +117,7 @@ export const SettingsScreen = () => {
             bgColor={globalColors.dangerAlt}
           />
         </View>
-        <View style={{ marginTop: 100 }}>
+        <View style={{ marginTop: 10 }}>
           <BrandLogo />
         </View>
       </View>

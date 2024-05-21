@@ -25,12 +25,17 @@ import PathPickScreen from "../pages/PathPickScreen";
 import { LoginScreen } from "../pages/login/LoginScreen";
 import { RegisterScreen } from "../pages/register/RegisterScreen";
 import { SettingsScreen } from "../pages/settings/SettingsScreen";
-import { AboutUsScreen } from "../pages/aboutUs/AboutUsScreen";
+import { StackSettingNavigator } from "./StackSettingNavigator";
 
 const Drawer = createDrawerNavigator();
 
 export const SideMenuNavigator = () => {
   const { isLoggedIn } = useAuthStatus();
+
+
+
+
+
   return (
     <Drawer.Navigator
       drawerContent={props => <CustomDrawerContent {...props} />}
@@ -44,7 +49,7 @@ export const SideMenuNavigator = () => {
           backgroundColor: globalColors.secondary,
           flex: 1,
         },
-        headerShown: true,
+        headerShown: false,
       }}>
       {isLoggedIn ? (
         <>
@@ -98,7 +103,7 @@ export const SideMenuNavigator = () => {
               ),
             }}
             name="Settings"
-            component={SettingsScreen}
+            component={StackSettingNavigator}
           />
 
         </>

@@ -8,7 +8,7 @@ export const AboutUsScreen = () => {
   return (
     <View style={[globalStyles.container, { padding: 24 }]}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <Text>AboutUsScreen</Text>
+
         <View style={styles.containerLogo}>
           <BrandLogo />
         </View>
