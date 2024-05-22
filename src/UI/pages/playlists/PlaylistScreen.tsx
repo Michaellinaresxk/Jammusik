@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   goBackLabel: {
-    fontSize: 20,
+    fontSize: 15,
     color: globalColors.terceary,
   },
   openModalBtn: {

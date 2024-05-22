@@ -1,5 +1,5 @@
 import { NavigationProp, useNavigation } from "@react-navigation/native";
-import React, { useRef } from "react";
+import React from "react";
 import { Pressable, StyleSheet, Text } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { RootStackParamsList } from "../../routes/StackNavigator";
@@ -17,7 +17,7 @@ export const GoBackButton = () => {
           ? styles.goBackDisable
           : styles.goBackContent
       }
-      onPress={() => navigation.navigate("HomeScreen")}>
+      onPress={() => navigation.goBack()}>
       <Icon
         name="chevron-back-sharp"
         color={globalColors.primaryDark1}
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   goBackLabel: {
-    fontSize: 20,
+    fontSize: 15,
     color: globalColors.terceary,
   },
   goBackDisable: {

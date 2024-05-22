@@ -140,9 +140,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   goBackLabel: {
-    fontSize: 20,
+    fontSize: 15,
     color: globalColors.terceary,
-    fontWeight: "bold",
   },
   buttonContainer: {
     alignItems: "center",
