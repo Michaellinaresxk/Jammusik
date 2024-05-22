@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { RootStackParamsList } from "../../routes/StackNavigator";
-import { type NavigationProp, useNavigation } from "@react-navigation/native";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 import {
   FlatList,
   KeyboardAvoidingView,
@@ -16,13 +16,12 @@ import {
 import { GlobalHeader } from "../../components/shared/GlobalHeader";
 import { TheGreenBorder } from "../../components/shared/TheGreenBorder";
 import { useCategoryService } from "../../../context/CategoryServiceContext";
-import { useEffect, useState } from "react";
-import { SongView } from "../../../views/SongView";
 import { getAuth } from "firebase/auth";
 import { globalColors } from "../../theme/Theme";
 import { SongCounter } from "../../components/shared/SongCounter";
 import { SongCard } from "../../components/shared/cards/SongCard";
 import { usePullRefresh } from "../../../hooks/usePullRefresing";
+import { SongView } from "../../../views/SongView";
 
 export const CategorySelectedScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
@@ -35,7 +34,6 @@ export const CategorySelectedScreen = () => {
   const [songList, setSongList] = useState<SongView[]>([]);
 
   const categoryId = params.id as string;
-  const categoryAll = "All";
 
   const [resetToggle, setResetToggle] = useState(false);
 
@@ -46,28 +44,25 @@ export const CategorySelectedScreen = () => {
   const { isRefreshing, refresh, top } = usePullRefresh();
 
   useEffect(() => {
-    if (categoryId === categoryAll) {
-      const fetchSongList = async () => {
-        const fetchedSongs = await categoryService.getAllSongsByUserId(userId);
-        setSongList(fetchedSongs);
-      };
-      fetchSongList();
-    } else {
-      const fetchSongsById = async () => {
-        const fetchSongListByid = await categoryService.getSongListByCategory(
+    const fetchSongList = async () => {
+      try {
+        let fetchedSongs = await categoryService.getSongListByCategory(
           categoryId,
           userId,
         );
-        setSongList(fetchSongListByid);
-      };
-      fetchSongsById();
-    }
 
+        setSongList(fetchedSongs);
+      } catch (error) {
+        console.error("Failed to fetch song list:", error);
+      }
+    };
+
+    fetchSongList();
   }, [categoryId, categoryService, userId]);
 
   if (!categoryId) {
     console.error("Failed to retrieve categoryId");
-    return;
+    return null;
   }
 
   return (
@@ -95,28 +90,30 @@ export const CategorySelectedScreen = () => {
               <FlatList
                 data={songList}
                 keyExtractor={item => item.id}
-                renderItem={({ item, index }) => (
-                  <View>
-                    <SongCard
-                      resetToggle={resetToggle}
-                      title={item.title}
-                      artist={item.artist}
-                      color={
-                        index % 2 === 0
-                          ? globalColors.primary
-                          : globalColors.secondary
-                      }
-                      onPress={() =>
-                        navigation.navigate("SongSelectedScreen", {
-                          id: item.id,
-                          title: item.title,
-                          artist: item.artist,
-                          categoryId: item.categoryId,
-                        })
-                      }
-                    />
-                  </View>
-                )}
+                renderItem={({ item, index }) => {
+                  return (
+                    <View>
+                      <SongCard
+                        resetToggle={resetToggle}
+                        title={item.title}
+                        artist={item.artist}
+                        color={
+                          index % 2 === 0
+                            ? globalColors.primary
+                            : globalColors.secondary
+                        }
+                        onPress={() =>
+                          navigation.navigate("SongSelectedScreen", {
+                            id: item.id,
+                            title: item.title,
+                            artist: item.artist,
+                            categoryId: item.categoryId,
+                          })
+                        }
+                      />
+                    </View>
+                  );
+                }}
               />
               <View>
                 <TouchableOpacity
