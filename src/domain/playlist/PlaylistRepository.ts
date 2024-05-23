@@ -6,7 +6,6 @@ export default interface PlaylistRepository {
     userId: string,
     playlistId: string,
     title: string,
-    modeId: string,
   ): Promise<Playlist>;
   deletePlaylist(playlistId: string): Promise<void>;
 }

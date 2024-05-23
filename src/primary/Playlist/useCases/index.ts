@@ -15,8 +15,8 @@ export class PlaylistService {
     this.getPlaylistUseCase = new GetPlaylistUseCase(playlistResource);
     this.deletePlaylistUseCase = new DeletePlaylistUseCase(playlistResource);
   }
-  async createPlaylist(title: string, modeId: string) {
-    return await this.createPlaylistUsecase.execute(title, modeId);
+  async createPlaylist(title: string) {
+    return await this.createPlaylistUsecase.execute(title);
   }
 
   async getPlaylists(userId: string): Promise<PlaylistView[]> {
