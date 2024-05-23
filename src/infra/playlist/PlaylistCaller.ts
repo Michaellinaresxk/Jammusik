@@ -5,7 +5,7 @@ import { getFirestore, collection, getDocs } from "@firebase/firestore";
 
 export class PlaylistCaller {
   private db = getFirestore();
-  async createPlaylist(title: string, modeId: string): Promise<ApiPlaylist> {
+  async createPlaylist(title: string): Promise<ApiPlaylist> {
     const userId = auth.currentUser?.uid;
     if (!userId) {
       throw new Error("userId is undefined!");
@@ -13,7 +13,6 @@ export class PlaylistCaller {
 
     const playlistData = {
       title,
-      modeId,
       userId,
     };
 

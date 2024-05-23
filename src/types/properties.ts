@@ -15,15 +15,9 @@ export interface SongDetailsProperties {
   tabLink?: string;
 }
 
-export type ModeProperties = {
-  id: string;
-  title: string;
-};
-
 export type PlaylistProperties = {
   id: string;
   title: string;
-  modeId: string;
 };
 
 export type CategoryProperties = {

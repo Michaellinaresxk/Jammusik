@@ -5,16 +5,15 @@ import Playlist from "../../domain/playlist/Playlist";
 export class PlaylistResource implements PlaylistRepository {
   constructor(public readonly playlistCaller: PlaylistCaller) {}
 
-  async createPlaylist(title: string, modeId: string): Promise<Playlist> {
-    const apiPlaylist = await this.playlistCaller.createPlaylist(title, modeId);
-    return new Playlist(apiPlaylist.id, apiPlaylist.title, apiPlaylist.modeId);
+  async createPlaylist(title: string): Promise<Playlist> {
+    const apiPlaylist = await this.playlistCaller.createPlaylist(title);
+    return new Playlist(apiPlaylist.id, apiPlaylist.title);
   }
 
   async getPlaylists(userId: string): Promise<Playlist[]> {
     const apiPlaylists = await this.playlistCaller.getPlaylists(userId);
     return apiPlaylists.map(
-      apiPlaylist =>
-        new Playlist(apiPlaylist.id, apiPlaylist.title, apiPlaylist.modeId),
+      apiPlaylist => new Playlist(apiPlaylist.id, apiPlaylist.title),
     );
   }
 

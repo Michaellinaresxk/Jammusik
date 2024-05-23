@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Alert,
   FlatList,
   KeyboardAvoidingView,
   Modal,
@@ -28,7 +27,6 @@ import { getAuth } from "firebase/auth";
 import { FormCreatePlaylist } from "../../components/shared/forms/FormCreatePlaylist";
 import { Separator } from "../../components/shared/Separator";
 import { usePullRefresh } from "../../../hooks/usePullRefresing";
-import Toast from "react-native-toast-message";
 
 export const PlaylistScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
@@ -38,7 +36,6 @@ export const PlaylistScreen = () => {
   const [triggerUpdate, setTriggerUpdate] = useState(false);
 
   const [title, setTitle] = useState("");
-  const [mode, setMode] = useState("");
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -62,9 +59,8 @@ export const PlaylistScreen = () => {
 
   const handleCreatePlaylist = async () => {
     console.log("creando playlist");
-    await playlistService.createPlaylist(title, mode);
+    await playlistService.createPlaylist(title);
     setTitle("");
-    setMode("");
     setTriggerUpdate(prev => !prev);
     closeModal();
   };
@@ -130,7 +126,7 @@ export const PlaylistScreen = () => {
           </View>
           <Separator color={globalColors.terceary} />
 
-          <View style={styles.container}>
+          <View>
             <FlatList
               data={playlists}
               keyExtractor={item => item.id}
@@ -172,8 +168,6 @@ export const PlaylistScreen = () => {
             <FormCreatePlaylist
               title={title}
               setTitle={setTitle}
-              mode={mode}
-              setMode={setMode}
               onCreatePlaylist={handleCreatePlaylist}
             />
           </Modal>
