@@ -12,11 +12,11 @@ import {
   TouchableOpacity,
   RefreshControl,
 } from "react-native";
+import { type NavigationProp, useNavigation } from "@react-navigation/native";
+import { type RootStackParamsList } from "../../routes/StackNavigator";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { GlobalHeader } from "../../components/shared/GlobalHeader";
 import { SongCard } from "../../components/shared/cards/SongCard";
-import { type NavigationProp, useNavigation } from "@react-navigation/native";
-import { type RootStackParamsList } from "../../routes/StackNavigator";
 import { globalColors } from "../../theme/Theme";
 import { FloatingActionButton } from "../../components/shared/FloatingActionButton";
 import { TheGreenBorder } from "../../components/shared/TheGreenBorder";

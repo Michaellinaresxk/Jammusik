@@ -28,6 +28,7 @@ import { getAuth } from "firebase/auth";
 import { FormCreatePlaylist } from "../../components/shared/forms/FormCreatePlaylist";
 import { Separator } from "../../components/shared/Separator";
 import { usePullRefresh } from "../../../hooks/usePullRefresing";
+import Toast from "react-native-toast-message";
 
 export const PlaylistScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
@@ -149,7 +150,6 @@ export const PlaylistScreen = () => {
                         title: item.title,
                       })
                     }
-                    onShare={() => Alert.alert("Compartiendo playlist")}
                     onDelete={() => handleDeletePlaylist(item.id)}
                   />
                 </View>
