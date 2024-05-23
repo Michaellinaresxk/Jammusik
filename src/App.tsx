@@ -20,6 +20,8 @@ import { songService } from "./services/songService";
 import { SongServiceProvider } from "./context/SongServiceContext";
 import { SideMenuNavigator } from "./UI/routes/SideMenuNavigator";
 import { userService } from "./services/userService";
+import Toast from "react-native-toast-message";
+import { ToastConfig } from "./UI/theme/ToastConfig";
 function App(): React.JSX.Element {
   return (
     <ProviderComposer
@@ -33,6 +35,7 @@ function App(): React.JSX.Element {
       ]}>
       <NavigationContainer>
         <SideMenuNavigator />
+        <Toast config={ToastConfig} />
       </NavigationContainer>
     </ProviderComposer>
   );

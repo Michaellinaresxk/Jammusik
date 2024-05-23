@@ -117,11 +117,6 @@ export const HomeScreen = () => {
                           title: item.title,
                         })
                       }
-                      onShare={function (
-                        event: MouseEvent<HTMLButtonElement, MouseEvent>,
-                      ): void {
-                        throw new Error("Function not implemented.");
-                      }}
                       onDelete={function (playlistId: string): void {
                         throw new Error("Function not implemented.");
                       }}
