@@ -99,7 +99,7 @@ export const SideMenuNavigator = () => {
               ),
             }}
             name="Settings"
-            component={SettingsScreen}
+            component={StackSettingNavigator}
           />
         </>
       ) : (
