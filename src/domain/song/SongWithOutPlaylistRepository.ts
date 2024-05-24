@@ -6,4 +6,5 @@ export default interface SongWithOutPlaylistRepository {
     artist: string,
     categoryId: string,
   ): Promise<SongWithOutPlaylist>;
+  getSongsWithOutPlaylist(categoryId: string): Promise<SongWithOutPlaylist[]>;
 }

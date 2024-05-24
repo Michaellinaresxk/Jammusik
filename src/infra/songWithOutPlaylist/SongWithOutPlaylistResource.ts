@@ -27,4 +27,25 @@ export class SongWithOutPlaylistResource
       apiSong.categoryId,
     );
   }
+
+  async getSongsWithOutPlaylist(
+    categoryId: string,
+  ): Promise<SongWithOutPlaylist[]> {
+    if (!categoryId) {
+      throw new Error("categoryId is undefined or empty!");
+    }
+
+    const apiSongList =
+      await this.songWithOutPlaylistCaller.getSongsWithOutPlaylist(categoryId);
+
+    return apiSongList.map(
+      apiSong =>
+        new SongWithOutPlaylist(
+          apiSong.id,
+          apiSong.title,
+          apiSong.artist,
+          apiSong.categoryId,
+        ),
+    );
+  }
 }
