@@ -173,6 +173,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     marginTop: 100,
     marginBottom: 50,
+    borderColor: 'red'
   },
   brandLogo: {
     position: "absolute",
