@@ -1,9 +1,11 @@
-import { SongWithOutPlaylistResource } from "../../infra/song/SongWithOutPlaylistResource";
+import { SongWithOutPlaylistResource } from "../../infra/songWithOutPlaylist/SongWithOutPlaylistResource";
 import type { UseCase } from "../UseCase";
 import { SongWithOutPlaylistView } from "../../views/SongWithOutPlaylistView";
 
 export class CreateSongWithOutPlaylistUseCase implements UseCase {
-  constructor(private songResource: SongWithOutPlaylistResource) {}
+  constructor(
+    private songWithOutPlaylistResource: SongWithOutPlaylistResource,
+  ) {}
 
   async execute(
     title: string,
@@ -12,7 +14,7 @@ export class CreateSongWithOutPlaylistUseCase implements UseCase {
   ): Promise<SongWithOutPlaylistView> {
     try {
       const songWithOutPlaylist =
-        await this.songResource.createSongWithOutPlaylist(
+        await this.songWithOutPlaylistResource.createSongWithOutPlaylist(
           title,
           artist,
           categoryId,
