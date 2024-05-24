@@ -114,6 +114,7 @@ export const SideMenuNavigator = () => {
 };
 
 const CustomDrawerContent = (props: DrawerContentComponentProps) => {
+  const { userName } = useAuthStatus();
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
 
   const userService = useUserService();
@@ -133,7 +134,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
           name="person-circle-outline"
           color={globalColors.primary}
         />
-        <Text style={styles.userName}>User Name:</Text>
+        <Text style={styles.userName}>{userName}</Text>
       </View>
       <Separator color="white" />
       <DrawerItemList {...props} />
