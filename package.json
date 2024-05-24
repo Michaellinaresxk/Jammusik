@@ -11,6 +11,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@dev-event/react-native-accordion": "^2.0.4",
     "@react-native-masked-view/masked-view": "^0.3.1",
     "@react-navigation/drawer": "^6.6.15",
     "@react-navigation/native": "^6.1.17",

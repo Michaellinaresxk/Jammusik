@@ -25,7 +25,7 @@ export const StackSettingNavigator = () => {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerShown: false,
+        headerShown: true,
         headerStyle: {
           elevation: 0,
           shadowColor: "transparent",
@@ -50,7 +50,9 @@ export const StackSettingNavigator = () => {
         name="FeedbackScreen"
         component={FeedbackScreen}
         options={{
-          headerTitle: "Feedback",
+          headerTitle: "",
+
+
         }}
       />
       <Stack.Screen
@@ -72,6 +74,7 @@ export const StackSettingNavigator = () => {
         component={FaqsScreen}
         options={{
           headerTitle: "Faq",
+
         }}
       />
     </Stack.Navigator>

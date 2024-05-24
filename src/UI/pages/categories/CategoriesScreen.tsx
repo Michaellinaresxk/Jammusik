@@ -143,7 +143,7 @@ export const CategoriesScreen = () => {
               <Modal
                 visible={isVisible}
                 animationType="slide"
-                presentationStyle="formSheet">
+                presentationStyle="formSheet" >
                 <View style={styles.modalBtnContainer}>
                   <Text style={styles.modalFormHeaderTitle}>
                     Add Category Info
@@ -206,10 +206,11 @@ const styles = StyleSheet.create({
     padding: 30,
   },
   modalBtnContainer: {
+    width: '100%',
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: globalColors.primary,
-    paddingLeft: 22,
+    paddingHorizontal: 22,
   },
   modalFormHeaderTitle: {
     fontSize: 20,

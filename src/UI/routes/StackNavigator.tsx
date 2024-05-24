@@ -49,7 +49,7 @@ export const StackNavigator = () => {
       }}>
       {isLoggedIn ? (
         <Stack.Group>
-          <Stack.Screen name="HomeScreen" component={HomeScreen} />
+          <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ headerShown: false }} />
           <Stack.Screen name="CategoriesScreen" component={CategoriesScreen} />
           <Stack.Screen
             name="CategorySelectedScreen"
@@ -64,7 +64,14 @@ export const StackNavigator = () => {
             name="SongSelectedScreen"
             component={SongSelectedScreen}
           />
-          <Stack.Screen name="FaqsScreen" component={FaqsScreen} />
+          <Stack.Screen name="FaqsScreen" component={FaqsScreen}
+            options={{
+              headerShown: true,
+              headerTitle: "Back",
+              headerTransparent: true,
+
+
+            }} />
           <Stack.Screen name="AboutUsScreen" component={AboutUsScreen} />
           <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
           <Stack.Screen name="FeedbackScreen" component={FeedbackScreen} />

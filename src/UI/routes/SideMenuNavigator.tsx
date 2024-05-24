@@ -96,10 +96,10 @@ export const SideMenuNavigator = () => {
                   color={focused ? globalColors.light : globalColors.terceary}
                   size={22}
                 />
-              ),
+              )
             }}
             name="Settings"
-            component={SettingsScreen}
+            component={StackSettingNavigator}
           />
         </>
       ) : (
