@@ -1,6 +1,7 @@
 import type { UserResource } from "../../../infra/user/UserResource";
 import CreateUserUseCase from "./CreateUserUseCase";
 import { LoginUserUseCase } from "./LoginUserUseCase";
+import AuthUserWithGoogleUseCase from "./AuthUserWithGoogleUseCase";
 import { GetCurrentUserUseCase } from "./GetCurrentUserUseCase";
 import { LogoutUserUseCase } from "./LogoutUserUseCase";
 export class UserService {
@@ -9,12 +10,16 @@ export class UserService {
   }
   private createUserUseCase: CreateUserUseCase;
   private loginUserUseCase: LoginUserUseCase;
+  private authUserWithGoogleUseCase: AuthUserWithGoogleUseCase;
   private getCurrentUserUseCase: GetCurrentUserUseCase;
   private logoutUserUseCase: LogoutUserUseCase;
 
   constructor(private readonly userResource: UserResource) {
     this.createUserUseCase = new CreateUserUseCase(userResource);
     this.loginUserUseCase = new LoginUserUseCase(userResource);
+    this.authUserWithGoogleUseCase = new AuthUserWithGoogleUseCase(
+      userResource,
+    );
     this.getCurrentUserUseCase = new GetCurrentUserUseCase(userResource);
     this.logoutUserUseCase = new LogoutUserUseCase(userResource);
   }
@@ -24,6 +29,9 @@ export class UserService {
   }
   async loginUser(email: string, password: string) {
     return await this.loginUserUseCase.execute(email, password);
+  }
+  async authUserGoogle() {
+    return await this.authUserWithGoogleUseCase.execute();
   }
   async getCurrentUser(userId: string) {
     return await this.getCurrentUserUseCase.execute(userId);

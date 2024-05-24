@@ -6,11 +6,24 @@ import { BrandLogo } from "../components/shared/BrandLogo";
 import { RootStackParamsList } from "../routes/StackNavigator";
 import { LinkLoginRegister } from "../components/shared/LinkLoginRegister";
 import { type NavigationProp, useNavigation } from "@react-navigation/native";
+import { useUserService } from "../../context/UserServiceContext";
 
 const backgroundImage = { uri: images.pathpickBackground };
 
 export const PathPickScreen = () => {
+  const userService = useUserService();
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
+
+  const authWithGoogle = async () => {
+    console.log("authWithGoogle");
+    try {
+      await userService.authUserGoogle();
+      navigation.navigate("HomeScreen");
+    } catch (err) {
+      console.error("Error during Google authentication:", err);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -40,7 +53,7 @@ export const PathPickScreen = () => {
               <PrimaryButton
                 label="Google"
                 bgColor={globalColors.warning}
-                onPress={() => console.log("google")}
+                onPress={() => authWithGoogle()}
                 borderRadius={5}
                 btnFontSize={20}
               />

@@ -8,11 +8,14 @@ import type {
 import { addDoc, collection } from "@firebase/firestore";
 import { auth, db, signInWithEmailAndPassword } from "../api/firebaseConfig";
 import {
+  GoogleAuthProvider,
   createUserWithEmailAndPassword,
   getAuth,
+  signInWithPopup,
   updateProfile,
 } from "firebase/auth";
 import type { ApiUser } from "./ApiUser";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 export class UserCaller {
   constructor(
     public readonly collection: (
@@ -74,6 +77,41 @@ export class UserCaller {
       throw error;
     }
   }
+
+  async authWithGoogle(): Promise<ApiUser> {
+    const provider = new GoogleAuthProvider();
+
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      if (user) {
+        const usersCollection = collection(db, "users");
+        const userRef = doc(usersCollection, user.uid);
+        const userSnap = await getDoc(userRef);
+
+        if (!userSnap.exists()) {
+          await setDoc(userRef, {
+            uid: user.uid,
+            email: user.email,
+            userName: user.displayName,
+          });
+        }
+
+        return {
+          id: user.uid,
+          name: user.displayName as string,
+          email: user.email as string,
+        };
+      } else {
+        throw new Error("Failed to authenticate with Google");
+      }
+    } catch (error) {
+      console.error("Authentication error:", error);
+      throw error;
+    }
+  }
+
   async getCurrentUser(userId: string): Promise<ApiUser | null> {
     const auth = getAuth();
     const user = auth.currentUser;

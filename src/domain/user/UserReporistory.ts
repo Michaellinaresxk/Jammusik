@@ -7,5 +7,6 @@ export default interface UserRepository {
   ): Promise<User>;
   loginUser(email: string, password: string): Promise<User>;
   getCurrentUser(userId: string): Promise<User>;
+  authUserWithGoogle(): Promise<User>;
   logout(): Promise<void>;
 }
