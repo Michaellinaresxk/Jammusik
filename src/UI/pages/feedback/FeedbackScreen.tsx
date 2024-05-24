@@ -20,6 +20,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamsList } from "../../routes/StackNavigator";
 import { usePullRefresh } from "../../../hooks/usePullRefresing";
+import { GoBackButton } from "../../components/shared/GoBackButton";
 
 export const FeedbackScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
@@ -37,6 +38,7 @@ export const FeedbackScreen = () => {
       resizeMode="cover"
       alt="Imagen de fondo">
       <View style={globalStyles.overlay}>
+        <GoBackButton />
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : undefined}>
           <ScrollView
@@ -52,19 +54,10 @@ export const FeedbackScreen = () => {
                 onRefresh={refresh}
               />
             }>
-            <Pressable
-              style={styles.goBackContent}
-              onPress={() => navigation.navigate("HomeScreen")}>
-              <Icon
-                name="chevron-back-sharp"
-                color={globalColors.primary}
-                size={25}
-              />
-
-              <Text style={styles.goBackLabel}>Back</Text>
-            </Pressable>
-            <View style={{ flex: 1, justifyContent: "center" }}>
-              <BrandLogo />
+            <View>
+              <View style={styles.logoContainer}>
+                <BrandLogo />
+              </View>
 
               <View style={styles.container}>
                 <Text style={styles.subTitle}>We Value Your Feedback!</Text>
@@ -104,16 +97,18 @@ export const FeedbackScreen = () => {
   );
 };
 const styles = StyleSheet.create({
+  logoContainer: {
+    marginTop: 100,
+  },
   goBackContent: {
     fontSize: 15,
     fontWeight: "bold",
-    margin: "auto",
     marginBottom: 30,
     flexDirection: "row",
     alignItems: "center",
   },
   goBackLabel: {
-    fontSize: 20,
+    fontSize: 15,
     color: globalColors.terceary,
   },
   text: {

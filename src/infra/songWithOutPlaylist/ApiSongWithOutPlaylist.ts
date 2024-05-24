@@ -1,7 +1,6 @@
-export type ApiSong = {
+export type ApiSongWithOutPlaylist = {
   id: string;
   title: string;
   artist: string;
   categoryId: string;
-  playlistId: string | undefined;
 };

@@ -157,14 +157,13 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
   goBackContent: {
-    fontSize: 15,
-    margin: "auto",
-    marginTop: 40,
+    marginLeft: 20,
+    marginTop: 70,
     flexDirection: "row",
     alignItems: "center",
   },
   goBackLabel: {
-    fontSize: 20,
+    fontSize: 15,
     color: globalColors.terceary,
   },
 });

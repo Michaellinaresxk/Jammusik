@@ -6,16 +6,12 @@ import { PrimaryButton } from "../PrimaryButton";
 type ProfileForm = {
   title: string;
   setTitle: React.Dispatch<React.SetStateAction<string>>;
-  mode: string;
-  setMode: React.Dispatch<React.SetStateAction<string>>;
   onCreatePlaylist: () => Promise<void>;
 };
 
 export const FormCreatePlaylist = ({
   title,
   setTitle,
-  mode,
-  setMode,
   onCreatePlaylist,
 }: ProfileForm) => {
   return (
@@ -28,13 +24,6 @@ export const FormCreatePlaylist = ({
             placeholder="Title"
             value={title}
             onChangeText={setTitle}
-          />
-          <TextInput
-            style={globalFormStyles.inputLogin}
-            placeholder="Mode"
-            value={mode}
-            placeholderTextColor="#838282"
-            onChangeText={setMode}
           />
         </View>
         <PrimaryButton

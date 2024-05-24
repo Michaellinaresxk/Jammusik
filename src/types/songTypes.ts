@@ -26,7 +26,6 @@ export interface SongDetails {
 export interface Playlist {
   id: string;
   title: string;
-  modeId: string;
 }
 
 export interface Category {
@@ -34,8 +33,3 @@ export interface Category {
   id: string;
   title: string;
 }
-
-export type Mode = {
-  id: string;
-  title: string;
-};

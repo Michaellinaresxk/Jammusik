@@ -6,6 +6,13 @@ export interface SongProperties {
   playlistId: string;
 }
 
+export interface SongWithOutPlaylistProperties {
+  id: string;
+  title: string;
+  artist: string;
+  categoryId: string;
+}
+
 export interface SongDetailsProperties {
   songId: string;
   key?: string;
@@ -15,15 +22,9 @@ export interface SongDetailsProperties {
   tabLink?: string;
 }
 
-export type ModeProperties = {
-  id: string;
-  title: string;
-};
-
 export type PlaylistProperties = {
   id: string;
   title: string;
-  modeId: string;
 };
 
 export type CategoryProperties = {

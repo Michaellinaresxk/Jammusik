@@ -18,8 +18,12 @@ import { playlistService } from "./services/playlistService";
 import { PlaylistServiceProvider } from "./context/PlaylistServiceContext";
 import { songService } from "./services/songService";
 import { SongServiceProvider } from "./context/SongServiceContext";
+import { songWithOutPlaylistService } from "./services/songWithOutPlaylist";
+import { SongWithOutPlaylistServiceProvider } from "./context/SongWithOutPlaylistContext";
 import { SideMenuNavigator } from "./UI/routes/SideMenuNavigator";
 import { userService } from "./services/userService";
+import Toast from "react-native-toast-message";
+import { ToastConfig } from "./UI/theme/ToastConfig";
 function App(): React.JSX.Element {
   return (
     <ProviderComposer
@@ -28,11 +32,15 @@ function App(): React.JSX.Element {
         <UserInfoServiceProvider userInfoService={userInfoService} />,
         <CategoryServiceProvider categoryService={categoryService} />,
         <PlaylistServiceProvider playlistService={playlistService} />,
+        <SongWithOutPlaylistServiceProvider
+          songWithOutPlaylistService={songWithOutPlaylistService}
+        />,
         <SongServiceProvider songService={songService} />,
         // Add other providers here as you create them
       ]}>
       <NavigationContainer>
         <SideMenuNavigator />
+        <Toast config={ToastConfig} />
       </NavigationContainer>
     </ProviderComposer>
   );

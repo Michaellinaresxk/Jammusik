@@ -1,23 +1,25 @@
 import React from "react";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { globalColors } from "../../../theme/Theme";
 import Icon from "react-native-vector-icons/Ionicons";
+import Toast from "react-native-toast-message";
 
 type Props = {
   title: string;
   onPress: () => void;
   color: string;
-  onShare: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   onDelete: (playlistId: string) => void;
 };
 
-export const PlaylistCard = ({
-  title,
-  onPress,
-  onDelete,
-  onShare,
-  color,
-}: Props) => {
+export const PlaylistCard = ({ title, onPress, onDelete, color }: Props) => {
+  const showToast = () => {
+    Toast.show({
+      type: "success",
+      text1: "Share Funcionality",
+      text2: "Comming soon... next release.👋",
+    });
+  };
+
   return (
     <TouchableOpacity
       style={[styles.playlistCard, { backgroundColor: color }]}
@@ -27,7 +29,7 @@ export const PlaylistCard = ({
         <Icon
           name="share-social-sharp"
           color={globalColors.light}
-          onPress={() => Alert.alert("Share functionality is comming soon...")}
+          onPress={showToast}
           size={20}
         />
         <Icon

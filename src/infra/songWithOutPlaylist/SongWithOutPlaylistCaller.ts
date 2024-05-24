@@ -1,17 +1,16 @@
-import type { ApiSong } from "./ApiSong";
+import type { ApiSongWithOutPlaylist } from "./ApiSongWithOutPlaylist";
 import { getFirestore, addDoc, collection } from "@firebase/firestore";
-import { getDocs, where, query } from "firebase/firestore";
 import { auth } from "../api/firebaseConfig";
+import { getDocs, query, where } from "firebase/firestore";
 
-export class SongCaller {
+export class SongWithOutPlaylistCaller {
   private db = getFirestore();
 
-  async createSong(
+  async createSongWithOutPlaylist(
     title: string,
     artist: string,
     categoryId: string,
-    playlistId: string,
-  ): Promise<ApiSong> {
+  ): Promise<ApiSongWithOutPlaylist> {
     const userId = auth.currentUser?.uid;
     if (!this.db || !userId) {
       throw new Error("Firestore instance or user ID is undefined!");
@@ -21,7 +20,6 @@ export class SongCaller {
       title,
       artist,
       categoryId,
-      playlistId,
       userId,
     };
 
@@ -37,7 +35,7 @@ export class SongCaller {
       return cleanObj;
     }
 
-    const songsCollection = collection(this.db, "songs");
+    const songsCollection = collection(this.db, "songsWithOutPlaylist");
     const cleanedSongData = cleanObject(songData);
     const docRef = await addDoc(songsCollection, cleanedSongData);
 
@@ -47,20 +45,22 @@ export class SongCaller {
     };
   }
 
-  async getSongs(playlistId: string): Promise<ApiSong[]> {
-    if (!this.db || !playlistId) {
-      throw new Error("Firestore instance or playlistId is undefined!");
+  async getSongsWithOutPlaylist(
+    categoryId: string,
+  ): Promise<ApiSongWithOutPlaylist[]> {
+    if (!this.db || !categoryId) {
+      throw new Error("Firestore instance or categoryId is undefined!");
     }
     try {
-      const songsCollection = collection(this.db, "songs");
+      const songsCollection = collection(this.db, "songsWithOutPlaylist");
       const songsQuery = query(
         songsCollection,
-        where("playlistId", "==", playlistId),
+        where("categoryId", "==", categoryId),
       );
       const querySnapshot = await getDocs(songsQuery);
 
       return querySnapshot.docs.map(doc => {
-        return { id: doc.id, ...doc.data() } as ApiSong;
+        return { id: doc.id, ...doc.data() } as ApiSongWithOutPlaylist;
       });
     } catch (error) {
       console.error("Error fetching songs:", error);

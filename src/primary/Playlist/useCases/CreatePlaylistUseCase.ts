@@ -5,16 +5,9 @@ import { PlaylistView } from "../../../views/PlaylistView";
 export class CreatePlaylistUseCase implements UseCase {
   constructor(private playlistResource: PlaylistResource) {}
 
-  async execute(title: string, modeId: string): Promise<PlaylistView> {
+  async execute(title: string): Promise<PlaylistView> {
     try {
-      if (!(typeof modeId === "string")) {
-        throw new Error("Category should be a string");
-      }
-
-      const playlist = await this.playlistResource.createPlaylist(
-        title,
-        modeId,
-      );
+      const playlist = await this.playlistResource.createPlaylist(title);
       return PlaylistView.fromDomain(playlist);
     } catch (err) {
       console.log(err);
