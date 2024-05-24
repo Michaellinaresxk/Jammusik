@@ -50,7 +50,7 @@ export const StackSettingNavigator = () => {
         name="FeedbackScreen"
         component={FeedbackScreen}
         options={{
-          headerTitle: "",
+          headerTitle: "FAQ",
 
 
         }}
