@@ -24,7 +24,7 @@ export const useEmailResend = () => {
     if (error) {
       throw new Error("Error sending the email")
     }
-    Alert.alert("Message sending success")
+    Alert.alert("Message sending success!")
     setEmail("")
   }
 
