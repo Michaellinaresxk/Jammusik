@@ -1,6 +1,7 @@
 import type { ApiSongWithOutPlaylist } from "./ApiSongWithOutPlaylist";
 import { getFirestore, addDoc, collection } from "@firebase/firestore";
 import { auth } from "../api/firebaseConfig";
+import { getDocs, query, where } from "firebase/firestore";
 
 export class SongWithOutPlaylistCaller {
   private db = getFirestore();
@@ -42,5 +43,28 @@ export class SongWithOutPlaylistCaller {
       id: docRef.id,
       ...songData,
     };
+  }
+
+  async getSongsWithOutPlaylist(
+    categoryId: string,
+  ): Promise<ApiSongWithOutPlaylist[]> {
+    if (!this.db || !categoryId) {
+      throw new Error("Firestore instance or categoryId is undefined!");
+    }
+    try {
+      const songsCollection = collection(this.db, "songsWithOutPlaylist");
+      const songsQuery = query(
+        songsCollection,
+        where("categoryId", "==", categoryId),
+      );
+      const querySnapshot = await getDocs(songsQuery);
+
+      return querySnapshot.docs.map(doc => {
+        return { id: doc.id, ...doc.data() } as ApiSongWithOutPlaylist;
+      });
+    } catch (error) {
+      console.error("Error fetching songs:", error);
+      throw error;
+    }
   }
 }
