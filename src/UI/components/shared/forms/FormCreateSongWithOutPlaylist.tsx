@@ -11,7 +11,6 @@ type SongForm = {
   artist: string;
   setArtist: React.Dispatch<React.SetStateAction<string>>;
   categoryId: string;
-  setCategoryId: React.Dispatch<React.SetStateAction<string>>;
   onCreateSong: () => Promise<void>;
 };
 
@@ -26,11 +25,13 @@ export const FormCreateSongWithOutPlaylist = ({
   artist,
   setArtist,
   categoryId,
-  setCategoryId,
   onCreateSong,
 }: SongForm) => {
   const categoryService = useCategoryService();
   const [categories, setCategories] = useState<DropdownItem[]>([]);
+  const [currentCategory, setCurrentCategory] = useState<DropdownItem | null>(
+    null,
+  );
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -40,17 +41,14 @@ export const FormCreateSongWithOutPlaylist = ({
         value: cat.id,
       }));
       setCategories(dropdownCategories);
-      if (!categoryId && dropdownCategories.length > 0) {
-        setCategoryId(dropdownCategories[0].value);
-      }
+      const selectedCategory = dropdownCategories.find(
+        cat => cat.value === categoryId,
+      );
+      setCurrentCategory(selectedCategory || null);
     };
 
     loadCategories();
-  }, [categoryId, categoryService, setCategoryId]);
-
-  const handleCategoryChange = (selectedCategoryId: string) => {
-    setCategoryId(selectedCategoryId); // This will update categoryId state used in song creation
-  };
+  }, [categoryId, categoryService]);
 
   return (
     <View style={globalFormStyles.containerForm}>
@@ -72,12 +70,13 @@ export const FormCreateSongWithOutPlaylist = ({
           value={artist}
           onChangeText={text => setArtist(text)}
         />
-        {categories.length > 0 && (
+        {currentCategory && (
           <CustomDropdown
-            items={categories}
-            defaultValue={categoryId || categories[0].value}
+            items={[currentCategory]} // Only show the current category
+            defaultValue={currentCategory.value}
             placeholder="Choose a category"
-            onChange={handleCategoryChange} // Handle changes here
+            onChange={() => {}} // No-op function since it shouldn't change
+            disabled={true} // Disable the dropdown
           />
         )}
         <PrimaryButton

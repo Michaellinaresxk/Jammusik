@@ -2,7 +2,6 @@ import type { CategoryResource } from "../../infra/category/CategoryResource";
 import { CreateCategoryUseCase } from "./CreateCategoryUseCase";
 import { GetCategoriesUseCase } from "./GetCategoriesUseCase";
 import { GetSongListByCategoryUseCase } from "./GetSongListByCategoryUseCase";
-
 import type { CategoryView } from "../../views/CategoryView";
 import { SongView } from "../../views/SongView";
 

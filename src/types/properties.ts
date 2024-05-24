@@ -6,6 +6,13 @@ export interface SongProperties {
   playlistId: string;
 }
 
+export interface SongWithOutPlaylistProperties {
+  id: string;
+  title: string;
+  artist: string;
+  categoryId: string;
+}
+
 export interface SongDetailsProperties {
   songId: string;
   key?: string;
