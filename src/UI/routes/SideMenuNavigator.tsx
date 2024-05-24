@@ -30,7 +30,7 @@ import { SettingsScreen } from "../pages/settings/SettingsScreen";
 const Drawer = createDrawerNavigator();
 
 export const SideMenuNavigator = () => {
-  const { isLoggedIn } = useAuthStatus();
+  const { isLoggedIn, userName } = useAuthStatus();
 
   return (
     <Drawer.Navigator
@@ -117,6 +117,10 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
 
   const userService = useUserService();
+  const { userName } = useAuthStatus();
+
+  console.log(userName)
+
   const logoutUser = async () => {
     try {
       console.log("logout");
@@ -133,7 +137,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
           name="person-circle-outline"
           color={globalColors.primary}
         />
-        <Text style={styles.userName}>User Name:</Text>
+        <Text style={styles.userName}>{userName}</Text>
       </View>
       <Separator color="white" />
       <DrawerItemList {...props} />
@@ -163,7 +167,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   userName: {
-    color: globalColors.terceary,
+    color: globalColors.primary,
     fontSize: 20,
   },
   buttonContainer: {
