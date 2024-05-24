@@ -1,9 +1,15 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { AccordionItem } from "../../components/shared/AccodionItems";
 import { globalColors } from "../../theme/Theme";
+import Icon from "react-native-vector-icons/Ionicons";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { RootStackParamsList } from "../../routes/StackNavigator";
+import { BrandLogo } from "../../components/shared/BrandLogo";
 
 export const FaqsScreen = () => {
+  const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
+
   const [askes, setAskes] = useState([
     {
       id: 0,
@@ -30,11 +36,23 @@ export const FaqsScreen = () => {
 
   return (
     <View style={styles.containerAsk}>
+      <Pressable
+        style={styles.goBackContent}
+        onPress={() => navigation.goBack()}>
+        <Icon
+          name="chevron-back-sharp"
+          color={globalColors.primary}
+          size={25}
+        />
+        <Text style={styles.goBackLabel}>Back</Text>
+      </Pressable>
       <Text style={styles.titleAsk}> Frequently asked questions</Text>
       <Text style={styles.description}>
         Need help with something? Here are the most asked questions
       </Text>
+
       <AccordionItem askes={askes} setAskes={setAskes} />
+      <BrandLogo />
     </View>
   );
 };
@@ -43,18 +61,30 @@ const styles = StyleSheet.create({
   containerAsk: {
     flex: 1,
     padding: 20,
+    marginTop: 50,
+  },
+  goBackContent: {
+    fontSize: 15,
+    fontWeight: "bold",
+    margin: "auto",
+    marginTop: 40,
+    flexDirection: "row",
     alignItems: "center",
+  },
+  goBackLabel: {
+    fontSize: 15,
+    color: globalColors.terceary,
   },
   titleAsk: {
     color: globalColors.primaryDark,
-    fontSize: 22,
+    fontSize: 25,
     marginTop: 50,
     fontWeight: "900",
-    width: "100%",
   },
   description: {
-    fontSize: 14,
+    fontSize: 20,
     color: globalColors.primaryDark,
     marginTop: 20,
+    marginBottom: 20,
   },
 });

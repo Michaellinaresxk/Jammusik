@@ -21,7 +21,7 @@ export const AccordionItem = ({ askes, setAskes }) => {
               <Text style={styles.ask}>{item.ask}</Text>
               <Icon
                 name={item.state ? "chevron-forward" : "chevron-down"}
-                size={24}
+                size={25}
                 color={globalColors.light}
               />
             </Pressable>
@@ -32,7 +32,7 @@ export const AccordionItem = ({ askes, setAskes }) => {
                 !item.state ? styles.show : { height: "200px" },
               ]}
               collapsable={false}>
-              <Text style={{ color: "black" }}>{item.answer}</Text>
+              <Text style={styles.answer}>{item.answer}</Text>
             </View>
           </View>
         )}
@@ -42,13 +42,10 @@ export const AccordionItem = ({ askes, setAskes }) => {
 };
 
 const styles = StyleSheet.create({
-  ContainerList: {
-    marginTop: 20,
-  },
   ask: {
-    width: 200,
+    width: "90%",
     color: globalColors.light,
-    fontSize: 14,
+    fontSize: 18,
   },
   answerContainer: {
     padding: 10,
@@ -65,5 +62,11 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     minHeight: 100,
+  },
+  answer: {
+    fontSize: 18,
+    marginTop: 10,
+    marginBottom: 20,
+    color: globalColors.primaryDark,
   },
 });
