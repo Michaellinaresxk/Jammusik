@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   ImageBackground,
   Text,
@@ -21,9 +21,12 @@ import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamsList } from "../../routes/StackNavigator";
 import { usePullRefresh } from "../../../hooks/usePullRefresing";
 import { GoBackButton } from "../../components/shared/GoBackButton";
+import { useEmailResend } from "../../../hooks/useEmailResend";
 
 export const FeedbackScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
+  const [text, setText] = useState<string>('')
+  const { sendEmail } = useEmailResend()
 
   const image = {
     uri: images.loginBackground,
@@ -79,13 +82,13 @@ export const FeedbackScreen = () => {
                     color: "black",
                   }}
                   placeholderTextColor="black"
-                  placeholder="Place your feedback here..."
+                  placeholder="Place your feedback here..." onChangeText={setText} value={text}
                 />
                 <PrimaryButton
                   label="SEND FEEDBACK"
                   bgColor="#18998B"
                   borderRadius={5}
-                  onPress={() => Alert.alert("Sending feedback")}
+                  onPress={() => sendEmail(text, setText)}
                   btnFontSize={20}
                 />
               </View>
