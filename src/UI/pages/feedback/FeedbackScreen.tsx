@@ -4,9 +4,7 @@ import {
   Text,
   View,
   TextInput,
-  Alert,
   StyleSheet,
-  Pressable,
   KeyboardAvoidingView,
   ScrollView,
   Platform,
@@ -16,17 +14,13 @@ import { globalColors, globalStyles } from "../../theme/Theme";
 import { images } from "../../../assets/img/Images";
 import { BrandLogo } from "../../components/shared/BrandLogo";
 import { PrimaryButton } from "../../components/shared/PrimaryButton";
-import Icon from "react-native-vector-icons/Ionicons";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { RootStackParamsList } from "../../routes/StackNavigator";
 import { usePullRefresh } from "../../../hooks/usePullRefresing";
 import { GoBackButton } from "../../components/shared/GoBackButton";
 import { useEmailResend } from "../../../hooks/useEmailResend";
 
 export const FeedbackScreen = () => {
-  const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
-  const [text, setText] = useState<string>('')
-  const { sendEmail } = useEmailResend()
+  const [text, setText] = useState<string>("");
+  const { sendEmail } = useEmailResend();
 
   const image = {
     uri: images.loginBackground,
@@ -82,7 +76,9 @@ export const FeedbackScreen = () => {
                     color: "black",
                   }}
                   placeholderTextColor="black"
-                  placeholder="Place your feedback here..." onChangeText={setText} value={text}
+                  placeholder="Place your feedback here..."
+                  onChangeText={setText}
+                  value={text}
                 />
                 <PrimaryButton
                   label="SEND FEEDBACK"

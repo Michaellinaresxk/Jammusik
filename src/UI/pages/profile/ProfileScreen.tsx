@@ -15,13 +15,13 @@ import { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
 import { ApiUser } from "../../../infra/user/ApiUser";
 import { globalColors } from "../../theme/Theme";
-import { PrimaryIcon } from "../../components/shared/PrimaryIcon";
 import { FormProfile } from "../../components/shared/forms/FormProfile";
 import { UserInfo } from "../../../types/formTypes";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamsList } from "../../routes/StackNavigator";
 import Icon from "react-native-vector-icons/Ionicons";
 import { usePullRefresh } from "../../../hooks/usePullRefresing";
+import { UserAvatar } from "../../components/shared/UserAvatar";
 
 export const ProfileScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
@@ -104,13 +104,7 @@ export const ProfileScreen = () => {
             />
             <Text style={styles.goBackLabel}>Back</Text>
           </Pressable>
-          <View style={styles.userIconContent}>
-            <PrimaryIcon
-              name="person-circle-outline"
-              color={globalColors.primary}
-            />
-            <Text style={styles.userName}> {user?.name}</Text>
-          </View>
+          <UserAvatar />
           <FormProfile
             email={user?.email}
             setEmail={setEmail}
