@@ -2,13 +2,14 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { globalColors } from "../../theme/Theme";
 import { PrimaryIcon } from "./PrimaryIcon";
-import { User } from "../../../types/formTypes";
+import useAuthStatus from "../../../hooks/useAuthStatus";
 
-export const UserAvatar = ({ user }) => {
+export const UserAvatar = () => {
+  const { userName } = useAuthStatus();
   return (
     <View style={styles.userIconContent}>
       <PrimaryIcon name="person-circle-outline" color={globalColors.primary} />
-      <Text style={styles.userName}>{user.name}</Text>
+      <Text style={styles.userName}>{userName}</Text>
     </View>
   );
 };

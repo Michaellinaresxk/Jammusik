@@ -26,6 +26,7 @@ import { LoginScreen } from "../pages/login/LoginScreen";
 import { RegisterScreen } from "../pages/register/RegisterScreen";
 import { StackSettingNavigator } from "./StackSettingNavigator";
 import { SettingsScreen } from "../pages/settings/SettingsScreen";
+import { UserAvatar } from "../components/shared/UserAvatar";
 
 const Drawer = createDrawerNavigator();
 
@@ -114,7 +115,6 @@ export const SideMenuNavigator = () => {
 };
 
 const CustomDrawerContent = (props: DrawerContentComponentProps) => {
-  const { userName } = useAuthStatus();
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
 
   const userService = useUserService();
@@ -129,13 +129,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   };
   return (
     <DrawerContentScrollView>
-      <View style={styles.userIconContent}>
-        <PrimaryIcon
-          name="person-circle-outline"
-          color={globalColors.primary}
-        />
-        <Text style={styles.userName}>{userName}</Text>
-      </View>
+      <UserAvatar />
       <Separator color="white" />
       <DrawerItemList {...props} />
       <View style={styles.buttonContainer}>

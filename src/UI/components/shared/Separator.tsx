@@ -13,7 +13,7 @@ export const Separator = ({ style, color }: Props) => {
         {
           alignItems: "center",
           justifyContent: "center",
-          width: "80%",
+          width: "100%",
           height: 1,
           backgroundColor: color,
           opacity: 0.1,
