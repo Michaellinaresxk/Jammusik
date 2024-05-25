@@ -129,13 +129,6 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   };
   return (
     <DrawerContentScrollView>
-      {/* <View style={styles.userIconContent}>
-        <PrimaryIcon
-          name="person-circle-outline"
-          color={globalColors.primary}
-        />
-        <Text style={styles.userName}>{userName}</Text>
-      </View> */}
       <UserAvatar />
       <Separator color="white" />
       <DrawerItemList {...props} />
