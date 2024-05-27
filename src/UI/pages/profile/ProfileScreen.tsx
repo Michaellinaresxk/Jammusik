@@ -22,6 +22,7 @@ import { RootStackParamsList } from "../../routes/StackNavigator";
 import Icon from "react-native-vector-icons/Ionicons";
 import { usePullRefresh } from "../../../hooks/usePullRefresing";
 import { UserAvatar } from "../../components/shared/UserAvatar";
+import Toast from "react-native-toast-message";
 
 export const ProfileScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
@@ -60,6 +61,13 @@ export const ProfileScreen = () => {
 
   const { isRefreshing, refresh, top } = usePullRefresh();
 
+  const showToast = () => {
+    Toast.show({
+      type: "success",
+      text1: "Updated info successfully!",
+    });
+  };
+
   const updateUserInfoProfile = async (userInfo: UserInfo) => {
     const { location, skills, instrument } = userInfo;
 
@@ -72,6 +80,7 @@ export const ProfileScreen = () => {
       );
 
       console.log(location, skills);
+      showToast();
     } catch (error) {
       console.error("Error updating profile:", error);
     }

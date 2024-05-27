@@ -15,7 +15,7 @@ import { GlobalHeader } from "../../components/shared/GlobalHeader";
 import { TheGreenBorder } from "../../components/shared/TheGreenBorder";
 import { globalColors } from "../../theme/Theme";
 import { useCategoryService } from "../../../context/CategoryServiceContext";
-import { MouseEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { CategoryView } from "../../../views/CategoryView";
 import { usePlaylistService } from "../../../context/PlaylistServiceContext";
 import { auth } from "../../../infra/api/firebaseConfig";
@@ -23,6 +23,7 @@ import { PlaylistView } from "../../../views/PlaylistView";
 import { PlaylistCard } from "../../components/shared/cards/PlaylistCard";
 import { SliderQuotes } from "../../components/shared/SliderQuotes";
 import { usePullRefresh } from "../../../hooks/usePullRefresing";
+import Toast from "react-native-toast-message";
 
 export const HomeScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
@@ -30,7 +31,7 @@ export const HomeScreen = () => {
   const playlistService = usePlaylistService();
   const [categories, setCategories] = useState<CategoryView[]>([]);
   const [playlists, setPlaylists] = useState<PlaylistView[]>([]);
-
+  const [triggerUpdate, setTriggerUpdate] = useState(false);
   useEffect(() => {
     const loadCategories = async () => {
       const fetchedCategories = await categoryService.getCategories();
@@ -56,6 +57,20 @@ export const HomeScreen = () => {
   }, [playlistService]);
 
   const { isRefreshing, refresh, top } = usePullRefresh();
+
+  const showToast = () => {
+    Toast.show({
+      type: "success",
+      text1: "Playlist Deleted successfully. 👋",
+    });
+  };
+
+  const handleDeletePlaylist = async (playlistId: string) => {
+    console.log("Deleting playlist", playlistId);
+    await playlistService.deletePlaylist(playlistId);
+    showToast();
+    setTriggerUpdate(prev => !prev);
+  };
 
   return (
     <>
@@ -117,9 +132,7 @@ export const HomeScreen = () => {
                           title: item.title,
                         })
                       }
-                      onDelete={function (playlistId: string): void {
-                        throw new Error("Function not implemented.");
-                      }}
+                      onDelete={() => handleDeletePlaylist(item.id)}
                     />
                   )}
                 />
