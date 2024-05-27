@@ -6,17 +6,18 @@ const useAuthStatus = () => {
   const auth = getAuth();
 
   const [userName, setUsername] = useState("");
+  const [uid, setUid] = useState("");
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, user => {
       setIsLoggedIn(!!user);
       setUsername(user.displayName);
+      setUid(user?.uid);
     });
-
     return () => unsubscribe();
   }, [auth]);
 
-  return { isLoggedIn, userName };
+  return { isLoggedIn, userName, uid };
 };
 
 export default useAuthStatus;

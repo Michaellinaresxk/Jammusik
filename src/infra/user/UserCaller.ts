@@ -13,6 +13,8 @@ import {
   updateProfile,
 } from "firebase/auth";
 import type { ApiUser } from "./ApiUser";
+import { deleteDoc, doc } from "firebase/firestore";
+import { Alert } from "react-native";
 export class UserCaller {
   constructor(
     public readonly collection: (
@@ -90,5 +92,28 @@ export class UserCaller {
   }
   async logout(): Promise<void> {
     await auth.signOut();
+  }
+
+  async deleteAccount(userId: string): Promise<void> {
+    const user = getAuth().currentUser;
+
+    if (user && user.uid === userId) {
+      try {
+        // Delete the user from the Firestore collection
+        const userDoc = doc(this.db, "users", userId);
+        await deleteDoc(userDoc);
+
+        await user.delete().then(() => {
+          Alert.alert("Successfully deleted user");
+        });
+
+        console.log(userId);
+      } catch (error) {
+        console.error("Error deleting user:", error);
+        throw error;
+      }
+    } else {
+      console.error("No authenticated user found or user ID does not match");
+    }
   }
 }
