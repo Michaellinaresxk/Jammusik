@@ -24,4 +24,7 @@ export class UserResource implements UserRepository {
   async logout(): Promise<void> {
     await this.userCaller.logout();
   }
+  async deleteAccount(userId: string): Promise<void> {
+    await this.userCaller.deleteAccount(userId);
+  }
 }

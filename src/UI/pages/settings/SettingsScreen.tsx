@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { MenuItem } from "../../components/shared/MenuItem";
 import { BrandLogo } from "../../components/shared/BrandLogo";
@@ -9,10 +9,11 @@ import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { PrimaryButton } from "../../components/shared/PrimaryButton";
 import { useUserService } from "../../../context/UserServiceContext";
 import { RootStackParamsList } from "../../routes/StackNavigator";
+import useAuthStatus from "../../../hooks/useAuthStatus";
 
 export const SettingsScreen = () => {
   const { top } = useSafeAreaInsets();
-
+  const { uid } = useAuthStatus();
   const profileItems = [
     {
       name: "Profile",
@@ -54,6 +55,16 @@ export const SettingsScreen = () => {
     try {
       console.log("logout");
       await userService.logout();
+      navigation.navigate("PathPickScreen");
+    } catch (error) {
+      console.error("Error al cerrar sesión: ", error);
+    }
+  };
+
+  const deleteAccount = async () => {
+    try {
+      const userId = uid;
+      await userService.deleteUser(userId);
       navigation.navigate("PathPickScreen");
     } catch (error) {
       console.error("Error al cerrar sesión: ", error);
@@ -113,7 +124,7 @@ export const SettingsScreen = () => {
           />
           <PrimaryButton
             label="Delete Account"
-            onPress={() => Alert.alert("Delete Account")}
+            onPress={() => deleteAccount()}
             borderRadius={5}
             colorText={globalColors.danger}
             btnFontSize={17}

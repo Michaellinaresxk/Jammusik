@@ -3,6 +3,8 @@ import CreateUserUseCase from "./CreateUserUseCase";
 import { LoginUserUseCase } from "./LoginUserUseCase";
 import { GetCurrentUserUseCase } from "./GetCurrentUserUseCase";
 import { LogoutUserUseCase } from "./LogoutUserUseCase";
+import { DeleteUserUseCase } from "./DeleteUserUseCase";
+
 export class UserService {
   static logout() {
     throw new Error("Method not implemented.");
@@ -11,12 +13,14 @@ export class UserService {
   private loginUserUseCase: LoginUserUseCase;
   private getCurrentUserUseCase: GetCurrentUserUseCase;
   private logoutUserUseCase: LogoutUserUseCase;
+  private deleteUserUseCase: DeleteUserUseCase;
 
   constructor(private readonly userResource: UserResource) {
     this.createUserUseCase = new CreateUserUseCase(userResource);
     this.loginUserUseCase = new LoginUserUseCase(userResource);
     this.getCurrentUserUseCase = new GetCurrentUserUseCase(userResource);
     this.logoutUserUseCase = new LogoutUserUseCase(userResource);
+    this.deleteUserUseCase = new DeleteUserUseCase(userResource);
   }
 
   async registerUser(email: string, password: string, userName: string) {
@@ -30,5 +34,8 @@ export class UserService {
   }
   async logout(): Promise<void> {
     await this.logoutUserUseCase.execute();
+  }
+  async deleteUser(userId: string): Promise<void> {
+    await this.deleteUserUseCase.execute(userId);
   }
 }

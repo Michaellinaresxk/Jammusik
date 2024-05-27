@@ -8,8 +8,7 @@ import {
 import { CategoriesScreen } from "../pages/categories/CategoriesScreen";
 import { globalColors } from "../theme/Theme";
 import { BrandLogo } from "../components/shared/BrandLogo";
-import { StyleSheet, Text, View } from "react-native";
-import { PrimaryIcon } from "../components/shared/PrimaryIcon";
+import { StyleSheet, View } from "react-native";
 import { Separator } from "../components/shared/Separator";
 import { PlaylistScreen } from "../pages/playlists/PlaylistScreen";
 import Icon from "react-native-vector-icons/Ionicons";
