@@ -14,7 +14,7 @@ import {
 } from "firebase/auth";
 import type { ApiUser } from "./ApiUser";
 import { deleteDoc, doc } from "firebase/firestore";
-import firebase from "firebase/compat/app";
+import { Alert } from "react-native";
 export class UserCaller {
   constructor(
     public readonly collection: (
@@ -103,9 +103,11 @@ export class UserCaller {
         const userDoc = doc(this.db, "users", userId);
         await deleteDoc(userDoc);
 
-        user.delete().then(() => {
-          console.log("Successfully deleted user");
+        await user.delete().then(() => {
+          Alert.alert("Successfully deleted user");
         });
+
+        console.log(userId);
       } catch (error) {
         console.error("Error deleting user:", error);
         throw error;

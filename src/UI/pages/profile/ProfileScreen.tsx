@@ -86,6 +86,15 @@ export const ProfileScreen = () => {
     }
   };
 
+  const deleteAccount = async () => {
+    try {
+      await userService.deleteUser(userId);
+      navigation.navigate("PathPickScreen");
+    } catch (error) {
+      console.error("Error al cerrar sesión: ", error);
+    }
+  };
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : undefined}>
