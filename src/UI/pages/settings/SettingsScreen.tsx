@@ -1,5 +1,5 @@
 import React from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { MenuItem } from "../../components/shared/MenuItem";
 import { BrandLogo } from "../../components/shared/BrandLogo";
@@ -70,12 +70,7 @@ export const SettingsScreen = () => {
       <Pressable
         style={styles.goBackContent}
         onPress={() => navigation.navigate("HomeScreen")}>
-        <Icon
-          name="chevron-back-sharp"
-          color={globalColors.primaryDark1}
-          size={25}
-        />
-        <Text style={styles.goBackLabel}>Back</Text>
+        <Icon name="arrow-back-sharp" color={globalColors.primary} size={30} />
       </Pressable>
       <View style={styles.mainContainer}>
         {profileItems.map((item, index) => (
@@ -112,9 +107,17 @@ export const SettingsScreen = () => {
             label="Logout"
             onPress={() => logoutUser()}
             borderRadius={5}
+            colorText={globalColors.primary}
+            btnFontSize={17}
+            bgColor={globalColors.primaryAlt}
+          />
+          <PrimaryButton
+            label="Delete Account"
+            onPress={() => Alert.alert("Delete Account")}
+            borderRadius={5}
             colorText={globalColors.danger}
             btnFontSize={17}
-            bgColor={globalColors.dangerAlt}
+            bgColor={globalColors.dangerAlt2}
           />
         </View>
         <View style={{ marginTop: 10 }}>
@@ -135,7 +138,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "bold",
     margin: "auto",
-    marginTop: 40,
     flexDirection: "row",
     alignItems: "center",
   },
@@ -147,5 +149,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 30,
     marginBottom: 50,
+  },
+  button: {
+    width: 200,
   },
 });

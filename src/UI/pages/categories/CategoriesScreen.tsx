@@ -89,11 +89,10 @@ export const CategoriesScreen = () => {
                 style={styles.goBackContent}
                 onPress={() => navigation.navigate("HomeScreen")}>
                 <Icon
-                  name="chevron-back-sharp"
-                  color={globalColors.primary}
-                  size={25}
+                  name="arrow-back-sharp"
+                  color={globalColors.light}
+                  size={30}
                 />
-                <Text style={styles.goBackLabel}>Back</Text>
               </Pressable>
               <View style={styles.containerHeader}>
                 <View style={styles.titleContent}>

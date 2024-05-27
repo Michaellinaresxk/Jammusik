@@ -39,12 +39,7 @@ export const FaqsScreen = () => {
       <Pressable
         style={styles.goBackContent}
         onPress={() => navigation.goBack()}>
-        <Icon
-          name="chevron-back-sharp"
-          color={globalColors.primary}
-          size={25}
-        />
-        <Text style={styles.goBackLabel}>Back</Text>
+        <Icon name="arrow-back-sharp" color={globalColors.primary} size={30} />
       </Pressable>
       <Text style={styles.titleAsk}> Frequently asked questions</Text>
       <Text style={styles.description}>
@@ -61,7 +56,6 @@ const styles = StyleSheet.create({
   containerAsk: {
     flex: 1,
     padding: 20,
-    marginTop: 50,
   },
   goBackContent: {
     fontSize: 15,

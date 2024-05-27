@@ -23,7 +23,7 @@ export const GlobalHeader = ({ headerTitle, artist }: Props) => {
         alt="Imagen de fondo"
         style={styles.headerImage}>
         <View style={globalStyles.overlay}>
-          <GoBackButton />
+          <GoBackButton bgColor={globalColors.light} />
           <HamburgerMenu />
           <View style={styles.container}>
             <Text style={styles.title}>{headerTitle}</Text>

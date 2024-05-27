@@ -16,7 +16,7 @@ export const globalColors = {
 
   warning: "#fca311",
   danger: "#e71d36",
-  dangerAlt: "#eac6ca",
+  dangerAlt2: "#eac6ca97",
   info: "#1372cb",
   light: "#F1FCF9",
 };

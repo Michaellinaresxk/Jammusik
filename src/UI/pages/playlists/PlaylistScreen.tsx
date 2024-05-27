@@ -110,11 +110,10 @@ export const PlaylistScreen = () => {
               style={styles.goBackContent}
               onPress={() => navigation.navigate("HomeScreen")}>
               <Icon
-                name="chevron-back-sharp"
+                name="arrow-back-sharp"
                 color={globalColors.primary}
-                size={25}
+                size={30}
               />
-              <Text style={styles.goBackLabel}>Back</Text>
             </Pressable>
             <View style={styles.containerHeader}>
               <View style={styles.titleContent}>
@@ -197,7 +196,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "bold",
     margin: "auto",
-    marginTop: 40,
+    marginTop: 20,
     flexDirection: "row",
     alignItems: "center",
     marginLeft: 20,
