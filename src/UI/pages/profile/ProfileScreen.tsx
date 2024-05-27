@@ -107,11 +107,10 @@ export const ProfileScreen = () => {
             style={styles.goBackContent}
             onPress={() => navigation.goBack()}>
             <Icon
-              name="chevron-back-sharp"
+              name="arrow-back-sharp"
               color={globalColors.primary}
-              size={25}
+              size={30}
             />
-            <Text style={styles.goBackLabel}>Back</Text>
           </Pressable>
           <UserAvatar />
           <FormProfile

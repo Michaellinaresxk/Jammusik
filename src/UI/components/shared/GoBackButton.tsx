@@ -1,12 +1,16 @@
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import React from "react";
-import { Pressable, StyleSheet, Text } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { RootStackParamsList } from "../../routes/StackNavigator";
 import { globalColors } from "../../theme/Theme";
 import { useRoute } from "@react-navigation/native";
 
-export const GoBackButton = () => {
+type Props = {
+  bgColor: string;
+};
+
+export const GoBackButton = ({ bgColor = globalColors.primary }: Props) => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
   const route = useRoute();
 
@@ -18,12 +22,7 @@ export const GoBackButton = () => {
           : styles.goBackContent
       }
       onPress={() => navigation.goBack()}>
-      <Icon
-        name="chevron-back-sharp"
-        color={globalColors.primaryDark1}
-        size={25}
-      />
-      <Text style={styles.goBackLabel}>Back</Text>
+      <Icon name="arrow-back-sharp" color={bgColor} size={30} />
     </Pressable>
   );
 };
@@ -35,12 +34,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     zIndex: 1,
     position: "absolute",
-    top: 60,
+    top: 57,
     marginLeft: 20,
-  },
-  goBackLabel: {
-    fontSize: 15,
-    color: globalColors.terceary,
   },
   goBackDisable: {
     display: "none",
