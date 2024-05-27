@@ -27,6 +27,7 @@ import { getAuth } from "firebase/auth";
 import { FormCreatePlaylist } from "../../components/shared/forms/FormCreatePlaylist";
 import { Separator } from "../../components/shared/Separator";
 import { usePullRefresh } from "../../../hooks/usePullRefresing";
+import Toast from "react-native-toast-message";
 
 export const PlaylistScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
@@ -57,6 +58,13 @@ export const PlaylistScreen = () => {
     setIsVisible(!isVisible);
   };
 
+  const showToast = () => {
+    Toast.show({
+      type: "success",
+      text1: "Playlist Deleted successfully. 👋",
+    });
+  };
+
   const handleCreatePlaylist = async () => {
     console.log("creando playlist");
     await playlistService.createPlaylist(title);
@@ -68,6 +76,7 @@ export const PlaylistScreen = () => {
   const handleDeletePlaylist = async (playlistId: string) => {
     console.log("Deleting playlist", playlistId);
     await playlistService.deletePlaylist(playlistId);
+    showToast();
     setTriggerUpdate(prev => !prev);
   };
 
