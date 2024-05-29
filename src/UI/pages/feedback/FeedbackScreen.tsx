@@ -114,7 +114,6 @@ const styles = StyleSheet.create({
     color: globalColors.light,
     fontSize: 18,
     lineHeight: 30,
-    fontWeight: "300",
   },
   subTitle: {
     fontSize: 25,

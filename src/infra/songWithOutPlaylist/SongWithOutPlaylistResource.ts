@@ -10,12 +10,14 @@ export class SongWithOutPlaylistResource
   ) {}
 
   async createSongWithOutPlaylist(
+    userId: string,
     title: string,
     artist: string,
     categoryId: string,
   ): Promise<SongWithOutPlaylist> {
     const apiSong =
       await this.songWithOutPlaylistCaller.createSongWithOutPlaylist(
+        userId,
         title,
         artist,
         categoryId,
@@ -30,13 +32,17 @@ export class SongWithOutPlaylistResource
 
   async getSongsWithOutPlaylist(
     categoryId: string,
+    userId: string,
   ): Promise<SongWithOutPlaylist[]> {
     if (!categoryId) {
       throw new Error("categoryId is undefined or empty!");
     }
 
     const apiSongList =
-      await this.songWithOutPlaylistCaller.getSongsWithOutPlaylist(categoryId);
+      await this.songWithOutPlaylistCaller.getSongsWithOutPlaylist(
+        categoryId,
+        userId,
+      );
 
     return apiSongList.map(
       apiSong =>

@@ -82,7 +82,10 @@ export const CategorySelectedScreen = () => {
     const fetchSongListWithOutPlaylist = async () => {
       try {
         let fetchedSongs =
-          await songWithOutPlaylistService.getSongsWithOutPlaylist(categoryId);
+          await songWithOutPlaylistService.getSongsWithOutPlaylist(
+            categoryId,
+            userId,
+          );
 
         setSongListWithOutPlaylist(fetchedSongs);
       } catch (error) {
@@ -93,23 +96,14 @@ export const CategorySelectedScreen = () => {
     fetchSongListWithOutPlaylist();
   }, [categoryId, songWithOutPlaylistService, userId, triggerUpdate]);
 
-  if (!categoryId) {
-    console.error("Failed to retrieve categoryId");
-    return null;
-  }
-
   const closeModal = () => {
     setIsVisible(!isVisible);
   };
 
   const handleCreateSongWithOutPlaylist = async () => {
-    if (!title || !artist || !categoryId) {
-      Alert.alert("Error", "All fields must be filled!");
-      return;
-    }
-
     try {
       await songWithOutPlaylistService.createSongWithOutPlaylist(
+        userId,
         title,
         artist,
         categoryId,

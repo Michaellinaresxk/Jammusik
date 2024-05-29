@@ -17,10 +17,10 @@ export class SongWithOutPlaylistCaller {
     }
 
     const songData: any = {
+      userId,
       title,
       artist,
       categoryId,
-      userId,
     };
 
     function cleanObject(obj: any) {
@@ -46,6 +46,7 @@ export class SongWithOutPlaylistCaller {
   }
 
   async getSongsWithOutPlaylist(
+    userId: string,
     categoryId: string,
   ): Promise<ApiSongWithOutPlaylist[]> {
     if (!this.db || !categoryId) {
@@ -56,11 +57,15 @@ export class SongWithOutPlaylistCaller {
       const songsQuery = query(
         songsCollection,
         where("categoryId", "==", categoryId),
+        where("userId", "==", userId),
       );
       const querySnapshot = await getDocs(songsQuery);
 
       return querySnapshot.docs.map(doc => {
-        return { id: doc.id, ...doc.data() } as ApiSongWithOutPlaylist;
+        return {
+          id: doc.id,
+          ...doc.data(),
+        } as unknown as ApiSongWithOutPlaylist;
       });
     } catch (error) {
       console.error("Error fetching songs:", error);

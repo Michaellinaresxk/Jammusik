@@ -29,14 +29,38 @@ export class CategoryCaller {
     };
   }
 
-  async getCategories(): Promise<ApiCategory[]> {
-    const db = getFirestore();
-    const querySnapshot = await getDocs(collection(db, "categories"));
-    return querySnapshot.docs.map(doc => {
-      return { id: doc.id, ...doc.data() } as ApiCategory;
-    });
-  }
+  // async getCategories(userId: string): Promise<ApiCategory[]> {
+  //   const db = getFirestore();
+  //   const querySnapshot = await getDocs(collection(db, "categories"));
+  //   return querySnapshot.docs.map(doc => {
+  //     return { id: doc.id, ...doc.data() } as ApiCategory;
+  //   });
+  // }
+  getCategories = async (userId: string): Promise<ApiCategory[]> => {
+    if (!userId) {
+      throw new Error("userId is undefined!");
+    }
 
+    const db = getFirestore();
+
+    try {
+      const categoriesCollection = collection(db, "categories");
+
+      const categoriesQuery = query(
+        categoriesCollection,
+        where("userId", "==", userId),
+      );
+
+      const querySnapshot = await getDocs(categoriesQuery);
+
+      return querySnapshot.docs.map(doc => {
+        return { id: doc.id, ...doc.data() } as ApiCategory;
+      });
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      throw error;
+    }
+  };
   async getSongListByCategory(
     categoryId: string,
     userId: string,

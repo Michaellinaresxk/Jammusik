@@ -45,11 +45,6 @@ export const PlaylistSelectedScreen = () => {
   const { isRefreshing, refresh, top } = usePullRefresh();
 
   const handleCreateSong = async () => {
-    if (!title || !artist || !categoryId || !playlistId) {
-      Alert.alert("Error", "All fields must be filled!");
-      return;
-    }
-
     try {
       await songService.createSong(title, artist, categoryId, playlistId);
       setTitle("");

@@ -11,11 +11,10 @@ export class CategoryResource implements CategoryRepository {
     return new Category(apiCategory.userId, apiCategory.title);
   }
 
-  async getCategories(): Promise<Category[]> {
-    const apiCategory = await this.categoryCaller.getCategories();
+  async getCategories(userId: string): Promise<Category[]> {
+    const apiCategory = await this.categoryCaller.getCategories(userId);
     return apiCategory.map(
-      (apiCategory: { id: string; title: string }) =>
-        new Category(apiCategory.id, apiCategory.title),
+      apiCategory => new Category(apiCategory.id, apiCategory.title),
     );
   }
 

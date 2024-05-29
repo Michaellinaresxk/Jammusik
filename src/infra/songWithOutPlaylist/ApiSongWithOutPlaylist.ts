@@ -1,5 +1,5 @@
 export type ApiSongWithOutPlaylist = {
-  id: string;
+  userId: string;
   title: string;
   artist: string;
   categoryId: string;
