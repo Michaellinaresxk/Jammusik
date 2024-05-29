@@ -1,5 +1,5 @@
 import React from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Alert, Pressable, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { MenuItem } from "../../components/shared/MenuItem";
 import { BrandLogo } from "../../components/shared/BrandLogo";
@@ -71,6 +71,34 @@ export const SettingsScreen = () => {
     }
   };
 
+  const logOutConfirmation = () =>
+    Alert.alert("Are you sure?", "Do you want to log-out?", [
+      {
+        text: "UPS! BY MISTAKE",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      {
+        text: "YES, LOG-OUT",
+        onPress: () => logoutUser(),
+        style: "destructive",
+      },
+    ]);
+
+  const deleteAccountConfirmation = () =>
+    Alert.alert("Are you sure?", "Do you want to remove your account?", [
+      {
+        text: "UPS! BY MISTAKE",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      {
+        text: "YES, DELETE ACCOUNT",
+        onPress: () => deleteAccount(),
+        style: "destructive",
+      },
+    ]);
+
   return (
     <View
       style={{
@@ -116,7 +144,7 @@ export const SettingsScreen = () => {
         <View style={styles.buttonContainer}>
           <PrimaryButton
             label="Logout"
-            onPress={() => logoutUser()}
+            onPress={() => logOutConfirmation()}
             borderRadius={5}
             colorText={globalColors.primary}
             btnFontSize={17}
@@ -124,7 +152,7 @@ export const SettingsScreen = () => {
           />
           <PrimaryButton
             label="Delete Account"
-            onPress={() => deleteAccount()}
+            onPress={() => deleteAccountConfirmation()}
             borderRadius={5}
             colorText={globalColors.danger}
             btnFontSize={17}
