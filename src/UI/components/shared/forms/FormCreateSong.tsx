@@ -4,6 +4,7 @@ import { globalColors, globalFormStyles } from "../../../theme/Theme";
 import { PrimaryButton } from "../PrimaryButton";
 import { CustomDropdown } from "../CustomDropdown";
 import { useCategoryService } from "../../../../context/CategoryServiceContext";
+import { auth } from "../../../../infra/api/firebaseConfig";
 
 type SongForm = {
   title: string;
@@ -34,22 +35,22 @@ export const FormCreateSong = ({
 
   useEffect(() => {
     const loadCategories = async () => {
-      const fetchedCategories = await categoryService.getCategories();
-      const dropdownCategories = fetchedCategories.map(cat => ({
-        label: cat.title,
-        value: cat.id,
-      }));
-      setCategories(dropdownCategories);
-      if (!categoryId && dropdownCategories.length > 0) {
-        setCategoryId(dropdownCategories[0].value);
+      if (auth.currentUser) {
+        const userId = auth.currentUser.uid;
+        const fetchedCategories = await categoryService.getCategories(userId);
+        const formattedCategories = fetchedCategories.map(category => ({
+          label: category.title,
+          value: category.id,
+        }));
+        setCategories(formattedCategories);
       }
     };
 
     loadCategories();
-  }, [categoryId, categoryService, setCategoryId]);
+  }, [categoryService]);
 
   const handleCategoryChange = (selectedCategoryId: string) => {
-    setCategoryId(selectedCategoryId); // This will update categoryId state used in song creation
+    setCategoryId(selectedCategoryId);
   };
 
   return (
@@ -77,7 +78,7 @@ export const FormCreateSong = ({
             items={categories}
             defaultValue={categoryId || categories[0].value}
             placeholder="Choose a category"
-            onChange={handleCategoryChange} // Handle changes here
+            onChange={handleCategoryChange}
           />
         )}
         <PrimaryButton

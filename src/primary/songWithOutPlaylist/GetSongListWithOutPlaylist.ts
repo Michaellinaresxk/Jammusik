@@ -7,9 +7,13 @@ export class GetSongListWithOutPlaylistUseCase implements UseCase {
     private songWithOutPlaylistRepository: SongWithOutPlaylistResource,
   ) {}
 
-  async execute(categoryId: string): Promise<SongWithOutPlaylistView[]> {
+  async execute(
+    categoryId: string,
+    userId: string,
+  ): Promise<SongWithOutPlaylistView[]> {
     const songList =
       await this.songWithOutPlaylistRepository.getSongsWithOutPlaylist(
+        userId,
         categoryId,
       );
 

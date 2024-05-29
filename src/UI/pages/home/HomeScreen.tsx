@@ -32,10 +32,17 @@ export const HomeScreen = () => {
   const [categories, setCategories] = useState<CategoryView[]>([]);
   const [playlists, setPlaylists] = useState<PlaylistView[]>([]);
   const [triggerUpdate, setTriggerUpdate] = useState(false);
+
   useEffect(() => {
     const loadCategories = async () => {
-      const fetchedCategories = await categoryService.getCategories();
-      setCategories(fetchedCategories);
+      const user = auth.currentUser;
+      const userId = user?.uid as string;
+      try {
+        const fetchedCategories = await categoryService.getCategories(userId);
+        setCategories(fetchedCategories);
+      } catch (error) {
+        console.error("Failed to fetch playlists:", error);
+      }
     };
 
     loadCategories();

@@ -8,6 +8,7 @@ export class CreateSongWithOutPlaylistUseCase implements UseCase {
   ) {}
 
   async execute(
+    userId: string,
     title: string,
     artist: string,
     categoryId: string,
@@ -15,6 +16,7 @@ export class CreateSongWithOutPlaylistUseCase implements UseCase {
     try {
       const songWithOutPlaylist =
         await this.songWithOutPlaylistResource.createSongWithOutPlaylist(
+          userId,
           title,
           artist,
           categoryId,

@@ -5,8 +5,8 @@ import { CategoryView } from "../../views/CategoryView";
 export class GetCategoriesUseCase implements UseCase {
   constructor(private categoryRepository: CategoryResource) {}
 
-  async execute(): Promise<CategoryView[]> {
-    const categories = await this.categoryRepository.getCategories();
+  async execute(userId: string): Promise<CategoryView[]> {
+    const categories = await this.categoryRepository.getCategories(userId);
     return categories.map(CategoryView.fromDomain);
   }
 }

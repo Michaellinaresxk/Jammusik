@@ -92,8 +92,10 @@ const styles = StyleSheet.create({
   title: {
     color: globalColors.primaryDark,
     fontWeight: "900",
+    fontSize: 18,
   },
   textos: {
     color: globalColors.primaryDark,
+    fontSize: 18,
   },
 });

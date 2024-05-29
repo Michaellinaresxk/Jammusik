@@ -33,10 +33,14 @@ export const CategoriesScreen = () => {
   const auth = getAuth();
   const categoryService = useCategoryService();
   const [categories, setCategories] = useState<CategoryView[]>([]);
+
   useEffect(() => {
     const loadCategories = async () => {
-      const fetchedCategories = await categoryService.getCategories();
-      setCategories(fetchedCategories);
+      if (auth.currentUser) {
+        const userId = auth.currentUser.uid;
+        const fetchedCategories = await categoryService.getCategories(userId);
+        setCategories(fetchedCategories);
+      }
     };
 
     loadCategories();
@@ -52,12 +56,14 @@ export const CategoriesScreen = () => {
 
   const handleCreateCategory = async () => {
     const user = auth.currentUser;
-    const userId = user?.uid as string;
-    console.log("creando playlist");
-    await categoryService.createCategory(userId, title);
-    setTitle("");
-    setTriggerUpdate(prev => !prev);
-    closeModal();
+    if (user) {
+      const userId = user.uid;
+      console.log("Creating category...");
+      await categoryService.createCategory(userId, title);
+      setTitle("");
+      setTriggerUpdate(prev => !prev); // Trigger the update to reload categories
+      closeModal();
+    }
   };
 
   const { isRefreshing, refresh, top } = usePullRefresh();
@@ -199,7 +205,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: globalColors.primary,
-    paddingLeft: 22,
+    paddingLeft: 10,
   },
   modalFormHeaderTitle: {
     fontSize: 20,

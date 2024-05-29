@@ -22,8 +22,8 @@ export class CategoryService {
     return await this.createCategoryUseCase.execute(userId, title);
   }
 
-  async getCategories(): Promise<CategoryView[]> {
-    return await this.getCategoriesUseCase.execute();
+  async getCategories(userId: string): Promise<CategoryView[]> {
+    return await this.getCategoriesUseCase.execute(userId);
   }
 
   async getSongListByCategory(

@@ -4,6 +4,7 @@ import { globalColors, globalFormStyles } from "../../../theme/Theme";
 import { PrimaryButton } from "../PrimaryButton";
 import { CustomDropdown } from "../CustomDropdown";
 import { useCategoryService } from "../../../../context/CategoryServiceContext";
+import { auth } from "../../../../infra/api/firebaseConfig";
 
 type SongForm = {
   title: string;
@@ -35,7 +36,8 @@ export const FormCreateSongWithOutPlaylist = ({
 
   useEffect(() => {
     const loadCategories = async () => {
-      const fetchedCategories = await categoryService.getCategories();
+      const userId = auth.currentUser.uid;
+      const fetchedCategories = await categoryService.getCategories(userId);
       const dropdownCategories = fetchedCategories.map(cat => ({
         label: cat.title,
         value: cat.id,

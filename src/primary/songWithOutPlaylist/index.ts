@@ -16,11 +16,13 @@ export class SongWithOutPlaylistService {
   }
 
   async createSongWithOutPlaylist(
+    userId: string,
     title: string,
     artist: string,
     categoryId: string,
   ): Promise<SongWithOutPlaylistView> {
     return await this.createSongWithOutPlaylistUseCase.execute(
+      userId,
       title,
       artist,
       categoryId,
@@ -29,7 +31,8 @@ export class SongWithOutPlaylistService {
 
   async getSongsWithOutPlaylist(
     categoryId: string,
+    userId: string,
   ): Promise<SongWithOutPlaylistView[]> {
-    return this.getSongListWithOutPlaylistUseCase.execute(categoryId);
+    return this.getSongListWithOutPlaylistUseCase.execute(categoryId, userId);
   }
 }
