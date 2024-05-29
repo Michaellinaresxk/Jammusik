@@ -104,7 +104,10 @@ export class UserCaller {
         await deleteDoc(userDoc);
 
         await user.delete().then(() => {
-          Alert.alert("Successfully deleted user");
+          Alert.alert(
+            "Successfully deleted user",
+            "We hope to see you soon...",
+          );
         });
 
         console.log(userId);

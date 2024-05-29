@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { globalColors } from "../../../theme/Theme";
 import Icon from "react-native-vector-icons/Ionicons";
 import Toast from "react-native-toast-message";
@@ -15,10 +15,25 @@ export const PlaylistCard = ({ title, onPress, onDelete, color }: Props) => {
   const showToast = () => {
     Toast.show({
       type: "success",
-      text1: "Share Funcionality",
-      text2: "Comming soon... next release.👋",
+      text1: "Comming soon... ",
+      text2: "Share Funcionality, next release! 👋",
+      topOffset: 90,
     });
   };
+
+  const deleteConfirmation = () =>
+    Alert.alert("Are you sure?", "Do you want to remove this playlist?", [
+      {
+        text: "UPS! BY MISTAKE",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      {
+        text: "YES, DELETE!",
+        onPress: () => onDelete(),
+        style: "destructive",
+      },
+    ]);
 
   return (
     <TouchableOpacity
@@ -37,7 +52,7 @@ export const PlaylistCard = ({ title, onPress, onDelete, color }: Props) => {
           color={globalColors.light}
           onPress={event => {
             event.stopPropagation();
-            onDelete(event);
+            deleteConfirmation();
           }}
           size={20}
         />

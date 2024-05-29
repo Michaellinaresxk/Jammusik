@@ -8,7 +8,7 @@ import {
 import { CategoriesScreen } from "../pages/categories/CategoriesScreen";
 import { globalColors } from "../theme/Theme";
 import { BrandLogo } from "../components/shared/BrandLogo";
-import { StyleSheet, View } from "react-native";
+import { Alert, StyleSheet, View } from "react-native";
 import { Separator } from "../components/shared/Separator";
 import { PlaylistScreen } from "../pages/playlists/PlaylistScreen";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -117,6 +117,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
 
   const userService = useUserService();
+
   const logoutUser = async () => {
     try {
       console.log("logout");
@@ -126,6 +127,21 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
       console.error("Error al cerrar sesión: ", error);
     }
   };
+
+  const logOutConfirmation = () =>
+    Alert.alert("Are you sure?", "Do you want to log-out?", [
+      {
+        text: "UPS! BY MISTAKE",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      {
+        text: "YES, LOG-OUT",
+        onPress: () => logoutUser(),
+        style: "destructive",
+      },
+    ]);
+
   return (
     <DrawerContentScrollView>
       <UserAvatar />
@@ -134,7 +150,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
       <View style={styles.buttonContainer}>
         <PrimaryButton
           label="Logout"
-          onPress={() => logoutUser()}
+          onPress={() => logOutConfirmation()}
           borderRadius={5}
           colorText={globalColors.primary}
           btnFontSize={17}
