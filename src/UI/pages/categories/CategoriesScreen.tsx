@@ -36,15 +36,17 @@ export const CategoriesScreen = () => {
 
   useEffect(() => {
     const loadCategories = async () => {
-      if (auth.currentUser) {
-        const userId = auth.currentUser.uid;
+      const user = auth.currentUser;
+      const userId = user?.uid as string;
+      try {
         const fetchedCategories = await categoryService.getCategories(userId);
         setCategories(fetchedCategories);
+      } catch (error) {
+        console.error("Failed to fetch playlists:", error);
       }
     };
-
     loadCategories();
-  }, [categoryService, auth.currentUser]);
+  }, [categories]);
 
   const [isVisible, setIsVisible] = useState(false);
   const [triggerUpdate, setTriggerUpdate] = useState(false);

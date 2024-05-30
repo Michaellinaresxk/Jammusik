@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import { GlobalHeader } from "../../components/shared/GlobalHeader";
 import { FloatingActionButton } from "../../components/shared/FloatingActionButton";
@@ -9,13 +9,11 @@ import { Text } from "react-native";
 import { PrimaryIcon } from "../../components/shared/PrimaryIcon";
 import { globalColors } from "../../theme/Theme";
 
-type Props = {
-  category: string;
-};
-
-export const SongSelectedScreen = ({ category }: Props) => {
+export const SongSelectedScreen = () => {
   const params =
     useRoute<RouteProp<RootStackParamsList, "PlaylistSelectedScreen">>().params;
+
+  console.log(params);
 
   return (
     <>
@@ -35,7 +33,7 @@ export const SongSelectedScreen = ({ category }: Props) => {
               size={22}
               color={globalColors.primary}
             />
-            <Text style={styles.category}> {category}</Text>
+            <Text style={styles.category}> Balad</Text>
           </View>
         </View>
         <View style={styles.container}>

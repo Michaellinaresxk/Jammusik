@@ -5,7 +5,7 @@ interface ResetSongsState {
   resetAllSongs: () => void;
 }
 
-export const useResetSongsState = create<ResetSongsState>(set => ({
+export const useResetSongsState = create<ResetSongsState>()(set => ({
   resetToggle: false,
   resetAllSongs: () => set(state => ({ resetToggle: !state.resetToggle })),
 }));
