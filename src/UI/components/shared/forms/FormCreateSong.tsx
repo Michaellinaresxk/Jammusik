@@ -47,7 +47,7 @@ export const FormCreateSong = ({
     };
 
     loadCategories();
-  }, [categoryService]);
+  }, [categories]);
 
   const handleCategoryChange = (selectedCategoryId: string) => {
     setCategoryId(selectedCategoryId);

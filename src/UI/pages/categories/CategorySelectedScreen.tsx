@@ -29,7 +29,6 @@ import { SongWithOutPlaylistView } from "../../../views/SongWithOutPlaylistView"
 import { FloatingActionButton } from "../../components/shared/FloatingActionButton";
 import { PrimaryButton } from "../../components/shared/PrimaryButton";
 import { FormCreateSongWithOutPlaylist } from "../../components/shared/forms/FormCreateSongWithOutPlaylist";
-import { Separator } from "../../components/shared/Separator";
 import Svg, { Path } from "react-native-svg";
 
 export const CategorySelectedScreen = () => {
@@ -76,7 +75,7 @@ export const CategorySelectedScreen = () => {
     };
 
     fetchSongList();
-  }, [categoryId, categoryService, userId, triggerUpdate]);
+  }, [songList]);
 
   useEffect(() => {
     const fetchSongListWithOutPlaylist = async () => {
@@ -94,7 +93,7 @@ export const CategorySelectedScreen = () => {
     };
 
     fetchSongListWithOutPlaylist();
-  }, [categoryId, songWithOutPlaylistService, userId, triggerUpdate]);
+  }, [songListWithOutPlaylist]);
 
   const closeModal = () => {
     setIsVisible(!isVisible);
