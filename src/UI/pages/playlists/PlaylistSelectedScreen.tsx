@@ -27,6 +27,8 @@ import { SongView } from "../../../views/SongView";
 import { PrimaryButton } from "../../components/shared/PrimaryButton";
 import { useResetSongsState } from "../../store/useResetSongsState";
 import { usePullRefresh } from "../../../hooks/usePullRefresing";
+import { Swipeable } from "react-native-gesture-handler";
+import Icon from "react-native-vector-icons/Ionicons";
 
 export const PlaylistSelectedScreen = () => {
   const songService = useSongService();
@@ -78,6 +80,30 @@ export const PlaylistSelectedScreen = () => {
 
   const { resetToggle, resetAllSongs } = useResetSongsState();
 
+  const deleteConfirmation = () =>
+    Alert.alert("Are you sure?", "Do you want to remove this song?", [
+      {
+        text: "UPS! BY MISTAKE",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      {
+        text: "YES, DELETE!",
+        onPress: () => console.log("delete"),
+        style: "destructive",
+      },
+    ]);
+
+  const swipeRightActions = () => {
+    return (
+      <TouchableOpacity
+        style={styles.deleteButtonContent}
+        onPress={deleteConfirmation}>
+        <Icon name="trash-sharp" size={25} style={styles.deleteIcon} />
+      </TouchableOpacity>
+    );
+  };
+
   return (
     <>
       <KeyboardAvoidingView
@@ -104,26 +130,28 @@ export const PlaylistSelectedScreen = () => {
               data={songList}
               keyExtractor={item => item.id}
               renderItem={({ item, index }) => (
-                <View>
-                  <SongCard
-                    resetToggle={resetToggle}
-                    title={item.title}
-                    artist={item.artist}
-                    color={
-                      index % 2 === 0
-                        ? globalColors.primary
-                        : globalColors.secondary
-                    }
-                    onPress={() =>
-                      navigation.navigate("SongSelectedScreen", {
-                        id: item.id,
-                        title: item.title,
-                        artist: item.artist,
-                        categoryId: item.categoryId,
-                      })
-                    }
-                  />
-                </View>
+                <Swipeable renderRightActions={swipeRightActions}>
+                  <View>
+                    <SongCard
+                      resetToggle={resetToggle}
+                      title={item.title}
+                      artist={item.artist}
+                      color={
+                        index % 2 === 0
+                          ? globalColors.primary
+                          : globalColors.secondary
+                      }
+                      onPress={() =>
+                        navigation.navigate("SongSelectedScreen", {
+                          id: item.id,
+                          title: item.title,
+                          artist: item.artist,
+                          categoryId: item.categoryId,
+                        })
+                      }
+                    />
+                  </View>
+                </Swipeable>
               )}
             />
             <View>
@@ -188,5 +216,16 @@ const styles = StyleSheet.create({
   },
   resetBtnText: {
     color: globalColors.primary,
+  },
+  deleteButtonContent: {
+    backgroundColor: globalColors.danger,
+    borderRadius: 10,
+    height: 85,
+    width: 80,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  deleteIcon: {
+    color: globalColors.light,
   },
 });
