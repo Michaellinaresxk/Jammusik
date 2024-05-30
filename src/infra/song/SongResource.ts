@@ -44,4 +44,8 @@ export class SongResource implements SongRepository {
         ),
     );
   }
+
+  async deleteSong(userId: string, songId: string) {
+    return await this.songCaller.deleteSong(userId, songId);
+  }
 }

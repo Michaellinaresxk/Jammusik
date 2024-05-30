@@ -1,6 +1,6 @@
 import type { ApiSong } from "./ApiSong";
 import { getFirestore, addDoc, collection } from "@firebase/firestore";
-import { getDocs, where, query } from "firebase/firestore";
+import { getDocs, where, query, deleteDoc, doc } from "firebase/firestore";
 import { auth } from "../api/firebaseConfig";
 
 export class SongCaller {
@@ -66,5 +66,14 @@ export class SongCaller {
       console.error("Error fetching songs:", error);
       throw error;
     }
+  }
+
+  async deleteSong(userId: string, songId: string): Promise<void> {
+    if (!this.db || !userId || !songId) {
+      throw new Error("Firestore instance or playlistId is undefined!");
+    }
+    console.log(userId, songId);
+    const specificSongDoc = doc(this.db, "songs", songId);
+    await deleteDoc(specificSongDoc);
   }
 }

@@ -8,4 +8,5 @@ export default interface SongRepository {
     playlistId: string,
   ): Promise<Song>;
   getSongs(playlistId: string): Promise<Song[]>;
+  deleteSong(userId: string, songId: string): Promise<void>;
 }
