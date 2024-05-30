@@ -34,7 +34,7 @@ export const SongCard = ({
       onPress={onPress}
       disabled={isDone}>
       <View style={styles.containerCard}>
-        <View style={isDone ? styles.lineThrough : null}>
+        <View>
           <Text style={styles.songCardTitle}>{title}</Text>
           <Text style={styles.songCardArtist}>- {artist}</Text>
         </View>
@@ -75,9 +75,6 @@ const styles = StyleSheet.create({
     color: globalColors.light,
     fontSize: 15,
     marginTop: 5,
-  },
-  lineThrough: {
-    textDecorationLine: "line-through", // Estilo de texto tachado
   },
   buttonContainer: {
     marginTop: 15,

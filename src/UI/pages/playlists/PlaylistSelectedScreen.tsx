@@ -29,6 +29,8 @@ import { useResetSongsState } from "../../store/useResetSongsState";
 import { usePullRefresh } from "../../../hooks/usePullRefresing";
 import { Swipeable } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/Ionicons";
+import Toast from "react-native-toast-message";
+import { auth } from "../../../infra/api/firebaseConfig";
 
 export const PlaylistSelectedScreen = () => {
   const songService = useSongService();
@@ -36,6 +38,7 @@ export const PlaylistSelectedScreen = () => {
   const params =
     useRoute<RouteProp<RootStackParamsList, "PlaylistScreen">>().params;
   const playlistId = params.id as string;
+  const userId = auth.currentUser;
 
   const [title, setTitle] = useState("");
   const [artist, setArtist] = useState("");
@@ -43,6 +46,7 @@ export const PlaylistSelectedScreen = () => {
   const [songList, setSongList] = useState<SongView[]>([]);
   const [isVisible, setIsVisible] = useState(false);
   const [triggerUpdate, setTriggerUpdate] = useState(false);
+  const [currentSongId, setCurrentSongId] = useState<string | null>(null);
 
   const { isRefreshing, refresh, top } = usePullRefresh();
 
@@ -80,7 +84,25 @@ export const PlaylistSelectedScreen = () => {
 
   const { resetToggle, resetAllSongs } = useResetSongsState();
 
-  const deleteConfirmation = () =>
+  const showToast = () => {
+    Toast.show({
+      type: "success",
+      text1: "Song Deleted successfully",
+    });
+  };
+
+  const handleDeleteSong = async (songId: string) => {
+    try {
+      await songService.deleteSong(userId, songId);
+      showToast();
+      setTriggerUpdate(prev => !prev);
+    } catch (error) {
+      console.error("Failed to delete song:", error);
+      Alert.alert("Error", "Failed to delete the song. Please try again.");
+    }
+  };
+
+  const deleteConfirmation = (songId: string) =>
     Alert.alert("Are you sure?", "Do you want to remove this song?", [
       {
         text: "UPS! BY MISTAKE",
@@ -89,20 +111,18 @@ export const PlaylistSelectedScreen = () => {
       },
       {
         text: "YES, DELETE!",
-        onPress: () => console.log("delete"),
+        onPress: () => handleDeleteSong(songId),
         style: "destructive",
       },
     ]);
 
-  const swipeRightActions = () => {
-    return (
-      <TouchableOpacity
-        style={styles.deleteButtonContent}
-        onPress={deleteConfirmation}>
-        <Icon name="trash-sharp" size={25} style={styles.deleteIcon} />
-      </TouchableOpacity>
-    );
-  };
+  const swipeRightActions = (songId: string) => (
+    <TouchableOpacity
+      style={styles.deleteButtonContent}
+      onPress={() => deleteConfirmation(songId)}>
+      <Icon name="trash-sharp" size={25} style={styles.deleteIcon} />
+    </TouchableOpacity>
+  );
 
   return (
     <>
@@ -130,7 +150,9 @@ export const PlaylistSelectedScreen = () => {
               data={songList}
               keyExtractor={item => item.id}
               renderItem={({ item, index }) => (
-                <Swipeable renderRightActions={swipeRightActions}>
+                <Swipeable
+                  renderRightActions={() => swipeRightActions(item.id)}
+                  onSwipeableWillOpen={() => setCurrentSongId(item.id)}>
                   <View>
                     <SongCard
                       resetToggle={resetToggle}
