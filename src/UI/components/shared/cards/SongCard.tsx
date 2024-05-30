@@ -1,37 +1,34 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { globalColors } from "../../../theme/Theme";
 import Icon from "react-native-vector-icons/Ionicons";
+import { useSongState } from "../../../store/useSongState";
 
 type Props = {
   title: string;
   artist: string;
-  onPress: () => void;
   color: string;
   resetToggle: boolean;
 };
 
-export const SongCard = ({
-  title,
-  artist,
-  color,
-  onPress,
-  resetToggle,
-}: Props) => {
-  const [isDone, setIsDone] = useState(false);
+export const SongCard = ({ title, artist, color, resetToggle }: Props) => {
+  // const [isDone, setIsDone] = useState(false);
 
-  useEffect(() => {
-    setIsDone(false);
-  }, [resetToggle]);
+  const isDone = useSongState(
+    (state: { isDone: boolean; setIsDone: () => void }) => state.isDone,
+  );
 
-  const handlePressIcon = () => {
-    setIsDone(!isDone);
-  };
+  // useEffect(() => {
+  //   setIsDone(false);
+  // }, [resetToggle]);
+
+  // const handlePressIcon = () => {
+  //   setIsDone(!isDone);
+  // };
 
   return (
     <TouchableOpacity
       style={[styles.songCard, { backgroundColor: isDone ? "#cccccc" : color }]}
-      onPress={onPress}
       disabled={isDone}>
       <View style={styles.containerCard}>
         <View>
@@ -39,12 +36,7 @@ export const SongCard = ({
           <Text style={styles.songCardArtist}>- {artist}</Text>
         </View>
         <View style={styles.buttonContainer}>
-          <Icon
-            name={isDone ? "checkmark-done-sharp" : "power-sharp"}
-            color={globalColors.light}
-            size={30}
-            onPress={handlePressIcon}
-          />
+          <Icon name={"power-sharp"} color={globalColors.light} size={30} />
         </View>
       </View>
     </TouchableOpacity>
