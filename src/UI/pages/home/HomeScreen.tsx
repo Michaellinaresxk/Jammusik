@@ -33,35 +33,32 @@ export const HomeScreen = () => {
   const [playlists, setPlaylists] = useState<PlaylistView[]>([]);
   const [triggerUpdate, setTriggerUpdate] = useState(false);
 
-  useEffect(() => {
-    const loadCategories = async () => {
-      const user = auth.currentUser;
-      const userId = user?.uid as string;
-      try {
-        const fetchedCategories = await categoryService.getCategories(userId);
-        setCategories(fetchedCategories);
-      } catch (error) {
-        console.error("Failed to fetch playlists:", error);
-      }
-    };
+  const loadCategories = async () => {
+    if (auth.currentUser) {
+      const userId = auth.currentUser.uid;
+      const fetchedCategories = await categoryService.getCategories(userId);
+      setCategories(fetchedCategories);
+    }
+  };
 
+  useEffect(() => {
     loadCategories();
-  }, [categoryService]);
+  }, [categoryService, loadCategories]);
+
+  const loadPlaylists = async () => {
+    const user = auth.currentUser;
+    const userId = user?.uid as string;
+    try {
+      const fetchedPlaylists = await playlistService.getPlaylists(userId);
+      setPlaylists(fetchedPlaylists);
+    } catch (error) {
+      console.error("Failed to fetch playlists:", error);
+    }
+  };
 
   useEffect(() => {
-    const loadPlaylists = async () => {
-      const user = auth.currentUser;
-      const userId = user?.uid as string;
-      try {
-        const fetchedPlaylists = await playlistService.getPlaylists(userId);
-        setPlaylists(fetchedPlaylists);
-      } catch (error) {
-        console.error("Failed to fetch playlists:", error);
-      }
-    };
-
     loadPlaylists();
-  }, [playlistService]);
+  }, [playlistService, loadPlaylists]);
 
   const { isRefreshing, refresh, top } = usePullRefresh();
 

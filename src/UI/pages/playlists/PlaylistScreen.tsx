@@ -39,20 +39,20 @@ export const PlaylistScreen = () => {
   const [title, setTitle] = useState("");
   const [isVisible, setIsVisible] = useState(false);
 
-  useEffect(() => {
-    const loadPlaylists = async () => {
-      const user = auth.currentUser;
-      const userId = user?.uid as string;
-      try {
-        const fetchedPlaylists = await playlistService.getPlaylists(userId);
-        setPlaylists(fetchedPlaylists);
-      } catch (error) {
-        console.error("Failed to fetch playlists:", error);
-      }
-    };
+  const loadPlaylists = async () => {
+    const user = auth.currentUser;
+    const userId = user?.uid as string;
+    try {
+      const fetchedPlaylists = await playlistService.getPlaylists(userId);
+      setPlaylists(fetchedPlaylists);
+    } catch (error) {
+      console.error("Failed to fetch playlists:", error);
+    }
+  };
 
+  useEffect(() => {
     loadPlaylists();
-  }, [auth.currentUser, playlistService, triggerUpdate]);
+  }, [playlistService, loadPlaylists]);
 
   const closeModal = () => {
     setIsVisible(!isVisible);

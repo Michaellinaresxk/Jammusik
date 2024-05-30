@@ -34,17 +34,17 @@ export const CategoriesScreen = () => {
   const categoryService = useCategoryService();
   const [categories, setCategories] = useState<CategoryView[]>([]);
 
-  useEffect(() => {
-    const loadCategories = async () => {
-      if (auth.currentUser) {
-        const userId = auth.currentUser.uid;
-        const fetchedCategories = await categoryService.getCategories(userId);
-        setCategories(fetchedCategories);
-      }
-    };
+  const loadCategories = async () => {
+    if (auth.currentUser) {
+      const userId = auth.currentUser.uid;
+      const fetchedCategories = await categoryService.getCategories(userId);
+      setCategories(fetchedCategories);
+    }
+  };
 
+  useEffect(() => {
     loadCategories();
-  }, [categoryService, auth.currentUser]);
+  }, [categoryService, loadCategories]);
 
   const [isVisible, setIsVisible] = useState(false);
   const [triggerUpdate, setTriggerUpdate] = useState(false);

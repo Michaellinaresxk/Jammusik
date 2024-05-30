@@ -61,22 +61,21 @@ export const CategorySelectedScreen = () => {
 
   const { isRefreshing, refresh, top } = usePullRefresh();
 
+  const fetchSongList = async () => {
+    try {
+      let fetchedSongs = await categoryService.getSongListByCategory(
+        categoryId,
+        userId,
+      );
+      setSongList(fetchedSongs);
+    } catch (error) {
+      console.error("Failed to fetch song list:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchSongList = async () => {
-      try {
-        let fetchedSongs = await categoryService.getSongListByCategory(
-          categoryId,
-          userId,
-        );
-
-        setSongList(fetchedSongs);
-      } catch (error) {
-        console.error("Failed to fetch song list:", error);
-      }
-    };
-
     fetchSongList();
-  }, [categoryId, categoryService, userId, triggerUpdate]);
+  }, [categoryId, categoryService, userId, triggerUpdate, fetchSongList]);
 
   useEffect(() => {
     const fetchSongListWithOutPlaylist = async () => {
