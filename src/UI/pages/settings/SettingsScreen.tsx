@@ -94,7 +94,7 @@ export const SettingsScreen = () => {
         onPress={() => navigation.navigate("HomeScreen")}>
         <Icon name="arrow-back-sharp" color={globalColors.primary} size={30} />
       </Pressable>
-      <Text style={styles.subTitle}>Settings:</Text>
+      <Text style={styles.subTitle}>Account Settings:</Text>
       <View style={styles.mainContainer}>
         {profileItems.map((item, index) => (
           <MenuItem

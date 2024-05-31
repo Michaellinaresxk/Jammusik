@@ -57,7 +57,8 @@ export const DeleteAccountScreen = () => {
           </Text>
           <Text style={styles.text}>
             Please be aware that this action is irreversible and will result in
-            the permanent loss of all associated data.
+            the permanent loss of all associated data. Please use this function
+            wisely.
           </Text>
         </View>
         <View style={styles.dangerZoneContent}>
