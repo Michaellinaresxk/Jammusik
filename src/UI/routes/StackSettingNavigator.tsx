@@ -5,6 +5,7 @@ import { AboutUsScreen } from "../pages/aboutUs/AboutUsScreen";
 import { GuideScreen } from "../pages/guide/GuideScreen";
 import { FaqsScreen } from "../pages/faqs/FaqsScreen";
 import { SettingsScreen } from "../pages/settings/SettingsScreen";
+import { DeleteAccountScreen } from "../pages/deleteAccount/DeleteAccountScreen";
 
 export type RootStackParamsList = {
   PathPickScreen: undefined;
@@ -17,6 +18,7 @@ export type RootStackParamsList = {
   GuideScreen: undefined;
   FaqsScreen: undefined;
   SettingsScreen: undefined;
+  DeleteAccountScreen: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamsList>();
@@ -72,6 +74,13 @@ export const StackSettingNavigator = () => {
         component={FaqsScreen}
         options={{
           headerTitle: "Faq",
+        }}
+      />
+      <Stack.Screen
+        name="DeleteAccountScreen"
+        component={DeleteAccountScreen}
+        options={{
+          headerTitle: "DeleteAccountScreen",
         }}
       />
     </Stack.Navigator>
