@@ -1,17 +1,16 @@
 import type { ApiSongWithOutPlaylist } from "./ApiSongWithOutPlaylist";
 import { getFirestore, addDoc, collection } from "@firebase/firestore";
-import { auth } from "../api/firebaseConfig";
 import { getDocs, query, where } from "firebase/firestore";
 
 export class SongWithOutPlaylistCaller {
   private db = getFirestore();
 
   async createSongWithOutPlaylist(
+    userId: string,
     title: string,
     artist: string,
     categoryId: string,
   ): Promise<ApiSongWithOutPlaylist> {
-    const userId = auth.currentUser?.uid;
     if (!this.db || !userId) {
       throw new Error("Firestore instance or user ID is undefined!");
     }

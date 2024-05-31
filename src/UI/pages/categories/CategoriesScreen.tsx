@@ -46,7 +46,7 @@ export const CategoriesScreen = () => {
       }
     };
     loadCategories();
-  }, [categories]);
+  }, [auth.currentUser, categories, categoryService]);
 
   const [isVisible, setIsVisible] = useState(false);
   const [triggerUpdate, setTriggerUpdate] = useState(false);

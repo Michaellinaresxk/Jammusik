@@ -45,8 +45,7 @@ export const HomeScreen = () => {
       }
     };
     loadCategories();
-    console.log("fetchedCategory");
-  }, [categories]);
+  }, [triggerUpdate]);
 
   useEffect(() => {
     const loadPlaylists = async () => {
@@ -59,9 +58,9 @@ export const HomeScreen = () => {
         console.error("Failed to fetch playlists:", error);
       }
     };
+
     loadPlaylists();
-    console.log("fetchedPaylists");
-  }, [playlists]);
+  }, [triggerUpdate]);
 
   const { isRefreshing, refresh, top } = usePullRefresh();
 

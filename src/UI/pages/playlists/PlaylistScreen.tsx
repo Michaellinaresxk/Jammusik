@@ -52,7 +52,7 @@ export const PlaylistScreen = () => {
     };
 
     loadPlaylists();
-  }, [playlists]);
+  }, [auth.currentUser, playlistService, playlists]);
 
   const closeModal = () => {
     setIsVisible(!isVisible);

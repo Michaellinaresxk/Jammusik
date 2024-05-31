@@ -36,10 +36,11 @@ export const CategorySelectedScreen = () => {
   const params =
     useRoute<RouteProp<RootStackParamsList, "CategoriesScreen">>().params;
   const auth = getAuth();
+  const userId = auth.currentUser?.uid as string;
 
   const categoryService = useCategoryService();
   const songWithOutPlaylistService = useSongWithOutPlaylistService();
-  const userId = auth.currentUser?.uid as string;
+
   const [songList, setSongList] = useState<SongView[]>([]);
   const [songListWithOutPlaylist, setSongListWithOutPlaylist] = useState<
     SongWithOutPlaylistView[]
@@ -64,8 +65,8 @@ export const CategorySelectedScreen = () => {
     const fetchSongList = async () => {
       try {
         let fetchedSongs = await categoryService.getSongListByCategory(
-          categoryId,
           userId,
+          categoryId,
         );
 
         setSongList(fetchedSongs);
@@ -75,15 +76,15 @@ export const CategorySelectedScreen = () => {
     };
 
     fetchSongList();
-  }, [songList]);
+  }, [categoryId, categoryService, triggerUpdate, userId]);
 
   useEffect(() => {
     const fetchSongListWithOutPlaylist = async () => {
       try {
         let fetchedSongs =
           await songWithOutPlaylistService.getSongsWithOutPlaylist(
-            categoryId,
             userId,
+            categoryId,
           );
 
         setSongListWithOutPlaylist(fetchedSongs);
@@ -93,7 +94,7 @@ export const CategorySelectedScreen = () => {
     };
 
     fetchSongListWithOutPlaylist();
-  }, [songListWithOutPlaylist]);
+  }, [categoryId, songWithOutPlaylistService, triggerUpdate, userId]);
 
   const closeModal = () => {
     setIsVisible(!isVisible);
@@ -103,14 +104,13 @@ export const CategorySelectedScreen = () => {
     try {
       await songWithOutPlaylistService.createSongWithOutPlaylist(
         userId,
+        categoryId,
         title,
         artist,
-        categoryId,
       );
       setTitle("");
       setArtist("");
       setTriggerUpdate(prev => !prev);
-      console.log(title, artist, categoryId);
       closeModal();
     } catch (error) {
       console.error("Failed to create song:", error);

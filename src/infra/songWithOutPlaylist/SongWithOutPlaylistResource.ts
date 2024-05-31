@@ -11,28 +11,28 @@ export class SongWithOutPlaylistResource
 
   async createSongWithOutPlaylist(
     userId: string,
+    categoryId: string,
     title: string,
     artist: string,
-    categoryId: string,
   ): Promise<SongWithOutPlaylist> {
     const apiSong =
       await this.songWithOutPlaylistCaller.createSongWithOutPlaylist(
         userId,
+        categoryId,
         title,
         artist,
-        categoryId,
       );
     return new SongWithOutPlaylist(
-      apiSong.id,
+      apiSong.userId,
+      apiSong.categoryId,
       apiSong.title,
       apiSong.artist,
-      apiSong.categoryId,
     );
   }
 
   async getSongsWithOutPlaylist(
-    categoryId: string,
     userId: string,
+    categoryId: string,
   ): Promise<SongWithOutPlaylist[]> {
     if (!categoryId) {
       throw new Error("categoryId is undefined or empty!");
@@ -47,10 +47,10 @@ export class SongWithOutPlaylistResource
     return apiSongList.map(
       apiSong =>
         new SongWithOutPlaylist(
-          apiSong.id,
+          apiSong.userId,
+          apiSong.categoryId,
           apiSong.title,
           apiSong.artist,
-          apiSong.categoryId,
         ),
     );
   }
