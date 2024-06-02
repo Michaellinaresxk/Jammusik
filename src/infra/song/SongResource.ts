@@ -12,10 +12,10 @@ export class SongResource implements SongRepository {
     artist: string,
   ): Promise<Song> {
     const apiSong = await this.songCaller.createSong(
-      title,
-      artist,
       categoryId,
       playlistId,
+      title,
+      artist,
     );
     return new Song(
       apiSong.id,

@@ -77,7 +77,7 @@ export const CategoriesScreen = () => {
     }
   };
 
-  const { isRefreshing, refresh, top } = usePullRefresh();
+  const { isRefreshing, refresh, top } = usePullRefresh(loadCategories);
 
   return (
     <ImageBackground source={backgroundImage} resizeMode="cover">

@@ -30,7 +30,6 @@ import { usePullRefresh } from "../../../hooks/usePullRefresing";
 import Toast from "react-native-toast-message";
 
 export const HomeScreen = () => {
-  const { isRefreshing, refresh, top } = usePullRefresh();
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
   const categoryService = useCategoryService();
   const playlistService = usePlaylistService();
@@ -73,6 +72,8 @@ export const HomeScreen = () => {
     setTriggerUpdate(prev => !prev); // Trigger the update
     showToast();
   };
+
+  const { isRefreshing, refresh, top } = usePullRefresh(loadData);
 
   return (
     <>

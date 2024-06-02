@@ -1,15 +1,17 @@
 import { useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-export const usePullRefresh = () => {
+export const usePullRefresh = (onRefresh: () => Promise<void>) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const { top } = useSafeAreaInsets();
 
-  const refresh = () => {
+  const refresh = async () => {
     setIsRefreshing(true);
-    setTimeout(() => {
+    try {
+      await onRefresh();
+    } finally {
       setIsRefreshing(false);
-    }, 2000);
+    }
   };
 
   return { isRefreshing, refresh, top };

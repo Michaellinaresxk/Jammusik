@@ -89,7 +89,7 @@ export const PlaylistScreen = () => {
     showToast();
   };
 
-  const { isRefreshing, refresh, top } = usePullRefresh();
+  const { isRefreshing, refresh, top } = usePullRefresh(loadPlaylists);
 
   return (
     <>

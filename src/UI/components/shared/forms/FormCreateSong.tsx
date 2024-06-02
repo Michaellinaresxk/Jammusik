@@ -7,12 +7,12 @@ import { useCategoryService } from "../../../../context/CategoryServiceContext";
 import { auth } from "../../../../infra/api/firebaseConfig";
 
 type SongForm = {
+  categoryId: string;
+  setCategoryId: React.Dispatch<React.SetStateAction<string>>;
   title: string;
   setTitle: React.Dispatch<React.SetStateAction<string>>;
   artist: string;
   setArtist: React.Dispatch<React.SetStateAction<string>>;
-  categoryId: string;
-  setCategoryId: React.Dispatch<React.SetStateAction<string>>;
   onCreateSong: () => Promise<void>;
 };
 
@@ -22,12 +22,12 @@ type DropdownItem = {
 };
 
 export const FormCreateSong = ({
+  categoryId,
+  setCategoryId,
   title,
   setTitle,
   artist,
   setArtist,
-  categoryId,
-  setCategoryId,
   onCreateSong,
 }: SongForm) => {
   const categoryService = useCategoryService();
@@ -47,7 +47,7 @@ export const FormCreateSong = ({
     };
 
     loadCategories();
-  }, [categories]);
+  });
 
   const handleCategoryChange = (selectedCategoryId: string) => {
     setCategoryId(selectedCategoryId);
