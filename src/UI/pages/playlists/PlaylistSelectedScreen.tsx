@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   FlatList,
@@ -76,7 +76,31 @@ export const PlaylistSelectedScreen = () => {
     };
 
     loadSongList();
-  }, [playlistId, songService, triggerUpdate]);
+  }, []);
+
+  // const loadSongList = useCallback(async () => {
+  //   const user = auth.currentUser;
+  //   const userId = user?.uid as string;
+  //   try {
+  //     const fetchedSongs = await songService.getSongs(playlistId);
+  //     setSongList(fetchedSongs);
+  //   } catch (error) {
+  //     console.error("Failed to fetch playlists:", error);
+  //   }
+  // }, [playlistId, songService]);
+
+  // useEffect(() => {
+  //   // Load categories when the component mounts
+  //   loadSongList();
+  // }, [loadSongList]);
+
+  // useEffect(() => {
+  //   //  Load categories when triggerUpdate changes
+  //   if (triggerUpdate) {
+  //     loadSongList();
+  //     setTriggerUpdate(false);
+  //   }
+  // }, [triggerUpdate, loadSongList]);
 
   const closeModal = () => {
     setIsVisible(!isVisible);
@@ -95,7 +119,7 @@ export const PlaylistSelectedScreen = () => {
     try {
       await songService.deleteSong(userId, songId);
       showToast();
-      setTriggerUpdate(prev => !prev);
+      setTriggerUpdate(true);
     } catch (error) {
       console.error("Failed to delete song:", error);
       Alert.alert("Error", "Failed to delete the song. Please try again.");
@@ -165,10 +189,8 @@ export const PlaylistSelectedScreen = () => {
                       }
                       onPress={() =>
                         navigation.navigate("SongSelectedScreen", {
-                          id: item.id,
                           title: item.title,
                           artist: item.artist,
-                          categoryId: item.categoryId,
                         })
                       }
                     />

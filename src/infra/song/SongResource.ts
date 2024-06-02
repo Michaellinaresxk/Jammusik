@@ -6,10 +6,10 @@ export class SongResource implements SongRepository {
   constructor(public readonly songCaller: SongCaller) {}
 
   async createSong(
-    title: string,
-    artist: string,
     categoryId: string,
     playlistId: string,
+    title: string,
+    artist: string,
   ): Promise<Song> {
     const apiSong = await this.songCaller.createSong(
       title,
@@ -19,10 +19,10 @@ export class SongResource implements SongRepository {
     );
     return new Song(
       apiSong.id,
-      apiSong.title,
-      apiSong.artist,
       apiSong.categoryId,
       apiSong.playlistId,
+      apiSong.title,
+      apiSong.artist,
     );
   }
 
@@ -37,10 +37,10 @@ export class SongResource implements SongRepository {
       apiSong =>
         new Song(
           apiSong.id,
-          apiSong.title,
-          apiSong.artist,
           apiSong.categoryId,
           apiSong.playlistId,
+          apiSong.title,
+          apiSong.artist,
         ),
     );
   }

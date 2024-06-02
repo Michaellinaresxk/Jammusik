@@ -29,13 +29,6 @@ export class CategoryCaller {
     };
   }
 
-  // async getCategories(userId: string): Promise<ApiCategory[]> {
-  //   const db = getFirestore();
-  //   const querySnapshot = await getDocs(collection(db, "categories"));
-  //   return querySnapshot.docs.map(doc => {
-  //     return { id: doc.id, ...doc.data() } as ApiCategory;
-  //   });
-  // }
   getCategories = async (userId: string): Promise<ApiCategory[]> => {
     if (!userId) {
       throw new Error("userId is undefined!");
@@ -62,8 +55,8 @@ export class CategoryCaller {
     }
   };
   async getSongListByCategory(
-    categoryId: string,
     userId: string,
+    categoryId: string,
   ): Promise<ApiSong[]> {
     if (!categoryId || !userId) {
       console.error(

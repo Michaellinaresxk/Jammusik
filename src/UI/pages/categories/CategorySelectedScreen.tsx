@@ -76,25 +76,25 @@ export const CategorySelectedScreen = () => {
     };
 
     fetchSongList();
-  }, [categoryId, categoryService, triggerUpdate, userId]);
+  }, []);
 
-  useEffect(() => {
-    const fetchSongListWithOutPlaylist = async () => {
-      try {
-        let fetchedSongs =
-          await songWithOutPlaylistService.getSongsWithOutPlaylist(
-            userId,
-            categoryId,
-          );
+  // useEffect(() => {
+  //   const fetchSongListWithOutPlaylist = async () => {
+  //     try {
+  //       let fetchedSongs =
+  //         await songWithOutPlaylistService.getSongsWithOutPlaylist(
+  //           userId,
+  //           categoryId,
+  //         );
 
-        setSongListWithOutPlaylist(fetchedSongs);
-      } catch (error) {
-        console.error("Failed to fetch song list:", error);
-      }
-    };
+  //       setSongListWithOutPlaylist(fetchedSongs);
+  //     } catch (error) {
+  //       console.error("Failed to fetch song list:", error);
+  //     }
+  //   };
 
-    fetchSongListWithOutPlaylist();
-  }, [categoryId, songWithOutPlaylistService, triggerUpdate, userId]);
+  //   fetchSongListWithOutPlaylist();
+  // }, []);
 
   const closeModal = () => {
     setIsVisible(!isVisible);
