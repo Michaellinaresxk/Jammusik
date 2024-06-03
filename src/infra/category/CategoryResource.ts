@@ -37,4 +37,8 @@ export class CategoryResource implements CategoryRepository {
         ),
     );
   }
+
+  async deleteCategory(userId: string, categoryId: string) {
+    return await this.categoryCaller.deleteCategory(userId, categoryId);
+  }
 }

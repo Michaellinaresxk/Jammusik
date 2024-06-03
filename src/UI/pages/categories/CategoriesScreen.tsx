@@ -26,9 +26,10 @@ import { getAuth } from "firebase/auth";
 import { Separator } from "../../components/shared/Separator";
 import Icon from "react-native-vector-icons/Ionicons";
 import { usePullRefresh } from "../../../hooks/usePullRefresing";
-const backgroundImage = { uri: images.image3 };
+import Toast from "react-native-toast-message";
 
 export const CategoriesScreen = () => {
+  const backgroundImage = { uri: images.image3 };
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
   const auth = getAuth();
   const categoryService = useCategoryService();
@@ -75,6 +76,21 @@ export const CategoriesScreen = () => {
       setTriggerUpdate(true); // Trigger the update to reload categories
       closeModal();
     }
+  };
+
+  const showToast = () => {
+    Toast.show({
+      type: "success",
+      text1: "Category Deleted successfully. 👋",
+    });
+  };
+
+  const handleDeleteCategory = async (categoryId: string) => {
+    console.log("Deleting category", categoryId);
+    const userId = auth.currentUser;
+    await categoryService.deleteCategory(userId, categoryId);
+    setTriggerUpdate(true);
+    showToast();
   };
 
   const { isRefreshing, refresh, top } = usePullRefresh(loadCategories);
@@ -137,6 +153,7 @@ export const CategoriesScreen = () => {
                 renderItem={({ item }) => (
                   <CategoryCard
                     title={item.title}
+                    onDelete={() => handleDeleteCategory(item.id)}
                     onPress={() =>
                       navigation.navigate("CategorySelectedScreen", {
                         id: item.id,
