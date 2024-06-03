@@ -18,7 +18,7 @@ import { CategoryCard } from "../../components/shared/cards/CategoryCard";
 import { type NavigationProp, useNavigation } from "@react-navigation/native";
 import { type RootStackParamsList } from "../../routes/StackNavigator";
 import { useCategoryService } from "../../../context/CategoryServiceContext";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { CategoryView } from "../../../views/CategoryView";
 import { PrimaryButton } from "../../components/shared/PrimaryButton";
 import { FormCreateCategory } from "../../components/shared/forms/FormCreateCategory";
@@ -33,25 +33,34 @@ export const CategoriesScreen = () => {
   const auth = getAuth();
   const categoryService = useCategoryService();
   const [categories, setCategories] = useState<CategoryView[]>([]);
+  const [triggerUpdate, setTriggerUpdate] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [title, setTitle] = useState("");
+
+  const loadCategories = useCallback(async () => {
+    const user = auth.currentUser;
+    const userId = user?.uid as string;
+    try {
+      const fetchedCategories = await categoryService.getCategories(userId);
+      setCategories(fetchedCategories);
+    } catch (error) {
+      console.error("Failed to fetch playlists:", error);
+    }
+  }, [auth.currentUser, categoryService]);
 
   useEffect(() => {
-    const loadCategories = async () => {
-      const user = auth.currentUser;
-      const userId = user?.uid as string;
-      try {
-        const fetchedCategories = await categoryService.getCategories(userId);
-        setCategories(fetchedCategories);
-      } catch (error) {
-        console.error("Failed to fetch playlists:", error);
-      }
-    };
+    // Load categories when the component mounts
     loadCategories();
-  }, [auth.currentUser, categories, categoryService]);
+  }, [loadCategories]);
 
-  const [isVisible, setIsVisible] = useState(false);
-  const [triggerUpdate, setTriggerUpdate] = useState(false);
+  useEffect(() => {
+    //  Load categories when triggerUpdate changes
+    if (triggerUpdate) {
+      loadCategories();
+      setTriggerUpdate(false);
+    }
+  }, [triggerUpdate, loadCategories]);
 
-  const [title, setTitle] = useState("");
   const closeModal = () => {
     setIsVisible(!isVisible);
   };
@@ -63,12 +72,12 @@ export const CategoriesScreen = () => {
       console.log("Creating category...");
       await categoryService.createCategory(userId, title);
       setTitle("");
-      setTriggerUpdate(prev => !prev); // Trigger the update to reload categories
+      setTriggerUpdate(true); // Trigger the update to reload categories
       closeModal();
     }
   };
 
-  const { isRefreshing, refresh, top } = usePullRefresh();
+  const { isRefreshing, refresh, top } = usePullRefresh(loadCategories);
 
   return (
     <ImageBackground source={backgroundImage} resizeMode="cover">

@@ -1,3 +1,4 @@
+import React, { useState, useCallback } from "react";
 import {
   FlatList,
   KeyboardAvoidingView,
@@ -9,13 +10,16 @@ import {
   View,
 } from "react-native";
 import { CategoryCardLight } from "../../components/shared/cards/CategoryCardLight";
-import { type NavigationProp, useNavigation } from "@react-navigation/native";
+import {
+  type NavigationProp,
+  useNavigation,
+  useFocusEffect,
+} from "@react-navigation/native";
 import { type RootStackParamsList } from "../../routes/StackNavigator";
 import { GlobalHeader } from "../../components/shared/GlobalHeader";
 import { TheGreenBorder } from "../../components/shared/TheGreenBorder";
 import { globalColors } from "../../theme/Theme";
 import { useCategoryService } from "../../../context/CategoryServiceContext";
-import { useEffect, useState } from "react";
 import { CategoryView } from "../../../views/CategoryView";
 import { usePlaylistService } from "../../../context/PlaylistServiceContext";
 import { auth } from "../../../infra/api/firebaseConfig";
@@ -33,36 +37,27 @@ export const HomeScreen = () => {
   const [playlists, setPlaylists] = useState<PlaylistView[]>([]);
   const [triggerUpdate, setTriggerUpdate] = useState(false);
 
-  useEffect(() => {
-    const loadCategories = async () => {
-      const user = auth.currentUser;
-      const userId = user?.uid as string;
-      try {
-        const fetchedCategories = await categoryService.getCategories(userId);
-        setCategories(fetchedCategories);
-      } catch (error) {
-        console.error("Failed to fetch playlists:", error);
-      }
-    };
-    loadCategories();
-  }, [triggerUpdate]);
+  const loadData = useCallback(async () => {
+    const user = auth.currentUser;
+    const userId = user?.uid as string;
 
-  useEffect(() => {
-    const loadPlaylists = async () => {
-      const user = auth.currentUser;
-      const userId = user?.uid as string;
-      try {
-        const fetchedPlaylists = await playlistService.getPlaylists(userId);
-        setPlaylists(fetchedPlaylists);
-      } catch (error) {
-        console.error("Failed to fetch playlists:", error);
-      }
-    };
+    try {
+      const [fetchedCategories, fetchedPlaylists] = await Promise.all([
+        categoryService.getCategories(userId),
+        playlistService.getPlaylists(userId),
+      ]);
+      setCategories(fetchedCategories);
+      setPlaylists(fetchedPlaylists);
+    } catch (error) {
+      console.error("Failed to fetch data:", error);
+    }
+  }, [categoryService, playlistService]);
 
-    loadPlaylists();
-  }, [triggerUpdate]);
-
-  const { isRefreshing, refresh, top } = usePullRefresh();
+  useFocusEffect(
+    useCallback(() => {
+      loadData();
+    }, [loadData, triggerUpdate]),
+  );
 
   const showToast = () => {
     Toast.show({
@@ -74,9 +69,11 @@ export const HomeScreen = () => {
   const handleDeletePlaylist = async (playlistId: string) => {
     console.log("Deleting playlist", playlistId);
     await playlistService.deletePlaylist(playlistId);
+    setTriggerUpdate(prev => !prev); // Trigger the update
     showToast();
-    setTriggerUpdate(prev => !prev);
   };
+
+  const { isRefreshing, refresh, top } = usePullRefresh(loadData);
 
   return (
     <>
@@ -117,7 +114,6 @@ export const HomeScreen = () => {
                 )}
               />
               <SliderQuotes />
-
               <View style={styles.playlistContainer}>
                 <Text style={styles.subTitle}>Playlists:</Text>
                 <FlatList
@@ -150,6 +146,7 @@ export const HomeScreen = () => {
     </>
   );
 };
+
 const styles = StyleSheet.create({
   text: {
     color: "red",

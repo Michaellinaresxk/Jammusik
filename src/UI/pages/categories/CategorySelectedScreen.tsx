@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { RootStackParamsList } from "../../routes/StackNavigator";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
@@ -59,42 +59,31 @@ export const CategorySelectedScreen = () => {
     setResetToggle(prev => !prev);
   };
 
-  const { isRefreshing, refresh, top } = usePullRefresh();
+  const loadSongList = useCallback(async () => {
+    try {
+      const [fetchedSongs, fetchedSongsWithoutPlaylist] = await Promise.all([
+        categoryService.getSongListByCategory(userId, categoryId),
+        songWithOutPlaylistService.getSongsWithOutPlaylist(userId, categoryId),
+      ]);
+      setSongList(fetchedSongs);
+      setSongListWithOutPlaylist(fetchedSongsWithoutPlaylist);
+    } catch (error) {
+      console.error("Failed to fetch song lists:", error);
+    }
+  }, [categoryId, categoryService, songWithOutPlaylistService, userId]);
 
   useEffect(() => {
-    const fetchSongList = async () => {
-      try {
-        let fetchedSongs = await categoryService.getSongListByCategory(
-          userId,
-          categoryId,
-        );
-
-        setSongList(fetchedSongs);
-      } catch (error) {
-        console.error("Failed to fetch song list:", error);
-      }
-    };
-
-    fetchSongList();
-  }, [categoryId, categoryService, triggerUpdate, userId]);
+    loadSongList();
+  }, [loadSongList]);
 
   useEffect(() => {
-    const fetchSongListWithOutPlaylist = async () => {
-      try {
-        let fetchedSongs =
-          await songWithOutPlaylistService.getSongsWithOutPlaylist(
-            userId,
-            categoryId,
-          );
+    if (triggerUpdate) {
+      loadSongList();
+      setTriggerUpdate(false);
+    }
+  }, [triggerUpdate, loadSongList]);
 
-        setSongListWithOutPlaylist(fetchedSongs);
-      } catch (error) {
-        console.error("Failed to fetch song list:", error);
-      }
-    };
-
-    fetchSongListWithOutPlaylist();
-  }, [categoryId, songWithOutPlaylistService, triggerUpdate, userId]);
+  const { isRefreshing, refresh, top } = usePullRefresh(loadSongList);
 
   const closeModal = () => {
     setIsVisible(!isVisible);

@@ -16,16 +16,16 @@ export class SongService {
   }
 
   async createSong(
-    title: string,
-    artist: string,
     categoryId: string,
     playlistId: string,
+    title: string,
+    artist: string,
   ) {
     return await this.songCreateUseCase.execute(
-      title,
-      artist,
       categoryId,
       playlistId,
+      title,
+      artist,
     );
   }
 

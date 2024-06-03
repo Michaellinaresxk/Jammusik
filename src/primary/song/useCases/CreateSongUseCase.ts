@@ -6,17 +6,17 @@ export class CreateSongUseCase implements UseCase {
   constructor(private songResource: SongResource) {}
 
   async execute(
-    title: string,
-    artist: string,
     categoryId: string,
     playlistId: string,
+    title: string,
+    artist: string,
   ): Promise<SongView> {
     try {
       const song = await this.songResource.createSong(
-        title,
-        artist,
         categoryId,
         playlistId,
+        title,
+        artist,
       );
       return SongView.fromDomain(song);
     } catch (err) {

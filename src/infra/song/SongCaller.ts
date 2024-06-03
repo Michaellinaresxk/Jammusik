@@ -7,10 +7,10 @@ export class SongCaller {
   private db = getFirestore();
 
   async createSong(
-    title: string,
-    artist: string,
     categoryId: string,
     playlistId: string,
+    title: string,
+    artist: string,
   ): Promise<ApiSong> {
     const userId = auth.currentUser?.uid;
     if (!this.db || !userId) {
@@ -18,11 +18,11 @@ export class SongCaller {
     }
 
     const songData: any = {
-      title,
-      artist,
+      userId,
       categoryId,
       playlistId,
-      userId,
+      title,
+      artist,
     };
 
     function cleanObject(obj: any) {

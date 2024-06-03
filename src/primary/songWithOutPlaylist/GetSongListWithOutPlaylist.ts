@@ -8,8 +8,8 @@ export class GetSongListWithOutPlaylistUseCase implements UseCase {
   ) {}
 
   async execute(
-    categoryId: string,
     userId: string,
+    categoryId: string,
   ): Promise<SongWithOutPlaylistView[]> {
     const songList =
       await this.songWithOutPlaylistRepository.getSongsWithOutPlaylist(

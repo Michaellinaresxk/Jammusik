@@ -9,17 +9,17 @@ export class CreateSongWithOutPlaylistUseCase implements UseCase {
 
   async execute(
     userId: string,
+    categoryId: string,
     title: string,
     artist: string,
-    categoryId: string,
   ): Promise<SongWithOutPlaylistView> {
     try {
       const songWithOutPlaylist =
         await this.songWithOutPlaylistResource.createSongWithOutPlaylist(
           userId,
+          categoryId,
           title,
           artist,
-          categoryId,
         );
       return SongWithOutPlaylistView.fromDomain(songWithOutPlaylist);
     } catch (err) {

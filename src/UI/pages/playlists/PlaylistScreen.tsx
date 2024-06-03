@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import {
   FlatList,
   KeyboardAvoidingView,
@@ -39,20 +39,29 @@ export const PlaylistScreen = () => {
   const [title, setTitle] = useState("");
   const [isVisible, setIsVisible] = useState(false);
 
-  useEffect(() => {
-    const loadPlaylists = async () => {
-      const user = auth.currentUser;
-      const userId = user?.uid as string;
-      try {
-        const fetchedPlaylists = await playlistService.getPlaylists(userId);
-        setPlaylists(fetchedPlaylists);
-      } catch (error) {
-        console.error("Failed to fetch playlists:", error);
-      }
-    };
+  const loadPlaylists = useCallback(async () => {
+    const user = auth.currentUser;
+    const userId = user?.uid as string;
+    try {
+      const fetchedPlaylists = await playlistService.getPlaylists(userId);
+      setPlaylists(fetchedPlaylists);
+    } catch (error) {
+      console.error("Failed to fetch playlists:", error);
+    }
+  }, [auth.currentUser, playlistService]);
 
+  useEffect(() => {
+    // Load playlist when the component mounts
     loadPlaylists();
-  }, [auth.currentUser, playlistService, playlists]);
+  }, [loadPlaylists]);
+
+  useEffect(() => {
+    //  Load playlist when triggerUpdate changes
+    if (triggerUpdate) {
+      loadPlaylists();
+      setTriggerUpdate(false);
+    }
+  }, [triggerUpdate, loadPlaylists]);
 
   const closeModal = () => {
     setIsVisible(!isVisible);
@@ -69,18 +78,18 @@ export const PlaylistScreen = () => {
     console.log("creando playlist");
     await playlistService.createPlaylist(title);
     setTitle("");
-    setTriggerUpdate(prev => !prev);
+    setTriggerUpdate(true);
     closeModal();
   };
 
   const handleDeletePlaylist = async (playlistId: string) => {
     console.log("Deleting playlist", playlistId);
     await playlistService.deletePlaylist(playlistId);
+    setTriggerUpdate(true);
     showToast();
-    setTriggerUpdate(prev => !prev);
   };
 
-  const { isRefreshing, refresh, top } = usePullRefresh();
+  const { isRefreshing, refresh, top } = usePullRefresh(loadPlaylists);
 
   return (
     <>

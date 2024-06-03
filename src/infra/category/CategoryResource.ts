@@ -19,21 +19,21 @@ export class CategoryResource implements CategoryRepository {
   }
 
   async getSongListByCategory(
-    categoryId: string,
     userId: string,
+    categoryId: string,
   ): Promise<Song[]> {
     const apiSongs = await this.categoryCaller.getSongListByCategory(
-      categoryId,
       userId,
+      categoryId,
     );
     return apiSongs.map(
       apiSong =>
         new Song(
           apiSong.id,
-          apiSong.title,
-          apiSong.artist,
           apiSong.categoryId,
           apiSong.playlistId,
+          apiSong.title,
+          apiSong.artist,
         ),
     );
   }

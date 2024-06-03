@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import { GlobalHeader } from "../../components/shared/GlobalHeader";
 import { FloatingActionButton } from "../../components/shared/FloatingActionButton";
@@ -12,8 +12,6 @@ import { globalColors } from "../../theme/Theme";
 export const SongSelectedScreen = () => {
   const params =
     useRoute<RouteProp<RootStackParamsList, "PlaylistSelectedScreen">>().params;
-
-  console.log(params);
 
   return (
     <>
