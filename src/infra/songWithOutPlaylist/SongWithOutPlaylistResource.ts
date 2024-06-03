@@ -23,6 +23,7 @@ export class SongWithOutPlaylistResource
         artist,
       );
     return new SongWithOutPlaylist(
+      apiSong.id,
       apiSong.userId,
       apiSong.categoryId,
       apiSong.title,
@@ -47,11 +48,16 @@ export class SongWithOutPlaylistResource
     return apiSongList.map(
       apiSong =>
         new SongWithOutPlaylist(
+          apiSong.id,
           apiSong.userId,
           apiSong.categoryId,
           apiSong.title,
           apiSong.artist,
         ),
     );
+  }
+
+  async deleteSong(userId: string, songId: string) {
+    return await this.songWithOutPlaylistCaller.deleteSong(userId, songId);
   }
 }
