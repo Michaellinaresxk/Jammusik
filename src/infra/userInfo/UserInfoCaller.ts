@@ -1,11 +1,11 @@
+import { doc, updateDoc, getDoc, setDoc } from "@firebase/firestore";
 import type {
+  Firestore,
+  CollectionReference,
   Query,
   DocumentData,
   QuerySnapshot,
-  Firestore,
-  CollectionReference,
 } from "@firebase/firestore";
-import { doc, updateDoc, getDoc, setDoc } from "@firebase/firestore";
 import { db } from "../api/firebaseConfig";
 import type { ApiUserInfo } from "./ApiUserInfo";
 
@@ -21,6 +21,7 @@ export class UserInfoCaller {
     ) => Promise<QuerySnapshot<DocumentData>>,
     public readonly db: Firestore,
   ) {}
+
   async setCurrentUserInfo(
     userId: string,
     location: string,
@@ -29,9 +30,9 @@ export class UserInfoCaller {
   ): Promise<ApiUserInfo> {
     const userRef = doc(db, "userInfo", userId);
     const userInfo = {
-      location: location,
-      skills: skills,
-      instrument: instrument,
+      location: location || "",
+      skills: skills || "",
+      instrument: instrument || "",
     };
     const userSnapshot = await getDoc(userRef);
     if (!userSnapshot.exists()) {
@@ -42,5 +43,15 @@ export class UserInfoCaller {
       await updateDoc(userRef, userInfo);
     }
     return { userId: userId, ...userInfo };
+  }
+
+  async getUserInfo(userId: string): Promise<ApiUserInfo | null> {
+    const userRef = doc(this.db, "userInfo", userId);
+    const userSnapshot = await getDoc(userRef);
+    if (userSnapshot.exists()) {
+      return userSnapshot.data() as ApiUserInfo;
+    } else {
+      return null;
+    }
   }
 }

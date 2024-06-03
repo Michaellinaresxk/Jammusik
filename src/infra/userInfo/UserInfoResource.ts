@@ -19,4 +19,9 @@ export class UserInfoResource implements UserInfoRepository {
     );
     return UserInfo.fromProperties(apiUserInfo);
   }
+
+  async getUserInfo(userId: string): Promise<UserInfo> {
+    const currentUserInfo = await this.userInfoCaller.getUserInfo(userId);
+    return UserInfo.fromProperties(currentUserInfo!);
+  }
 }

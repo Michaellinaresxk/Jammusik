@@ -79,7 +79,7 @@ export const PlaylistSelectedScreen = () => {
   useEffect(() => {
     if (triggerUpdate) {
       loadSongList();
-      setTriggerUpdate(false); // Solo actualiza esto dentro del if
+      setTriggerUpdate(false);
     }
   }, [triggerUpdate, loadSongList]);
 
