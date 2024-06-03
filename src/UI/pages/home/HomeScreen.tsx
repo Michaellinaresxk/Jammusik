@@ -1,3 +1,4 @@
+
 import {
   FlatList,
   KeyboardAvoidingView,
@@ -45,7 +46,6 @@ export const HomeScreen = () => {
       }
     };
     loadCategories();
-    console.log("fetchedCategory");
   }, [categories]);
 
   useEffect(() => {
@@ -60,7 +60,6 @@ export const HomeScreen = () => {
       }
     };
     loadPlaylists();
-    console.log("fetchedPaylists");
   }, [playlists]);
 
   const { isRefreshing, refresh, top } = usePullRefresh();
