@@ -11,4 +11,5 @@ export default interface SongWithOutPlaylistRepository {
     userId: string,
     categoryId: string,
   ): Promise<SongWithOutPlaylist[]>;
+  deleteSong(userId: string, songId: string): Promise<void>;
 }
