@@ -40,8 +40,8 @@ export class SongWithOutPlaylistResource
 
     const apiSongList =
       await this.songWithOutPlaylistCaller.getSongsWithOutPlaylist(
-        categoryId,
         userId,
+        categoryId,
       );
 
     return apiSongList.map(

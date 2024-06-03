@@ -7,9 +7,9 @@ export class SongWithOutPlaylistCaller {
 
   async createSongWithOutPlaylist(
     userId: string,
+    categoryId: string,
     title: string,
     artist: string,
-    categoryId: string,
   ): Promise<ApiSongWithOutPlaylist> {
     if (!this.db || !userId) {
       throw new Error("Firestore instance or user ID is undefined!");
@@ -17,9 +17,9 @@ export class SongWithOutPlaylistCaller {
 
     const songData: any = {
       userId,
+      categoryId,
       title,
       artist,
-      categoryId,
     };
 
     function cleanObject(obj: any) {
@@ -55,8 +55,8 @@ export class SongWithOutPlaylistCaller {
       const songsCollection = collection(this.db, "songsWithOutPlaylist");
       const songsQuery = query(
         songsCollection,
-        where("categoryId", "==", categoryId),
         where("userId", "==", userId),
+        where("categoryId", "==", categoryId),
       );
       const querySnapshot = await getDocs(songsQuery);
 

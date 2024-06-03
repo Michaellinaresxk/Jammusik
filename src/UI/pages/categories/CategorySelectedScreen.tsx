@@ -61,15 +61,16 @@ export const CategorySelectedScreen = () => {
 
   const loadSongList = useCallback(async () => {
     try {
-      const fetchedSongs = await categoryService.getSongListByCategory(
-        userId,
-        categoryId,
-      );
+      const [fetchedSongs, fetchedSongsWithoutPlaylist] = await Promise.all([
+        categoryService.getSongListByCategory(userId, categoryId),
+        songWithOutPlaylistService.getSongsWithOutPlaylist(userId, categoryId),
+      ]);
       setSongList(fetchedSongs);
+      setSongListWithOutPlaylist(fetchedSongsWithoutPlaylist);
     } catch (error) {
-      console.error("Failed to fetch songList:", error);
+      console.error("Failed to fetch song lists:", error);
     }
-  }, [categoryId, categoryService, userId]);
+  }, [categoryId, categoryService, songWithOutPlaylistService, userId]);
 
   useEffect(() => {
     loadSongList();
@@ -81,24 +82,6 @@ export const CategorySelectedScreen = () => {
       setTriggerUpdate(false);
     }
   }, [triggerUpdate, loadSongList]);
-
-  // useEffect(() => {
-  //   const fetchSongListWithOutPlaylist = async () => {
-  //     try {
-  //       let fetchedSongs =
-  //         await songWithOutPlaylistService.getSongsWithOutPlaylist(
-  //           userId,
-  //           categoryId,
-  //         );
-
-  //       setSongListWithOutPlaylist(fetchedSongs);
-  //     } catch (error) {
-  //       console.error("Failed to fetch song list:", error);
-  //     }
-  //   };
-
-  //   fetchSongListWithOutPlaylist();
-  // }, []);
 
   const { isRefreshing, refresh, top } = usePullRefresh(loadSongList);
 
