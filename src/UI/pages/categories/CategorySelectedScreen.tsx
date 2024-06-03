@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { RootStackParamsList } from "../../routes/StackNavigator";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
@@ -59,24 +59,28 @@ export const CategorySelectedScreen = () => {
     setResetToggle(prev => !prev);
   };
 
-  const { isRefreshing, refresh, top } = usePullRefresh();
+  const loadSongList = useCallback(async () => {
+    try {
+      const fetchedSongs = await categoryService.getSongListByCategory(
+        userId,
+        categoryId,
+      );
+      setSongList(fetchedSongs);
+    } catch (error) {
+      console.error("Failed to fetch songList:", error);
+    }
+  }, [categoryId, categoryService, userId]);
 
   useEffect(() => {
-    const fetchSongList = async () => {
-      try {
-        let fetchedSongs = await categoryService.getSongListByCategory(
-          userId,
-          categoryId,
-        );
+    loadSongList();
+  }, [loadSongList]);
 
-        setSongList(fetchedSongs);
-      } catch (error) {
-        console.error("Failed to fetch song list:", error);
-      }
-    };
-
-    fetchSongList();
-  }, []);
+  useEffect(() => {
+    if (triggerUpdate) {
+      loadSongList();
+      setTriggerUpdate(false);
+    }
+  }, [triggerUpdate, loadSongList]);
 
   // useEffect(() => {
   //   const fetchSongListWithOutPlaylist = async () => {
@@ -95,6 +99,8 @@ export const CategorySelectedScreen = () => {
 
   //   fetchSongListWithOutPlaylist();
   // }, []);
+
+  const { isRefreshing, refresh, top } = usePullRefresh(loadSongList);
 
   const closeModal = () => {
     setIsVisible(!isVisible);
