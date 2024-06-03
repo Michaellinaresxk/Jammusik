@@ -1,20 +1,20 @@
-import React from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   StyleSheet,
-  Text,
   View,
   KeyboardAvoidingView,
   ScrollView,
   Platform,
   Pressable,
   RefreshControl,
+  ImageBackground,
+  Text,
 } from "react-native";
 import { useUserService } from "../../../context/UserServiceContext";
 import { useUserInfoService } from "../../../context/UserInfoServiceContext";
-import { useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
 import { ApiUser } from "../../../infra/user/ApiUser";
-import { globalColors } from "../../theme/Theme";
+import { globalColors, globalStyles } from "../../theme/Theme";
 import { FormProfile } from "../../components/shared/forms/FormProfile";
 import { UserInfo } from "../../../types/formTypes";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
@@ -23,14 +23,20 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { usePullRefresh } from "../../../hooks/usePullRefresing";
 import { UserAvatar } from "../../components/shared/UserAvatar";
 import Toast from "react-native-toast-message";
+import { images } from "../../../assets/img/Images";
 
 export const ProfileScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
+
+  const image = {
+    uri: images.loginBackground,
+  };
 
   const userService = useUserService();
   const userInfoService = useUserInfoService();
 
   const [user, setUser] = useState<ApiUser | null>(null);
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const auth = getAuth();
 
   const [userId, setUserId] = useState("");
@@ -39,27 +45,41 @@ export const ProfileScreen = () => {
   const [location, setLocation] = useState("");
   const [selectedSkill, setSelectedSkill] = useState("");
   const [selectedInstrumentId, setSelectedInstrumentId] = useState("");
+  const [triggerUpdate, setTriggerUpdate] = useState(false);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const user = auth.currentUser;
-      if (user) {
-        const userData = await userService.getCurrentUser(user.uid);
-        setUser(userData);
-      } else {
-        console.log("No user logged in");
-        setUser(null);
+  const fetchUser = useCallback(async () => {
+    const user = auth.currentUser;
+    if (user) {
+      const userData = await userService.getCurrentUser(user.uid);
+      setUser(userData);
+      setUserId(user.uid); // Asegúrate de establecer el userId aquí
+      const userInfoData = await userInfoService.getCurrentUserInfo(user.uid);
+      if (userInfoData) {
+        setUserInfo(userInfoData);
+        setLocation(userInfoData.location || "");
+        setSelectedSkill(userInfoData.skills || "");
+        setSelectedInstrumentId(userInfoData.instrument || "");
       }
-    };
-
-    fetchUser();
-  }, [auth.currentUser, userService]);
+    } else {
+      console.log("No user logged in");
+      setUser(null);
+    }
+  }, [auth.currentUser, userService, userInfoService]);
 
   useEffect(() => {
-    console.log("Selected Instrument ID:", selectedInstrumentId);
-  }, [selectedInstrumentId]);
+    // Load user information when the component mounts
+    fetchUser();
+  }, [fetchUser]);
 
-  const { isRefreshing, refresh, top } = usePullRefresh();
+  useEffect(() => {
+    // Load user information when triggerUpdate changes
+    if (triggerUpdate) {
+      fetchUser();
+      setTriggerUpdate(false);
+    }
+  }, [triggerUpdate, fetchUser]);
+
+  const { isRefreshing, refresh, top } = usePullRefresh(fetchUser);
 
   const showToast = () => {
     Toast.show({
@@ -71,82 +91,86 @@ export const ProfileScreen = () => {
   const updateUserInfoProfile = async (userInfo: UserInfo) => {
     const { location, skills, instrument } = userInfo;
 
-    try {
-      await userInfoService.setCurrentUserInfo(
-        userId,
-        location as string,
-        skills as string,
-        instrument as string,
-      );
+    if (location && skills && instrument) {
+      // Check to avoid undefined values
+      try {
+        await userInfoService.setCurrentUserInfo(
+          userId,
+          location as string,
+          skills as string,
+          instrument as string,
+        );
 
-      console.log(location, skills);
-      showToast();
-    } catch (error) {
-      console.error("Error updating profile:", error);
-    }
-  };
-
-  const deleteAccount = async () => {
-    try {
-      await userService.deleteUser(userId);
-      navigation.navigate("PathPickScreen");
-    } catch (error) {
-      console.error("Error al cerrar sesión: ", error);
+        console.log(location, skills, instrument);
+        showToast();
+        setTriggerUpdate(true); // Trigger update after saving info
+      } catch (error) {
+        console.error("Error updating profile:", error);
+      }
+    } else {
+      console.error("All fields must be filled out.");
     }
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : undefined}>
-      <ScrollView
-        refreshControl={
-          <RefreshControl
-            refreshing={isRefreshing}
-            progressViewOffset={top}
-            colors={[
-              globalColors.primary,
-              globalColors.terceary,
-              globalColors.primary,
-            ]}
-            onRefresh={refresh}
-          />
-        }>
-        <View>
-          <Pressable
-            style={styles.goBackContent}
-            onPress={() => navigation.goBack()}>
-            <Icon
-              name="arrow-back-sharp"
-              color={globalColors.primary}
-              size={30}
-            />
-          </Pressable>
-          <UserAvatar />
-          <FormProfile
-            email={user?.email}
-            setEmail={setEmail}
-            name={user?.name}
-            setName={setName}
-            userId={user?.id}
-            setUserId={setUserId}
-            location={location}
-            setLocation={setLocation}
-            selectedSkill={selectedSkill}
-            setSelectedSkill={setSelectedSkill}
-            selectedInstrumentId={selectedInstrumentId}
-            setSelectedInstrumentId={setSelectedInstrumentId}
-            onProfile={() =>
-              updateUserInfoProfile({
-                userId,
-                location,
-                skills: selectedSkill,
-                instrument: selectedInstrumentId,
-              })
-            }
-          />
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+    <ImageBackground source={image} resizeMode="cover" alt="Imagen de fondo">
+      <View style={globalStyles.overlay}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : undefined}>
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={isRefreshing}
+                progressViewOffset={top}
+                colors={[
+                  globalColors.primary,
+                  globalColors.terceary,
+                  globalColors.primary,
+                ]}
+                onRefresh={refresh}
+              />
+            }>
+            <View>
+              <Pressable
+                style={styles.goBackContent}
+                onPress={() => navigation.goBack()}>
+                <Icon
+                  name="arrow-back-sharp"
+                  color={globalColors.primary}
+                  size={30}
+                />
+              </Pressable>
+              <UserAvatar />
+              <Text>Location: {location}</Text>
+              <Text>Skills: {selectedSkill}</Text>
+              <Text>Instrument: {selectedInstrumentId}</Text>
+              <FormProfile
+                email={user?.email || ""}
+                setEmail={setEmail}
+                name={user?.name || ""}
+                setName={setName}
+                userId={userId} // Pasa el userId correcto aquí
+                setUserId={setUserId}
+                location={location}
+                setLocation={setLocation}
+                selectedSkill={selectedSkill}
+                setSelectedSkill={setSelectedSkill}
+                selectedInstrumentId={selectedInstrumentId}
+                setSelectedInstrumentId={setSelectedInstrumentId}
+                onProfile={() =>
+                  updateUserInfoProfile({
+                    userId,
+                    location,
+                    skills: selectedSkill,
+                    instrument: selectedInstrumentId,
+                  })
+                }
+              />
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </View>
+    </ImageBackground>
   );
 };
 

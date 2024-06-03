@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Text, TextInput, View } from "react-native";
 import { globalColors, globalFormStyles } from "../../../theme/Theme";
 import { PrimaryButton } from "../PrimaryButton";
@@ -6,7 +6,7 @@ import { CustomDropdown } from "../CustomDropdown";
 import RadioButton from "../RadioButton";
 import { UserInfo } from "../../../../types/formTypes";
 
-type ProfileForm = {
+type ProfileFormProps = {
   email: string;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
   name: string;
@@ -17,6 +17,8 @@ type ProfileForm = {
   setLocation: React.Dispatch<React.SetStateAction<string>>;
   selectedSkill: string;
   setSelectedSkill: React.Dispatch<React.SetStateAction<string>>;
+  selectedInstrumentId: string;
+  setSelectedInstrumentId: React.Dispatch<React.SetStateAction<string>>;
   onProfile: (userInfo: UserInfo) => Promise<void>;
 };
 
@@ -31,8 +33,10 @@ export const FormProfile = ({
   setLocation,
   selectedSkill,
   setSelectedSkill,
+  selectedInstrumentId,
+  setSelectedInstrumentId,
   onProfile,
-}: ProfileForm) => {
+}: ProfileFormProps) => {
   const instruments = [
     { name: "Bass", id: "1" },
     { name: "Drums", id: "2" },
@@ -46,18 +50,17 @@ export const FormProfile = ({
     { label: "Dj", value: "dj" },
     { label: "Producer", value: "producer" },
   ];
+
   const dropdownInstruments = instruments.map(instrument => ({
     label: instrument.name,
     value: instrument.id,
   }));
 
-  const [selectedInstrumentId, setSelectedInstrumentId] = useState(
-    dropdownInstruments[0].value,
-  );
-
-  const onSelect = value => {
-    console.log("Selected:", value);
-  };
+  useEffect(() => {
+    if (!selectedInstrumentId) {
+      setSelectedInstrumentId(dropdownInstruments[0].value);
+    }
+  }, [dropdownInstruments, selectedInstrumentId]);
 
   return (
     <View style={globalFormStyles.containerForm}>
@@ -102,11 +105,15 @@ export const FormProfile = ({
               selectedSkill={selectedSkill}
             />
           </View>
+          <Text style={globalFormStyles.radioButtonTitle}>Instrument</Text>
           <CustomDropdown
             items={dropdownInstruments}
             defaultValue={selectedInstrumentId}
             placeholder="Choose an instrument"
-            onChange={setSelectedInstrumentId}
+            onChange={value => {
+              console.log("Selected Instrument:", value);
+              setSelectedInstrumentId(value);
+            }}
           />
         </View>
         <View style={{ marginTop: 20 }}>
@@ -114,9 +121,16 @@ export const FormProfile = ({
             label="Save Changes"
             bgColor={globalColors.primary}
             borderRadius={5}
-            colorText={globalColors.light}
+            colorText={globalColors.secondary}
             btnFontSize={20}
-            onPress={onProfile}
+            onPress={() =>
+              onProfile({
+                userId,
+                location,
+                skills: selectedSkill,
+                instrument: selectedInstrumentId,
+              })
+            }
           />
         </View>
       </View>

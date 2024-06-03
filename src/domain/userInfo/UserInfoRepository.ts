@@ -7,4 +7,5 @@ export default interface UserInfoRepository {
     skills?: string,
     instrument?: string,
   ): Promise<UserInfo>;
+  getUserInfo(userId: string): Promise<UserInfo>;
 }
