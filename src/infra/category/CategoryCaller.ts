@@ -1,4 +1,4 @@
-import { addDoc, query, where } from "firebase/firestore";
+import { addDoc, deleteDoc, doc, query, where } from "firebase/firestore";
 import { auth } from "../api/firebaseConfig";
 import { ApiSong } from "../song/ApiSong";
 import type { ApiCategory } from "./ApiCategory";
@@ -86,5 +86,14 @@ export class CategoryCaller {
       );
       throw error;
     }
+  }
+
+  async deleteCategory(userId: string, categoryId: string) {
+    if (!this.db || !userId || !categoryId) {
+      throw new Error("Firestore instance or categoryId is undefined!");
+    }
+
+    const specificCategoryDoc = doc(this.db, "categories", categoryId);
+    await deleteDoc(specificCategoryDoc);
   }
 }

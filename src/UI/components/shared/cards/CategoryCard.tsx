@@ -1,16 +1,42 @@
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { globalColors } from "../../../theme/Theme";
+import Icon from "react-native-vector-icons/Ionicons";
 
 type Props = {
   title: string;
   onPress: () => void;
+  onDelete: (categoryId: string) => void;
 };
 
-export const CategoryCard = ({ title, onPress }: Props) => {
+export const CategoryCard = ({ title, onPress, onDelete }: Props) => {
+  const deleteConfirmation = () =>
+    Alert.alert("Are you sure?", "Do you want to remove this category?", [
+      {
+        text: "UPS! BY MISTAKE",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      {
+        text: "YES, DELETE!",
+        onPress: () => onDelete(),
+        style: "destructive",
+      },
+    ]);
   return (
     <TouchableOpacity style={styles.categoryCard} onPress={onPress}>
       <Text style={styles.categoryCardText}>{title}</Text>
+      <View style={styles.containerIcons}>
+        <Icon
+          name="trash-sharp"
+          color={globalColors.light}
+          onPress={event => {
+            event.stopPropagation();
+            deleteConfirmation();
+          }}
+          size={20}
+        />
+      </View>
     </TouchableOpacity>
   );
 };
@@ -29,5 +55,13 @@ const styles = StyleSheet.create({
     color: globalColors.light,
     fontSize: 23,
     paddingHorizontal: 5,
+  },
+  containerIcons: {
+    padding: 10,
+    gap: 15,
+    flexDirection: "row",
+    position: "absolute",
+    bottom: 0,
+    right: 0,
   },
 });
