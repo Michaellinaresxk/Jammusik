@@ -52,7 +52,7 @@ export const ProfileScreen = () => {
     if (user) {
       const userData = await userService.getCurrentUser(user.uid);
       setUser(userData);
-      setUserId(user.uid); // Asegúrate de establecer el userId aquí
+      setUserId(user.uid);
       const userInfoData = await userInfoService.getCurrentUserInfo(user.uid);
       if (userInfoData) {
         setUserInfo(userInfoData);

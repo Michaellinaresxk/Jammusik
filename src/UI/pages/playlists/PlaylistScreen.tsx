@@ -236,6 +236,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 25,
     fontWeight: "bold",
+    color: globalColors.primaryDark,
   },
   playlistCardContainer: {
     flex: 1,
