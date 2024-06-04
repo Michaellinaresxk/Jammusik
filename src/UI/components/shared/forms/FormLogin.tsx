@@ -2,23 +2,11 @@ import { Text, View, TextInput, ActivityIndicator, Button } from "react-native";
 import { PrimaryButton } from "../PrimaryButton";
 import { globalColors, globalFormStyles } from "../../../theme/Theme";
 import React from "react";
-import * as Yup from 'yup'
+
 import { Formik } from 'formik'
+import { validationLoginForm } from "./yup/validation_login_yup";
 
 
-const validationSchemaFormLogin = Yup.object().shape({
-  email:
-    Yup.string()
-      .email('The email is not valid')
-      .required("The email is required")
-  ,
-
-  password:
-    Yup.string().required('The password is required')
-      .min(4, 'Password have it more than 4 words')
-
-
-})
 
 
 interface FormLoginProps {
@@ -54,7 +42,7 @@ export const Formlogin = ({
       <Formik
         initialValues={{ email: "", password: "" }}
         onSubmit={(values) => onLogin(values)}
-        validationSchema={validationSchemaFormLogin}
+        validationSchema={validationLoginForm}
 
       >
         {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (

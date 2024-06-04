@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { RootStackParamsList } from "../../routes/StackNavigator";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
@@ -14,8 +14,10 @@ import {
   Text,
   TouchableOpacity,
   View,
+  useWindowDimensions,
 } from "react-native";
 import { GlobalHeader } from "../../components/shared/GlobalHeader";
+import { Swipeable } from "react-native-gesture-handler";
 import { TheGreenBorder } from "../../components/shared/TheGreenBorder";
 import { useCategoryService } from "../../../context/CategoryServiceContext";
 import { useSongWithOutPlaylistService } from "../../../context/SongWithOutPlaylistContext";
@@ -30,16 +32,21 @@ import { FloatingActionButton } from "../../components/shared/FloatingActionButt
 import { PrimaryButton } from "../../components/shared/PrimaryButton";
 import { FormCreateSongWithOutPlaylist } from "../../components/shared/forms/FormCreateSongWithOutPlaylist";
 import Svg, { Path } from "react-native-svg";
+import Icon from "react-native-vector-icons/Ionicons";
+import { useSongService } from "../../../context/SongServiceContext";
+import Toast from "react-native-toast-message";
 
 export const CategorySelectedScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
   const params =
     useRoute<RouteProp<RootStackParamsList, "CategoriesScreen">>().params;
   const auth = getAuth();
+  const userId = auth.currentUser?.uid as string;
 
   const categoryService = useCategoryService();
   const songWithOutPlaylistService = useSongWithOutPlaylistService();
-  const userId = auth.currentUser?.uid as string;
+  const songService = useSongService();
+
   const [songList, setSongList] = useState<SongView[]>([]);
   const [songListWithOutPlaylist, setSongListWithOutPlaylist] = useState<
     SongWithOutPlaylistView[]
@@ -49,74 +56,122 @@ export const CategorySelectedScreen = () => {
   const [artist, setArtist] = useState("");
   const [isVisible, setIsVisible] = useState(false);
   const [triggerUpdate, setTriggerUpdate] = useState(false);
+  const [currentSongId, setCurrentSongId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false)
 
   const categoryId = params.id as string;
 
   const [resetToggle, setResetToggle] = useState(false);
+  const valueWidth = useWindowDimensions().width - 10
 
   const handleResetSongs = () => {
     setResetToggle(prev => !prev);
   };
 
-  const { isRefreshing, refresh, top } = usePullRefresh();
+  const loadSongList = useCallback(async () => {
+    try {
+      const [fetchedSongs, fetchedSongsWithoutPlaylist] = await Promise.all([
+        categoryService.getSongListByCategory(userId, categoryId),
+        songWithOutPlaylistService.getSongsWithOutPlaylist(userId, categoryId),
+      ]);
+      setSongList(fetchedSongs);
+      setSongListWithOutPlaylist(fetchedSongsWithoutPlaylist);
+    } catch (error) {
+      console.error("Failed to fetch song lists:", error);
+    }
+  }, [categoryId, categoryService, songWithOutPlaylistService, userId]);
 
   useEffect(() => {
-    const fetchSongList = async () => {
-      try {
-        let fetchedSongs = await categoryService.getSongListByCategory(
-          categoryId,
-          userId,
-        );
-
-        setSongList(fetchedSongs);
-      } catch (error) {
-        console.error("Failed to fetch song list:", error);
-      }
-    };
-
-    fetchSongList();
-  }, [songList]);
+    loadSongList();
+  }, [loadSongList]);
 
   useEffect(() => {
-    const fetchSongListWithOutPlaylist = async () => {
-      try {
-        let fetchedSongs =
-          await songWithOutPlaylistService.getSongsWithOutPlaylist(
-            categoryId,
-            userId,
-          );
+    if (triggerUpdate) {
+      loadSongList();
+      setTriggerUpdate(false);
+    }
+  }, [triggerUpdate, loadSongList]);
 
-        setSongListWithOutPlaylist(fetchedSongs);
-      } catch (error) {
-        console.error("Failed to fetch song list:", error);
-      }
-    };
-
-    fetchSongListWithOutPlaylist();
-  }, [songListWithOutPlaylist]);
+  const { isRefreshing, refresh, top } = usePullRefresh(loadSongList);
 
   const closeModal = () => {
     setIsVisible(!isVisible);
   };
 
-  const handleCreateSongWithOutPlaylist = async () => {
+  const handleCreateSongWithOutPlaylist = async (values) => {
     try {
+      const { title, artist } = values
+
+      setIsLoading(true)
       await songWithOutPlaylistService.createSongWithOutPlaylist(
         userId,
+        categoryId,
         title,
         artist,
-        categoryId,
       );
       setTitle("");
       setArtist("");
       setTriggerUpdate(prev => !prev);
-      console.log(title, artist, categoryId);
+      setIsLoading(false)
+
       closeModal();
     } catch (error) {
       console.error("Failed to create song:", error);
       Alert.alert("Error", "Failed to create the song. Please try again.");
     }
   };
+
+  const showToast = () => {
+    Toast.show({
+      type: "success",
+      text1: "Song Deleted successfully",
+    });
+  };
+
+  const handleDeleteSong = async (
+    songId: string,
+    isWithoutPlaylist: boolean,
+  ) => {
+    console.log(
+      `Deleting song with ID: ${songId}, isWithoutPlaylist: ${isWithoutPlaylist}`,
+    );
+    try {
+      if (isWithoutPlaylist) {
+        console.log("Deleting song without playlist");
+        await songWithOutPlaylistService.deleteSong(userId, songId);
+      } else {
+        console.log("Deleting song with playlist");
+        await songService.deleteSong(userId, songId);
+      }
+      setTriggerUpdate(true);
+      showToast();
+    } catch (error) {
+      console.error("Failed to delete song:", error);
+      Alert.alert("Error", "Failed to delete the song. Please try again.");
+    }
+  };
+
+  const deleteConfirmation = (songId: string, isWithoutPlaylist: boolean) =>
+    Alert.alert("Are you sure?", "Do you want to remove this song?", [
+      {
+        text: "UPS! BY MISTAKE",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      {
+        text: "YES, DELETE!",
+        onPress: () => handleDeleteSong(songId, isWithoutPlaylist),
+        style: "destructive",
+      },
+    ]);
+
+  const swipeRightActions = (songId: string, isWithoutPlaylist: boolean) => (
+    <TouchableOpacity
+      style={styles.deleteButtonContent}
+      onPress={() => deleteConfirmation(songId, isWithoutPlaylist)}>
+      <Icon name="trash-sharp" size={25} style={styles.deleteIcon} />
+    </TouchableOpacity>
+  );
 
   return (
     <>
@@ -146,26 +201,32 @@ export const CategorySelectedScreen = () => {
                 keyExtractor={item => item.id}
                 renderItem={({ item, index }) => {
                   return (
-                    <View>
-                      <SongCard
-                        resetToggle={resetToggle}
-                        title={item.title}
-                        artist={item.artist}
-                        color={
-                          index % 2 === 0
-                            ? globalColors.primary
-                            : globalColors.secondary
-                        }
-                        onPress={() =>
-                          navigation.navigate("SongSelectedScreen", {
-                            id: item.id,
-                            title: item.title,
-                            artist: item.artist,
-                            categoryId: item.categoryId,
-                          })
-                        }
-                      />
-                    </View>
+                    <Swipeable
+                      renderRightActions={() =>
+                        swipeRightActions(item.id, false)
+                      }
+                      onSwipeableWillOpen={() => setCurrentSongId(item.id)}>
+                      <View style={{ paddingHorizontal: 5, width: valueWidth }}>
+                        <SongCard
+                          resetToggle={resetToggle}
+                          title={item.title}
+                          artist={item.artist}
+                          color={
+                            index % 2 === 0
+                              ? globalColors.primary
+                              : globalColors.secondary
+                          }
+                          onPress={() =>
+                            navigation.navigate("SongSelectedScreen", {
+                              id: item.id,
+                              title: item.title,
+                              artist: item.artist,
+                              categoryId: item.categoryId,
+                            })
+                          }
+                        />
+                      </View>
+                    </Swipeable>
                   );
                 }}
               />
@@ -192,26 +253,32 @@ export const CategorySelectedScreen = () => {
                 keyExtractor={item => item.id}
                 renderItem={({ item, index }) => {
                   return (
-                    <View>
-                      <SongCard
-                        resetToggle={resetToggle}
-                        title={item.title}
-                        artist={item.artist}
-                        color={
-                          index % 2 === 0
-                            ? globalColors.primary
-                            : globalColors.secondary
-                        }
-                        onPress={() =>
-                          navigation.navigate("SongSelectedScreen", {
-                            id: item.id,
-                            title: item.title,
-                            artist: item.artist,
-                            categoryId: item.categoryId,
-                          })
-                        }
-                      />
-                    </View>
+                    <Swipeable
+                      renderRightActions={() =>
+                        swipeRightActions(item.id, true)
+                      }
+                      onSwipeableWillOpen={() => setCurrentSongId(item.id)}>
+                      <View style={{ paddingHorizontal: 5, width: valueWidth }}>
+                        <SongCard
+                          resetToggle={resetToggle}
+                          title={item.title}
+                          artist={item.artist}
+                          color={
+                            index % 2 === 0
+                              ? globalColors.primary
+                              : globalColors.secondary
+                          }
+                          onPress={() =>
+                            navigation.navigate("SongSelectedScreen", {
+                              id: item.id,
+                              title: item.title,
+                              artist: item.artist,
+                              categoryId: item.categoryId,
+                            })
+                          }
+                        />
+                      </View>
+                    </Swipeable>
                   );
                 }}
               />
@@ -230,7 +297,7 @@ export const CategorySelectedScreen = () => {
         visible={isVisible}
         animationType="slide"
         presentationStyle="formSheet">
-        <View style={styles.modalBtnContainer}>
+        <View style={[styles.modalBtnContainer, { paddingRight: 30 }]}>
           <Text style={styles.modalFormHeaderTitle}>Add Song Info</Text>
           <PrimaryButton
             label="Close"
@@ -246,6 +313,7 @@ export const CategorySelectedScreen = () => {
           setArtist={setArtist}
           categoryId={categoryId}
           onCreateSong={handleCreateSongWithOutPlaylist}
+          isLoading={isLoading}
         />
       </Modal>
     </>
@@ -299,5 +367,16 @@ const styles = StyleSheet.create({
   brandLogo: {
     marginBottom: 40,
     alignSelf: "center",
+  },
+  deleteButtonContent: {
+    backgroundColor: globalColors.danger,
+    borderRadius: 10,
+    height: 85,
+    width: 80,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  deleteIcon: {
+    color: globalColors.light,
   },
 });

@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, Pressable, StyleSheet, View } from "react-native";
+import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { MenuItem } from "../../components/shared/MenuItem";
 import { BrandLogo } from "../../components/shared/BrandLogo";
@@ -9,11 +9,10 @@ import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { PrimaryButton } from "../../components/shared/PrimaryButton";
 import { useUserService } from "../../../context/UserServiceContext";
 import { RootStackParamsList } from "../../routes/StackNavigator";
-import useAuthStatus from "../../../hooks/useAuthStatus";
 
 export const SettingsScreen = () => {
   const { top } = useSafeAreaInsets();
-  const { uid } = useAuthStatus();
+
   const profileItems = [
     {
       name: "Profile",
@@ -48,6 +47,14 @@ export const SettingsScreen = () => {
     },
   ];
 
+  const deleteAccountInfo = [
+    {
+      name: "Delete Account",
+      icon: "alert-circle-sharp",
+      component: "DeleteAccountScreen",
+    },
+  ];
+
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
 
   const userService = useUserService();
@@ -55,16 +62,6 @@ export const SettingsScreen = () => {
     try {
       console.log("logout");
       await userService.logout();
-      navigation.navigate("PathPickScreen");
-    } catch (error) {
-      console.error("Error al cerrar sesión: ", error);
-    }
-  };
-
-  const deleteAccount = async () => {
-    try {
-      const userId = uid;
-      await userService.deleteUser(userId);
       navigation.navigate("PathPickScreen");
     } catch (error) {
       console.error("Error al cerrar sesión: ", error);
@@ -85,20 +82,6 @@ export const SettingsScreen = () => {
       },
     ]);
 
-  const deleteAccountConfirmation = () =>
-    Alert.alert("Are you sure?", "Do you want to remove your account?", [
-      {
-        text: "UPS! BY MISTAKE",
-        onPress: () => console.log("Cancel Pressed"),
-        style: "cancel",
-      },
-      {
-        text: "YES, DELETE ACCOUNT",
-        onPress: () => deleteAccount(),
-        style: "destructive",
-      },
-    ]);
-
   return (
     <View
       style={{
@@ -111,6 +94,7 @@ export const SettingsScreen = () => {
         onPress={() => navigation.navigate("HomeScreen")}>
         <Icon name="arrow-back-sharp" color={globalColors.primary} size={30} />
       </Pressable>
+      <Text style={styles.subTitle}>Account Settings:</Text>
       <View style={styles.mainContainer}>
         {profileItems.map((item, index) => (
           <MenuItem
@@ -141,6 +125,16 @@ export const SettingsScreen = () => {
           />
         ))}
         <View style={{ marginTop: 30 }} />
+        {deleteAccountInfo.map((item, index) => (
+          <MenuItem
+            key={item.component}
+            {...item}
+            isFirst={index === 0}
+            isLast={index === menuItems.length - 1}
+          />
+        ))}
+
+        <View style={{ marginTop: 30 }} />
         <View style={styles.buttonContainer}>
           <PrimaryButton
             label="Logout"
@@ -149,14 +143,6 @@ export const SettingsScreen = () => {
             colorText={globalColors.primary}
             btnFontSize={17}
             bgColor={globalColors.primaryAlt}
-          />
-          <PrimaryButton
-            label="Delete Account"
-            onPress={() => deleteAccountConfirmation()}
-            borderRadius={5}
-            colorText={globalColors.danger}
-            btnFontSize={17}
-            bgColor={globalColors.dangerAlt2}
           />
         </View>
         <View style={{ marginTop: 10 }}>
@@ -185,11 +171,33 @@ const styles = StyleSheet.create({
     color: globalColors.terceary,
   },
   buttonContainer: {
-    alignItems: "center",
     marginTop: 30,
     marginBottom: 50,
+    marginRight: 20,
   },
   button: {
     width: 200,
+  },
+  subTitle: {
+    marginBottom: 5,
+    marginTop: 40,
+    alignSelf: "center",
+    fontSize: 25,
+    fontWeight: "900",
+    color: globalColors.primaryDark,
+  },
+  dangerZoneContent: {
+    backgroundColor: "white",
+    borderRadius: 10,
+    marginTop: 30,
+  },
+  dangerIconContent: {
+    flexDirection: "row",
+  },
+  dangerZoneText: {
+    color: globalColors.danger,
+    fontWeight: "400",
+    fontSize: 20,
+    marginBottom: 20,
   },
 });

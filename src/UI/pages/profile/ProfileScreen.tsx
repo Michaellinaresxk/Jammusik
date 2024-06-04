@@ -39,6 +39,7 @@ export const ProfileScreen = () => {
   const [location, setLocation] = useState("");
   const [selectedSkill, setSelectedSkill] = useState("");
   const [selectedInstrumentId, setSelectedInstrumentId] = useState("");
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -69,17 +70,22 @@ export const ProfileScreen = () => {
   };
 
   const updateUserInfoProfile = async (userInfo: UserInfo) => {
-    const { location, skills, instrument } = userInfo;
+
+
+    const { location, skills, instrument, userId } = userInfo;
 
     try {
+      setIsLoading(true)
       await userInfoService.setCurrentUserInfo(
-        userId,
+        userId as string,
         location as string,
         skills as string,
         instrument as string,
       );
 
       console.log(location, skills);
+      setIsLoading(false)
+
       showToast();
     } catch (error) {
       console.error("Error updating profile:", error);
@@ -135,6 +141,7 @@ export const ProfileScreen = () => {
             setSelectedSkill={setSelectedSkill}
             selectedInstrumentId={selectedInstrumentId}
             setSelectedInstrumentId={setSelectedInstrumentId}
+            isLoading={isLoading}
             onProfile={() =>
               updateUserInfoProfile({
                 userId,

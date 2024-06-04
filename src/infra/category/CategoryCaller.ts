@@ -1,4 +1,4 @@
-import { addDoc, query, where } from "firebase/firestore";
+import { addDoc, deleteDoc, doc, query, where } from "firebase/firestore";
 import { auth } from "../api/firebaseConfig";
 import { ApiSong } from "../song/ApiSong";
 import type { ApiCategory } from "./ApiCategory";
@@ -29,13 +29,6 @@ export class CategoryCaller {
     };
   }
 
-  // async getCategories(userId: string): Promise<ApiCategory[]> {
-  //   const db = getFirestore();
-  //   const querySnapshot = await getDocs(collection(db, "categories"));
-  //   return querySnapshot.docs.map(doc => {
-  //     return { id: doc.id, ...doc.data() } as ApiCategory;
-  //   });
-  // }
   getCategories = async (userId: string): Promise<ApiCategory[]> => {
     if (!userId) {
       throw new Error("userId is undefined!");
@@ -62,8 +55,8 @@ export class CategoryCaller {
     }
   };
   async getSongListByCategory(
-    categoryId: string,
     userId: string,
+    categoryId: string,
   ): Promise<ApiSong[]> {
     if (!categoryId || !userId) {
       console.error(
@@ -93,5 +86,14 @@ export class CategoryCaller {
       );
       throw error;
     }
+  }
+
+  async deleteCategory(userId: string, categoryId: string) {
+    if (!this.db || !userId || !categoryId) {
+      throw new Error("Firestore instance or categoryId is undefined!");
+    }
+
+    const specificCategoryDoc = doc(this.db, "categories", categoryId);
+    await deleteDoc(specificCategoryDoc);
   }
 }

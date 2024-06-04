@@ -30,15 +30,12 @@ export const LoginScreen = () => {
       const res = await userService.loginUser(email, password);
 
 
-      if (res.FirebaseError) {
-        Alert.alert('Error de credenciales')
-        return
-      } else {
-        setEmail("");
-        setPassword("");
-        navigation.navigate("HomeScreen");
-        setIsLoading(false)
-      }
+
+      setEmail("");
+      setPassword("");
+      navigation.navigate("HomeScreen");
+      setIsLoading(false)
+
 
     } catch (error) {
       console.log(error)
@@ -58,6 +55,7 @@ export const LoginScreen = () => {
           </View>
           <Text style={styles.labelTitle}>Log In</Text>
           <View style={styles.containerForm}>
+
             <Formlogin
               email={email}
               setEmail={setEmail}

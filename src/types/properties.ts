@@ -8,9 +8,10 @@ export interface SongProperties {
 
 export interface SongWithOutPlaylistProperties {
   id: string;
+  userId: string;
+  categoryId: string;
   title: string;
   artist: string;
-  categoryId: string;
 }
 
 export interface SongDetailsProperties {

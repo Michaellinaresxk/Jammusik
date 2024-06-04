@@ -2,6 +2,8 @@ import type { CategoryResource } from "../../infra/category/CategoryResource";
 import { CreateCategoryUseCase } from "./CreateCategoryUseCase";
 import { GetCategoriesUseCase } from "./GetCategoriesUseCase";
 import { GetSongListByCategoryUseCase } from "./GetSongListByCategoryUseCase";
+import { DeleteCategoryUseCase } from "./DeleteCategoryUseCase";
+
 import type { CategoryView } from "../../views/CategoryView";
 import { SongView } from "../../views/SongView";
 
@@ -9,6 +11,7 @@ export class CategoryService {
   private createCategoryUseCase: CreateCategoryUseCase;
   private getCategoriesUseCase: GetCategoriesUseCase;
   private getSongListByCategoryUseCase: GetSongListByCategoryUseCase;
+  private deleteCategoryUseCase: DeleteCategoryUseCase;
 
   constructor(private readonly categoryResource: CategoryResource) {
     this.createCategoryUseCase = new CreateCategoryUseCase(categoryResource);
@@ -16,6 +19,7 @@ export class CategoryService {
     this.getSongListByCategoryUseCase = new GetSongListByCategoryUseCase(
       categoryResource,
     );
+    this.deleteCategoryUseCase = new DeleteCategoryUseCase(categoryResource);
   }
 
   async createCategory(userId: string, title: string): Promise<CategoryView> {
@@ -27,9 +31,13 @@ export class CategoryService {
   }
 
   async getSongListByCategory(
-    categoryId: string,
     userId: string,
+    categoryId: string,
   ): Promise<SongView[]> {
-    return await this.getSongListByCategoryUseCase.execute(categoryId, userId);
+    return await this.getSongListByCategoryUseCase.execute(userId, categoryId);
+  }
+
+  async deleteCategory(userId: string, categoryId: string): Promise<void> {
+    return await this.deleteCategoryUseCase.execute(userId, categoryId);
   }
 }

@@ -18,7 +18,7 @@ import { CategoryCard } from "../../components/shared/cards/CategoryCard";
 import { type NavigationProp, useNavigation } from "@react-navigation/native";
 import { type RootStackParamsList } from "../../routes/StackNavigator";
 import { useCategoryService } from "../../../context/CategoryServiceContext";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { CategoryView } from "../../../views/CategoryView";
 import { PrimaryButton } from "../../components/shared/PrimaryButton";
 import { FormCreateCategory } from "../../components/shared/forms/FormCreateCategory";
@@ -26,49 +26,78 @@ import { getAuth } from "firebase/auth";
 import { Separator } from "../../components/shared/Separator";
 import Icon from "react-native-vector-icons/Ionicons";
 import { usePullRefresh } from "../../../hooks/usePullRefresing";
-const backgroundImage = { uri: images.image3 };
+import Toast from "react-native-toast-message";
 
 export const CategoriesScreen = () => {
+  const backgroundImage = { uri: images.image3 };
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
   const auth = getAuth();
   const categoryService = useCategoryService();
   const [categories, setCategories] = useState<CategoryView[]>([]);
+  const [triggerUpdate, setTriggerUpdate] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [title, setTitle] = useState("");
+  const [isLoading, setIsLoading] = useState(false)
+
+  const loadCategories = useCallback(async () => {
+    const user = auth.currentUser;
+    const userId = user?.uid as string;
+    try {
+      const fetchedCategories = await categoryService.getCategories(userId);
+      setCategories(fetchedCategories);
+    } catch (error) {
+      console.error("Failed to fetch playlists:", error);
+    }
+  }, [auth.currentUser, categoryService]);
 
   useEffect(() => {
-    const loadCategories = async () => {
-      const user = auth.currentUser;
-      const userId = user?.uid as string;
-      try {
-        const fetchedCategories = await categoryService.getCategories(userId);
-        setCategories(fetchedCategories);
-      } catch (error) {
-        console.error("Failed to fetch playlists:", error);
-      }
-    };
+    // Load categories when the component mounts
     loadCategories();
-  }, [categories]);
+  }, [loadCategories]);
 
-  const [isVisible, setIsVisible] = useState(false);
-  const [triggerUpdate, setTriggerUpdate] = useState(false);
+  useEffect(() => {
+    //  Load categories when triggerUpdate changes
+    if (triggerUpdate) {
+      loadCategories();
+      setTriggerUpdate(false);
+    }
+  }, [triggerUpdate, loadCategories]);
 
-  const [title, setTitle] = useState("");
   const closeModal = () => {
     setIsVisible(!isVisible);
   };
 
-  const handleCreateCategory = async () => {
+  const handleCreateCategory = async (values) => {
+    const { title } = values
     const user = auth.currentUser;
     if (user) {
       const userId = user.uid;
       console.log("Creating category...");
+      setIsLoading(true)
       await categoryService.createCategory(userId, title);
       setTitle("");
-      setTriggerUpdate(prev => !prev); // Trigger the update to reload categories
+      setTriggerUpdate(true); // Trigger the update to reload categories
+      setIsLoading(false)
       closeModal();
     }
   };
 
-  const { isRefreshing, refresh, top } = usePullRefresh();
+  const showToast = () => {
+    Toast.show({
+      type: "success",
+      text1: "Category Deleted successfully. 👋",
+    });
+  };
+
+  const handleDeleteCategory = async (categoryId: string) => {
+    console.log("Deleting category", categoryId);
+    const userId = auth.currentUser;
+    await categoryService.deleteCategory(userId, categoryId);
+    setTriggerUpdate(true);
+    showToast();
+  };
+
+  const { isRefreshing, refresh, top } = usePullRefresh(loadCategories);
 
   return (
     <ImageBackground source={backgroundImage} resizeMode="cover">
@@ -128,6 +157,7 @@ export const CategoriesScreen = () => {
                 renderItem={({ item }) => (
                   <CategoryCard
                     title={item.title}
+                    onDelete={() => handleDeleteCategory(item.id)}
                     onPress={() =>
                       navigation.navigate("CategorySelectedScreen", {
                         id: item.id,
@@ -157,6 +187,7 @@ export const CategoriesScreen = () => {
                   title={title}
                   setTitle={setTitle}
                   onCreateCategory={handleCreateCategory}
+                  isLoading={isLoading}
                 />
               </Modal>
             </View>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   FlatList,
@@ -26,11 +26,11 @@ import { useSongService } from "../../../context/SongServiceContext";
 import { SongView } from "../../../views/SongView";
 import { PrimaryButton } from "../../components/shared/PrimaryButton";
 import { useResetSongsState } from "../../store/useResetSongsState";
-import { usePullRefresh } from "../../../hooks/usePullRefresing";
 import { Swipeable } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/Ionicons";
 import Toast from "react-native-toast-message";
 import { auth } from "../../../infra/api/firebaseConfig";
+import { usePullRefresh } from "../../../hooks/usePullRefresing";
 
 export const PlaylistSelectedScreen = () => {
   const songService = useSongService();
@@ -40,23 +40,23 @@ export const PlaylistSelectedScreen = () => {
   const playlistId = params.id as string;
   const userId = auth.currentUser;
 
+  const [categoryId, setCategoryId] = useState("");
   const [title, setTitle] = useState("");
   const [artist, setArtist] = useState("");
-  const [categoryId, setCategoryId] = useState("");
   const [songList, setSongList] = useState<SongView[]>([]);
   const [isVisible, setIsVisible] = useState(false);
   const [triggerUpdate, setTriggerUpdate] = useState(false);
   const [currentSongId, setCurrentSongId] = useState<string | null>(null);
 
-  const { isRefreshing, refresh, top } = usePullRefresh();
+  const handleCreateSong = async (values) => {
+    const { title, artist } = values
 
-  const handleCreateSong = async () => {
     try {
-      await songService.createSong(title, artist, categoryId, playlistId);
+      await songService.createSong(categoryId, playlistId, title, artist);
+      setCategoryId("");
       setTitle("");
       setArtist("");
-      setCategoryId("");
-      setTriggerUpdate(prev => !prev);
+      setTriggerUpdate(true);
 
       closeModal();
     } catch (error) {
@@ -65,18 +65,25 @@ export const PlaylistSelectedScreen = () => {
     }
   };
 
-  useEffect(() => {
-    const loadSongList = async () => {
-      try {
-        const fetchedSongs = await songService.getSongs(playlistId);
-        setSongList(fetchedSongs);
-      } catch (error) {
-        console.error("Failed to fetch songList:", error);
-      }
-    };
+  const loadSongList = useCallback(async () => {
+    try {
+      const fetchedSongs = await songService.getSongs(playlistId);
+      setSongList(fetchedSongs);
+    } catch (error) {
+      console.error("Failed to fetch songList:", error);
+    }
+  }, [playlistId, songService]);
 
+  useEffect(() => {
     loadSongList();
-  }, [playlistId, songService, triggerUpdate]);
+  }, [loadSongList]);
+
+  useEffect(() => {
+    if (triggerUpdate) {
+      loadSongList();
+      setTriggerUpdate(false); // Solo actualiza esto dentro del if
+    }
+  }, [triggerUpdate, loadSongList]);
 
   const closeModal = () => {
     setIsVisible(!isVisible);
@@ -92,14 +99,10 @@ export const PlaylistSelectedScreen = () => {
   };
 
   const handleDeleteSong = async (songId: string) => {
-    try {
-      await songService.deleteSong(userId, songId);
-      showToast();
-      setTriggerUpdate(prev => !prev);
-    } catch (error) {
-      console.error("Failed to delete song:", error);
-      Alert.alert("Error", "Failed to delete the song. Please try again.");
-    }
+    console.log("Deleting playlist", songId);
+    await songService.deleteSong(userId, songId);
+    setTriggerUpdate(true);
+    showToast();
   };
 
   const deleteConfirmation = (songId: string) =>
@@ -123,6 +126,8 @@ export const PlaylistSelectedScreen = () => {
       <Icon name="trash-sharp" size={25} style={styles.deleteIcon} />
     </TouchableOpacity>
   );
+
+  const { isRefreshing, refresh, top } = usePullRefresh(loadSongList);
 
   return (
     <>
@@ -165,10 +170,8 @@ export const PlaylistSelectedScreen = () => {
                       }
                       onPress={() =>
                         navigation.navigate("SongSelectedScreen", {
-                          id: item.id,
                           title: item.title,
                           artist: item.artist,
-                          categoryId: item.categoryId,
                         })
                       }
                     />
