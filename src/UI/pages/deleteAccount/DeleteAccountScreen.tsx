@@ -5,7 +5,6 @@ import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { GoBackButton } from "../../components/shared/GoBackButton";
 import { globalColors } from "../../theme/Theme";
-import { PrimaryButton } from "../../components/shared/PrimaryButton";
 import { userService } from "../../../services/userService";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamsList } from "../../routes/StackNavigator";

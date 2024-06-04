@@ -15,6 +15,7 @@ export interface SongWithOutPlaylistProperties {
 }
 
 export interface SongDetailsProperties {
+  userId: string;
   songId: string;
   key?: string;
   chordList?: string[];
