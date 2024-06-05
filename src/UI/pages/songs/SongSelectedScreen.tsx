@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
-  Alert,
   KeyboardAvoidingView,
   Modal,
   Platform,
@@ -8,6 +7,7 @@ import {
   ScrollView,
   StyleSheet,
   View,
+  Alert,
 } from "react-native";
 import { GlobalHeader } from "../../components/shared/GlobalHeader";
 import { FloatingActionButton } from "../../components/shared/FloatingActionButton";
@@ -19,17 +19,61 @@ import { PrimaryIcon } from "../../components/shared/PrimaryIcon";
 import { globalColors } from "../../theme/Theme";
 import { usePullRefresh } from "../../../hooks/usePullRefresing";
 import { PrimaryButton } from "../../components/shared/PrimaryButton";
-import { FormCreatePlaylist } from "../../components/shared/forms/FormCreatePlaylist";
 import { FormSongDetails } from "../../components/shared/forms/FormSongDetails";
+import Toast from "react-native-toast-message";
+import { auth } from "../../../infra/api/firebaseConfig";
+import { useSongDetailsService } from "../../../context/SongDetailsServiceContext";
+import { SongDetailsView } from "../../../views/SongDetailsView";
 
 export const SongSelectedScreen = () => {
   const params =
     useRoute<RouteProp<RootStackParamsList, "PlaylistSelectedScreen">>().params;
   const [isVisible, setIsVisible] = useState(false);
+  const [songDetails, setSongDetails] = useState<SongDetailsView[]>();
+  const [songKey, setSongKey] = useState("");
+  const [chordList, setChordList] = useState<string[]>([]);
+  const [notes, setNotes] = useState("");
+  const [lyricLink, setLyricLink] = useState("");
+  const [tabLink, setTabLink] = useState("");
+  const [triggerUpdate, setTriggerUpdate] = useState(false);
+
+  const userId = auth.currentUser ? auth.currentUser.uid : null;
+  const songId = params.songId;
+  const SongDetailsService = useSongDetailsService();
+
   const closeModal = () => {
-    setIsVisible(!isVisible);
+    setIsVisible(false);
   };
-  const { isRefreshing, refresh, top } = usePullRefresh();
+
+  const showToast = () => {
+    Toast.show({
+      type: "success",
+      text1: "Updated song Info successfully!",
+    });
+  };
+
+  const onCreateSongDetails = async () => {
+    try {
+      const songDetails = await SongDetailsService.setSongDetails(
+        userId,
+        songId,
+        songKey,
+        chordList,
+        notes,
+        lyricLink,
+        tabLink,
+      );
+      console.log(songDetails);
+      showToast();
+      closeModal();
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Error", "Failed to create the song. Please try again.");
+    }
+  };
+
+  
+
   return (
     <>
       <KeyboardAvoidingView
@@ -37,14 +81,14 @@ export const SongSelectedScreen = () => {
         <ScrollView
           refreshControl={
             <RefreshControl
-              refreshing={isRefreshing}
-              progressViewOffset={top}
+              // refreshing={isRefreshing}
+              // progressViewOffset={top}
               colors={[
                 globalColors.primary,
                 globalColors.terceary,
                 globalColors.primary,
               ]}
-              onRefresh={refresh}
+              // onRefresh={refresh}
             />
           }>
           <TheGreenBorder />
@@ -111,7 +155,19 @@ export const SongSelectedScreen = () => {
                 onPress={() => closeModal()}
               />
             </View>
-            <FormSongDetails />
+            <FormSongDetails
+              songKey={songKey}
+              setSongKey={setSongKey}
+              chordList={chordList}
+              setChordList={setChordList}
+              notes={notes}
+              setNotes={setNotes}
+              lyricLink={lyricLink}
+              setLyricLink={setLyricLink}
+              tabLink={tabLink}
+              setTabLink={setTabLink}
+              onCreateSongDetails={onCreateSongDetails}
+            />
           </Modal>
         </ScrollView>
       </KeyboardAvoidingView>

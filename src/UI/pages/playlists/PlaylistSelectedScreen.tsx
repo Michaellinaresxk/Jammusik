@@ -170,6 +170,7 @@ export const PlaylistSelectedScreen = () => {
                         navigation.navigate("SongSelectedScreen", {
                           title: item.title,
                           artist: item.artist,
+                          songId: item.id,
                         })
                       }
                     />
