@@ -2,8 +2,9 @@ import type SongDetails from "../domain/song/SongDetails";
 
 export class SongDetailsView {
   private constructor(
+    public readonly userId: string,
     public readonly songId: string,
-    public readonly key?: string,
+    public readonly key?: string | undefined,
     public readonly chordList?: string[],
     public readonly notes?: string,
     public readonly lyricLink?: string,
@@ -11,8 +12,10 @@ export class SongDetailsView {
   ) {}
 
   static fromDomain(songDetails: SongDetails): SongDetailsView {
-    const { songId, key, chordList, notes, lyricLink, tabLink } = songDetails;
+    const { userId, songId, key, chordList, notes, lyricLink, tabLink } =
+      songDetails;
     return new SongDetailsView(
+      userId,
       songId,
       key,
       chordList,

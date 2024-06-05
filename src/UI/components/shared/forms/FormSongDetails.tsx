@@ -1,13 +1,14 @@
-import React from "react";
-import { TextInput, View } from "react-native";
+import React, { useState } from "react";
+import { TextInput, View, Text, FlatList, StyleSheet } from "react-native";
 import { globalColors, globalFormStyles } from "../../../theme/Theme";
 import { PrimaryButton } from "../PrimaryButton";
+import Icon from "react-native-vector-icons/Ionicons";
 
 type SongDetails = {
-  key: string;
-  setKey: React.Dispatch<React.SetStateAction<string>>;
+  songKey: string;
+  setSongKey: React.Dispatch<React.SetStateAction<string>>;
   chordList: string[];
-  setChordList: React.Dispatch<React.SetStateAction<string>>;
+  setChordList: React.Dispatch<React.SetStateAction<string[]>>;
   notes: string;
   setNotes: React.Dispatch<React.SetStateAction<string>>;
   lyricLink: string;
@@ -18,8 +19,8 @@ type SongDetails = {
 };
 
 export const FormSongDetails = ({
-  key,
-  setKey,
+  songKey,
+  setSongKey,
   chordList,
   setChordList,
   notes,
@@ -30,6 +31,19 @@ export const FormSongDetails = ({
   setTabLink,
   onCreateSongDetails,
 }: SongDetails) => {
+  const [chordInput, setChordInput] = useState("");
+
+  const handleChordInput = (text: string) => {
+    setChordInput(text);
+  };
+
+  const handleSubmitEditing = () => {
+    if (chordInput.trim() !== "") {
+      setChordList(prevChordList => [...prevChordList, chordInput.trim()]);
+      setChordInput("");
+    }
+  };
+
   return (
     <View style={globalFormStyles.containerForm}>
       <View style={globalFormStyles.form}>
@@ -38,17 +52,28 @@ export const FormSongDetails = ({
             style={globalFormStyles.inputLogin}
             placeholderTextColor="#838282"
             placeholder="Key"
-            value={key}
-            onChangeText={setKey}
+            value={songKey}
+            onChangeText={setSongKey}
           />
           <TextInput
             style={globalFormStyles.inputLogin}
             placeholderTextColor="#838282"
             placeholder="Chord List"
-            value={chordList}
-            onChangeText={setChordList}
+            value={chordInput}
+            onChangeText={handleChordInput}
+            onSubmitEditing={handleSubmitEditing}
           />
-
+          <FlatList
+            data={chordList}
+            horizontal={true}
+            renderItem={({ item }) => (
+              <Text style={styles.chord}>
+                {item}{" "}
+                <Icon name="stop-sharp" color={globalColors.primary} size={5} />{" "}
+              </Text>
+            )}
+            keyExtractor={(item, index) => index.toString()}
+          />
           <TextInput
             multiline={true}
             style={{ ...globalFormStyles.inputLogin, height: 100 }}
@@ -84,3 +109,11 @@ export const FormSongDetails = ({
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  chord: {
+    fontSize: 18,
+    color: globalColors.primaryDark,
+    marginBottom: 30,
+  },
+});

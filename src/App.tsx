@@ -20,6 +20,8 @@ import { songService } from "./services/songService";
 import { SongServiceProvider } from "./context/SongServiceContext";
 import { songWithOutPlaylistService } from "./services/songWithOutPlaylist";
 import { SongWithOutPlaylistServiceProvider } from "./context/SongWithOutPlaylistContext";
+import { songDetailsService } from "./services/songDetailsService";
+import { SongDetailsServiceProvider } from "./context/SongDetailsServiceContext";
 import { SideMenuNavigator } from "./UI/routes/SideMenuNavigator";
 import { userService } from "./services/userService";
 import Toast from "react-native-toast-message";
@@ -36,6 +38,7 @@ function App(): React.JSX.Element {
           songWithOutPlaylistService={songWithOutPlaylistService}
         />,
         <SongServiceProvider songService={songService} />,
+        <SongDetailsServiceProvider songDetailsService={songDetailsService} />,
         // Add other providers here as you create them
       ]}>
       <NavigationContainer>
