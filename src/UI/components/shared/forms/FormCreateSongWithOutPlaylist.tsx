@@ -1,10 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { TextInput, View } from "react-native";
+import { ActivityIndicator, Text, TextInput, View } from "react-native";
 import { globalColors, globalFormStyles } from "../../../theme/Theme";
 import { PrimaryButton } from "../PrimaryButton";
 import { CustomDropdown } from "../CustomDropdown";
 import { useCategoryService } from "../../../../context/CategoryServiceContext";
 import { auth } from "../../../../infra/api/firebaseConfig";
+import { Formik } from "formik";
+import { validationCreateSongForm } from "./yup/validation_create_song";
 
 type SongForm = {
   categoryId: string;
@@ -13,6 +15,7 @@ type SongForm = {
   artist: string;
   setArtist: React.Dispatch<React.SetStateAction<string>>;
   onCreateSong: () => Promise<void>;
+  isLoading: boolean;
 };
 
 type DropdownItem = {
@@ -27,6 +30,7 @@ export const FormCreateSongWithOutPlaylist = ({
   artist,
   setArtist,
   onCreateSong,
+  isLoading
 }: SongForm) => {
   const categoryService = useCategoryService();
   const [categories, setCategories] = useState<DropdownItem[]>([]);
@@ -69,42 +73,61 @@ export const FormCreateSongWithOutPlaylist = ({
 
   return (
     <View style={globalFormStyles.containerForm}>
-      <View style={globalFormStyles.form}>
-        <TextInput
-          style={globalFormStyles.inputLogin}
-          placeholderTextColor="#838282"
-          placeholder="Title"
-          autoCorrect={false}
-          autoCapitalize="words"
-          value={title}
-          onChangeText={setTitle}
-        />
-        <TextInput
-          style={globalFormStyles.inputLogin}
-          placeholder="Artist"
-          autoCapitalize="words"
-          autoCorrect={false}
-          value={artist}
-          onChangeText={text => setArtist(text)}
-        />
-        {currentCategory && (
-          <CustomDropdown
-            items={[currentCategory]} // Only show the current category
-            defaultValue={currentCategory.value}
-            placeholder="Choose a category"
-            onChange={() => {}} // No-op function since it shouldn't change
-            disabled={true} // Disable the dropdown
-          />
+
+      <Formik
+        validationSchema={validationCreateSongForm}
+        initialValues={{ title: '', artist: '' }}
+        onSubmit={onCreateSong}
+
+      >
+
+        {({ values, errors, handleChange, handleSubmit, touched }) => (
+
+          <View style={globalFormStyles.form}>
+            <TextInput
+              style={globalFormStyles.inputLogin}
+              placeholderTextColor="#838282"
+              placeholder="Title"
+              autoCorrect={false}
+              autoCapitalize="words"
+              value={values.title}
+              onChangeText={handleChange('title')}
+            />
+            {errors.title && touched.title ? <Text style={{ color: 'red', marginBottom: 5 }}>{errors.title}</Text> : null}
+
+            <TextInput
+              style={globalFormStyles.inputLogin}
+              placeholder="Artist"
+              placeholderTextColor="#838282"
+
+              autoCapitalize="words"
+              autoCorrect={false}
+              value={values.artist}
+              onChangeText={handleChange('artist')}
+            />
+            {errors.artist && touched.artist ? <Text style={{ color: 'red', marginBottom: 5 }}>{errors.artist}</Text> : null}
+
+            {currentCategory && (
+              <CustomDropdown
+                items={[currentCategory]} // Only show the current category
+                defaultValue={currentCategory.value}
+                placeholder="Choose a category"
+                onChange={() => { }} // No-op function since it shouldn't change
+                disabled={true} // Disable the dropdown
+              />
+            )}
+            <PrimaryButton
+              label={!isLoading ? "Create A New Song" : <ActivityIndicator size={'large'} />}
+              bgColor={globalColors.primary}
+              borderRadius={5}
+              colorText={globalColors.light}
+              btnFontSize={20}
+              onPress={handleSubmit}
+            />
+          </View>
         )}
-        <PrimaryButton
-          label="Create A New Song"
-          bgColor={globalColors.primary}
-          borderRadius={5}
-          colorText={globalColors.light}
-          btnFontSize={20}
-          onPress={onCreateSong}
-        />
-      </View>
+
+      </Formik>
     </View>
   );
 };

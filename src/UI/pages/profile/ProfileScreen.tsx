@@ -89,7 +89,9 @@ export const ProfileScreen = () => {
   };
 
   const updateUserInfoProfile = async (userInfo: UserInfo) => {
-    const { location, skills, instrument } = userInfo;
+
+
+    const { location, skills, instrument, userId } = userInfo;
 
     if (location && skills && instrument) {
       // Check to avoid undefined values

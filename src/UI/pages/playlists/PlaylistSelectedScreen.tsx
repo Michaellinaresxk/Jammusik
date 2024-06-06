@@ -47,14 +47,19 @@ export const PlaylistSelectedScreen = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [triggerUpdate, setTriggerUpdate] = useState(false);
   const [currentSongId, setCurrentSongId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false)
 
-  const handleCreateSong = async () => {
+  const handleCreateSong = async (values) => {
+    const { title, artist } = values
+
     try {
+      setIsLoading(true)
       await songService.createSong(categoryId, playlistId, title, artist);
       setCategoryId("");
       setTitle("");
       setArtist("");
       setTriggerUpdate(true);
+      setIsLoading(false)
 
       closeModal();
     } catch (error) {
@@ -156,7 +161,7 @@ export const PlaylistSelectedScreen = () => {
                 <Swipeable
                   renderRightActions={() => swipeRightActions(item.id)}
                   onSwipeableWillOpen={() => setCurrentSongId(item.id)}>
-                  <View>
+                  <View style={{ paddingHorizontal: 15 }}>
                     <SongCard
                       resetToggle={resetToggle}
                       title={item.title}
@@ -191,7 +196,7 @@ export const PlaylistSelectedScreen = () => {
         visible={isVisible}
         animationType="slide"
         presentationStyle="formSheet">
-        <View style={styles.modalBtnContainer}>
+        <View style={[styles.modalBtnContainer, { paddingRight: 25 }]}>
           <Text style={styles.modalFormHeaderTitle}>Add Song Info</Text>
           <PrimaryButton
             label="Close"
@@ -208,6 +213,7 @@ export const PlaylistSelectedScreen = () => {
           categoryId={categoryId}
           setCategoryId={setCategoryId}
           onCreateSong={handleCreateSong}
+          isLoading={isLoading}
         />
       </Modal>
     </>

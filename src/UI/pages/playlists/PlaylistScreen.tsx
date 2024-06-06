@@ -35,7 +35,7 @@ export const PlaylistScreen = () => {
   const playlistService = usePlaylistService();
   const [playlists, setPlaylists] = useState<PlaylistView[]>([]);
   const [triggerUpdate, setTriggerUpdate] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false)
   const [title, setTitle] = useState("");
   const [isVisible, setIsVisible] = useState(false);
 
@@ -74,11 +74,15 @@ export const PlaylistScreen = () => {
     });
   };
 
-  const handleCreatePlaylist = async () => {
+  const handleCreatePlaylist = async (values: any) => {
+    const { title } = values
     console.log("creando playlist");
+    setIsLoading(true)
     await playlistService.createPlaylist(title);
     setTitle("");
     setTriggerUpdate(true);
+    setIsLoading(false)
+
     closeModal();
   };
 
@@ -186,6 +190,7 @@ export const PlaylistScreen = () => {
               title={title}
               setTitle={setTitle}
               onCreatePlaylist={handleCreatePlaylist}
+              isLoading={isLoading}
             />
           </Modal>
         </ScrollView>
@@ -236,7 +241,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 25,
     fontWeight: "bold",
-    color: globalColors.primaryDark,
+    color: globalColors.primaryDark
   },
   playlistCardContainer: {
     flex: 1,

@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { Text, TextInput, View } from "react-native";
+import React, { useState } from "react";
+import { ActivityIndicator, Text, TextInput, View } from "react-native";
 import { globalColors, globalFormStyles } from "../../../theme/Theme";
 import { PrimaryButton } from "../PrimaryButton";
 import { CustomDropdown } from "../CustomDropdown";
 import RadioButton from "../RadioButton";
 import { UserInfo } from "../../../../types/formTypes";
+import { Formik } from "formik";
+import { validationProfileForm } from "./yup/validation_profile_form";
 
-type ProfileFormProps = {
+type ProfileForm = {
   email: string;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
   name: string;
@@ -17,9 +19,8 @@ type ProfileFormProps = {
   setLocation: React.Dispatch<React.SetStateAction<string>>;
   selectedSkill: string;
   setSelectedSkill: React.Dispatch<React.SetStateAction<string>>;
-  selectedInstrumentId: string;
-  setSelectedInstrumentId: React.Dispatch<React.SetStateAction<string>>;
   onProfile: (userInfo: UserInfo) => Promise<void>;
+  isLoading: boolean;
 };
 
 export const FormProfile = ({
@@ -33,10 +34,9 @@ export const FormProfile = ({
   setLocation,
   selectedSkill,
   setSelectedSkill,
-  selectedInstrumentId,
-  setSelectedInstrumentId,
+  isLoading,
   onProfile,
-}: ProfileFormProps) => {
+}: ProfileForm) => {
   const instruments = [
     { name: "Bass", id: "1" },
     { name: "Drums", id: "2" },
@@ -50,21 +50,21 @@ export const FormProfile = ({
     { label: "Dj", value: "dj" },
     { label: "Producer", value: "producer" },
   ];
-
   const dropdownInstruments = instruments.map(instrument => ({
     label: instrument.name,
     value: instrument.id,
   }));
 
-  useEffect(() => {
-    if (!selectedInstrumentId) {
-      setSelectedInstrumentId(dropdownInstruments[0].value);
-    }
-  }, [dropdownInstruments, selectedInstrumentId]);
+  const [selectedInstrumentId, setSelectedInstrumentId] = useState(
+    dropdownInstruments[0].value,
+  );
+
+
 
   return (
     <View style={globalFormStyles.containerForm}>
       <Text style={globalFormStyles.labelTitle}>General Information:</Text>
+
 
       <View style={globalFormStyles.form}>
         <View>
@@ -73,30 +73,35 @@ export const FormProfile = ({
             placeholderTextColor="#838282"
             placeholder="Name"
             value={name}
-            onChangeText={setName}
+            onChangeText={text => setName(text)}
           />
+
           <TextInput
             style={globalFormStyles.inputLogin}
             placeholderTextColor="#838282"
             keyboardType="email-address"
             placeholder="Email"
             value={email}
-            onChangeText={setEmail}
+            onChangeText={text => setEmail(text)}
           />
+
           <TextInput
             style={globalFormStyles.inputLogin}
             placeholder="userId"
             value={userId}
             placeholderTextColor="#838282"
-            onChangeText={setUserId}
+            onChangeText={text => setUserId(text)}
           />
+
           <TextInput
             style={globalFormStyles.inputLogin}
             placeholder="Location"
             value={location}
             placeholderTextColor="#838282"
-            onChangeText={setLocation}
+            onChangeText={text => setLocation(text)}
           />
+
+
           <View style={globalFormStyles.radioButtonContainer}>
             <Text style={globalFormStyles.radioButtonTitle}>Skills</Text>
             <RadioButton
@@ -104,36 +109,32 @@ export const FormProfile = ({
               setSelectedSkill={setSelectedSkill}
               selectedSkill={selectedSkill}
             />
+
+
           </View>
-          <Text style={globalFormStyles.radioButtonTitle}>Instrument</Text>
           <CustomDropdown
             items={dropdownInstruments}
             defaultValue={selectedInstrumentId}
             placeholder="Choose an instrument"
-            onChange={value => {
-              console.log("Selected Instrument:", value);
-              setSelectedInstrumentId(value);
-            }}
+            onChange={setSelectedInstrumentId}
           />
         </View>
         <View style={{ marginTop: 20 }}>
           <PrimaryButton
-            label="Save Changes"
+            label={"Save Changes"}
             bgColor={globalColors.primary}
             borderRadius={5}
-            colorText={globalColors.secondary}
+            colorText={globalColors.light}
             btnFontSize={20}
-            onPress={() =>
-              onProfile({
-                userId,
-                location,
-                skills: selectedSkill,
-                instrument: selectedInstrumentId,
-              })
-            }
+            onPress={onProfile}
           />
         </View>
       </View>
+
+
+
+
+
     </View>
   );
 };

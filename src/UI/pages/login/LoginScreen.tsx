@@ -1,4 +1,4 @@
-import { ImageBackground, StyleSheet, Text, View } from "react-native";
+import { Alert, ImageBackground, StyleSheet, Text, View } from "react-native";
 import { globalColors, globalStyles } from "../../theme/Theme";
 import { Formlogin } from "../../components/shared/forms/FormLogin";
 import { images } from "../../../assets/img/Images";
@@ -11,6 +11,8 @@ import { useNavigation } from "@react-navigation/native";
 export const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false)
+
 
   const userService = useUserService();
   const navigation = useNavigation();
@@ -19,14 +21,29 @@ export const LoginScreen = () => {
     uri: images.loginBackground,
   };
 
-  const handleLogin = async () => {
-    console.log(email, password);
-    const res = await userService.loginUser(email, password);
+  const handleLogin = async (values) => {
+    const { email, password } = values
 
-    console.log(res);
-    setEmail("");
-    setPassword("");
-    navigation.navigate("HomeScreen");
+    try {
+      setIsLoading(true)
+
+      const res = await userService.loginUser(email, password);
+
+
+
+      setEmail("");
+      setPassword("");
+      navigation.navigate("HomeScreen");
+      setIsLoading(false)
+
+
+    } catch (error) {
+      console.log(error)
+      setIsLoading(false)
+
+    }
+
+
   };
 
   return (
@@ -38,12 +55,14 @@ export const LoginScreen = () => {
           </View>
           <Text style={styles.labelTitle}>Log In</Text>
           <View style={styles.containerForm}>
+
             <Formlogin
               email={email}
               setEmail={setEmail}
               password={password}
               setPassword={setPassword}
-              onLogin={() => handleLogin()}
+              onLogin={handleLogin}
+              isLoading={isLoading}
             />
             <LinkLoginRegister
               text="Not a member yet?"

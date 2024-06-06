@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { TextInput, View } from "react-native";
+import { TextInput, View, Text, ActivityIndicator } from "react-native";
 import { globalColors, globalFormStyles } from "../../../theme/Theme";
 import { PrimaryButton } from "../PrimaryButton";
 import { CustomDropdown } from "../CustomDropdown";
 import { useCategoryService } from "../../../../context/CategoryServiceContext";
 import { auth } from "../../../../infra/api/firebaseConfig";
+import { Formik } from "formik";
+import { validationCreateSongForm } from "./yup/validation_create_song";
 
 type SongForm = {
   categoryId: string;
@@ -14,6 +16,7 @@ type SongForm = {
   artist: string;
   setArtist: React.Dispatch<React.SetStateAction<string>>;
   onCreateSong: () => Promise<void>;
+  isLoading: boolean
 };
 
 type DropdownItem = {
@@ -28,7 +31,7 @@ export const FormCreateSong = ({
   setTitle,
   artist,
   setArtist,
-  onCreateSong,
+  onCreateSong, isLoading
 }: SongForm) => {
   const categoryService = useCategoryService();
   const [categories, setCategories] = useState<DropdownItem[]>([]);
@@ -55,41 +58,60 @@ export const FormCreateSong = ({
 
   return (
     <View style={globalFormStyles.containerForm}>
-      <View style={globalFormStyles.form}>
-        <TextInput
-          style={globalFormStyles.inputLogin}
-          placeholderTextColor="#838282"
-          placeholder="Title"
-          autoCorrect={false}
-          autoCapitalize="words"
-          value={title}
-          onChangeText={setTitle}
-        />
-        <TextInput
-          style={globalFormStyles.inputLogin}
-          placeholder="Artist"
-          autoCapitalize="words"
-          autoCorrect={false}
-          value={artist}
-          onChangeText={text => setArtist(text)}
-        />
-        {categories.length > 0 && (
-          <CustomDropdown
-            items={categories}
-            defaultValue={categoryId || categories[0].value}
-            placeholder="Choose a category"
-            onChange={handleCategoryChange}
-          />
-        )}
-        <PrimaryButton
-          label="Create A New Song"
-          bgColor={globalColors.primary}
-          borderRadius={5}
-          colorText={globalColors.light}
-          btnFontSize={20}
-          onPress={onCreateSong}
-        />
-      </View>
-    </View>
+
+      <Formik
+
+        validationSchema={validationCreateSongForm}
+        initialValues={{ title: '', artist: '' }}
+        onSubmit={onCreateSong}
+
+      >
+
+
+        {({ values, errors, handleChange, handleSubmit, touched }) => (
+
+          <View style={globalFormStyles.form}>
+            <TextInput
+              style={globalFormStyles.inputLogin}
+              placeholderTextColor="#838282"
+              placeholder="Title"
+              autoCorrect={false}
+              autoCapitalize="words"
+              value={values.title}
+              onChangeText={handleChange('title')}
+            />
+
+            {errors.title && touched.title ? <Text style={{ color: 'red', marginBottom: 5 }}>{errors.title}</Text> : null}
+            <TextInput
+              style={globalFormStyles.inputLogin}
+              placeholder="Artist"
+              placeholderTextColor={'gray'}
+              autoCapitalize="words"
+              autoCorrect={false}
+              value={values.artist}
+              onChangeText={handleChange('artist')}
+            />
+            {errors.artist && touched.artist ? <Text style={{ color: 'red', marginBottom: 5 }}>{errors.artist}</Text> : null}
+
+            {categories.length > 0 && (
+              <CustomDropdown
+                items={categories}
+                defaultValue={categoryId || categories[0].value}
+                placeholder="Choose a category"
+                onChange={handleCategoryChange}
+              />
+            )}
+            <PrimaryButton
+              label={!isLoading ? "Create A New Song" : <ActivityIndicator size={'large'} />}
+              bgColor={globalColors.primary}
+              borderRadius={5}
+              colorText={globalColors.light}
+              btnFontSize={20}
+              onPress={handleSubmit}
+            />
+          </View>)}
+
+      </Formik>
+    </View >
   );
 };

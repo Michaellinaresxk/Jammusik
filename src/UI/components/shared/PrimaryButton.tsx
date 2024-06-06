@@ -29,6 +29,7 @@ export const PrimaryButton = ({
         backgroundColor: bgColor,
         opacity: pressed ? 0.8 : 1,
         borderRadius: borderRadius ? borderRadius : 0,
+        height: 60
       })}
       onPress={() => onPress()}>
       <Text

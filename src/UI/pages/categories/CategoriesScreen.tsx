@@ -37,6 +37,7 @@ export const CategoriesScreen = () => {
   const [triggerUpdate, setTriggerUpdate] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [title, setTitle] = useState("");
+  const [isLoading, setIsLoading] = useState(false)
 
   const loadCategories = useCallback(async () => {
     const user = auth.currentUser;
@@ -66,14 +67,17 @@ export const CategoriesScreen = () => {
     setIsVisible(!isVisible);
   };
 
-  const handleCreateCategory = async () => {
+  const handleCreateCategory = async (values) => {
+    const { title } = values
     const user = auth.currentUser;
     if (user) {
       const userId = user.uid;
       console.log("Creating category...");
+      setIsLoading(true)
       await categoryService.createCategory(userId, title);
       setTitle("");
       setTriggerUpdate(true); // Trigger the update to reload categories
+      setIsLoading(false)
       closeModal();
     }
   };
@@ -183,6 +187,7 @@ export const CategoriesScreen = () => {
                   title={title}
                   setTitle={setTitle}
                   onCreateCategory={handleCreateCategory}
+                  isLoading={isLoading}
                 />
               </Modal>
             </View>

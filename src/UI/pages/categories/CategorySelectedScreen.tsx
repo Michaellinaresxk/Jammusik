@@ -14,6 +14,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  useWindowDimensions,
 } from "react-native";
 import { GlobalHeader } from "../../components/shared/GlobalHeader";
 import { Swipeable } from "react-native-gesture-handler";
@@ -56,10 +57,12 @@ export const CategorySelectedScreen = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [triggerUpdate, setTriggerUpdate] = useState(false);
   const [currentSongId, setCurrentSongId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false)
 
   const categoryId = params.id as string;
 
   const [resetToggle, setResetToggle] = useState(false);
+  const valueWidth = useWindowDimensions().width - 10
 
   const handleResetSongs = () => {
     setResetToggle(prev => !prev);
@@ -95,8 +98,11 @@ export const CategorySelectedScreen = () => {
     setIsVisible(!isVisible);
   };
 
-  const handleCreateSongWithOutPlaylist = async () => {
+  const handleCreateSongWithOutPlaylist = async (values) => {
     try {
+      const { title, artist } = values
+
+      setIsLoading(true)
       await songWithOutPlaylistService.createSongWithOutPlaylist(
         userId,
         categoryId,
@@ -106,6 +112,8 @@ export const CategorySelectedScreen = () => {
       setTitle("");
       setArtist("");
       setTriggerUpdate(prev => !prev);
+      setIsLoading(false)
+
       closeModal();
     } catch (error) {
       console.error("Failed to create song:", error);
@@ -198,7 +206,7 @@ export const CategorySelectedScreen = () => {
                         swipeRightActions(item.id, false)
                       }
                       onSwipeableWillOpen={() => setCurrentSongId(item.id)}>
-                      <View>
+                      <View style={{ paddingHorizontal: 5, width: valueWidth }}>
                         <SongCard
                           resetToggle={resetToggle}
                           title={item.title}
@@ -250,7 +258,7 @@ export const CategorySelectedScreen = () => {
                         swipeRightActions(item.id, true)
                       }
                       onSwipeableWillOpen={() => setCurrentSongId(item.id)}>
-                      <View>
+                      <View style={{ paddingHorizontal: 5, width: valueWidth }}>
                         <SongCard
                           resetToggle={resetToggle}
                           title={item.title}
@@ -289,7 +297,7 @@ export const CategorySelectedScreen = () => {
         visible={isVisible}
         animationType="slide"
         presentationStyle="formSheet">
-        <View style={styles.modalBtnContainer}>
+        <View style={[styles.modalBtnContainer, { paddingRight: 30 }]}>
           <Text style={styles.modalFormHeaderTitle}>Add Song Info</Text>
           <PrimaryButton
             label="Close"
@@ -305,6 +313,7 @@ export const CategorySelectedScreen = () => {
           setArtist={setArtist}
           categoryId={categoryId}
           onCreateSong={handleCreateSongWithOutPlaylist}
+          isLoading={isLoading}
         />
       </Modal>
     </>
