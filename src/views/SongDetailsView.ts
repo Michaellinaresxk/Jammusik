@@ -1,5 +1,4 @@
-import type SongDetails from "../domain/song/SongDetails";
-
+import type SongDetails from "../domain/songDetails/SongDetails";
 export class SongDetailsView {
   private constructor(
     public readonly userId: string,
@@ -10,7 +9,6 @@ export class SongDetailsView {
     public readonly lyricLink?: string,
     public readonly tabLink?: string,
   ) {}
-
   static fromDomain(songDetails: SongDetails): SongDetailsView {
     const { userId, songId, key, chordList, notes, lyricLink, tabLink } =
       songDetails;

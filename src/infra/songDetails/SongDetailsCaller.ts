@@ -1,3 +1,4 @@
+import { getDocs, query, where } from "firebase/firestore";
 import type { ApiSongDetails } from "./ApiSongDetails";
 import { getFirestore, addDoc, collection } from "@firebase/firestore";
 
@@ -51,5 +52,31 @@ export class SongDetailsCaller {
       id: songDetailsRef.id,
       ...cleanedSongData,
     };
+  }
+
+  async getCurrentSongInfo(
+    userId: string,
+    songId: string,
+  ): Promise<ApiSongDetails | null> {
+    if (!userId || !songId) {
+      throw new Error("User ID and Song ID must be provided!");
+    }
+    try {
+      const songDetailsCollection = collection(this.db, "songDetails");
+      const songDetailsQuery = query(
+        songDetailsCollection,
+        where("userId", "==", userId),
+        where("songId", "==", songId),
+      );
+      const querySnapshot = await getDocs(songDetailsQuery);
+      if (querySnapshot.empty) {
+        return null;
+      }
+      const doc = querySnapshot.docs[0];
+      return { id: doc.id, ...doc.data() } as unknown as ApiSongDetails;
+    } catch (error) {
+      console.error("Error fetching song details:", error);
+      throw error;
+    }
   }
 }

@@ -8,6 +8,7 @@ import {
   StyleSheet,
   View,
   Alert,
+  FlatList,
 } from "react-native";
 import { GlobalHeader } from "../../components/shared/GlobalHeader";
 import { FloatingActionButton } from "../../components/shared/FloatingActionButton";
@@ -24,7 +25,6 @@ import Toast from "react-native-toast-message";
 import { auth } from "../../../infra/api/firebaseConfig";
 import { useSongDetailsService } from "../../../context/SongDetailsServiceContext";
 import { SongDetailsView } from "../../../views/SongDetailsView";
-
 export const SongSelectedScreen = () => {
   const params =
     useRoute<RouteProp<RootStackParamsList, "PlaylistSelectedScreen">>().params;
@@ -36,25 +36,23 @@ export const SongSelectedScreen = () => {
   const [lyricLink, setLyricLink] = useState("");
   const [tabLink, setTabLink] = useState("");
   const [triggerUpdate, setTriggerUpdate] = useState(false);
-
-  const userId = auth.currentUser ? auth.currentUser.uid : null;
+  const [hasSavedData, setHasSavedData] = useState(false);
+  const userId = auth.currentUser ? auth.currentUser.uid : "";
   const songId = params.songId;
-  const SongDetailsService = useSongDetailsService();
-
+  const songDetailsService = useSongDetailsService();
+  console.log("UserID:", userId, "SongID:", songId);
   const closeModal = () => {
     setIsVisible(false);
   };
-
   const showToast = () => {
     Toast.show({
       type: "success",
       text1: "Updated song Info successfully!",
     });
   };
-
   const onCreateSongDetails = async () => {
     try {
-      const songDetails = await SongDetailsService.setSongDetails(
+      const songDetails = await songDetailsService.setSongDetails(
         userId,
         songId,
         songKey,
@@ -66,14 +64,63 @@ export const SongSelectedScreen = () => {
       console.log(songDetails);
       showToast();
       closeModal();
+      setHasSavedData(true);
+      setTriggerUpdate(true); // Actualizar datos después de crear/actualizar
     } catch (error) {
       console.error(error);
       Alert.alert("Error", "Failed to create the song. Please try again.");
     }
   };
-
-  
-
+  const loadSongDetails = useCallback(async () => {
+    if (!userId || !songId) {
+      console.error("userId or songId is undefined or empty!");
+      return;
+    }
+    try {
+      const fetchedSongDetails = await songDetailsService.getSongDetails(
+        userId,
+        songId,
+      );
+      if (fetchedSongDetails) {
+        setSongDetails(fetchedSongDetails);
+        setSongKey(fetchedSongDetails.key || "");
+        setChordList(fetchedSongDetails.chordList || []);
+        setNotes(fetchedSongDetails.notes || "");
+        setLyricLink(fetchedSongDetails.lyricLink || "");
+        setTabLink(fetchedSongDetails.tabLink || "");
+        setHasSavedData(true); // Indicar que los datos han sido recuperados
+      } else {
+        setSongDetails(null);
+        setSongKey("");
+        setChordList([]);
+        setNotes("");
+        setLyricLink("");
+        setTabLink("");
+      }
+      console.log("Fetched Song Details:", fetchedSongDetails);
+    } catch (error) {
+      if (hasSavedData) {
+        // Solo mostrar el error si ya se ha intentado guardar datos previamente
+        console.error("Failed to fetch songDetails:", error);
+        Alert.alert("Error", "Failed to fetch song details.");
+      }
+    }
+  }, [userId, songId, songDetailsService, hasSavedData]);
+  useEffect(() => {
+    loadSongDetails();
+  }, [loadSongDetails]);
+  useEffect(() => {
+    if (triggerUpdate) {
+      loadSongDetails();
+      setTriggerUpdate(false);
+    }
+  }, [triggerUpdate, loadSongDetails]);
+  const { isRefreshing, refresh, top } = usePullRefresh(loadSongDetails);
+  const renderChordItem = ({ item }: { item: string }) => (
+    <View style={styles.chordConntent}>
+      <Text style={styles.chord}>{item}</Text>
+    </View>
+  );
   return (
     <>
       <KeyboardAvoidingView
@@ -81,14 +128,14 @@ export const SongSelectedScreen = () => {
         <ScrollView
           refreshControl={
             <RefreshControl
-              // refreshing={isRefreshing}
-              // progressViewOffset={top}
+              refreshing={isRefreshing}
+              progressViewOffset={top}
               colors={[
                 globalColors.primary,
                 globalColors.terceary,
                 globalColors.primary,
               ]}
-              // onRefresh={refresh}
+              onRefresh={refresh}
             />
           }>
           <TheGreenBorder />
@@ -111,35 +158,31 @@ export const SongSelectedScreen = () => {
             <View style={styles.container}>
               <Text style={styles.title}>Key:</Text>
               <View style={styles.titleContent}>
-                <Text style={styles.category}>F#</Text>
+                <Text style={styles.category}>{songKey}</Text>
               </View>
             </View>
           </View>
-
-          <View style={styles.chordLayout}>
-            <Text style={styles.title}>Chords:</Text>
-            <View style={styles.chordConntent}>
-              <Text style={styles.chord}>Fa</Text>
-              <Text style={styles.chord}>Fa</Text>
-              <Text style={styles.chord}>Fa</Text>
-            </View>
-          </View>
-
           <View style={styles.notesContent}>
             <Text style={styles.title}>Notes:</Text>
-            <Text style={{ ...styles.category, marginTop: 10 }}>
-              Stop after the first
-              chorusadfaasdfa;lsdkfjas;dlfkajs;dlfkaj;aldskfjasl
-            </Text>
+            <Text style={{ ...styles.category, marginTop: 10 }}>{notes}</Text>
+          </View>
+          <View style={styles.chordLayout}>
+            <Text style={styles.title}>Chords:</Text>
+            <FlatList
+              data={chordList}
+              renderItem={renderChordItem}
+              keyExtractor={(item, index) => index.toString()}
+              horizontal
+            />
           </View>
           <View style={styles.linksContent}>
             <View style={{ ...styles.container, marginBottom: 30 }}>
               <Text style={styles.title}>Lyric link:</Text>
-              <Text style={styles.links}>Acordes.com</Text>
+              <Text style={styles.links}>{lyricLink}</Text>
             </View>
             <View style={styles.container}>
               <Text style={styles.title}>Tab link: </Text>
-              <Text style={styles.links}>Acordes.com</Text>
+              <Text style={styles.links}>{tabLink}</Text>
             </View>
           </View>
           <Modal
@@ -174,7 +217,6 @@ export const SongSelectedScreen = () => {
     </>
   );
 };
-
 const styles = StyleSheet.create({
   layout: {
     padding: 30,
@@ -202,9 +244,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   chordLayout: {
+    marginTop: 30,
     padding: 30,
     width: "100%",
-    marginBottom: 15,
   },
   chordConntent: {
     flexDirection: "row",
@@ -214,8 +256,10 @@ const styles = StyleSheet.create({
   chord: {
     color: globalColors.primary,
     backgroundColor: globalColors.primaryAlt,
-    fontSize: 18,
+    fontSize: 15,
     padding: 10,
+    marginRight: 10,
+    borderRadius: 5,
   },
   category: {
     color: globalColors.primary,
@@ -232,7 +276,6 @@ const styles = StyleSheet.create({
     color: globalColors.primary,
   },
   linksContent: {
-    marginTop: 30,
     marginBottom: 30,
     padding: 30,
   },
