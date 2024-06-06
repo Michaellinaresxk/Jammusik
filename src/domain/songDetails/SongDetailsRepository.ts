@@ -11,5 +11,5 @@ export default interface SongDetailsRepository {
     instrument?: string,
   ): Promise<SongDetails>;
 
-  // getCurrentSongInfo(userId: string, songId: string): Promise<SongDetails>;
+  getCurrentSongInfo(userId: string, songId: string): Promise<SongDetails>;
 }

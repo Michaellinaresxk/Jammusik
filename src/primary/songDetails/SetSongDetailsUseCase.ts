@@ -1,10 +1,8 @@
 import { SongDetailsResource } from "../../infra/songDetails/SongDetailsResource";
 import type { UseCase } from "../../primary/UseCase";
 import { SongDetailsView } from "../../views/SongDetailsView";
-
 export class SetSongDetailsUseCase implements UseCase {
   constructor(private songDetailsResource: SongDetailsResource) {}
-
   async execute(
     userId: string,
     songId: string,
@@ -24,7 +22,6 @@ export class SetSongDetailsUseCase implements UseCase {
         lyricLink,
         tabLink,
       );
-
       return SongDetailsView.fromDomain(songDetails);
     } catch (err) {
       console.log(err);

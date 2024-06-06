@@ -34,4 +34,26 @@ export class SongDetailsResource implements SongDetailsRepository {
       apiSong.tabLink,
     );
   }
+  async getCurrentSongInfo(
+    userId: string,
+    songId: string,
+  ): Promise<SongDetails> {
+    const apiSongDetails = await this.songDetailsCaller.getCurrentSongInfo(
+      userId,
+      songId,
+    );
+    if (apiSongDetails) {
+      return new SongDetails(
+        apiSongDetails.userId,
+        apiSongDetails.songId,
+        apiSongDetails.key,
+        apiSongDetails.chordList,
+        apiSongDetails.notes,
+        apiSongDetails.lyricLink,
+        apiSongDetails.tabLink,
+      );
+    } else {
+      return null;
+    }
+  }
 }
