@@ -1,7 +1,8 @@
-import type { SongDetailsProperties } from "../../types/properties";
+import { SongDetailsProperties } from "../../types/properties";
 
 class SongDetails {
   constructor(
+    public readonly userId: string,
     public readonly songId: string,
     public readonly key?: string | undefined,
     public readonly chordList?: string[],
@@ -11,11 +12,21 @@ class SongDetails {
   ) {}
 
   static fromProperties(properties: SongDetailsProperties) {
-    const { songId, key, chordList, notes, lyricLink, tabLink } = properties;
-    return new SongDetails(songId, key, chordList, notes, lyricLink, tabLink);
+    const { userId, songId, key, chordList, notes, lyricLink, tabLink } =
+      properties;
+    return new SongDetails(
+      userId,
+      songId,
+      key,
+      chordList,
+      notes,
+      lyricLink,
+      tabLink,
+    );
   }
   get properties(): SongDetailsProperties {
     return Object.freeze({
+      userId: this.userId,
       songId: this.songId,
       key: this.key,
       chordList: this.chordList,

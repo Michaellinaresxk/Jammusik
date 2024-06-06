@@ -19,7 +19,6 @@ export const SongCard = ({
   resetToggle,
 }: Props) => {
   const [isDone, setIsDone] = useState(false);
-
   useEffect(() => {
     setIsDone(false);
   }, [resetToggle]);

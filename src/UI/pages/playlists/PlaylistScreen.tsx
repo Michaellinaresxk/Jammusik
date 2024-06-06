@@ -74,7 +74,7 @@ export const PlaylistScreen = () => {
     });
   };
 
-  const handleCreatePlaylist = async (values) => {
+  const handleCreatePlaylist = async (values: any) => {
     const { title } = values
     console.log("creando playlist");
     setIsLoading(true)

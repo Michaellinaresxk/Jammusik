@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { TextInput, View, Text } from "react-native";
+import { TextInput, View, Text, ActivityIndicator } from "react-native";
 import { globalColors, globalFormStyles } from "../../../theme/Theme";
 import { PrimaryButton } from "../PrimaryButton";
 import { CustomDropdown } from "../CustomDropdown";
@@ -16,6 +16,7 @@ type SongForm = {
   artist: string;
   setArtist: React.Dispatch<React.SetStateAction<string>>;
   onCreateSong: () => Promise<void>;
+  isLoading: boolean
 };
 
 type DropdownItem = {
@@ -30,7 +31,7 @@ export const FormCreateSong = ({
   setTitle,
   artist,
   setArtist,
-  onCreateSong,
+  onCreateSong, isLoading
 }: SongForm) => {
   const categoryService = useCategoryService();
   const [categories, setCategories] = useState<DropdownItem[]>([]);
@@ -101,7 +102,7 @@ export const FormCreateSong = ({
               />
             )}
             <PrimaryButton
-              label="Create A New Song"
+              label={!isLoading ? "Create A New Song" : <ActivityIndicator size={'large'} />}
               bgColor={globalColors.primary}
               borderRadius={5}
               colorText={globalColors.light}

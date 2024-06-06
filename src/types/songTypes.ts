@@ -22,6 +22,7 @@ export interface SongCard {
 }
 
 export interface SongDetails {
+  userId: string;
   songId: string;
   key?: string;
   chordList?: string[];

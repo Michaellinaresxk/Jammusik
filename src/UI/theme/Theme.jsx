@@ -30,11 +30,11 @@ export const globalFormStyles = StyleSheet.create({
     fontSize: 18,
     textAlign: "center",
     marginBottom: 30,
-    color: globalColors.secondary,
+    color: globalColors.light,
   },
 
   form: {
-    width: "90%",
+    width: "95%",
     padding: 10,
     alignSelf: "center",
     marginTop: 20,

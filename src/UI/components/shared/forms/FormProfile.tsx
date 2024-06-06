@@ -59,102 +59,81 @@ export const FormProfile = ({
     dropdownInstruments[0].value,
   );
 
-  const onSelect = value => {
-    console.log("Selected:", value);
-  };
+
 
   return (
     <View style={globalFormStyles.containerForm}>
       <Text style={globalFormStyles.labelTitle}>General Information:</Text>
-      <Formik
-        validationSchema={validationProfileForm}
-        initialValues={{ name: '', email: '', location: '', selectedSkill: '', userId, selectedInstrumentId: '' }}
 
-        onSubmit={values => console.log(values)}
 
-      >
-        {({ values, errors, handleChange, handleSubmit, touched }) => (
+      <View style={globalFormStyles.form}>
+        <View>
+          <TextInput
+            style={globalFormStyles.inputLogin}
+            placeholderTextColor="#838282"
+            placeholder="Name"
+            value={name}
+            onChangeText={text => setName(text)}
+          />
 
-          <View style={globalFormStyles.form}>
-            <View>
-              <TextInput
-                style={globalFormStyles.inputLogin}
-                placeholderTextColor="#838282"
-                placeholder="Name"
-                value={values.name}
-                onChangeText={handleChange('name')}
-              />
-              {errors.name && touched.name ?
-                (
-                  <Text style={{ color: 'red' }}>{errors.name}</Text>
-                ) : null}
-              <TextInput
-                style={globalFormStyles.inputLogin}
-                placeholderTextColor="#838282"
-                keyboardType="email-address"
-                placeholder="Email"
-                value={email}
-                onChangeText={handleChange('email')}
-              />
-              {errors.email && touched.email ?
-                (
-                  <Text style={{ color: 'red' }}>{errors.email}</Text>
-                ) : null}
-              <TextInput
-                style={globalFormStyles.inputLogin}
-                placeholder="userId"
-                value={userId}
-                placeholderTextColor="#838282"
-                onChangeText={text => setUserId(text)}
-              />
+          <TextInput
+            style={globalFormStyles.inputLogin}
+            placeholderTextColor="#838282"
+            keyboardType="email-address"
+            placeholder="Email"
+            value={email}
+            onChangeText={text => setEmail(text)}
+          />
 
-              <TextInput
-                style={globalFormStyles.inputLogin}
-                placeholder="Location"
-                value={values.location}
-                placeholderTextColor="#838282"
-                onChangeText={handleChange('location')}
-              />
-              {errors.location && touched.location ?
-                (
-                  <Text style={{ color: 'red' }}>{errors.location}</Text>
-                ) : null}
+          <TextInput
+            style={globalFormStyles.inputLogin}
+            placeholder="userId"
+            value={userId}
+            placeholderTextColor="#838282"
+            onChangeText={text => setUserId(text)}
+          />
 
-              <View style={globalFormStyles.radioButtonContainer}>
-                <Text style={globalFormStyles.radioButtonTitle}>Skills</Text>
-                <RadioButton
-                  options={options}
-                  setSelectedSkill={handleChange('selectedSkill')}
-                  selectedSkill={values.selectedSkill}
-                />
-                {errors.selectedSkill && touched.selectedSkill ?
-                  (
-                    <Text style={{ color: 'red' }}>{errors.selectedSkill}</Text>
-                  ) : null}
+          <TextInput
+            style={globalFormStyles.inputLogin}
+            placeholder="Location"
+            value={location}
+            placeholderTextColor="#838282"
+            onChangeText={text => setLocation(text)}
+          />
 
-              </View>
-              <CustomDropdown
-                items={dropdownInstruments}
-                defaultValue={selectedInstrumentId}
-                placeholder="Choose an instrument"
-                onChange={setSelectedInstrumentId}
-              />
-            </View>
-            <View style={{ marginTop: 20 }}>
-              <PrimaryButton
-                label={!isLoading ? "Save Changes" : <ActivityIndicator size={'large'} />}
-                bgColor={globalColors.primary}
-                borderRadius={5}
-                colorText={globalColors.light}
-                btnFontSize={20}
-                onPress={handleSubmit}
-              />
-            </View>
+
+          <View style={globalFormStyles.radioButtonContainer}>
+            <Text style={globalFormStyles.radioButtonTitle}>Skills</Text>
+            <RadioButton
+              options={options}
+              setSelectedSkill={setSelectedSkill}
+              selectedSkill={selectedSkill}
+            />
+
+
           </View>
-        )}
+          <CustomDropdown
+            items={dropdownInstruments}
+            defaultValue={selectedInstrumentId}
+            placeholder="Choose an instrument"
+            onChange={setSelectedInstrumentId}
+          />
+        </View>
+        <View style={{ marginTop: 20 }}>
+          <PrimaryButton
+            label={"Save Changes"}
+            bgColor={globalColors.primary}
+            borderRadius={5}
+            colorText={globalColors.light}
+            btnFontSize={20}
+            onPress={onProfile}
+          />
+        </View>
+      </View>
 
 
-      </Formik>
+
+
 
     </View>
   );

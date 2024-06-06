@@ -34,7 +34,7 @@ export const Formlogin = ({
 
   return (
     <View style={globalFormStyles.containerForm}>
-      <Text style={globalFormStyles.labelTitle}>Login</Text>
+      <Text style={globalFormStyles.labelTitle}></Text>
 
 
 
