@@ -15,13 +15,6 @@ export interface Login {
   password: string;
 }
 
-export interface UserInfo {
-  userId: string;
-  location?: string;
-  skills?: string;
-  instrument?: string;
-}
-
 export interface Category {
   id: string;
   name: string;

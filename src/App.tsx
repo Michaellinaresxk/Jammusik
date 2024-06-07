@@ -9,8 +9,6 @@ import React from "react";
 import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { UserServiceProvider } from "./context/UserServiceContext";
-import { UserInfoServiceProvider } from "./context/UserInfoServiceContext";
-import { userInfoService } from "./services/userInfoService";
 import { ProviderComposer } from "./context/ProviderComposer";
 import { categoryService } from "./services/categoryService";
 import { CategoryServiceProvider } from "./context/CategoryServiceContext";
@@ -31,7 +29,6 @@ function App(): React.JSX.Element {
     <ProviderComposer
       contexts={[
         <UserServiceProvider userService={userService} />,
-        <UserInfoServiceProvider userInfoService={userInfoService} />,
         <CategoryServiceProvider categoryService={categoryService} />,
         <PlaylistServiceProvider playlistService={playlistService} />,
         <SongWithOutPlaylistServiceProvider
