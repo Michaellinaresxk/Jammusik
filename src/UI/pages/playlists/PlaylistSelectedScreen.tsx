@@ -31,6 +31,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import Toast from "react-native-toast-message";
 import { auth } from "../../../infra/api/firebaseConfig";
 import { usePullRefresh } from "../../../hooks/usePullRefresing";
+import { Category } from "../../../types/formTypes";
 
 export const PlaylistSelectedScreen = () => {
   const songService = useSongService();
@@ -166,6 +167,7 @@ export const PlaylistSelectedScreen = () => {
                       resetToggle={resetToggle}
                       title={item.title}
                       artist={item.artist}
+                      categoryId={item.categoryId}
                       color={
                         index % 2 === 0
                           ? globalColors.primary
@@ -175,6 +177,7 @@ export const PlaylistSelectedScreen = () => {
                         navigation.navigate("SongSelectedScreen", {
                           title: item.title,
                           artist: item.artist,
+                          categoryId: item.categoryId,
                           songId: item.id,
                         })
                       }
