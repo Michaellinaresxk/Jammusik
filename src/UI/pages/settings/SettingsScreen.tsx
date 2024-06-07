@@ -28,18 +28,10 @@ export const SettingsScreen = () => {
 
   const menuItems = [
     {
-      name: "Guide",
-      icon: "rocket-sharp",
-      component: "GuideScreen",
-    },
-    {
       name: "FAQ's",
       icon: "help-sharp",
       component: "FaqsScreen",
     },
-  ];
-
-  const menuQuestions = [
     {
       name: "FeedBack",
       icon: "chatbox-ellipses-sharp",
@@ -116,14 +108,6 @@ export const SettingsScreen = () => {
         ))}
         <View style={{ marginTop: 30 }} />
 
-        {menuQuestions.map((item, index) => (
-          <MenuItem
-            key={item.component}
-            {...item}
-            isFirst={index === 0}
-            isLast={index === menuItems.length - 1}
-          />
-        ))}
         <View style={{ marginTop: 30 }} />
         {deleteAccountInfo.map((item, index) => (
           <MenuItem

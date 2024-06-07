@@ -12,7 +12,6 @@ import type { Song } from "../../types/songTypes";
 import { FeedbackScreen } from "../pages/feedback/FeedbackScreen";
 import useAuthStatus from "../../hooks/useAuthStatus";
 import { AboutUsScreen } from "../pages/aboutUs/AboutUsScreen";
-import { GuideScreen } from "../pages/guide/GuideScreen";
 import { FaqsScreen } from "../pages/faqs/FaqsScreen";
 
 export type RootStackParamsList = {
@@ -66,7 +65,6 @@ export const StackNavigator = () => {
           <Stack.Screen name="AboutUsScreen" component={AboutUsScreen} />
           <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
           <Stack.Screen name="FeedbackScreen" component={FeedbackScreen} />
-          <Stack.Screen name="GuideScreen" component={GuideScreen} />
         </Stack.Group>
       ) : (
         <Stack.Group screenOptions={{ headerShown: false }}>
