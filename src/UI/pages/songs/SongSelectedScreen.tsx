@@ -25,6 +25,7 @@ import Toast from "react-native-toast-message";
 import { auth } from "../../../infra/api/firebaseConfig";
 import { useSongDetailsService } from "../../../context/SongDetailsServiceContext";
 import { SongDetailsView } from "../../../views/SongDetailsView";
+import { useGetCategoryTitle } from "../../../hooks/useGetCategoryTitle";
 export const SongSelectedScreen = () => {
   const params =
     useRoute<RouteProp<RootStackParamsList, "PlaylistSelectedScreen">>().params;
@@ -37,10 +38,12 @@ export const SongSelectedScreen = () => {
   const [tabLink, setTabLink] = useState("");
   const [triggerUpdate, setTriggerUpdate] = useState(false);
   const [hasSavedData, setHasSavedData] = useState(false);
+  const [category, setCategory] = useState("");
+
   const userId = auth.currentUser ? auth.currentUser.uid : "";
   const songId = params.songId;
   const songDetailsService = useSongDetailsService();
-  console.log("UserID:", userId, "SongID:", songId);
+
   const closeModal = () => {
     setIsVisible(false);
   };
@@ -115,6 +118,19 @@ export const SongSelectedScreen = () => {
       setTriggerUpdate(false);
     }
   }, [triggerUpdate, loadSongDetails]);
+
+  useEffect(() => {
+    const getCategoryTitle = async () => {
+      try {
+        const categoryTitle = await useGetCategoryTitle(params.categoryId);
+        setCategory(categoryTitle);
+      } catch (error) {
+        Alert.alert("Error", "Failed to fetch category title.");
+      }
+    };
+    getCategoryTitle();
+  }, [params.categoryId]);
+
   const { isRefreshing, refresh, top } = usePullRefresh(loadSongDetails);
   const renderChordItem = ({ item }: { item: string }) => (
     <View style={styles.chordConntent}>
@@ -152,7 +168,7 @@ export const SongSelectedScreen = () => {
                   size={22}
                   color={globalColors.primary}
                 />
-                <Text style={styles.category}> Balad</Text>
+                <Text style={styles.category}> {category}</Text>
               </View>
             </View>
             <View style={styles.container}>
