@@ -2,7 +2,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { ProfileScreen } from "../pages/profile/ProfileScreen";
 import { FeedbackScreen } from "../pages/feedback/FeedbackScreen";
 import { AboutUsScreen } from "../pages/aboutUs/AboutUsScreen";
-import { GuideScreen } from "../pages/guide/GuideScreen";
 import { FaqsScreen } from "../pages/faqs/FaqsScreen";
 import { SettingsScreen } from "../pages/settings/SettingsScreen";
 import { DeleteAccountScreen } from "../pages/deleteAccount/DeleteAccountScreen";
@@ -14,7 +13,6 @@ export type RootStackParamsList = {
   ProfileScreen: undefined;
   FeedbackScreen: undefined;
   AboutUsScreen: undefined;
-  GuideScreen: undefined;
   FaqsScreen: undefined;
   SettingsScreen: undefined;
   DeleteAccountScreen: undefined;
@@ -59,13 +57,6 @@ export const StackSettingNavigator = () => {
         component={AboutUsScreen}
         options={{
           headerTitle: "About",
-        }}
-      />
-      <Stack.Screen
-        name="GuideScreen"
-        component={GuideScreen}
-        options={{
-          headerTitle: "Guide",
         }}
       />
       <Stack.Screen

@@ -28,11 +28,6 @@ export const SettingsScreen = () => {
 
   const menuItems = [
     {
-      name: "Guide",
-      icon: "rocket-sharp",
-      component: "GuideScreen",
-    },
-    {
       name: "FAQ's",
       icon: "help-sharp",
       component: "FaqsScreen",
