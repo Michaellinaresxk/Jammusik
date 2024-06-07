@@ -39,7 +39,7 @@ export const StackSettingNavigator = () => {
         }}
       />
       <Stack.Screen
-        name="ProfileScreenF"
+        name="ProfileScreen"
         component={ProfileScreen}
         options={{
           headerTitle: "Profile",
