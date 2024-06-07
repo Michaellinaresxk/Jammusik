@@ -62,7 +62,7 @@ export const SettingsScreen = () => {
     try {
       console.log("logout");
       await userService.logout();
-      navigation.navigate("PathPickScreen");
+      navigation.navigate("LoginScreen");
     } catch (error) {
       console.error("Error al cerrar sesión: ", error);
     }

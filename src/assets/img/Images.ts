@@ -1,6 +1,4 @@
 export const images = {
-  pathpickBackground:
-    "https://res.cloudinary.com/freelancer2222222222222222/image/upload/v1692639050/banner-bg_hachlh.png",
   homeBackground:
     "https://res.cloudinary.com/freelancer2222222222222222/image/upload/v1692639050/bg-home_lxvdjj.png",
   loginBackground:

@@ -1,5 +1,4 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import { PathPickScreen } from "../pages/PathPickScreen";
 import { LoginScreen } from "../pages/login/LoginScreen";
 import { RegisterScreen } from "../pages/register/RegisterScreen";
 import { HomeScreen } from "../pages/home/HomeScreen";
@@ -17,7 +16,6 @@ import { GuideScreen } from "../pages/guide/GuideScreen";
 import { FaqsScreen } from "../pages/faqs/FaqsScreen";
 
 export type RootStackParamsList = {
-  PathPickScreen: undefined;
   LoginScreen: undefined;
   RegisterScreen: undefined;
   HomeScreen: undefined;
@@ -72,7 +70,6 @@ export const StackNavigator = () => {
         </Stack.Group>
       ) : (
         <Stack.Group screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="PathPickScreen" component={PathPickScreen} />
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
           <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
         </Stack.Group>

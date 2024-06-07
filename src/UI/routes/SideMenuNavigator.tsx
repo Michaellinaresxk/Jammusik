@@ -20,7 +20,6 @@ import {
   type RootStackParamsList,
 } from "../routes/StackNavigator";
 import useAuthStatus from "../../hooks/useAuthStatus";
-import PathPickScreen from "../pages/PathPickScreen";
 import { LoginScreen } from "../pages/login/LoginScreen";
 import { RegisterScreen } from "../pages/register/RegisterScreen";
 import { StackSettingNavigator } from "./StackSettingNavigator";
@@ -104,7 +103,6 @@ export const SideMenuNavigator = () => {
         </>
       ) : (
         <Drawer.Group screenOptions={{ headerShown: false }}>
-          <Drawer.Screen name="PathPickScreen" component={PathPickScreen} />
           <Drawer.Screen name="LoginScreen" component={LoginScreen} />
           <Drawer.Screen name="RegisterScreen" component={RegisterScreen} />
         </Drawer.Group>
@@ -122,7 +120,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
     try {
       console.log("logout");
       await userService.logout();
-      navigation.navigate("PathPickScreen");
+      navigation.navigate("LoginScreen");
     } catch (error) {
       console.error("Error al cerrar sesión: ", error);
     }

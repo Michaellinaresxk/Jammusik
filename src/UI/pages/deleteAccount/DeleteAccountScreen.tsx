@@ -19,7 +19,7 @@ export const DeleteAccountScreen = () => {
     try {
       const userId = uid;
       await userService.deleteUser(userId);
-      navigation.navigate("PathPickScreen");
+      navigation.navigate("LoginScreen");
     } catch (error) {
       console.error("Error al cerrar sesión: ", error);
     }
