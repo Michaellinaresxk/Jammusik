@@ -1,12 +1,10 @@
-import React, { useState } from "react";
-import { ActivityIndicator, Text, TextInput, View } from "react-native";
+import React from "react";
+import { Alert, Text, TextInput, View } from "react-native";
 import { globalColors, globalFormStyles } from "../../../theme/Theme";
 import { PrimaryButton } from "../PrimaryButton";
-import { CustomDropdown } from "../CustomDropdown";
-import RadioButton from "../RadioButton";
-import { UserInfo } from "../../../../types/formTypes";
-import { Formik } from "formik";
-import { validationProfileForm } from "./yup/validation_profile_form";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { RootStackParamsList } from "../../../routes/StackNavigator";
+import { useUserService } from "../../../../context/UserServiceContext";
 
 type ProfileForm = {
   email: string;
@@ -15,12 +13,6 @@ type ProfileForm = {
   setName: React.Dispatch<React.SetStateAction<string>>;
   userId: string;
   setUserId: React.Dispatch<React.SetStateAction<string>>;
-  location: string;
-  setLocation: React.Dispatch<React.SetStateAction<string>>;
-  selectedSkill: string;
-  setSelectedSkill: React.Dispatch<React.SetStateAction<string>>;
-  onProfile: (userInfo: UserInfo) => Promise<void>;
-  isLoading: boolean;
 };
 
 export const FormProfile = ({
@@ -30,41 +22,38 @@ export const FormProfile = ({
   setName,
   userId,
   setUserId,
-  location,
-  setLocation,
-  selectedSkill,
-  setSelectedSkill,
-  isLoading,
-  onProfile,
 }: ProfileForm) => {
-  const instruments = [
-    { name: "Bass", id: "1" },
-    { name: "Drums", id: "2" },
-    { name: "Vocals", id: "3" },
-    { name: "Guitar", id: "4" },
-    { name: "Keyboard", id: "5" },
-    { name: "DJ Controller", id: "6" },
-  ];
-  const options = [
-    { label: "Musician", value: "musician" },
-    { label: "Dj", value: "dj" },
-    { label: "Producer", value: "producer" },
-  ];
-  const dropdownInstruments = instruments.map(instrument => ({
-    label: instrument.name,
-    value: instrument.id,
-  }));
+  const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
 
-  const [selectedInstrumentId, setSelectedInstrumentId] = useState(
-    dropdownInstruments[0].value,
-  );
+  const userService = useUserService();
 
+  const logoutUser = async () => {
+    try {
+      console.log("logout");
+      await userService.logout();
+      navigation.navigate("PathPickScreen");
+    } catch (error) {
+      console.error("Error al cerrar sesión: ", error);
+    }
+  };
 
+  const logOutConfirmation = () =>
+    Alert.alert("Are you sure?", "Do you want to log-out?", [
+      {
+        text: "UPS! BY MISTAKE",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      {
+        text: "YES, LOG-OUT",
+        onPress: () => logoutUser(),
+        style: "destructive",
+      },
+    ]);
 
   return (
     <View style={globalFormStyles.containerForm}>
       <Text style={globalFormStyles.labelTitle}>General Information:</Text>
-
 
       <View style={globalFormStyles.form}>
         <View>
@@ -92,49 +81,18 @@ export const FormProfile = ({
             placeholderTextColor="#838282"
             onChangeText={text => setUserId(text)}
           />
-
-          <TextInput
-            style={globalFormStyles.inputLogin}
-            placeholder="Location"
-            value={location}
-            placeholderTextColor="#838282"
-            onChangeText={text => setLocation(text)}
-          />
-
-
-          <View style={globalFormStyles.radioButtonContainer}>
-            <Text style={globalFormStyles.radioButtonTitle}>Skills</Text>
-            <RadioButton
-              options={options}
-              setSelectedSkill={setSelectedSkill}
-              selectedSkill={selectedSkill}
-            />
-
-
-          </View>
-          <CustomDropdown
-            items={dropdownInstruments}
-            defaultValue={selectedInstrumentId}
-            placeholder="Choose an instrument"
-            onChange={setSelectedInstrumentId}
-          />
         </View>
         <View style={{ marginTop: 20 }}>
           <PrimaryButton
-            label={"Save Changes"}
+            label={"LOG-OUT"}
             bgColor={globalColors.primary}
             borderRadius={5}
-            colorText={globalColors.light}
+            colorText={globalColors.secondary}
             btnFontSize={20}
-            onPress={onProfile}
+            onPress={logOutConfirmation}
           />
         </View>
       </View>
-
-
-
-
-
     </View>
   );
 };

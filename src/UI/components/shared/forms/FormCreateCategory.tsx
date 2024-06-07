@@ -15,19 +15,15 @@ type CategoryForm = {
 export const FormCreateCategory = ({
   title,
   setTitle,
-  onCreateCategory, isLoading
+  onCreateCategory,
+  isLoading,
 }: CategoryForm) => {
   return (
     <View style={globalFormStyles.containerForm}>
-
       <Formik
         validationSchema={validationCreateCategoryForm}
-        initialValues={{ title: '' }}
-        onSubmit={onCreateCategory}
-
-
-      >
-
+        initialValues={{ title: "" }}
+        onSubmit={onCreateCategory}>
         {({ values, handleChange, errors, touched, handleSubmit }) => (
           <View style={globalFormStyles.form}>
             <View>
@@ -36,12 +32,20 @@ export const FormCreateCategory = ({
                 placeholderTextColor="#838282"
                 placeholder="Title"
                 value={values.title}
-                onChangeText={handleChange('title')}
+                onChangeText={handleChange("title")}
               />
-              {errors.title && touched.title ? (<Text style={{ color: 'red' }}>{errors.title}</Text>) : null}
+              {errors.title && touched.title ? (
+                <Text style={{ color: "red" }}>{errors.title}</Text>
+              ) : null}
             </View>
             <PrimaryButton
-              label={!isLoading ? "Create Category" : <ActivityIndicator size={'large'} />}
+              label={
+                !isLoading ? (
+                  "Create Category"
+                ) : (
+                  <ActivityIndicator size={"large"} />
+                )
+              }
               bgColor={globalColors.primary}
               borderRadius={5}
               colorText={globalColors.light}
@@ -50,7 +54,6 @@ export const FormCreateCategory = ({
             />
           </View>
         )}
-
       </Formik>
     </View>
   );
