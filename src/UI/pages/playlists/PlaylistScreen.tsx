@@ -35,7 +35,7 @@ export const PlaylistScreen = () => {
   const playlistService = usePlaylistService();
   const [playlists, setPlaylists] = useState<PlaylistView[]>([]);
   const [triggerUpdate, setTriggerUpdate] = useState(false);
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
   const [title, setTitle] = useState("");
   const [isVisible, setIsVisible] = useState(false);
 
@@ -75,13 +75,13 @@ export const PlaylistScreen = () => {
   };
 
   const handleCreatePlaylist = async (values: any) => {
-    const { title } = values
+    const { title } = values;
     console.log("creando playlist");
-    setIsLoading(true)
+    setIsLoading(true);
     await playlistService.createPlaylist(title);
     setTitle("");
     setTriggerUpdate(true);
-    setIsLoading(false)
+    setIsLoading(false);
 
     closeModal();
   };
@@ -241,7 +241,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 25,
     fontWeight: "bold",
-    color: globalColors.primaryDark
+    color: globalColors.primaryDark,
   },
   playlistCardContainer: {
     flex: 1,
@@ -260,6 +260,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: globalColors.primary,
     paddingLeft: 22,
+    paddingRight: 20,
   },
   modalFormHeaderTitle: {
     fontSize: 20,

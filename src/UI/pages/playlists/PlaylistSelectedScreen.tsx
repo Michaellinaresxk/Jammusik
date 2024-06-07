@@ -47,19 +47,19 @@ export const PlaylistSelectedScreen = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [triggerUpdate, setTriggerUpdate] = useState(false);
   const [currentSongId, setCurrentSongId] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleCreateSong = async (values) => {
-    const { title, artist } = values
+  const handleCreateSong = async values => {
+    const { title, artist } = values;
 
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       await songService.createSong(categoryId, playlistId, title, artist);
       setCategoryId("");
       setTitle("");
       setArtist("");
       setTriggerUpdate(true);
-      setIsLoading(false)
+      setIsLoading(false);
 
       closeModal();
     } catch (error) {

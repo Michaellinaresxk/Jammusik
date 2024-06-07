@@ -3,11 +3,8 @@ import { PrimaryButton } from "../PrimaryButton";
 import { globalColors, globalFormStyles } from "../../../theme/Theme";
 import React from "react";
 
-import { Formik } from 'formik'
+import { Formik } from "formik";
 import { validationLoginForm } from "./yup/validation_login_yup";
-
-
-
 
 interface FormLoginProps {
   email: string;
@@ -17,7 +14,7 @@ interface FormLoginProps {
   password: string;
   setPassword: React.Dispatch<React.SetStateAction<string>>;
   onLogin: () => Promise<void>;
-  isLoading: boolean
+  isLoading: boolean;
 }
 
 export const Formlogin = ({
@@ -25,27 +22,25 @@ export const Formlogin = ({
   setEmail,
   password,
   setPassword,
-  onLogin, isLoading
+  onLogin,
+  isLoading,
 }: FormLoginProps) => {
-
-
-
-
-
   return (
     <View style={globalFormStyles.containerForm}>
       <Text style={globalFormStyles.labelTitle}></Text>
 
-
-
-
       <Formik
         initialValues={{ email: "", password: "" }}
-        onSubmit={(values) => onLogin(values)}
-        validationSchema={validationLoginForm}
-
-      >
-        {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+        onSubmit={values => onLogin(values)}
+        validationSchema={validationLoginForm}>
+        {({
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          values,
+          errors,
+          touched,
+        }) => (
           <View style={globalFormStyles.form}>
             <View>
               <TextInput
@@ -56,13 +51,11 @@ export const Formlogin = ({
                 value={values.email}
                 autoCorrect={false}
                 autoCapitalize="none"
-                onChangeText={handleChange('email')}
+                onChangeText={handleChange("email")}
               />
-              {errors.email && touched.email ?
-                (
-                  <Text style={{ color: 'red' }}>{errors.email}</Text>
-                ) : null}
-
+              {errors.email && touched.email ? (
+                <Text style={{ color: "red" }}>{errors.email}</Text>
+              ) : null}
 
               <TextInput
                 style={globalFormStyles.inputLogin}
@@ -72,18 +65,18 @@ export const Formlogin = ({
                 value={values.password}
                 secureTextEntry={true}
                 placeholderTextColor="#838282"
-                onChangeText={handleChange('password')}
-
+                onChangeText={handleChange("password")}
               />
 
-              {errors.password && touched.password ?
-                (
-                  <Text style={{ color: 'red' }}>{errors.password}</Text>
-                ) : null}
+              {errors.password && touched.password ? (
+                <Text style={{ color: "red" }}>{errors.password}</Text>
+              ) : null}
             </View>
             <View style={{ marginTop: 20 }}>
               <PrimaryButton
-                label={!isLoading ? "SIGN IN" : <ActivityIndicator size={'large'} />}
+                label={
+                  !isLoading ? "SIGN IN" : <ActivityIndicator size={"large"} />
+                }
                 bgColor={globalColors.primary}
                 borderRadius={5}
                 colorText={globalColors.secondary}

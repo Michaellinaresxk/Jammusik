@@ -30,7 +30,7 @@ export const FormCreateSongWithOutPlaylist = ({
   artist,
   setArtist,
   onCreateSong,
-  isLoading
+  isLoading,
 }: SongForm) => {
   const categoryService = useCategoryService();
   const [categories, setCategories] = useState<DropdownItem[]>([]);
@@ -73,16 +73,11 @@ export const FormCreateSongWithOutPlaylist = ({
 
   return (
     <View style={globalFormStyles.containerForm}>
-
       <Formik
         validationSchema={validationCreateSongForm}
-        initialValues={{ title: '', artist: '' }}
-        onSubmit={onCreateSong}
-
-      >
-
+        initialValues={{ title: "", artist: "" }}
+        onSubmit={onCreateSong}>
         {({ values, errors, handleChange, handleSubmit, touched }) => (
-
           <View style={globalFormStyles.form}>
             <TextInput
               style={globalFormStyles.inputLogin}
@@ -91,33 +86,46 @@ export const FormCreateSongWithOutPlaylist = ({
               autoCorrect={false}
               autoCapitalize="words"
               value={values.title}
-              onChangeText={handleChange('title')}
+              onChangeText={handleChange("title")}
             />
-            {errors.title && touched.title ? <Text style={{ color: 'red', marginBottom: 5 }}>{errors.title}</Text> : null}
+            {errors.title && touched.title ? (
+              <Text style={{ color: "red", marginBottom: 5 }}>
+                {errors.title}
+              </Text>
+            ) : null}
 
             <TextInput
               style={globalFormStyles.inputLogin}
               placeholder="Artist"
               placeholderTextColor="#838282"
-
               autoCapitalize="words"
               autoCorrect={false}
               value={values.artist}
-              onChangeText={handleChange('artist')}
+              onChangeText={handleChange("artist")}
             />
-            {errors.artist && touched.artist ? <Text style={{ color: 'red', marginBottom: 5 }}>{errors.artist}</Text> : null}
+            {errors.artist && touched.artist ? (
+              <Text style={{ color: "red", marginBottom: 5 }}>
+                {errors.artist}
+              </Text>
+            ) : null}
 
             {currentCategory && (
               <CustomDropdown
                 items={[currentCategory]} // Only show the current category
                 defaultValue={currentCategory.value}
                 placeholder="Choose a category"
-                onChange={() => { }} // No-op function since it shouldn't change
+                onChange={() => {}} // No-op function since it shouldn't change
                 disabled={true} // Disable the dropdown
               />
             )}
             <PrimaryButton
-              label={!isLoading ? "Create A New Song" : <ActivityIndicator size={'large'} />}
+              label={
+                !isLoading ? (
+                  "Create A New Song"
+                ) : (
+                  <ActivityIndicator size={"large"} />
+                )
+              }
               bgColor={globalColors.primary}
               borderRadius={5}
               colorText={globalColors.light}
@@ -126,7 +134,6 @@ export const FormCreateSongWithOutPlaylist = ({
             />
           </View>
         )}
-
       </Formik>
     </View>
   );

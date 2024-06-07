@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { ImageBackground, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  ImageBackground,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { globalColors, globalStyles } from "../../theme/Theme";
 import { images } from "../../../assets/img/Images";
 import { BrandLogo } from "../../components/shared/BrandLogo";
@@ -12,7 +20,7 @@ export const RegisterScreen = () => {
   const [email, setEmail] = useState("");
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
 
   const userService = useUserService();
 
@@ -23,54 +31,55 @@ export const RegisterScreen = () => {
   };
 
   // Function to handle registration logic
-  const handleRegister = async (values) => {
-    const { email, password, userName } = values
-    setIsLoading(true)
+  const handleRegister = async values => {
+    const { email, password, userName } = values;
+    setIsLoading(true);
     await userService.registerUser(email, password, userName);
     setEmail("");
     setUserName("");
     setPassword("");
-    setIsLoading(false)
+    setIsLoading(false);
 
     navigation.navigate("LoginScreen");
   };
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false} horizontal={false}>
-      <ImageBackground
-        source={image}
-        style={styles.containerImage}
-        resizeMode="cover"
-        alt="Imagen de fondo">
-
-        <View style={globalStyles.overlay}>
-          <View style={styles.containerLoginScreen}>
-            <View style={styles.containerLogo}>
-              <BrandLogo />
-            </View>
-            <Text style={styles.labelTitle}>Register</Text>
-            <View>
-              <FormRegister
-                email={email}
-                setEmail={setEmail}
-                userName={userName}
-                setUserName={setUserName}
-                password={password}
-                setPassword={setPassword}
-                isLoading={isLoading}
-                onRegister={handleRegister}
-              />
-              <LinkLoginRegister
-                text="Have an account?"
-                link="Login"
-                goTo="LoginScreen"
-              />
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : undefined}>
+      <ScrollView showsVerticalScrollIndicator={false} horizontal={false}>
+        <ImageBackground
+          source={image}
+          style={styles.containerImage}
+          resizeMode="cover"
+          alt="Imagen de fondo">
+          <View style={globalStyles.overlay}>
+            <View style={styles.containerLoginScreen}>
+              <View style={styles.containerLogo}>
+                <BrandLogo />
+              </View>
+              <Text style={styles.labelTitle}>Register</Text>
+              <View style={{ marginBottom: 100 }}>
+                <FormRegister
+                  email={email}
+                  setEmail={setEmail}
+                  userName={userName}
+                  setUserName={setUserName}
+                  password={password}
+                  setPassword={setPassword}
+                  isLoading={isLoading}
+                  onRegister={handleRegister}
+                />
+                <LinkLoginRegister
+                  text="Have an account?"
+                  link="Login"
+                  goTo="LoginScreen"
+                />
+              </View>
             </View>
           </View>
-        </View>
-      </ImageBackground>
-    </ScrollView>
-
+        </ImageBackground>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
