@@ -1,4 +1,5 @@
 import {
+  Alert,
   ImageBackground,
   KeyboardAvoidingView,
   Platform,
@@ -42,6 +43,7 @@ export const LoginScreen = () => {
       setIsLoading(false);
     } catch (error) {
       console.log(error);
+      Alert.alert(error.code);
       setIsLoading(false);
     }
   };

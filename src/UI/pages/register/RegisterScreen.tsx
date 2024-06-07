@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import {
+  Alert,
   ImageBackground,
   KeyboardAvoidingView,
   Platform,
@@ -34,13 +35,18 @@ export const RegisterScreen = () => {
   const handleRegister = async values => {
     const { email, password, userName } = values;
     setIsLoading(true);
-    await userService.registerUser(email, password, userName);
-    setEmail("");
-    setUserName("");
-    setPassword("");
-    setIsLoading(false);
-
-    navigation.navigate("LoginScreen");
+    try {
+      await userService.registerUser(email, password, userName);
+      setEmail("");
+      setUserName("");
+      setPassword("");
+      setIsLoading(false);
+      navigation.navigate("HomeScreen");
+    } catch (error) {
+      console.log(error);
+      Alert.alert(error.message);
+      setIsLoading(false);
+    }
   };
 
   return (
