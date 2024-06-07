@@ -62,6 +62,7 @@ export const FormProfile = ({
             placeholderTextColor="#838282"
             placeholder="Name"
             value={name}
+            autoCorrect={false}
             onChangeText={text => setName(text)}
           />
 
@@ -71,6 +72,7 @@ export const FormProfile = ({
             keyboardType="email-address"
             placeholder="Email"
             value={email}
+            autoCorrect={false}
             onChangeText={text => setEmail(text)}
           />
 
@@ -78,6 +80,7 @@ export const FormProfile = ({
             style={globalFormStyles.inputLogin}
             placeholder="userId"
             value={userId}
+            autoCorrect={false}
             placeholderTextColor="#838282"
             onChangeText={text => setUserId(text)}
           />

@@ -31,11 +31,16 @@ export const FormRegister = ({
     <View style={globalFormStyles.containerForm}>
       <Formik
         initialValues={{ email: "", userName: "", password: "" }}
-        onSubmit={(values) => onRegister(values)}
-        validationSchema={validationRegisterForm}
-
-      >
-        {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+        onSubmit={values => onRegister(values)}
+        validationSchema={validationRegisterForm}>
+        {({
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          values,
+          errors,
+          touched,
+        }) => (
           <View style={globalFormStyles.form}>
             <View>
               <TextInput
@@ -46,12 +51,11 @@ export const FormRegister = ({
                 value={values.email}
                 autoCorrect={false}
                 autoCapitalize="none"
-                onChangeText={handleChange('email')}
+                onChangeText={handleChange("email")}
               />
-              {errors.email && touched.email ?
-                (
-                  <Text style={{ color: 'red' }}>{errors.email}</Text>
-                ) : null}
+              {errors.email && touched.email ? (
+                <Text style={{ color: "red" }}>{errors.email}</Text>
+              ) : null}
               <TextInput
                 style={globalFormStyles.inputLogin}
                 placeholderTextColor="#838282"
@@ -59,13 +63,11 @@ export const FormRegister = ({
                 value={values.userName}
                 autoCorrect={false}
                 autoCapitalize="none"
-                onChangeText={handleChange('userName')}
+                onChangeText={handleChange("userName")}
               />
-              {errors.userName && touched.userName ?
-                (
-                  <Text style={{ color: 'red' }}>{errors.userName}</Text>
-                ) : null}
-
+              {errors.userName && touched.userName ? (
+                <Text style={{ color: "red" }}>{errors.userName}</Text>
+              ) : null}
 
               <TextInput
                 style={globalFormStyles.inputLogin}
@@ -75,18 +77,18 @@ export const FormRegister = ({
                 value={values.password}
                 secureTextEntry={true}
                 placeholderTextColor="#838282"
-                onChangeText={handleChange('password')}
-
+                onChangeText={handleChange("password")}
               />
 
-              {errors.password && touched.password ?
-                (
-                  <Text style={{ color: 'red' }}>{errors.password}</Text>
-                ) : null}
+              {errors.password && touched.password ? (
+                <Text style={{ color: "red" }}>{errors.password}</Text>
+              ) : null}
             </View>
             <View style={{ marginTop: 20 }}>
               <PrimaryButton
-                label={!isLoading ? "SIGN IN" : <ActivityIndicator size={'large'} />}
+                label={
+                  !isLoading ? "SIGN IN" : <ActivityIndicator size={"large"} />
+                }
                 bgColor={globalColors.primary}
                 borderRadius={5}
                 colorText={globalColors.secondary}

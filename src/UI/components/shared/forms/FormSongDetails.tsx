@@ -54,6 +54,7 @@ export const FormSongDetails = ({
             placeholder="Key"
             value={songKey}
             onChangeText={setSongKey}
+            autoCorrect={false}
           />
           <TextInput
             style={globalFormStyles.inputLogin}
@@ -61,6 +62,7 @@ export const FormSongDetails = ({
             placeholder="Chord List"
             value={chordInput}
             onChangeText={handleChordInput}
+            autoCorrect={false}
             onSubmitEditing={handleSubmitEditing}
           />
           <FlatList
@@ -81,6 +83,7 @@ export const FormSongDetails = ({
             placeholder="Notes"
             value={notes}
             onChangeText={setNotes}
+            autoCorrect={false}
           />
           <TextInput
             style={globalFormStyles.inputLogin}
@@ -88,6 +91,7 @@ export const FormSongDetails = ({
             placeholder="Lyric link"
             value={lyricLink}
             onChangeText={setLyricLink}
+            autoCorrect={false}
           />
           <TextInput
             style={globalFormStyles.inputLogin}
@@ -95,6 +99,7 @@ export const FormSongDetails = ({
             placeholder="Tab link"
             value={tabLink}
             onChangeText={setTabLink}
+            autoCorrect={false}
           />
         </View>
         <PrimaryButton

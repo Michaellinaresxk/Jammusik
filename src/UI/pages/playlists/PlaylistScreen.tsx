@@ -14,7 +14,11 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { globalColors } from "../../theme/Theme";
-import { type NavigationProp, useNavigation } from "@react-navigation/native";
+import {
+  type NavigationProp,
+  useNavigation,
+  useFocusEffect,
+} from "@react-navigation/native";
 import { type RootStackParamsList } from "../../routes/StackNavigator";
 
 import { PlaylistCard } from "../../components/shared/cards/PlaylistCard";
@@ -35,7 +39,7 @@ export const PlaylistScreen = () => {
   const playlistService = usePlaylistService();
   const [playlists, setPlaylists] = useState<PlaylistView[]>([]);
   const [triggerUpdate, setTriggerUpdate] = useState(false);
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
   const [title, setTitle] = useState("");
   const [isVisible, setIsVisible] = useState(false);
 
@@ -50,10 +54,11 @@ export const PlaylistScreen = () => {
     }
   }, [auth.currentUser, playlistService]);
 
-  useEffect(() => {
-    // Load playlist when the component mounts
-    loadPlaylists();
-  }, [loadPlaylists]);
+  useFocusEffect(
+    useCallback(() => {
+      loadPlaylists();
+    }, [loadPlaylists]),
+  );
 
   useEffect(() => {
     //  Load playlist when triggerUpdate changes
@@ -75,13 +80,13 @@ export const PlaylistScreen = () => {
   };
 
   const handleCreatePlaylist = async (values: any) => {
-    const { title } = values
+    const { title } = values;
     console.log("creando playlist");
-    setIsLoading(true)
+    setIsLoading(true);
     await playlistService.createPlaylist(title);
     setTitle("");
     setTriggerUpdate(true);
-    setIsLoading(false)
+    setIsLoading(false);
 
     closeModal();
   };
@@ -241,7 +246,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 25,
     fontWeight: "bold",
-    color: globalColors.primaryDark
+    color: globalColors.primaryDark,
   },
   playlistCardContainer: {
     flex: 1,
