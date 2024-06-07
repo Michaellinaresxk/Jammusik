@@ -8,7 +8,6 @@ import { SettingsScreen } from "../pages/settings/SettingsScreen";
 import { DeleteAccountScreen } from "../pages/deleteAccount/DeleteAccountScreen";
 
 export type RootStackParamsList = {
-  PathPickScreen: undefined;
   LoginScreen: undefined;
   RegisterScreen: undefined;
 
@@ -42,7 +41,7 @@ export const StackSettingNavigator = () => {
         }}
       />
       <Stack.Screen
-        name="ProfileScreen"
+        name="ProfileScreenF"
         component={ProfileScreen}
         options={{
           headerTitle: "Profile",
