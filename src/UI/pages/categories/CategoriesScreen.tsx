@@ -37,7 +37,7 @@ export const CategoriesScreen = () => {
   const [triggerUpdate, setTriggerUpdate] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [title, setTitle] = useState("");
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
 
   const loadCategories = useCallback(async () => {
     const user = auth.currentUser;
@@ -67,17 +67,17 @@ export const CategoriesScreen = () => {
     setIsVisible(!isVisible);
   };
 
-  const handleCreateCategory = async (values) => {
-    const { title } = values
+  const handleCreateCategory = async values => {
+    const { title } = values;
     const user = auth.currentUser;
     if (user) {
       const userId = user.uid;
       console.log("Creating category...");
-      setIsLoading(true)
+      setIsLoading(true);
       await categoryService.createCategory(userId, title);
       setTitle("");
       setTriggerUpdate(true); // Trigger the update to reload categories
-      setIsLoading(false)
+      setIsLoading(false);
       closeModal();
     }
   };
@@ -238,7 +238,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: globalColors.primary,
-    paddingLeft: 10,
+    paddingLeft: 20,
+    paddingRight: 55,
   },
   modalFormHeaderTitle: {
     fontSize: 20,

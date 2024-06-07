@@ -32,6 +32,7 @@ export const FormCreateCategory = ({
                 placeholderTextColor="#838282"
                 placeholder="Title"
                 value={values.title}
+                autoCorrect={false}
                 onChangeText={handleChange("title")}
               />
               {errors.title && touched.title ? (

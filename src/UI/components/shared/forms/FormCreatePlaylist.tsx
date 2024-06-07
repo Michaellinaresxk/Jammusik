@@ -16,39 +16,45 @@ export const FormCreatePlaylist = ({
   title,
   setTitle,
   onCreatePlaylist,
-  isLoading
+  isLoading,
 }: ProfileForm) => {
   return (
     <View style={globalFormStyles.containerForm}>
-
       <Formik
         validationSchema={validationCreatePlaylistForm}
         initialValues={{ title: "" }}
-        onSubmit={onCreatePlaylist}
-
-      >
-
-        {({ values, handleChange, errors, touched, handleSubmit }) => (<View style={globalFormStyles.form}>
-          <View>
-            <TextInput
-              style={globalFormStyles.inputLogin}
-              placeholderTextColor="#838282"
-              placeholder="Title"
-              value={values.title}
-              onChangeText={handleChange('title')}
+        onSubmit={onCreatePlaylist}>
+        {({ values, handleChange, errors, touched, handleSubmit }) => (
+          <View style={globalFormStyles.form}>
+            <View>
+              <TextInput
+                style={globalFormStyles.inputLogin}
+                placeholderTextColor="#838282"
+                placeholder="Title"
+                value={values.title}
+                autoCorrect={false}
+                onChangeText={handleChange("title")}
+              />
+              {errors.title && touched.title ? (
+                <Text style={{ color: "red" }}>{errors.title}</Text>
+              ) : null}
+            </View>
+            <PrimaryButton
+              label={
+                !isLoading ? (
+                  "Create Playlist"
+                ) : (
+                  <ActivityIndicator size={"large"} />
+                )
+              }
+              bgColor={globalColors.primary}
+              borderRadius={5}
+              colorText={globalColors.light}
+              btnFontSize={20}
+              onPress={handleSubmit}
             />
-            {errors.title && touched.title ? (<Text style={{ color: 'red' }}>{errors.title}</Text>) : null}
           </View>
-          <PrimaryButton
-            label={!isLoading ? "Create Playlist" : <ActivityIndicator size={'large'} />}
-            bgColor={globalColors.primary}
-            borderRadius={5}
-            colorText={globalColors.light}
-            btnFontSize={20}
-            onPress={handleSubmit}
-          />
-        </View>)}
-
+        )}
       </Formik>
     </View>
   );

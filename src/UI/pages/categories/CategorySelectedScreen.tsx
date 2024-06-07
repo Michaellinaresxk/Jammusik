@@ -57,12 +57,12 @@ export const CategorySelectedScreen = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [triggerUpdate, setTriggerUpdate] = useState(false);
   const [currentSongId, setCurrentSongId] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
 
   const categoryId = params.id as string;
 
   const [resetToggle, setResetToggle] = useState(false);
-  const valueWidth = useWindowDimensions().width - 10
+  const valueWidth = useWindowDimensions().width - 10;
 
   const handleResetSongs = () => {
     setResetToggle(prev => !prev);
@@ -98,11 +98,11 @@ export const CategorySelectedScreen = () => {
     setIsVisible(!isVisible);
   };
 
-  const handleCreateSongWithOutPlaylist = async (values) => {
+  const handleCreateSongWithOutPlaylist = async values => {
     try {
-      const { title, artist } = values
+      const { title, artist } = values;
 
-      setIsLoading(true)
+      setIsLoading(true);
       await songWithOutPlaylistService.createSongWithOutPlaylist(
         userId,
         categoryId,
@@ -112,7 +112,7 @@ export const CategorySelectedScreen = () => {
       setTitle("");
       setArtist("");
       setTriggerUpdate(prev => !prev);
-      setIsLoading(false)
+      setIsLoading(false);
 
       closeModal();
     } catch (error) {
