@@ -1,4 +1,11 @@
-import { addDoc, deleteDoc, doc, query, where } from "firebase/firestore";
+import {
+  addDoc,
+  deleteDoc,
+  doc,
+  query,
+  where,
+  writeBatch,
+} from "firebase/firestore";
 import { auth } from "../api/firebaseConfig";
 import type { ApiPlaylist } from "./ApiPlaylist";
 import { getFirestore, collection, getDocs } from "@firebase/firestore";
@@ -48,12 +55,34 @@ export class PlaylistCaller {
     }
   }
 
-  async deletePlaylist(playlistId: string) {
+  async deletePlaylist(playlistId: string): Promise<void> {
     if (!this.db || !playlistId) {
       throw new Error("Firestore instance or playlistId is undefined!");
     }
 
-    const specificPlaylistDoc = doc(this.db, "playlists", playlistId);
-    await deleteDoc(specificPlaylistDoc);
+    const db = this.db;
+    const batch = writeBatch(db);
+
+    // Query for songs with the specified playlistId
+    const songsCollection = collection(db, "songs");
+    const songsQuery = query(
+      songsCollection,
+      where("playlistId", "==", playlistId),
+    );
+    const querySnapshot = await getDocs(songsQuery);
+
+    // Add delete operations to the batch
+    querySnapshot.docs.forEach(doc => batch.delete(doc.ref));
+
+    // Add playlist delete operation to the batch
+    const specificPlaylistDoc = doc(db, "playlists", playlistId);
+    batch.delete(specificPlaylistDoc);
+
+    // Commit the batch
+    await batch.commit();
+
+    console.log(
+      `Playlist with ID ${playlistId} and its songs deleted successfully.`,
+    );
   }
 }
