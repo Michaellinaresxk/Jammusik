@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { Text, View, TextInput, ActivityIndicator, Button } from "react-native";
 import { PrimaryButton } from "../PrimaryButton";
 import { globalColors, globalFormStyles } from "../../../theme/Theme";
@@ -15,7 +17,11 @@ interface FormLoginProps {
   setPassword: React.Dispatch<React.SetStateAction<string>>;
   onLogin: () => Promise<void>;
   isLoading: boolean;
+  error: string;
+  setError: React.Dispatch<React.SetStateAction<string>>
 }
+
+
 
 export const Formlogin = ({
   email,
@@ -23,8 +29,12 @@ export const Formlogin = ({
   password,
   setPassword,
   onLogin,
-  isLoading,
+  isLoading, error, setError
 }: FormLoginProps) => {
+
+
+
+
   return (
     <View style={globalFormStyles.containerForm}>
       <Text style={globalFormStyles.labelTitle}></Text>
@@ -52,6 +62,7 @@ export const Formlogin = ({
                 autoCorrect={false}
                 autoCapitalize="none"
                 onChangeText={handleChange("email")}
+                onFocus={() => setError('')}
               />
               {errors.email && touched.email ? (
                 <Text style={{ color: "red" }}>{errors.email}</Text>
@@ -66,12 +77,16 @@ export const Formlogin = ({
                 secureTextEntry={true}
                 placeholderTextColor="#838282"
                 onChangeText={handleChange("password")}
+                onFocus={() => setError('')}
               />
 
               {errors.password && touched.password ? (
                 <Text style={{ color: "red" }}>{errors.password}</Text>
               ) : null}
             </View>
+            {error ? <View style={{ marginTop: 10, padding: 10, backgroundColor: globalColors.danger }}>
+              <Text style={{ color: globalColors.light, textAlign: 'center' }}>{error}</Text>
+            </View> : null}
             <View style={{ marginTop: 20 }}>
               <PrimaryButton
                 label={
