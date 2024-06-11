@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {
   Alert,
   ImageBackground,
@@ -21,6 +22,7 @@ export const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('')
 
   const userService = useUserService();
   const navigation = useNavigation();
@@ -42,15 +44,25 @@ export const LoginScreen = () => {
       navigation.navigate("HomeScreen");
       setIsLoading(false);
     } catch (error) {
-      console.log(error);
-      Alert.alert(error.code);
-      setIsLoading(false);
-    }
-  };
 
+
+      if (error.code === 'auth/invalid-credential') {
+        setError('Invalid credentials');
+
+
+
+
+      }
+      setTimeout(() => {
+        setError('');
+      }, 5000)
+      setIsLoading(false);
+
+    };
+  }
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : undefined}>
+      behavior={Platform.OS === "ios" ? "padding" : undefined}  >
       <ScrollView>
         <ImageBackground
           source={image}
@@ -62,7 +74,9 @@ export const LoginScreen = () => {
                 <BrandLogo />
               </View>
               <Text style={styles.labelTitle}>Log In</Text>
+
               <View style={styles.containerForm}>
+
                 <Formlogin
                   email={email}
                   setEmail={setEmail}
@@ -70,6 +84,8 @@ export const LoginScreen = () => {
                   setPassword={setPassword}
                   onLogin={handleLogin}
                   isLoading={isLoading}
+                  error={error}
+                  setError={setError}
                 />
                 <LinkLoginRegister
                   text="Not a member yet?"
