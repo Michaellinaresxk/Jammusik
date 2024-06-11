@@ -56,7 +56,9 @@ export const FormSongDetails = ({
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : undefined}>
-      <ScrollView>
+      <ScrollView
+        keyboardDismissMode="none"
+        keyboardShouldPersistTaps="handled">
         <View style={globalFormStyles.containerForm}>
           <View style={globalFormStyles.form}>
             <View>
