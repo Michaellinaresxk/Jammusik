@@ -22,6 +22,7 @@ export const RegisterScreen = () => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('')
 
   const userService = useUserService();
 
@@ -43,8 +44,15 @@ export const RegisterScreen = () => {
       setIsLoading(false);
       navigation.navigate("HomeScreen");
     } catch (error) {
-      console.log(error);
-      Alert.alert(error.message);
+      console.log(error.code);
+      if (error.code === 'auth/email-already-in-use') {
+        setError("The email already in use, please a use it on another ")
+      }
+      setTimeout(() => {
+        setError('');
+      }, 5000)
+      setIsLoading(false);
+
       setIsLoading(false);
     }
   };
@@ -74,6 +82,8 @@ export const RegisterScreen = () => {
                   setPassword={setPassword}
                   isLoading={isLoading}
                   onRegister={handleRegister}
+                  error={error}
+                  setError={setError}
                 />
                 <LinkLoginRegister
                   text="Have an account?"

@@ -83,7 +83,7 @@ export const globalStyles = StyleSheet.create({
   primaryButton: {
     borderRadius: 5,
     padding: 10,
-    margin: 10,
+
     width: "100%",
     alignItems: "center",
     justifyContent: "center",

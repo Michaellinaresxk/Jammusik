@@ -94,7 +94,7 @@ export const HomeScreen = () => {
           }>
           <View>
             <GlobalHeader headerTitle="Home" />
-            <TheGreenBorder />
+
             <View style={styles.categoryCardContainer}>
               <Text style={styles.subTitle}>Categories:</Text>
               <FlatList
