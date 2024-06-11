@@ -76,9 +76,10 @@ export class CategoryCaller {
       );
       const querySnapshot = await getDocs(songQuery);
 
-      return querySnapshot.docs.map(doc => {
-        return { id: doc.id, ...doc.data() } as ApiSong;
-      });
+      return querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as ApiSong[];
     } catch (error) {
       console.error(
         `Error fetching songs for category ${categoryId} and user ${userId}:`,
