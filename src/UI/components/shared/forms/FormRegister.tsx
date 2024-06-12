@@ -15,6 +15,8 @@ interface FormRegisterProps {
   setPassword: React.Dispatch<React.SetStateAction<string>>;
   isLoading: boolean;
   onRegister: () => Promise<Register>;
+  error: string;
+  setError: React.Dispatch<React.SetStateAction<string>>
 }
 
 export const FormRegister = ({
@@ -25,7 +27,8 @@ export const FormRegister = ({
   password,
   setPassword,
   onRegister,
-  isLoading,
+  isLoading, error, setError
+
 }: FormRegisterProps) => {
   return (
     <View style={globalFormStyles.containerForm}>
@@ -52,6 +55,7 @@ export const FormRegister = ({
                 autoCorrect={false}
                 autoCapitalize="none"
                 onChangeText={handleChange("email")}
+                onFocus={() => setError('')}
               />
               {errors.email && touched.email ? (
                 <Text style={{ color: "red" }}>{errors.email}</Text>
@@ -84,6 +88,9 @@ export const FormRegister = ({
                 <Text style={{ color: "red" }}>{errors.password}</Text>
               ) : null}
             </View>
+            {error ? <View style={{ marginTop: 10, padding: 10, backgroundColor: globalColors.danger }}>
+              <Text style={{ color: globalColors.light, textAlign: 'center' }}>{error}</Text>
+            </View> : null}
             <View style={{ marginTop: 20 }}>
               <PrimaryButton
                 label={

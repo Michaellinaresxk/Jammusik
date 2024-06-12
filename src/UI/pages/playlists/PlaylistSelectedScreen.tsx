@@ -11,6 +11,7 @@ import {
   Text,
   TouchableOpacity,
   RefreshControl,
+  useWindowDimensions,
 } from "react-native";
 import { type NavigationProp, useNavigation } from "@react-navigation/native";
 import { type RootStackParamsList } from "../../routes/StackNavigator";
@@ -49,6 +50,8 @@ export const PlaylistSelectedScreen = () => {
   const [triggerUpdate, setTriggerUpdate] = useState(false);
   const [currentSongId, setCurrentSongId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const valueWidth = useWindowDimensions().width;
 
   const handleCreateSong = async values => {
     const { title, artist } = values;
@@ -151,7 +154,7 @@ export const PlaylistSelectedScreen = () => {
             />
           }>
           <GlobalHeader headerTitle={params.title} />
-          <TheGreenBorder />
+
           <FloatingActionButton onPress={() => setIsVisible(true)} />
           <View style={styles.songCardContainer}>
             <SongCounter songCounter={songList.length} />
@@ -162,7 +165,7 @@ export const PlaylistSelectedScreen = () => {
                 <Swipeable
                   renderRightActions={() => swipeRightActions(item.id)}
                   onSwipeableWillOpen={() => setCurrentSongId(item.id)}>
-                  <View style={{ paddingHorizontal: 15 }}>
+                  <View style={{ width: valueWidth - 20 }}>
                     <SongCard
                       resetToggle={resetToggle}
                       title={item.title}
@@ -227,6 +230,7 @@ const styles = StyleSheet.create({
   songCardContainer: {
     marginTop: 100,
     alignItems: "center",
+    paddingHorizontal: 10,
   },
   modalBtnContainer: {
     flexDirection: "row",

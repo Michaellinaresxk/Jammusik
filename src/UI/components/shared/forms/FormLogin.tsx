@@ -17,8 +17,7 @@ interface FormLoginProps {
   setPassword: React.Dispatch<React.SetStateAction<string>>;
   onLogin: () => Promise<void>;
   isLoading: boolean;
-  error: string;
-  setError: React.Dispatch<React.SetStateAction<string>>
+
 }
 
 

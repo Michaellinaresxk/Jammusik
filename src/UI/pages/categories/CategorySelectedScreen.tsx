@@ -62,7 +62,7 @@ export const CategorySelectedScreen = () => {
   const categoryId = params.id as string;
 
   const [resetToggle, setResetToggle] = useState(false);
-  const valueWidth = useWindowDimensions().width - 10;
+  const valueWidth = useWindowDimensions().width;
 
   const handleResetSongs = () => {
     setResetToggle(prev => !prev);
@@ -175,7 +175,7 @@ export const CategorySelectedScreen = () => {
 
   return (
     <>
-      <TheGreenBorder />
+      {/* <TheGreenBorder /> */}
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : undefined}>
         <ScrollView
@@ -191,7 +191,7 @@ export const CategorySelectedScreen = () => {
               onRefresh={refresh}
             />
           }>
-          <View>
+          <View >
             <GlobalHeader headerTitle={params.title} />
             <FloatingActionButton onPress={() => setIsVisible(true)} />
             <View style={styles.songCardContainer}>
@@ -206,9 +206,9 @@ export const CategorySelectedScreen = () => {
                         swipeRightActions(item.id, false)
                       }
                       onSwipeableWillOpen={() => setCurrentSongId(item.id)}>
-                      <View style={{ paddingHorizontal: 5, width: valueWidth }}>
+                      <View style={{ width: valueWidth - 20 }}>
                         <SongCard
-                          resetToggle={resetToggle}
+                          resetToggle={resetToggle} s
                           title={item.title}
                           artist={item.artist}
                           color={
@@ -258,7 +258,7 @@ export const CategorySelectedScreen = () => {
                         swipeRightActions(item.id, true)
                       }
                       onSwipeableWillOpen={() => setCurrentSongId(item.id)}>
-                      <View style={{ paddingHorizontal: 5, width: valueWidth }}>
+                      <View style={{ width: valueWidth - 20 }}>
                         <SongCard
                           resetToggle={resetToggle}
                           title={item.title}
@@ -323,6 +323,9 @@ export const CategorySelectedScreen = () => {
 const styles = StyleSheet.create({
   songCardContainer: {
     marginTop: 100,
+    paddingHorizontal: 10,
+    display: 'flex',
+    justifyContent: 'center',
     alignItems: "center",
   },
   titleContainer: {
