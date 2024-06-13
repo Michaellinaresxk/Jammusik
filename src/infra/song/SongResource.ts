@@ -1,6 +1,7 @@
 import type SongRepository from "../../domain/song/SongRepository";
 import { SongCaller } from "./SongCaller";
 import Song from "../../domain/song/Song";
+import { ApiSongWithOutPlaylist } from "../songWithOutPlaylist/ApiSongWithOutPlaylist";
 
 export class SongResource implements SongRepository {
   constructor(public readonly songCaller: SongCaller) {}
@@ -10,12 +11,14 @@ export class SongResource implements SongRepository {
     playlistId: string,
     title: string,
     artist: string,
+    isDone: boolean,
   ): Promise<Song> {
     const apiSong = await this.songCaller.createSong(
       categoryId,
       playlistId,
       title,
       artist,
+      isDone,
     );
     return new Song(
       apiSong.id,
@@ -23,6 +26,7 @@ export class SongResource implements SongRepository {
       apiSong.playlistId,
       apiSong.title,
       apiSong.artist,
+      apiSong.isDone,
     );
   }
 

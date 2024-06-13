@@ -20,7 +20,6 @@ import { GlobalHeader } from "../../components/shared/GlobalHeader";
 import { SongCard } from "../../components/shared/cards/SongCard";
 import { globalColors } from "../../theme/Theme";
 import { FloatingActionButton } from "../../components/shared/FloatingActionButton";
-import { TheGreenBorder } from "../../components/shared/TheGreenBorder";
 import { SongCounter } from "../../components/shared/SongCounter";
 import { FormCreateSong } from "../../components/shared/forms/FormCreateSong";
 import { useSongService } from "../../../context/SongServiceContext";
@@ -32,7 +31,6 @@ import Icon from "react-native-vector-icons/Ionicons";
 import Toast from "react-native-toast-message";
 import { auth } from "../../../infra/api/firebaseConfig";
 import { usePullRefresh } from "../../../hooks/usePullRefresing";
-import { Category } from "../../../types/formTypes";
 
 export const PlaylistSelectedScreen = () => {
   const songService = useSongService();
@@ -50,6 +48,7 @@ export const PlaylistSelectedScreen = () => {
   const [triggerUpdate, setTriggerUpdate] = useState(false);
   const [currentSongId, setCurrentSongId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isDone, setIsDone] = useState(false);
 
   const valueWidth = useWindowDimensions().width;
 
@@ -58,7 +57,13 @@ export const PlaylistSelectedScreen = () => {
 
     try {
       setIsLoading(true);
-      await songService.createSong(categoryId, playlistId, title, artist);
+      await songService.createSong(
+        categoryId,
+        playlistId,
+        title,
+        artist,
+        isDone,
+      );
       setCategoryId("");
       setTitle("");
       setArtist("");
@@ -171,6 +176,8 @@ export const PlaylistSelectedScreen = () => {
                       title={item.title}
                       artist={item.artist}
                       categoryId={item.categoryId}
+                      isDone={item.isDone}
+                      songId={item.id}
                       color={
                         index % 2 === 0
                           ? globalColors.primary

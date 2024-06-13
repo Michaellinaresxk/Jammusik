@@ -20,12 +20,14 @@ export class SongService {
     playlistId: string,
     title: string,
     artist: string,
+    isDone: boolean,
   ) {
     return await this.songCreateUseCase.execute(
       categoryId,
       playlistId,
       title,
       artist,
+      isDone,
     );
   }
 

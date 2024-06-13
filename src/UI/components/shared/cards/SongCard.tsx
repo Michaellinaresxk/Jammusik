@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { globalColors } from "../../../theme/Theme";
 import Icon from "react-native-vector-icons/Ionicons";
+import { useToggleIsDone } from "../../../../hooks/useToggleIsDone";
+import { auth } from "../../../../infra/api/firebaseConfig";
 
 type Props = {
   title: string;
@@ -9,6 +11,8 @@ type Props = {
   onPress: () => void;
   color: string;
   resetToggle: boolean;
+  isDone: boolean;
+  songId: string;
 };
 
 export const SongCard = ({
@@ -16,22 +20,26 @@ export const SongCard = ({
   artist,
   color,
   onPress,
-  resetToggle,
+  isDone,
+  songId,
 }: Props) => {
-  const [isDone, setIsDone] = useState(false);
-  useEffect(() => {
-    setIsDone(false);
-  }, [resetToggle]);
+  const [changeIcon, setChangeIcon] = useState(isDone);
+  const userId = auth.currentUser;
+
+  const { settingIcons } = useToggleIsDone(isDone, userId, songId);
 
   const handlePressIcon = () => {
-    setIsDone(!isDone);
+    setChangeIcon(!changeIcon);
+    settingIcons(songId, changeIcon);
   };
 
   return (
     <TouchableOpacity
-      style={[styles.songCard, { backgroundColor: isDone ? "#cccccc" : color }]}
-      onPress={onPress}
-      disabled={isDone}>
+      style={[
+        styles.songCard,
+        { backgroundColor: changeIcon ? "#cccccc" : color },
+      ]}
+      onPress={onPress}>
       <View style={styles.containerCard}>
         <View>
           <Text style={styles.songCardTitle}>{title}</Text>
@@ -39,10 +47,10 @@ export const SongCard = ({
         </View>
         <View style={styles.buttonContainer}>
           <Icon
-            name={isDone ? "checkmark-done-sharp" : "power-sharp"}
+            name={changeIcon ? "checkmark-done-sharp" : "power-sharp"}
             color={globalColors.light}
             size={30}
-            onPress={handlePressIcon}
+            onPress={() => handlePressIcon()}
           />
         </View>
       </View>

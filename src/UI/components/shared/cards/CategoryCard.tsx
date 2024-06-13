@@ -53,8 +53,9 @@ const styles = StyleSheet.create({
   },
   categoryCardText: {
     color: globalColors.light,
-    fontSize: 23,
     paddingHorizontal: 5,
+    fontSize: 18,
+    fontWeight: "300",
   },
   containerIcons: {
     padding: 10,

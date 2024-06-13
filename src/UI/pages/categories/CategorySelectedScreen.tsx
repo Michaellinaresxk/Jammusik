@@ -191,7 +191,7 @@ export const CategorySelectedScreen = () => {
               onRefresh={refresh}
             />
           }>
-          <View >
+          <View>
             <GlobalHeader headerTitle={params.title} />
             <FloatingActionButton onPress={() => setIsVisible(true)} />
             <View style={styles.songCardContainer}>
@@ -208,7 +208,7 @@ export const CategorySelectedScreen = () => {
                       onSwipeableWillOpen={() => setCurrentSongId(item.id)}>
                       <View style={{ width: valueWidth - 20 }}>
                         <SongCard
-                          resetToggle={resetToggle} s
+                          resetToggle={resetToggle}
                           title={item.title}
                           artist={item.artist}
                           color={
@@ -324,8 +324,8 @@ const styles = StyleSheet.create({
   songCardContainer: {
     marginTop: 100,
     paddingHorizontal: 10,
-    display: 'flex',
-    justifyContent: 'center',
+    display: "flex",
+    justifyContent: "center",
     alignItems: "center",
   },
   titleContainer: {

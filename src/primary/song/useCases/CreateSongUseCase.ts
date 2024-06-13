@@ -10,6 +10,7 @@ export class CreateSongUseCase implements UseCase {
     playlistId: string,
     title: string,
     artist: string,
+    isDone: boolean,
   ): Promise<SongView> {
     try {
       const song = await this.songResource.createSong(
@@ -17,6 +18,7 @@ export class CreateSongUseCase implements UseCase {
         playlistId,
         title,
         artist,
+        isDone,
       );
       return SongView.fromDomain(song);
     } catch (err) {

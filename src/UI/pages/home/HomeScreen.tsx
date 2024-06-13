@@ -17,7 +17,6 @@ import {
 } from "@react-navigation/native";
 import { type RootStackParamsList } from "../../routes/StackNavigator";
 import { GlobalHeader } from "../../components/shared/GlobalHeader";
-import { TheGreenBorder } from "../../components/shared/TheGreenBorder";
 import { globalColors } from "../../theme/Theme";
 import { useCategoryService } from "../../../context/CategoryServiceContext";
 import { CategoryView } from "../../../views/CategoryView";
