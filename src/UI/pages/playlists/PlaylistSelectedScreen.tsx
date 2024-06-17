@@ -140,7 +140,6 @@ export const PlaylistSelectedScreen = () => {
   );
 
   const { isRefreshing, refresh, top } = usePullRefresh(loadSongList);
-
   return (
     <>
       <KeyboardAvoidingView

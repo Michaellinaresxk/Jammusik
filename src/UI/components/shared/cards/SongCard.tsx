@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { globalColors } from "../../../theme/Theme";
 import Icon from "react-native-vector-icons/Ionicons";
-import { useToggleIsDone } from "../../../../hooks/useToggleIsDone";
+import { useSongState } from "../../../store/useSongState";
 import { auth } from "../../../../infra/api/firebaseConfig";
 
 type Props = {
@@ -24,15 +24,20 @@ export const SongCard = ({
   songId,
 }: Props) => {
   const [changeIcon, setChangeIcon] = useState(isDone);
-  const userId = auth.currentUser;
+  const userId = auth.currentUser?.uid;
 
-  const { settingIcons } = useToggleIsDone(isDone, userId, songId);
+  const toggleIsDone = useSongState(state => state.toggleIsDone);
 
-  const handlePressIcon = () => {
-    setChangeIcon(!changeIcon);
-    settingIcons(songId, changeIcon);
+  const handlePressIcon = async () => {
+    if (userId && songId) {
+      await toggleIsDone(userId, songId, changeIcon);
+      setChangeIcon(prev => !prev);
+    }
   };
 
+  useEffect(() => {
+    setChangeIcon(isDone);
+  }, [isDone]);
   return (
     <TouchableOpacity
       style={[
