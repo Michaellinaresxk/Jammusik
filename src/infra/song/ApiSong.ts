@@ -4,4 +4,5 @@ export type ApiSong = {
   artist: string;
   categoryId: string;
   playlistId: string | undefined;
+  isDone: boolean;
 };

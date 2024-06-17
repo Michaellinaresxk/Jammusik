@@ -7,10 +7,11 @@ export class SongView {
     public readonly artist: string,
     public readonly categoryId: string,
     public readonly playlistId: string,
+    public readonly isDone: boolean,
   ) {}
 
   static fromDomain(song: Song): SongView {
-    const { id, title, artist, categoryId, playlistId } = song;
-    return new SongView(id, title, artist, categoryId, playlistId);
+    const { id, title, artist, categoryId, playlistId, isDone } = song;
+    return new SongView(id, title, artist, categoryId, playlistId, isDone);
   }
 }

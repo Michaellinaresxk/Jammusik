@@ -11,6 +11,7 @@ export class SongCaller {
     playlistId: string,
     title: string,
     artist: string,
+    isDone: boolean,
   ): Promise<ApiSong> {
     const userId = auth.currentUser?.uid;
     if (!this.db || !userId) {
@@ -23,6 +24,7 @@ export class SongCaller {
       playlistId,
       title,
       artist,
+      isDone,
     };
 
     function cleanObject(obj: any) {
