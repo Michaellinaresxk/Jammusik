@@ -31,6 +31,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import Toast from "react-native-toast-message";
 import { auth } from "../../../infra/api/firebaseConfig";
 import { usePullRefresh } from "../../../hooks/usePullRefresing";
+import { getIsDone } from "../../../hooks/useToggleIsDone";
 
 export const PlaylistSelectedScreen = () => {
   const songService = useSongService();
@@ -80,7 +81,13 @@ export const PlaylistSelectedScreen = () => {
   const loadSongList = useCallback(async () => {
     try {
       const fetchedSongs = await songService.getSongs(playlistId);
-      setSongList(fetchedSongs);
+      const songsWithIsDone = await Promise.all(
+        fetchedSongs.map(async song => ({
+          ...song,
+          isDone: await getIsDone(song.id), // Obtener el estado de isDone
+        })),
+      );
+      setSongList(songsWithIsDone);
     } catch (error) {
       console.error("Failed to fetch songList:", error);
     }
