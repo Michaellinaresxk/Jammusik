@@ -14,6 +14,7 @@ export class SongWithOutPlaylistResource
     categoryId: string,
     title: string,
     artist: string,
+    isDone: boolean,
   ): Promise<SongWithOutPlaylist> {
     const apiSong =
       await this.songWithOutPlaylistCaller.createSongWithOutPlaylist(
@@ -21,6 +22,7 @@ export class SongWithOutPlaylistResource
         categoryId,
         title,
         artist,
+        isDone,
       );
     return new SongWithOutPlaylist(
       apiSong.id,
@@ -28,6 +30,7 @@ export class SongWithOutPlaylistResource
       apiSong.categoryId,
       apiSong.title,
       apiSong.artist,
+      apiSong.isDone,
     );
   }
 
@@ -53,6 +56,7 @@ export class SongWithOutPlaylistResource
           apiSong.categoryId,
           apiSong.title,
           apiSong.artist,
+          apiSong.isDone,
         ),
     );
   }

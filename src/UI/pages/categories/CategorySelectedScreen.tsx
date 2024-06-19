@@ -1,7 +1,4 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { RouteProp, useRoute } from "@react-navigation/native";
-import { RootStackParamsList } from "../../routes/StackNavigator";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
 import {
   Alert,
   FlatList,
@@ -16,24 +13,28 @@ import {
   View,
   useWindowDimensions,
 } from "react-native";
-import { GlobalHeader } from "../../components/shared/GlobalHeader";
+import { RouteProp, useRoute } from "@react-navigation/native";
+import { RootStackParamsList } from "../../routes/StackNavigator";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { getAuth } from "firebase/auth";
 import { Swipeable } from "react-native-gesture-handler";
 import { useCategoryService } from "../../../context/CategoryServiceContext";
 import { useSongWithOutPlaylistService } from "../../../context/SongWithOutPlaylistContext";
-import { getAuth } from "firebase/auth";
-import { globalColors } from "../../theme/Theme";
+import { useSongService } from "../../../context/SongServiceContext";
+import { getIsDone } from "../../../hooks/useToggleIsDone";
 import { SongCounter } from "../../components/shared/SongCounter";
-import { SongCard } from "../../components/shared/cards/SongCard";
 import { usePullRefresh } from "../../../hooks/usePullRefresing";
 import { SongView } from "../../../views/SongView";
 import { SongWithOutPlaylistView } from "../../../views/SongWithOutPlaylistView";
 import { FloatingActionButton } from "../../components/shared/FloatingActionButton";
-import { PrimaryButton } from "../../components/shared/PrimaryButton";
 import { FormCreateSongWithOutPlaylist } from "../../components/shared/forms/FormCreateSongWithOutPlaylist";
+import { globalColors } from "../../theme/Theme";
+import { SongCard } from "../../components/shared/cards/SongCard";
+import { PrimaryButton } from "../../components/shared/PrimaryButton";
+import { GlobalHeader } from "../../components/shared/GlobalHeader";
 import Svg, { Path } from "react-native-svg";
-import Icon from "react-native-vector-icons/Ionicons";
-import { useSongService } from "../../../context/SongServiceContext";
 import Toast from "react-native-toast-message";
+import Icon from "react-native-vector-icons/Ionicons";
 
 export const CategorySelectedScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
@@ -57,6 +58,7 @@ export const CategorySelectedScreen = () => {
   const [triggerUpdate, setTriggerUpdate] = useState(false);
   const [currentSongId, setCurrentSongId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isDone, setIsDone] = useState(false);
 
   const categoryId = params.id as string;
 
@@ -73,8 +75,23 @@ export const CategorySelectedScreen = () => {
         categoryService.getSongListByCategory(userId, categoryId),
         songWithOutPlaylistService.getSongsWithOutPlaylist(userId, categoryId),
       ]);
-      setSongList(fetchedSongs);
-      setSongListWithOutPlaylist(fetchedSongsWithoutPlaylist);
+
+      const songsWithIsDone = await Promise.all(
+        fetchedSongs.map(async song => ({
+          ...song,
+          isDone: await getIsDone(song.id),
+        })),
+      );
+
+      const songsWithoutPlaylistWithIsDone = await Promise.all(
+        fetchedSongsWithoutPlaylist.map(async song => ({
+          ...song,
+          isDone: await getIsDone(song.id),
+        })),
+      );
+
+      setSongList(songsWithIsDone);
+      setSongListWithOutPlaylist(songsWithoutPlaylistWithIsDone);
     } catch (error) {
       console.error("Failed to fetch song lists:", error);
     }
@@ -103,7 +120,7 @@ export const CategorySelectedScreen = () => {
 
   const handleCreateSongWithOutPlaylist = async values => {
     try {
-      const { title, artist } = values;
+      const { title, artist, isDone } = values;
 
       setIsLoading(true);
       await songWithOutPlaylistService.createSongWithOutPlaylist(
@@ -111,6 +128,7 @@ export const CategorySelectedScreen = () => {
         categoryId,
         title,
         artist,
+        isDone,
       );
       setTitle("");
       setArtist("");
@@ -213,6 +231,8 @@ export const CategorySelectedScreen = () => {
                           resetToggle={resetToggle}
                           title={item.title}
                           artist={item.artist}
+                          isDone={item.isDone}
+                          songId={item.id}
                           color={
                             index % 2 === 0
                               ? globalColors.primary

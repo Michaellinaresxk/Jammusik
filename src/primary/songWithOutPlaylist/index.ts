@@ -24,12 +24,14 @@ export class SongWithOutPlaylistService {
     categoryId: string,
     title: string,
     artist: string,
+    isDone: boolean,
   ): Promise<SongWithOutPlaylistView> {
     return await this.createSongWithOutPlaylistUseCase.execute(
       userId,
       categoryId,
       title,
       artist,
+      isDone,
     );
   }
 

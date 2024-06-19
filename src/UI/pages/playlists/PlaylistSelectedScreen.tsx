@@ -84,7 +84,7 @@ export const PlaylistSelectedScreen = () => {
       const songsWithIsDone = await Promise.all(
         fetchedSongs.map(async song => ({
           ...song,
-          isDone: await getIsDone(song.id), // Obtener el estado de isDone
+          isDone: await getIsDone(song.id),
         })),
       );
       setSongList(songsWithIsDone);

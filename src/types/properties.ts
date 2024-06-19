@@ -13,6 +13,7 @@ export interface SongWithOutPlaylistProperties {
   categoryId: string;
   title: string;
   artist: string;
+  isDone: boolean;
 }
 
 export interface SongDetailsProperties {

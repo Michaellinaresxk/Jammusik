@@ -34,6 +34,7 @@ export class CategoryResource implements CategoryRepository {
           apiSong.playlistId,
           apiSong.title,
           apiSong.artist,
+          apiSong.isDone,
         ),
     );
   }
