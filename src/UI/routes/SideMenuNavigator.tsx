@@ -8,11 +8,10 @@ import {
 import { CategoriesScreen } from "../pages/categories/CategoriesScreen";
 import { globalColors } from "../theme/Theme";
 import { BrandLogo } from "../components/shared/BrandLogo";
-import { Alert, StyleSheet, View } from "react-native";
+import { Alert, StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { Separator } from "../components/shared/Separator";
 import { PlaylistScreen } from "../pages/playlists/PlaylistScreen";
 import Icon from "react-native-vector-icons/Ionicons";
-import { PrimaryButton } from "../components/shared/PrimaryButton";
 import { useUserService } from "../../context/UserServiceContext";
 import { type NavigationProp, useNavigation } from "@react-navigation/native";
 import {
@@ -23,7 +22,6 @@ import useAuthStatus from "../../hooks/useAuthStatus";
 import { LoginScreen } from "../pages/login/LoginScreen";
 import { RegisterScreen } from "../pages/register/RegisterScreen";
 import { StackSettingNavigator } from "./StackSettingNavigator";
-import { SettingsScreen } from "../pages/settings/SettingsScreen";
 import { UserAvatar } from "../components/shared/UserAvatar";
 
 const Drawer = createDrawerNavigator();
@@ -146,13 +144,13 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
       <Separator color="white" />
       <DrawerItemList {...props} />
       <View style={styles.buttonContainer}>
-        <PrimaryButton
-          label="Logout"
-          onPress={() => logOutConfirmation()}
-          borderRadius={5}
-          colorText={globalColors.primary}
-          btnFontSize={17}
-        />
+
+
+        <TouchableOpacity style={styles.btnContainer}
+
+          onPress={() => logOutConfirmation()}>
+          <Text style={styles.btnText}>Logout</Text>
+        </TouchableOpacity>
       </View>
       <View style={{ marginTop: 100 }}>
         <BrandLogo />
@@ -182,4 +180,21 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
   },
+  btnContainer: {
+    backgroundColor: 'transparent',
+    width: 100,
+    padding: 10,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: globalColors.primary,
+
+    alignSelf: 'center'
+  },
+  btnText: {
+
+    color: globalColors.primary,
+    margin: 'auto',
+    textAlign: 'center'
+
+  }
 });
