@@ -115,6 +115,8 @@ export const SettingsScreen = () => {
             {...item}
             isFirst={index === 0}
             isLast={index === menuItems.length - 1}
+            isOnly
+
           />
         ))}
 
