@@ -9,6 +9,7 @@ import {
   ScrollView,
   Platform,
   RefreshControl,
+  ActivityIndicator,
 } from "react-native";
 import { globalColors, globalStyles } from "../../theme/Theme";
 import { images } from "../../../assets/img/Images";
@@ -20,7 +21,7 @@ import { useEmailResend } from "../../../hooks/useEmailResend";
 
 export const FeedbackScreen = () => {
   const [text, setText] = useState<string>("");
-  const { sendEmail } = useEmailResend();
+  const { sendEmail, isLoading } = useEmailResend();
 
   const image = {
     uri: images.loginBackground,
@@ -81,7 +82,7 @@ export const FeedbackScreen = () => {
                   value={text}
                 />
                 <PrimaryButton
-                  label="SEND FEEDBACK"
+                  label={isLoading ? <ActivityIndicator size='small' color={globalColors.primaryDark} /> : "SEND FEEDBACK"}
                   bgColor="#18998B"
                   borderRadius={5}
                   onPress={() => sendEmail(text, setText)}

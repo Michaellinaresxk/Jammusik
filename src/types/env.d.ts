@@ -7,4 +7,5 @@ declare module "@env" {
   export const APP_ID: string;
   export const MEASUREMENT_ID: string;
   export const RESEND_API_KEY: string;
+  export const SEND_FEEDBACK_TO: string;
 }
