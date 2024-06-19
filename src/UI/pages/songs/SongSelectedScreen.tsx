@@ -14,7 +14,6 @@ import { GlobalHeader } from "../../components/shared/GlobalHeader";
 import { FloatingActionButton } from "../../components/shared/FloatingActionButton";
 import { type RootStackParamsList } from "../../routes/StackNavigator";
 import { RouteProp, useRoute } from "@react-navigation/native";
-import { TheGreenBorder } from "../../components/shared/TheGreenBorder";
 import { Text } from "react-native";
 import { PrimaryIcon } from "../../components/shared/PrimaryIcon";
 import { globalColors } from "../../theme/Theme";
@@ -68,7 +67,7 @@ export const SongSelectedScreen = () => {
       showToast();
       closeModal();
       setHasSavedData(true);
-      setTriggerUpdate(true); // Actualizar datos después de crear/actualizar
+      setTriggerUpdate(true);
     } catch (error) {
       console.error(error);
       Alert.alert("Error", "Failed to create the song. Please try again.");
@@ -91,7 +90,7 @@ export const SongSelectedScreen = () => {
         setNotes(fetchedSongDetails.notes || "");
         setLyricLink(fetchedSongDetails.lyricLink || "");
         setTabLink(fetchedSongDetails.tabLink || "");
-        setHasSavedData(true); // Indicar que los datos han sido recuperados
+        setHasSavedData(true);
       } else {
         setSongDetails(null);
         setSongKey("");
@@ -154,13 +153,12 @@ export const SongSelectedScreen = () => {
               onRefresh={refresh}
             />
           }>
-          <TheGreenBorder />
           <View>
             <GlobalHeader headerTitle={params.title} artist={params.artist} />
             <FloatingActionButton onPress={() => setIsVisible(true)} />
           </View>
           <View style={styles.layout}>
-            <View style={styles.container}>
+            <View style={styles.titleContainer}>
               <Text style={styles.title}>Category:</Text>
               <View style={styles.titleContent}>
                 <PrimaryIcon
@@ -171,7 +169,7 @@ export const SongSelectedScreen = () => {
                 <Text style={styles.category}> {category}</Text>
               </View>
             </View>
-            <View style={styles.container}>
+            <View>
               <Text style={styles.title}>Key:</Text>
               <View style={styles.titleContent}>
                 <Text style={styles.category}>{songKey}</Text>
@@ -236,7 +234,7 @@ export const SongSelectedScreen = () => {
 const styles = StyleSheet.create({
   layout: {
     padding: 30,
-    marginTop: 30,
+    marginTop: 40,
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
@@ -245,6 +243,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
+  titleContainer: {},
   title: {
     fontSize: 16,
     marginRight: 10,
@@ -258,6 +257,7 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 5,
     paddingHorizontal: 10,
+    marginTop: 15,
   },
   chordLayout: {
     marginTop: 30,
@@ -283,10 +283,11 @@ const styles = StyleSheet.create({
   },
   notesContent: {
     backgroundColor: globalColors.primaryAlt,
-    marginLeft: 40,
+    marginLeft: 20,
+    marginTop: 20,
     borderRadius: 10,
     padding: 30,
-    width: "80%",
+    width: "90%",
   },
   notesText: {
     color: globalColors.primary,
