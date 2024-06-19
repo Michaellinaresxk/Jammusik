@@ -114,7 +114,7 @@ export const FormCreateSongWithOutPlaylist = ({
                 items={[currentCategory]} // Only show the current category
                 defaultValue={currentCategory.value}
                 placeholder="Choose a category"
-                onChange={() => {}} // No-op function since it shouldn't change
+                onChange={() => { }} // No-op function since it shouldn't change
                 disabled={true} // Disable the dropdown
               />
             )}

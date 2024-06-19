@@ -54,84 +54,79 @@ export const FormSongDetails = ({
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : undefined}>
-      <ScrollView
-        keyboardDismissMode="none"
-        keyboardShouldPersistTaps="handled">
-        <View style={globalFormStyles.containerForm}>
-          <View style={globalFormStyles.form}>
-            <View>
-              <TextInput
-                style={globalFormStyles.inputLogin}
-                placeholderTextColor="#838282"
-                placeholder="Key"
-                value={songKey}
-                autoCorrect={false}
-                onChangeText={setSongKey}
-              />
-              <TextInput
-                style={globalFormStyles.inputLogin}
-                placeholderTextColor="#838282"
-                placeholder="Put chord and press enter"
-                value={chordInput}
-                onChangeText={handleChordInput}
-                autoCorrect={false}
-                onSubmitEditing={handleSubmitEditing}
-              />
-              <FlatList
-                data={chordList}
-                horizontal={true}
-                renderItem={({ item }) => (
-                  <Text style={styles.chord}>
-                    {item}{" "}
-                    <Icon
-                      name="stop-sharp"
-                      color={globalColors.primary}
-                      size={5}
-                    />{" "}
-                  </Text>
-                )}
-                keyExtractor={(item, index) => index.toString()}
-              />
-              <TextInput
-                multiline={true}
-                style={{ ...globalFormStyles.inputLogin, height: 100 }}
-                placeholderTextColor="#838282"
-                placeholder="Notes"
-                value={notes}
-                autoCorrect={false}
-                onChangeText={setNotes}
-              />
-              <TextInput
-                style={globalFormStyles.inputLogin}
-                placeholderTextColor="#838282"
-                placeholder="Lyric link"
-                value={lyricLink}
-                autoCorrect={false}
-                onChangeText={setLyricLink}
-              />
-              <TextInput
-                style={globalFormStyles.inputLogin}
-                placeholderTextColor="#838282"
-                placeholder="Tab link"
-                value={tabLink}
-                autoCorrect={false}
-                onChangeText={setTabLink}
-              />
-            </View>
-            <PrimaryButton
-              label="Save song details"
-              bgColor={globalColors.primary}
-              borderRadius={5}
-              colorText={globalColors.light}
-              btnFontSize={20}
-              onPress={onCreateSongDetails}
-            />
-          </View>
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+
+    <View style={globalFormStyles.containerForm}>
+      <View style={globalFormStyles.form}>
+
+        <TextInput
+          style={globalFormStyles.inputLogin}
+          placeholderTextColor="#838282"
+          placeholder="Key"
+          value={songKey}
+          autoCorrect={false}
+          onChangeText={setSongKey}
+        />
+        <TextInput
+          style={globalFormStyles.inputLogin}
+          placeholderTextColor="#838282"
+          placeholder="Put chord and press enter"
+          value={chordInput}
+          onChangeText={handleChordInput}
+          autoCorrect={false}
+          onSubmitEditing={handleSubmitEditing}
+        />
+        <FlatList
+          data={chordList}
+          horizontal={true}
+          renderItem={({ item }) => (
+            <Text style={styles.chord}>
+              {item}{" "}
+              <Icon
+                name="stop-sharp"
+                color={globalColors.primary}
+                size={5}
+              />{" "}
+            </Text>
+          )}
+          keyExtractor={(item, index) => index.toString()}
+        />
+        <TextInput
+          multiline={true}
+          style={{ ...globalFormStyles.inputLogin, height: 100 }}
+          placeholderTextColor="#838282"
+          placeholder="Notes"
+          value={notes}
+          autoCorrect={false}
+          onChangeText={setNotes}
+        />
+        <TextInput
+          style={globalFormStyles.inputLogin}
+          placeholderTextColor="#838282"
+          placeholder="Lyric link"
+          value={lyricLink}
+          autoCorrect={false}
+          onChangeText={setLyricLink}
+        />
+        <TextInput
+          style={globalFormStyles.inputLogin}
+          placeholderTextColor="#838282"
+          placeholder="Tab link"
+          value={tabLink}
+          autoCorrect={false}
+          onChangeText={setTabLink}
+        />
+
+        <PrimaryButton
+          label="Save song details"
+          bgColor={globalColors.primary}
+          borderRadius={5}
+          colorText={globalColors.light}
+          btnFontSize={20}
+          onPress={onCreateSongDetails}
+        />
+      </View>
+    </View>
+
   );
 };
 

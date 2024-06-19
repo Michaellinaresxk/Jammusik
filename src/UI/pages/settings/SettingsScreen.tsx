@@ -78,7 +78,7 @@ export const SettingsScreen = () => {
     <View
       style={{
         flex: 1,
-        paddingHorizontal: 20,
+        padding: 20,
         marginTop: top,
       }}>
       <Pressable
@@ -115,9 +115,10 @@ export const SettingsScreen = () => {
             {...item}
             isFirst={index === 0}
             isLast={index === menuItems.length - 1}
-            isOnly
+            isOnly={true}
 
           />
+
         ))}
 
         <View style={{ marginTop: 30 }} />
