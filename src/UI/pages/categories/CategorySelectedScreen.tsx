@@ -18,7 +18,6 @@ import {
 } from "react-native";
 import { GlobalHeader } from "../../components/shared/GlobalHeader";
 import { Swipeable } from "react-native-gesture-handler";
-import { TheGreenBorder } from "../../components/shared/TheGreenBorder";
 import { useCategoryService } from "../../../context/CategoryServiceContext";
 import { useSongWithOutPlaylistService } from "../../../context/SongWithOutPlaylistContext";
 import { getAuth } from "firebase/auth";
@@ -80,6 +79,10 @@ export const CategorySelectedScreen = () => {
       console.error("Failed to fetch song lists:", error);
     }
   }, [categoryId, categoryService, songWithOutPlaylistService, userId]);
+
+  useEffect(() => {
+    loadSongList();
+  }, [loadSongList]);
 
   useEffect(() => {
     loadSongList();
@@ -175,7 +178,6 @@ export const CategorySelectedScreen = () => {
 
   return (
     <>
-      {/* <TheGreenBorder /> */}
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : undefined}>
         <ScrollView

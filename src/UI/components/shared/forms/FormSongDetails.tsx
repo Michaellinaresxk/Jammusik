@@ -73,7 +73,7 @@ export const FormSongDetails = ({
               <TextInput
                 style={globalFormStyles.inputLogin}
                 placeholderTextColor="#838282"
-                placeholder="Chord List"
+                placeholder="Put chord and press enter"
                 value={chordInput}
                 onChangeText={handleChordInput}
                 autoCorrect={false}

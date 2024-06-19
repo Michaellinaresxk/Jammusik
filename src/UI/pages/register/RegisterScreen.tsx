@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import {
-  Alert,
   ImageBackground,
   KeyboardAvoidingView,
   Platform,
@@ -22,7 +21,7 @@ export const RegisterScreen = () => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('')
+  const [error, setError] = useState("");
 
   const userService = useUserService();
 
@@ -45,12 +44,12 @@ export const RegisterScreen = () => {
       navigation.navigate("HomeScreen");
     } catch (error) {
       console.log(error.code);
-      if (error.code === 'auth/email-already-in-use') {
-        setError("The email already in use, please a use it on another ")
+      if (error.code === "auth/email-already-in-use") {
+        setError("The email already in use, please a use it on another ");
       }
       setTimeout(() => {
-        setError('');
-      }, 5000)
+        setError("");
+      }, 5000);
       setIsLoading(false);
 
       setIsLoading(false);
@@ -58,15 +57,15 @@ export const RegisterScreen = () => {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : undefined}>
-      <ScrollView showsVerticalScrollIndicator={false} horizontal={false}>
-        <ImageBackground
-          source={image}
-          style={styles.containerImage}
-          resizeMode="cover"
-          alt="Imagen de fondo">
-          <View style={globalStyles.overlay}>
+    <ImageBackground
+      source={image}
+      style={styles.containerImage}
+      resizeMode="cover"
+      alt="Imagen de fondo">
+      <View style={globalStyles.overlay}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : undefined}>
+          <ScrollView showsVerticalScrollIndicator={false} horizontal={false}>
             <View style={styles.containerLoginScreen}>
               <View style={styles.containerLogo}>
                 <BrandLogo />
@@ -92,10 +91,10 @@ export const RegisterScreen = () => {
                 />
               </View>
             </View>
-          </View>
-        </ImageBackground>
-      </ScrollView>
-    </KeyboardAvoidingView>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </View>
+    </ImageBackground>
   );
 };
 
