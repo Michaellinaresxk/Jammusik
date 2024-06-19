@@ -22,7 +22,7 @@ export const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('')
+  const [error, setError] = useState("");
 
   const userService = useUserService();
   const navigation = useNavigation();
@@ -44,31 +44,21 @@ export const LoginScreen = () => {
       navigation.navigate("HomeScreen");
       setIsLoading(false);
     } catch (error) {
-
-
-      if (error.code === 'auth/invalid-credential') {
-        setError('Invalid credentials');
-
-
-
-
+      if (error.code === "auth/invalid-credential") {
+        setError("Invalid credentials");
       }
       setTimeout(() => {
-        setError('');
-      }, 5000)
+        setError("");
+      }, 5000);
       setIsLoading(false);
-
-    };
-  }
+    }
+  };
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : undefined}  >
-      <ScrollView>
-        <ImageBackground
-          source={image}
-          resizeMode="cover"
-          alt="Imagen de fondo">
-          <View style={globalStyles.overlay}>
+    <ImageBackground source={image} resizeMode="cover" alt="Imagen de fondo">
+      <View style={globalStyles.overlay}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : undefined}>
+          <ScrollView>
             <View style={styles.containerLoginScreen}>
               <View style={styles.containerLogo}>
                 <BrandLogo />
@@ -76,7 +66,6 @@ export const LoginScreen = () => {
               <Text style={styles.labelTitle}>Log In</Text>
 
               <View style={styles.containerForm}>
-
                 <Formlogin
                   email={email}
                   setEmail={setEmail}
@@ -94,10 +83,10 @@ export const LoginScreen = () => {
                 />
               </View>
             </View>
-          </View>
-        </ImageBackground>
-      </ScrollView>
-    </KeyboardAvoidingView>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </View>
+    </ImageBackground>
   );
 };
 
