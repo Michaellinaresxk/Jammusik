@@ -4,4 +4,5 @@ export type ApiSongWithOutPlaylist = {
   categoryId: string;
   title: string;
   artist: string;
+  isDone: boolean;
 };

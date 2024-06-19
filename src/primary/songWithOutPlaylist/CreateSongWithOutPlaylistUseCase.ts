@@ -12,6 +12,7 @@ export class CreateSongWithOutPlaylistUseCase implements UseCase {
     categoryId: string,
     title: string,
     artist: string,
+    isDone: boolean,
   ): Promise<SongWithOutPlaylistView> {
     try {
       const songWithOutPlaylist =
@@ -20,6 +21,7 @@ export class CreateSongWithOutPlaylistUseCase implements UseCase {
           categoryId,
           title,
           artist,
+          isDone,
         );
       return SongWithOutPlaylistView.fromDomain(songWithOutPlaylist);
     } catch (err) {

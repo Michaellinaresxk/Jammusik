@@ -10,6 +10,7 @@ export class SongWithOutPlaylistCaller {
     categoryId: string,
     title: string,
     artist: string,
+    isDone: boolean,
   ): Promise<ApiSongWithOutPlaylist> {
     if (!this.db || !userId) {
       throw new Error("Firestore instance or user ID is undefined!");
@@ -20,6 +21,7 @@ export class SongWithOutPlaylistCaller {
       categoryId,
       title,
       artist,
+      isDone,
     };
 
     function cleanObject(obj: any) {

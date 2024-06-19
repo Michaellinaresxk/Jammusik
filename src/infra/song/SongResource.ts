@@ -45,6 +45,7 @@ export class SongResource implements SongRepository {
           apiSong.playlistId,
           apiSong.title,
           apiSong.artist,
+          apiSong.isDone,
         ),
     );
   }
