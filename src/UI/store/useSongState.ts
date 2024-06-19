@@ -1,4 +1,4 @@
-import create from "zustand";
+import { create } from "zustand";
 import { useToggleIsDone } from "../../hooks/useToggleIsDone";
 
 interface SongState {
