@@ -66,7 +66,7 @@ export const AboutUsScreen = () => {
               filter songs by musical genre, making it easy to search for songs
               by musical category or genre.
             </Text>
-            <Text style={styles.textos}>
+            <Text style={{ ...styles.textos, marginBottom: 100 }}>
               It is important to note that, in this version, the app does not
               play music; its main focus is the management and organization of
               playlists for musicians.

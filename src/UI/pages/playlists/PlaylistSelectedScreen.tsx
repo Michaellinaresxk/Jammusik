@@ -52,7 +52,7 @@ export const PlaylistSelectedScreen = () => {
   const [currentSongId, setCurrentSongId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isDone, setIsDone] = useState(false);
-  const { KeyboardGestureArea, height, scale } = useAnimationKeyboard()
+  const { KeyboardGestureArea, height, scale } = useAnimationKeyboard();
 
   const valueWidth = useWindowDimensions().width;
 
@@ -179,7 +179,7 @@ export const PlaylistSelectedScreen = () => {
                 <Swipeable
                   renderRightActions={() => swipeRightActions(item.id)}
                   onSwipeableWillOpen={() => setCurrentSongId(item.id)}>
-                  <View style={{ width: valueWidth - 20 }}>
+                  <View>
                     <SongCard
                       resetToggle={resetToggle}
                       title={item.title}
@@ -214,26 +214,18 @@ export const PlaylistSelectedScreen = () => {
         </ScrollView>
       </KeyboardAvoidingView>
 
-
       <Modal
         visible={isVisible}
         animationType="slide"
         presentationStyle="formSheet">
-
         <KeyboardGestureArea interpolator="ios" style={{ flex: 1 }}>
           <ScrollView horizontal={false} style={{ flex: 1 }}>
-            <Animated.View style={{
-              flex: 1,
-              transform: [{ translateY: height }, { scale }],
-
-            }}>
-              <View style={
-                styles.modalBtnContainer
-
-
-
-
-              }>
+            <Animated.View
+              style={{
+                flex: 1,
+                transform: [{ translateY: height }, { scale }],
+              }}>
+              <View style={styles.modalBtnContainer}>
                 <Text style={styles.modalFormHeaderTitle}>Add Song Info</Text>
                 <PrimaryButton
                   label="Close"
@@ -242,7 +234,6 @@ export const PlaylistSelectedScreen = () => {
                   onPress={() => closeModal()}
                 />
               </View>
-
 
               <FormCreateSong
                 title={title}
@@ -257,9 +248,7 @@ export const PlaylistSelectedScreen = () => {
             </Animated.View>
           </ScrollView>
         </KeyboardGestureArea>
-      </Modal >
-
-
+      </Modal>
     </>
   );
 };

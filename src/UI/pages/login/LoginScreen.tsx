@@ -7,7 +7,8 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  View, Animated
+  View,
+  Animated,
 } from "react-native";
 import { globalColors, globalStyles } from "../../theme/Theme";
 import { Formlogin } from "../../components/shared/forms/FormLogin";
@@ -19,8 +20,6 @@ import { useUserService } from "../../../context/UserServiceContext";
 import { useNavigation } from "@react-navigation/native";
 import useAnimationKeyboard from "../../../hooks/useAnimationKeyboard";
 
-
-
 export const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,7 +27,7 @@ export const LoginScreen = () => {
   const [error, setError] = useState("");
 
   const userService = useUserService();
-  const { height, scale, KeyboardGestureArea } = useAnimationKeyboard()
+  const { height, scale, KeyboardGestureArea } = useAnimationKeyboard();
   const navigation = useNavigation();
 
   const image = {
@@ -58,20 +57,18 @@ export const LoginScreen = () => {
     }
   };
 
-
   return (
     <ImageBackground source={image} resizeMode="cover" alt="Imagen de fondo">
-      <KeyboardGestureArea interpolator="ios">
-        <ScrollView>
-          <View style={globalStyles.overlay}>
+      <View style={globalStyles.overlay}>
+        <KeyboardGestureArea interpolator="ios">
+          <ScrollView>
             <KeyboardAvoidingView
               behavior={Platform.OS === "ios" ? "padding" : undefined}>
-
-
-              <Animated.View style={{
-                ...styles.containerLoginScreen,
-                transform: [{ translateY: height }, { scale }],
-              }}>
+              <Animated.View
+                style={{
+                  ...styles.containerLoginScreen,
+                  transform: [{ translateY: height }, { scale }],
+                }}>
                 <View style={styles.containerLogo}>
                   <BrandLogo />
                 </View>
@@ -95,15 +92,11 @@ export const LoginScreen = () => {
                   />
                 </View>
               </Animated.View>
-
-
-
             </KeyboardAvoidingView>
-          </View>
-
-        </ScrollView>
-      </KeyboardGestureArea>
-    </ImageBackground >
+          </ScrollView>
+        </KeyboardGestureArea>
+      </View>
+    </ImageBackground>
   );
 };
 
