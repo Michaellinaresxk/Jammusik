@@ -23,7 +23,8 @@ export const globalColors = {
 
 export const globalFormStyles = StyleSheet.create({
   containerForm: {
-    height: "auto",
+    flex: 1,
+
     color: "white",
   },
   labelTitle: {

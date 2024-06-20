@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { TextInput, View, Text, ActivityIndicator } from "react-native";
+import { TextInput, View, Text, ActivityIndicator, Animated, ScrollView } from "react-native";
 import { globalColors, globalFormStyles } from "../../../theme/Theme";
 import { PrimaryButton } from "../PrimaryButton";
 import { CustomDropdown } from "../CustomDropdown";
@@ -37,6 +37,7 @@ export const FormCreateSong = ({
   const categoryService = useCategoryService();
   const [categories, setCategories] = useState<DropdownItem[]>([]);
 
+
   useEffect(() => {
     const loadCategories = async () => {
       if (auth.currentUser) {
@@ -58,13 +59,28 @@ export const FormCreateSong = ({
   };
 
   return (
-    <View style={globalFormStyles.containerForm}>
+
+
+
+
+    <View style={
+
+      globalFormStyles.containerForm
+
+
+    }>
+
+
+
+
       <Formik
         validationSchema={validationCreateSongForm}
         initialValues={{ title: "", artist: "" }}
         onSubmit={onCreateSong}>
         {({ values, errors, handleChange, handleSubmit, touched }) => (
-          <View style={globalFormStyles.form}>
+          <View style={
+            globalFormStyles.form
+          }>
             <TextInput
               style={globalFormStyles.inputLogin}
               placeholderTextColor="#838282"
@@ -118,8 +134,14 @@ export const FormCreateSong = ({
               onPress={handleSubmit}
             />
           </View>
+
+
         )}
+
       </Formik>
+
     </View>
+
+
   );
 };

@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   RefreshControl,
   useWindowDimensions,
+  Animated,
 } from "react-native";
 import { type NavigationProp, useNavigation } from "@react-navigation/native";
 import { type RootStackParamsList } from "../../routes/StackNavigator";
@@ -32,6 +33,7 @@ import Toast from "react-native-toast-message";
 import { auth } from "../../../infra/api/firebaseConfig";
 import { usePullRefresh } from "../../../hooks/usePullRefresing";
 import { getIsDone } from "../../../hooks/useToggleIsDone";
+import useAnimationKeyboard from "../../../hooks/useAnimationKeyboard";
 
 export const PlaylistSelectedScreen = () => {
   const songService = useSongService();
@@ -50,6 +52,7 @@ export const PlaylistSelectedScreen = () => {
   const [currentSongId, setCurrentSongId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isDone, setIsDone] = useState(false);
+  const { KeyboardGestureArea, height, scale } = useAnimationKeyboard()
 
   const valueWidth = useWindowDimensions().width;
 
@@ -211,30 +214,52 @@ export const PlaylistSelectedScreen = () => {
         </ScrollView>
       </KeyboardAvoidingView>
 
+
       <Modal
         visible={isVisible}
         animationType="slide"
         presentationStyle="formSheet">
-        <View style={[styles.modalBtnContainer, { paddingRight: 25 }]}>
-          <Text style={styles.modalFormHeaderTitle}>Add Song Info</Text>
-          <PrimaryButton
-            label="Close"
-            btnFontSize={20}
-            colorText={globalColors.light}
-            onPress={() => closeModal()}
-          />
-        </View>
-        <FormCreateSong
-          title={title}
-          setTitle={setTitle}
-          artist={artist}
-          setArtist={setArtist}
-          categoryId={categoryId}
-          setCategoryId={setCategoryId}
-          onCreateSong={handleCreateSong}
-          isLoading={isLoading}
-        />
-      </Modal>
+
+        <KeyboardGestureArea interpolator="ios" style={{ flex: 1 }}>
+          <ScrollView horizontal={false} style={{ flex: 1 }}>
+            <Animated.View style={{
+              flex: 1,
+              transform: [{ translateY: height }, { scale }],
+
+            }}>
+              <View style={
+                styles.modalBtnContainer
+
+
+
+
+              }>
+                <Text style={styles.modalFormHeaderTitle}>Add Song Info</Text>
+                <PrimaryButton
+                  label="Close"
+                  btnFontSize={20}
+                  colorText={globalColors.light}
+                  onPress={() => closeModal()}
+                />
+              </View>
+
+
+              <FormCreateSong
+                title={title}
+                setTitle={setTitle}
+                artist={artist}
+                setArtist={setArtist}
+                categoryId={categoryId}
+                setCategoryId={setCategoryId}
+                onCreateSong={handleCreateSong}
+                isLoading={isLoading}
+              />
+            </Animated.View>
+          </ScrollView>
+        </KeyboardGestureArea>
+      </Modal >
+
+
     </>
   );
 };
@@ -250,6 +275,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: globalColors.primary,
     paddingLeft: 35,
+    paddingRight: 25,
   },
   modalFormHeaderTitle: {
     fontSize: 20,

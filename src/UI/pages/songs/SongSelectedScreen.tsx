@@ -9,6 +9,7 @@ import {
   View,
   Alert,
   FlatList,
+  Animated,
 } from "react-native";
 import { GlobalHeader } from "../../components/shared/GlobalHeader";
 import { FloatingActionButton } from "../../components/shared/FloatingActionButton";
@@ -25,6 +26,8 @@ import { auth } from "../../../infra/api/firebaseConfig";
 import { useSongDetailsService } from "../../../context/SongDetailsServiceContext";
 import { SongDetailsView } from "../../../views/SongDetailsView";
 import { useGetCategoryTitle } from "../../../hooks/useGetCategoryTitle";
+import { KeyboardGestureArea } from "react-native-keyboard-controller";
+import useAnimationKeyboard from "../../../hooks/useAnimationKeyboard";
 export const SongSelectedScreen = () => {
   const params =
     useRoute<RouteProp<RootStackParamsList, "PlaylistSelectedScreen">>().params;
@@ -42,6 +45,8 @@ export const SongSelectedScreen = () => {
   const userId = auth.currentUser ? auth.currentUser.uid : "";
   const songId = params.songId;
   const songDetailsService = useSongDetailsService();
+  const { KeyboardGestureArea, height, scale } = useAnimationKeyboard()
+
 
   const closeModal = () => {
     setIsVisible(false);
@@ -199,35 +204,59 @@ export const SongSelectedScreen = () => {
               <Text style={styles.links}>{tabLink}</Text>
             </View>
           </View>
-          <Modal
-            visible={isVisible}
-            animationType="slide"
-            presentationStyle="formSheet">
-            <View style={styles.modalBtnContainer}>
-              <Text style={styles.modalFormHeaderTitle}>Add Song Details</Text>
-              <PrimaryButton
-                label="Close"
-                btnFontSize={20}
-                colorText={globalColors.light}
-                onPress={() => closeModal()}
-              />
-            </View>
-            <FormSongDetails
-              songKey={songKey}
-              setSongKey={setSongKey}
-              chordList={chordList}
-              setChordList={setChordList}
-              notes={notes}
-              setNotes={setNotes}
-              lyricLink={lyricLink}
-              setLyricLink={setLyricLink}
-              tabLink={tabLink}
-              setTabLink={setTabLink}
-              onCreateSongDetails={onCreateSongDetails}
-            />
-          </Modal>
-        </ScrollView>
+        </ScrollView >
+
       </KeyboardAvoidingView>
+
+
+
+      <Modal
+        visible={isVisible}
+        animationType="slide"
+        presentationStyle="formSheet" style={{ flex: 1 }}>
+
+        <KeyboardGestureArea
+          interpolator="ios"
+        >
+
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            horizontal={false}
+          >
+            <Animated.View
+              style={{
+                flex: 1,
+                transform: [{ translateY: height }, { scale }],
+
+              }}>
+              <View style={styles.modalBtnContainer}>
+                <Text style={styles.modalFormHeaderTitle}>Add Song Details</Text>
+                <PrimaryButton
+                  label="Close"
+                  btnFontSize={20}
+                  colorText={globalColors.light}
+                  onPress={() => closeModal()}
+                />
+              </View>
+              <FormSongDetails
+                songKey={songKey}
+                setSongKey={setSongKey}
+                chordList={chordList}
+                setChordList={setChordList}
+                notes={notes}
+                setNotes={setNotes}
+                lyricLink={lyricLink}
+                setLyricLink={setLyricLink}
+                tabLink={tabLink}
+                setTabLink={setTabLink}
+                onCreateSongDetails={onCreateSongDetails}
+              />
+            </Animated.View>
+          </ScrollView>
+        </KeyboardGestureArea>
+      </Modal >
+
+
     </>
   );
 };

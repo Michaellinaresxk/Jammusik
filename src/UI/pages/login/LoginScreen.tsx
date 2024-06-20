@@ -7,7 +7,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  View,
+  View, Animated
 } from "react-native";
 import { globalColors, globalStyles } from "../../theme/Theme";
 import { Formlogin } from "../../components/shared/forms/FormLogin";
@@ -17,6 +17,9 @@ import React, { useState } from "react";
 import { LinkLoginRegister } from "../../components/shared/LinkLoginRegister";
 import { useUserService } from "../../../context/UserServiceContext";
 import { useNavigation } from "@react-navigation/native";
+import useAnimationKeyboard from "../../../hooks/useAnimationKeyboard";
+
+
 
 export const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -25,6 +28,7 @@ export const LoginScreen = () => {
   const [error, setError] = useState("");
 
   const userService = useUserService();
+  const { height, scale, KeyboardGestureArea } = useAnimationKeyboard()
   const navigation = useNavigation();
 
   const image = {
@@ -53,40 +57,53 @@ export const LoginScreen = () => {
       setIsLoading(false);
     }
   };
+
+
   return (
     <ImageBackground source={image} resizeMode="cover" alt="Imagen de fondo">
-      <View style={globalStyles.overlay}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : undefined}>
-          <ScrollView>
-            <View style={styles.containerLoginScreen}>
-              <View style={styles.containerLogo}>
-                <BrandLogo />
-              </View>
-              <Text style={styles.labelTitle}>Log In</Text>
+      <KeyboardGestureArea interpolator="ios">
+        <ScrollView>
+          <View style={globalStyles.overlay}>
+            <KeyboardAvoidingView
+              behavior={Platform.OS === "ios" ? "padding" : undefined}>
 
-              <View style={styles.containerForm}>
-                <Formlogin
-                  email={email}
-                  setEmail={setEmail}
-                  password={password}
-                  setPassword={setPassword}
-                  onLogin={handleLogin}
-                  isLoading={isLoading}
-                  error={error}
-                  setError={setError}
-                />
-                <LinkLoginRegister
-                  text="Not a member yet?"
-                  link="Register"
-                  goTo={"RegisterScreen"}
-                />
-              </View>
-            </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </View>
-    </ImageBackground>
+
+              <Animated.View style={{
+                ...styles.containerLoginScreen,
+                transform: [{ translateY: height }, { scale }],
+              }}>
+                <View style={styles.containerLogo}>
+                  <BrandLogo />
+                </View>
+                <Text style={styles.labelTitle}>Log In</Text>
+
+                <View style={styles.containerForm}>
+                  <Formlogin
+                    email={email}
+                    setEmail={setEmail}
+                    password={password}
+                    setPassword={setPassword}
+                    onLogin={handleLogin}
+                    isLoading={isLoading}
+                    error={error}
+                    setError={setError}
+                  />
+                  <LinkLoginRegister
+                    text="Not a member yet?"
+                    link="Register"
+                    goTo={"RegisterScreen"}
+                  />
+                </View>
+              </Animated.View>
+
+
+
+            </KeyboardAvoidingView>
+          </View>
+
+        </ScrollView>
+      </KeyboardGestureArea>
+    </ImageBackground >
   );
 };
 

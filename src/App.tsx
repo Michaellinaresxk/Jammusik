@@ -24,25 +24,34 @@ import { SideMenuNavigator } from "./UI/routes/SideMenuNavigator";
 import { userService } from "./services/userService";
 import Toast from "react-native-toast-message";
 import { ToastConfig } from "./UI/theme/ToastConfig";
+import { KeyboardProvider } from "react-native-keyboard-controller";
+
 function App(): React.JSX.Element {
   return (
-    <ProviderComposer
-      contexts={[
-        <UserServiceProvider userService={userService} />,
-        <CategoryServiceProvider categoryService={categoryService} />,
-        <PlaylistServiceProvider playlistService={playlistService} />,
-        <SongWithOutPlaylistServiceProvider
-          songWithOutPlaylistService={songWithOutPlaylistService}
-        />,
-        <SongServiceProvider songService={songService} />,
-        <SongDetailsServiceProvider songDetailsService={songDetailsService} />,
-        // Add other providers here as you create them
-      ]}>
-      <NavigationContainer>
-        <SideMenuNavigator />
-        <Toast config={ToastConfig} />
-      </NavigationContainer>
-    </ProviderComposer>
+    <KeyboardProvider >
+      <ProviderComposer
+        contexts={[
+          <UserServiceProvider userService={userService} />,
+          <CategoryServiceProvider categoryService={categoryService} />,
+          <PlaylistServiceProvider playlistService={playlistService} />,
+          <SongWithOutPlaylistServiceProvider
+            songWithOutPlaylistService={songWithOutPlaylistService}
+          />,
+          <SongServiceProvider songService={songService} />,
+          <SongDetailsServiceProvider songDetailsService={songDetailsService} />,
+          // Add other providers here as you create them
+        ]}>
+
+        <NavigationContainer>
+
+          <SideMenuNavigator />
+
+
+          <Toast config={ToastConfig} />
+        </NavigationContainer>
+
+      </ProviderComposer>
+    </KeyboardProvider>
   );
 }
 
