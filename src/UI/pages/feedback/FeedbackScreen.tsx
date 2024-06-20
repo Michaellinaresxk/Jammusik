@@ -25,9 +25,7 @@ import { KeyboardGestureArea } from "react-native-keyboard-controller";
 export const FeedbackScreen = () => {
   const [text, setText] = useState<string>("");
   const { sendEmail, isLoading } = useEmailResend();
-  const { height, scale } = useAnimationKeyboard()
-
-
+  const { height, scale } = useAnimationKeyboard();
 
   const image = {
     uri: images.loginBackground,
@@ -36,7 +34,6 @@ export const FeedbackScreen = () => {
   const { isRefreshing, refresh, top } = usePullRefresh();
 
   return (
-
     <ImageBackground
       source={image}
       style={globalStyles.container}
@@ -44,26 +41,19 @@ export const FeedbackScreen = () => {
       alt="Imagen de fondo">
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : undefined}>
-        <View style={
-          globalStyles.overlay
-
-        }>
-          <KeyboardGestureArea interpolator="ios" >
-            <ScrollView showsVerticalScrollIndicator={false} horizontal={false}
-            >
+        <View style={globalStyles.overlay}>
+          <KeyboardGestureArea interpolator="ios">
+            <ScrollView showsVerticalScrollIndicator={false} horizontal={false}>
               <Animated.View
                 style={{
                   flex: 1,
                   transform: [{ translateY: height }, { scale }],
                 }}>
+                <GoBackButton bgColor={globalColors.primary} />
 
-
-                <GoBackButton />
-
-
-
-
-                <ScrollView showsVerticalScrollIndicator={false} horizontal={false}
+                <ScrollView
+                  showsVerticalScrollIndicator={false}
+                  horizontal={false}
                   refreshControl={
                     <RefreshControl
                       refreshing={isRefreshing}
@@ -76,20 +66,11 @@ export const FeedbackScreen = () => {
                       onRefresh={refresh}
                     />
                   }>
-
-
                   <View style={styles.logoContainer}>
                     <BrandLogo />
                   </View>
 
-
-                  <View
-                    style={
-                      styles.container
-
-
-                    }>
-
+                  <View style={{ ...styles.container, marginBottom: 100 }}>
                     <Text style={styles.subTitle}>We Value Your Feedback!</Text>
                     <Text style={styles.text}>
                       We're always striving to improve and provide the best
@@ -115,29 +96,28 @@ export const FeedbackScreen = () => {
                     />
                     <PrimaryButton
                       label={
-                        isLoading
-                          ? <ActivityIndicator size='small' color={globalColors.primaryDark} />
-                          : "SEND FEEDBACK"}
+                        isLoading ? (
+                          <ActivityIndicator
+                            size="small"
+                            color={globalColors.primaryDark}
+                          />
+                        ) : (
+                          "SEND FEEDBACK"
+                        )
+                      }
                       bgColor="#18998B"
                       borderRadius={5}
                       onPress={() => sendEmail(text, setText)}
                       btnFontSize={20}
                     />
                   </View>
-
-
-
                 </ScrollView>
-
-
               </Animated.View>
             </ScrollView>
           </KeyboardGestureArea>
         </View>
       </KeyboardAvoidingView>
-
-    </ImageBackground >
-
+    </ImageBackground>
   );
 };
 const styles = StyleSheet.create({

@@ -226,7 +226,7 @@ export const CategorySelectedScreen = () => {
                         swipeRightActions(item.id, false)
                       }
                       onSwipeableWillOpen={() => setCurrentSongId(item.id)}>
-                      <View style={{ width: valueWidth - 20 }}>
+                      <View>
                         <SongCard
                           resetToggle={resetToggle}
                           title={item.title}
@@ -280,11 +280,13 @@ export const CategorySelectedScreen = () => {
                         swipeRightActions(item.id, true)
                       }
                       onSwipeableWillOpen={() => setCurrentSongId(item.id)}>
-                      <View style={{ width: valueWidth - 20 }}>
+                      <View>
                         <SongCard
                           resetToggle={resetToggle}
                           title={item.title}
                           artist={item.artist}
+                          isDone={item.isDone}
+                          songId={item.id}
                           color={
                             index % 2 === 0
                               ? globalColors.primary

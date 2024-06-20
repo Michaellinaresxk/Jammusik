@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { AccordionItem } from "../../components/shared/AccodionItems";
 import { globalColors } from "../../theme/Theme";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -35,20 +35,28 @@ export const FaqsScreen = () => {
   ]);
 
   return (
-    <View style={styles.containerAsk}>
-      <Pressable
-        style={styles.goBackContent}
-        onPress={() => navigation.goBack()}>
-        <Icon name="arrow-back-sharp" color={globalColors.primary} size={30} />
-      </Pressable>
-      <Text style={styles.titleAsk}> Frequently asked questions</Text>
-      <Text style={styles.description}>
-        Need help with something? Here are the most asked questions
-      </Text>
+    <ScrollView>
+      <View style={styles.containerAsk}>
+        <Pressable
+          style={styles.goBackContent}
+          onPress={() => navigation.goBack()}>
+          <Icon
+            name="arrow-back-sharp"
+            color={globalColors.primary}
+            size={30}
+          />
+        </Pressable>
+        <Text style={styles.titleAsk}> Frequently asked questions</Text>
+        <Text style={styles.description}>
+          Need help with something? Here are the most asked questions
+        </Text>
 
-      <AccordionItem askes={askes} setAskes={setAskes} />
-      <BrandLogo />
-    </View>
+        <AccordionItem askes={askes} setAskes={setAskes} />
+        <View style={styles.logoContent}>
+          <BrandLogo />
+        </View>
+      </View>
+    </ScrollView>
   );
 };
 
@@ -80,5 +88,8 @@ const styles = StyleSheet.create({
     color: globalColors.primaryDark,
     marginTop: 20,
     marginBottom: 20,
+  },
+  logoContent: {
+    marginBottom: 100,
   },
 });

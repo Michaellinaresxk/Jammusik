@@ -1,7 +1,14 @@
 import React from "react";
 import useAuthStatus from "../../../hooks/useAuthStatus";
 import Icon from "react-native-vector-icons/Ionicons";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { GoBackButton } from "../../components/shared/GoBackButton";
 import { globalColors } from "../../theme/Theme";
@@ -40,45 +47,47 @@ export const DeleteAccountScreen = () => {
     ]);
   return (
     <>
-      <GoBackButton />
-      <View
-        style={{
-          flex: 1,
-          paddingHorizontal: 20,
-          marginTop: top,
-        }}>
-        <Text style={styles.subTitle}>Before Delete:</Text>
-        <View>
-          <Text style={styles.text}>
-            By pressing the "Delete Account" button, a confirmation button will
-            appear. After you press the confirmation button, the deletion of
-            your account will proceed.
-          </Text>
-          <Text style={styles.text}>
-            Please be aware that this action is irreversible and will result in
-            the permanent loss of all associated data. Please use this function
-            wisely.
-          </Text>
-        </View>
-        <View style={styles.dangerZoneContent}>
-          <View style={styles.dangerIconContent}>
-            <Icon
-              name="alert-circle-sharp"
-              color={globalColors.danger}
-              size={25}
-            />
-            <Text style={styles.dangerZoneText}>Danger zone!</Text>
+      <ScrollView>
+        <GoBackButton bgColor={globalColors.primary} />
+        <View
+          style={{
+            flex: 1,
+            paddingHorizontal: 20,
+            marginTop: top,
+          }}>
+          <Text style={styles.subTitle}>Before Delete:</Text>
+          <View>
+            <Text style={styles.text}>
+              By pressing the "Delete Account" button, a confirmation button
+              will appear. After you press the confirmation button, the deletion
+              of your account will proceed.
+            </Text>
+            <Text style={styles.text}>
+              Please be aware that this action is irreversible and will result
+              in the permanent loss of all associated data. Please use this
+              function wisely.
+            </Text>
           </View>
-          <TouchableOpacity
-            style={styles.deleteButton}
-            onPress={() => deleteAccountConfirmation()}>
-            <Text style={styles.deleteButtonTitle}>Delete Account</Text>
-          </TouchableOpacity>
+          <View style={styles.dangerZoneContent}>
+            <View style={styles.dangerIconContent}>
+              <Icon
+                name="alert-circle-sharp"
+                color={globalColors.danger}
+                size={25}
+              />
+              <Text style={styles.dangerZoneText}>Danger zone!</Text>
+            </View>
+            <TouchableOpacity
+              style={styles.deleteButton}
+              onPress={() => deleteAccountConfirmation()}>
+              <Text style={styles.deleteButtonTitle}>Delete Account</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{ marginTop: 100, marginBottom: 100 }}>
+            <BrandLogo />
+          </View>
         </View>
-        <View style={{ marginTop: 100 }}>
-          <BrandLogo />
-        </View>
-      </View>
+      </ScrollView>
     </>
   );
 };

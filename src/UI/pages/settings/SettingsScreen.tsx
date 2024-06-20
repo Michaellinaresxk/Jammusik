@@ -116,9 +116,7 @@ export const SettingsScreen = () => {
             isFirst={index === 0}
             isLast={index === menuItems.length - 1}
             isOnly={true}
-
           />
-
         ))}
 
         <View style={{ marginTop: 30 }} />
@@ -172,19 +170,5 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: "900",
     color: globalColors.primaryDark,
-  },
-  dangerZoneContent: {
-    backgroundColor: "white",
-    borderRadius: 10,
-    marginTop: 30,
-  },
-  dangerIconContent: {
-    flexDirection: "row",
-  },
-  dangerZoneText: {
-    color: globalColors.danger,
-    fontWeight: "400",
-    fontSize: 20,
-    marginBottom: 20,
   },
 });
