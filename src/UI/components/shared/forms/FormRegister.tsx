@@ -1,10 +1,11 @@
 import React from "react";
-import { View, TextInput, ActivityIndicator, Text } from "react-native";
+import { View, TextInput, ActivityIndicator, Text, Pressable } from "react-native";
 import { PrimaryButton } from "../PrimaryButton";
 import { globalColors, globalFormStyles } from "../../../theme/Theme";
 import { type Register } from "../../../../types/formTypes";
 import { Formik } from "formik";
 import { validationRegisterForm } from "./yup/validation_register_yup";
+import Ionicons from 'react-native-vector-icons/Ionicons'
 
 interface FormRegisterProps {
   email: string;
@@ -16,7 +17,9 @@ interface FormRegisterProps {
   isLoading: boolean;
   onRegister: () => Promise<Register>;
   error: string;
-  setError: React.Dispatch<React.SetStateAction<string>>
+  setError: React.Dispatch<React.SetStateAction<string>>;
+  showPassword: boolean;
+  toggleShowPassword: () => void
 }
 
 export const FormRegister = ({
@@ -27,7 +30,7 @@ export const FormRegister = ({
   password,
   setPassword,
   onRegister,
-  isLoading, error, setError
+  isLoading, error, setError, showPassword, toggleShowPassword
 
 }: FormRegisterProps) => {
   return (
@@ -73,16 +76,33 @@ export const FormRegister = ({
                 <Text style={{ color: "red" }}>{errors.userName}</Text>
               ) : null}
 
-              <TextInput
-                style={globalFormStyles.inputLogin}
-                placeholder="Password"
-                autoCorrect={false}
-                autoCapitalize="none"
-                value={values.password}
-                secureTextEntry={true}
-                placeholderTextColor="#838282"
-                onChangeText={handleChange("password")}
-              />
+              <View>
+                <TextInput
+                  style={globalFormStyles.inputLogin}
+                  placeholder="Password"
+                  autoCorrect={false}
+                  autoCapitalize="none"
+                  value={values.password}
+                  secureTextEntry={!showPassword ? true : false}
+                  placeholderTextColor="#838282"
+                  onChangeText={handleChange("password")}
+                />
+
+                <Pressable style={{
+                  width: 30,
+                  position: 'absolute',
+                  right: 10,
+                  bottom: 37
+
+
+                }} onPress={toggleShowPassword} >
+                  <Ionicons
+                    name={showPassword ? "eye-outline" : 'eye-off-outline'}
+                    size={24} color={'gray'}
+                  />
+                </Pressable>
+              </View>
+
 
               {errors.password && touched.password ? (
                 <Text style={{ color: "red" }}>{errors.password}</Text>

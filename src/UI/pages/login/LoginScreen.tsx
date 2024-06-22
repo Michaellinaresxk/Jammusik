@@ -25,7 +25,7 @@ export const LoginScreen = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-
+  const [showPassword, setShowPassword] = useState(false)
   const userService = useUserService();
   const { height, scale, KeyboardGestureArea } = useAnimationKeyboard();
   const navigation = useNavigation();
@@ -57,6 +57,10 @@ export const LoginScreen = () => {
     }
   };
 
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword)
+  }
+
   return (
     <ImageBackground source={image} resizeMode="cover" alt="Imagen de fondo">
       <View style={globalStyles.overlay}>
@@ -84,6 +88,8 @@ export const LoginScreen = () => {
                     isLoading={isLoading}
                     error={error}
                     setError={setError}
+                    showPassword={showPassword}
+                    toggleShowPassword={toggleShowPassword}
                   />
                   <LinkLoginRegister
                     text="Not a member yet?"

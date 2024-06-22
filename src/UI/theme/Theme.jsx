@@ -46,6 +46,7 @@ export const globalFormStyles = StyleSheet.create({
   },
 
   inputLogin: {
+    position: "relative",
     borderWidth: 0.2,
     borderBottomColor: globalColors.terceary,
     color: globalColors.terceary,
