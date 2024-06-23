@@ -1,12 +1,14 @@
 /* eslint-disable */
 
-import { Text, View, TextInput, ActivityIndicator, Button } from "react-native";
+import { Text, View, TextInput, ActivityIndicator, Button, Pressable } from "react-native";
 import { PrimaryButton } from "../PrimaryButton";
 import { globalColors, globalFormStyles } from "../../../theme/Theme";
 import React from "react";
+import Ionicons from 'react-native-vector-icons/Ionicons'
 
 import { Formik } from "formik";
 import { validationLoginForm } from "./yup/validation_login_yup";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 interface FormLoginProps {
   email: string;
@@ -17,6 +19,8 @@ interface FormLoginProps {
   setPassword: React.Dispatch<React.SetStateAction<string>>;
   onLogin: () => Promise<void>;
   isLoading: boolean;
+  showPassword: boolean;
+  toggleShowPassword: () => void
 
 }
 
@@ -28,7 +32,7 @@ export const Formlogin = ({
   password,
   setPassword,
   onLogin,
-  isLoading, error, setError
+  isLoading, error, setError, showPassword, toggleShowPassword
 }: FormLoginProps) => {
 
 
@@ -67,18 +71,38 @@ export const Formlogin = ({
                 <Text style={{ color: "red" }}>{errors.email}</Text>
               ) : null}
 
-              <TextInput
-                style={globalFormStyles.inputLogin}
-                placeholder="Password"
-                autoCorrect={false}
-                autoCapitalize="none"
-                value={values.password}
-                secureTextEntry={true}
-                placeholderTextColor="#838282"
-                onChangeText={handleChange("password")}
-                onFocus={() => setError('')}
-              />
+              <View style={{
+                position: 'relative',
 
+
+              }}>
+                <TextInput
+                  style={globalFormStyles.inputLogin}
+                  placeholder="Password"
+                  autoCorrect={false}
+                  autoCapitalize="none"
+                  value={values.password}
+                  secureTextEntry={!showPassword ? true : false}
+                  placeholderTextColor="#838282"
+                  onChangeText={handleChange("password")}
+                  onFocus={() => setError('')}
+                />
+                <Pressable style={{
+                  width: 30,
+                  position: 'absolute',
+                  right: 10,
+                  bottom: 37
+
+
+                }} onPress={toggleShowPassword} >
+                  <Ionicons
+                    name={showPassword ? "eye-outline" : 'eye-off-outline'}
+                    size={24} color={'gray'}
+                  />
+                </Pressable>
+
+
+              </View>
               {errors.password && touched.password ? (
                 <Text style={{ color: "red" }}>{errors.password}</Text>
               ) : null}

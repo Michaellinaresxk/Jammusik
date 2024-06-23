@@ -24,6 +24,7 @@ export const RegisterScreen = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false)
 
   const userService = useUserService();
 
@@ -60,6 +61,11 @@ export const RegisterScreen = () => {
 
   const { height, scale, KeyboardGestureArea } = useAnimationKeyboard()
 
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword)
+  }
+
   return (
     <ImageBackground
       source={image}
@@ -92,6 +98,8 @@ export const RegisterScreen = () => {
                     onRegister={handleRegister}
                     error={error}
                     setError={setError}
+                    showPassword={showPassword}
+                    toggleShowPassword={toggleShowPassword}
                   />
                   <LinkLoginRegister
                     text="Have an account?"
