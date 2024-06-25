@@ -26,13 +26,13 @@ import { FormCreateSong } from "../../components/shared/forms/FormCreateSong";
 import { useSongService } from "../../../context/SongServiceContext";
 import { SongView } from "../../../views/SongView";
 import { PrimaryButton } from "../../components/shared/PrimaryButton";
-import { useResetSongsState } from "../../store/useResetSongsState";
 import { Swipeable } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/Ionicons";
 import Toast from "react-native-toast-message";
 import { auth } from "../../../infra/api/firebaseConfig";
 import { usePullRefresh } from "../../../hooks/usePullRefresing";
 import { getIsDone } from "../../../hooks/useToggleIsDone";
+import { useResetAllSongs } from "../../../hooks/useResetAllSongs";
 import useAnimationKeyboard from "../../../hooks/useAnimationKeyboard";
 
 export const PlaylistSelectedScreen = () => {
@@ -111,8 +111,6 @@ export const PlaylistSelectedScreen = () => {
     setIsVisible(!isVisible);
   };
 
-  const { resetToggle, resetAllSongs } = useResetSongsState();
-
   const showToast = () => {
     Toast.show({
       type: "success",
@@ -148,6 +146,23 @@ export const PlaylistSelectedScreen = () => {
       <Icon name="trash-sharp" size={25} style={styles.deleteIcon} />
     </TouchableOpacity>
   );
+  const handleResetSongs = async () => {
+    try {
+      setIsLoading(true);
+      const result = await useResetAllSongs(playlistId);
+      if (result.success) {
+        await loadSongList();
+        setTriggerUpdate(true);
+      } else {
+        Alert.alert("Error", "You cannot reset the songs. Try later");
+      }
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Failed to reset songs:", error);
+      Alert.alert("Error", "Failed to reset songs. Please try again.");
+      setIsLoading(false);
+    }
+  };
 
   const { isRefreshing, refresh, top } = usePullRefresh(loadSongList);
   return (
@@ -181,7 +196,6 @@ export const PlaylistSelectedScreen = () => {
                   onSwipeableWillOpen={() => setCurrentSongId(item.id)}>
                   <View>
                     <SongCard
-                      resetToggle={resetToggle}
                       title={item.title}
                       artist={item.artist}
                       categoryId={item.categoryId}
@@ -206,7 +220,9 @@ export const PlaylistSelectedScreen = () => {
               )}
             />
             <View>
-              <TouchableOpacity style={styles.resetBtn} onPress={resetAllSongs}>
+              <TouchableOpacity
+                style={styles.resetBtn}
+                onPress={handleResetSongs}>
                 <Text style={styles.resetBtnText}>RESET SONGS</Text>
               </TouchableOpacity>
             </View>
