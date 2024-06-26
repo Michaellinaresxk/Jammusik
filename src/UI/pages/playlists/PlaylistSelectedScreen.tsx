@@ -32,7 +32,7 @@ import Toast from "react-native-toast-message";
 import { auth } from "../../../infra/api/firebaseConfig";
 import { usePullRefresh } from "../../../hooks/usePullRefresing";
 import { getIsDone } from "../../../hooks/useToggleIsDone";
-import { useResetAllSongs } from "../../../hooks/useResetAllSongs";
+import { useResetSongsState } from "../../store/useResetSongsState";
 import useAnimationKeyboard from "../../../hooks/useAnimationKeyboard";
 
 export const PlaylistSelectedScreen = () => {
@@ -52,6 +52,8 @@ export const PlaylistSelectedScreen = () => {
   const [currentSongId, setCurrentSongId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isDone, setIsDone] = useState(false);
+  const resetSongsState = useResetSongsState();
+  const { resetToggle, resetAllSongs } = resetSongsState;
   const { KeyboardGestureArea, height, scale } = useAnimationKeyboard();
 
   const valueWidth = useWindowDimensions().width;
@@ -149,20 +151,23 @@ export const PlaylistSelectedScreen = () => {
   const handleResetSongs = async () => {
     try {
       setIsLoading(true);
-      const result = await useResetAllSongs(playlistId);
-      if (result.success) {
-        await loadSongList();
-        setTriggerUpdate(true);
-      } else {
-        Alert.alert("Error", "You cannot reset the songs. Try later");
-      }
+      await resetAllSongs(playlistId); // Usar la función de Zustand
+      await loadSongList();
       setIsLoading(false);
     } catch (error) {
-      console.error("Failed to reset songs:", error);
-      Alert.alert("Error", "Failed to reset songs. Please try again.");
+      console.error("Fallo al resetear las canciones:", error);
+      Alert.alert(
+        "Error",
+        "Fallo al resetear las canciones. Por favor intente de nuevo.",
+      );
       setIsLoading(false);
     }
   };
+
+  // Dentro del efecto de useEffect para recargar la lista de canciones
+  useEffect(() => {
+    loadSongList();
+  }, [loadSongList, resetToggle]);
 
   const { isRefreshing, refresh, top } = usePullRefresh(loadSongList);
   return (
@@ -196,6 +201,7 @@ export const PlaylistSelectedScreen = () => {
                   onSwipeableWillOpen={() => setCurrentSongId(item.id)}>
                   <View>
                     <SongCard
+                      resetToggle={resetToggle}
                       title={item.title}
                       artist={item.artist}
                       categoryId={item.categoryId}

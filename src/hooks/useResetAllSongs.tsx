@@ -26,7 +26,7 @@ export const useResetAllSongs = async (playlistId: string) => {
     await batch.commit();
     return { success: true };
   } catch (err) {
-    console.error("Error reseteando las canciones: ", err);
+    console.error("Error reseting songs: ", err);
     return { success: false, error: err };
   }
 };
