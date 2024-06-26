@@ -26,13 +26,13 @@ import { FormCreateSong } from "../../components/shared/forms/FormCreateSong";
 import { useSongService } from "../../../context/SongServiceContext";
 import { SongView } from "../../../views/SongView";
 import { PrimaryButton } from "../../components/shared/PrimaryButton";
-import { useResetSongsState } from "../../store/useResetSongsState";
 import { Swipeable } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/Ionicons";
 import Toast from "react-native-toast-message";
 import { auth } from "../../../infra/api/firebaseConfig";
 import { usePullRefresh } from "../../../hooks/usePullRefresing";
 import { getIsDone } from "../../../hooks/useToggleIsDone";
+import { useResetSongsState } from "../../store/useResetSongsState";
 import useAnimationKeyboard from "../../../hooks/useAnimationKeyboard";
 
 export const PlaylistSelectedScreen = () => {
@@ -52,6 +52,8 @@ export const PlaylistSelectedScreen = () => {
   const [currentSongId, setCurrentSongId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isDone, setIsDone] = useState(false);
+  const resetSongsState = useResetSongsState();
+  const { resetToggle, resetAllSongs } = resetSongsState;
   const { KeyboardGestureArea, height, scale } = useAnimationKeyboard();
 
   const valueWidth = useWindowDimensions().width;
@@ -111,8 +113,6 @@ export const PlaylistSelectedScreen = () => {
     setIsVisible(!isVisible);
   };
 
-  const { resetToggle, resetAllSongs } = useResetSongsState();
-
   const showToast = () => {
     Toast.show({
       type: "success",
@@ -148,6 +148,26 @@ export const PlaylistSelectedScreen = () => {
       <Icon name="trash-sharp" size={25} style={styles.deleteIcon} />
     </TouchableOpacity>
   );
+  const handleResetSongs = async () => {
+    try {
+      setIsLoading(true);
+      await resetAllSongs(playlistId); // Usar la función de Zustand
+      await loadSongList();
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Fallo al resetear las canciones:", error);
+      Alert.alert(
+        "Error",
+        "Fallo al resetear las canciones. Por favor intente de nuevo.",
+      );
+      setIsLoading(false);
+    }
+  };
+
+  // Dentro del efecto de useEffect para recargar la lista de canciones
+  useEffect(() => {
+    loadSongList();
+  }, [loadSongList, resetToggle]);
 
   const { isRefreshing, refresh, top } = usePullRefresh(loadSongList);
   return (
@@ -206,7 +226,9 @@ export const PlaylistSelectedScreen = () => {
               )}
             />
             <View>
-              <TouchableOpacity style={styles.resetBtn} onPress={resetAllSongs}>
+              <TouchableOpacity
+                style={styles.resetBtn}
+                onPress={handleResetSongs}>
                 <Text style={styles.resetBtnText}>RESET SONGS</Text>
               </TouchableOpacity>
             </View>
