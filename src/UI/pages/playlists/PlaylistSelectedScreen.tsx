@@ -100,14 +100,14 @@ export const PlaylistSelectedScreen = () => {
 
   useEffect(() => {
     loadSongList();
-  }, [loadSongList]);
+  }, [loadSongList, resetToggle]); // Asegúrate de que resetToggle esté aquí como dependencia
 
   useEffect(() => {
     if (triggerUpdate) {
       loadSongList();
       setTriggerUpdate(false);
     }
-  }, [triggerUpdate, loadSongList]);
+  }, [triggerUpdate, loadSongList, resetToggle]);
 
   const closeModal = () => {
     setIsVisible(!isVisible);
@@ -151,8 +151,9 @@ export const PlaylistSelectedScreen = () => {
   const handleResetSongs = async () => {
     try {
       setIsLoading(true);
-      await resetAllSongs(playlistId); // Usar la función de Zustand
-      await loadSongList();
+      await resetAllSongs(playlistId);
+      setIsDone(false); // Usar la función de Zustand
+      setTriggerUpdate(true); // Asegúrate de disparar una actualización
       setIsLoading(false);
     } catch (error) {
       console.error("Fallo al resetear las canciones:", error);
@@ -163,11 +164,6 @@ export const PlaylistSelectedScreen = () => {
       setIsLoading(false);
     }
   };
-
-  // Dentro del efecto de useEffect para recargar la lista de canciones
-  useEffect(() => {
-    loadSongList();
-  }, [loadSongList, resetToggle]);
 
   const { isRefreshing, refresh, top } = usePullRefresh(loadSongList);
   return (

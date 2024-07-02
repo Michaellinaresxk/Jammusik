@@ -10,7 +10,7 @@ export const useResetSongsState = create<ResetSongsState>(set => ({
   resetToggle: false,
   resetAllSongs: async (playlistId: string) => {
     const result = await useResetAllSongs(playlistId);
-    if (result.success) {
+    if (result) {
       set(state => ({
         resetToggle: !state.resetToggle,
       }));

@@ -22,6 +22,7 @@ export const SongCard = ({
   onPress,
   isDone,
   songId,
+  resetToggle,
 }: Props) => {
   const [changeIcon, setChangeIcon] = useState(isDone);
   const userId = auth.currentUser?.uid;
@@ -37,7 +38,8 @@ export const SongCard = ({
 
   useEffect(() => {
     setChangeIcon(isDone);
-  }, [isDone]);
+  }, [isDone, resetToggle]); // Asegúrate de que resetToggle esté aquí como dependencia
+
   return (
     <TouchableOpacity
       style={[
