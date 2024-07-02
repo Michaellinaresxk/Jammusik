@@ -7,14 +7,6 @@ export interface SongProperties {
   isDone: boolean;
 }
 
-export interface SongWithOutPlaylistProperties {
-  id: string;
-  userId: string;
-  categoryId: string;
-  title: string;
-  artist: string;
-  isDone: boolean;
-}
 
 export interface SongDetailsProperties {
   userId: string;

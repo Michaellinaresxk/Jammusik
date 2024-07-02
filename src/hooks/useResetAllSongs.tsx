@@ -26,11 +26,11 @@ export const useResetAllSongs = async (playlistId: string) => {
 
     await batch.commit();
 
-    // Devuelve la lista de canciones actualizada después de resetearlas
+    // Returns the updated song list after resetting them
     const updatedSongs = await songService.getSongs(playlistId);
     return updatedSongs;
   } catch (err) {
     console.error("Error reseteando canciones: ", err);
-    throw err; // Propaga el error para manejarlo en el componente
+    throw err;
   }
 };

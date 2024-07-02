@@ -107,7 +107,6 @@ export const SongSelectedScreen = () => {
       console.log("Fetched Song Details:", fetchedSongDetails);
     } catch (error) {
       if (hasSavedData) {
-        // Solo mostrar el error si ya se ha intentado guardar datos previamente
         console.error("Failed to fetch songDetails:", error);
         Alert.alert("Error", "Failed to fetch song details.");
       }

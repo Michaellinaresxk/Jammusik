@@ -9,7 +9,6 @@ export const UserServiceContext = createContext<
   UserServiceContextType | undefined
 >(undefined);
 
-// Context Provider Component
 export const UserServiceProvider: React.FC<{ userService: UserService }> = ({
   children,
   userService,
@@ -21,7 +20,6 @@ export const UserServiceProvider: React.FC<{ userService: UserService }> = ({
   );
 };
 
-// Custom hook to use the user service context
 export const useUserService = (): UserService => {
   const context = useContext(UserServiceContext);
   if (!context)
