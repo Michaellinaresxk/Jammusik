@@ -5,13 +5,6 @@ export interface Song {
   title: string;
   artist: string;
 }
-export interface SongWithOutPlaylist {
-  userId: string;
-  songId: string;
-  categoryId: string;
-  title: string;
-  artist: string;
-}
 
 export interface SongCard {
   id: string;

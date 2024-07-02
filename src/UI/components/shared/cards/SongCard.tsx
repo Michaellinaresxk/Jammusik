@@ -38,7 +38,7 @@ export const SongCard = ({
 
   useEffect(() => {
     setChangeIcon(isDone);
-  }, [isDone, resetToggle]); // Asegúrate de que resetToggle esté aquí como dependencia
+  }, [isDone, resetToggle]);
 
   return (
     <TouchableOpacity

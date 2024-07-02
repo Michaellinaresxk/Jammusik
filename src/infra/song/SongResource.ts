@@ -1,7 +1,6 @@
 import type SongRepository from "../../domain/song/SongRepository";
 import { SongCaller } from "./SongCaller";
 import Song from "../../domain/song/Song";
-import { ApiSongWithOutPlaylist } from "../songWithOutPlaylist/ApiSongWithOutPlaylist";
 
 export class SongResource implements SongRepository {
   constructor(public readonly songCaller: SongCaller) {}

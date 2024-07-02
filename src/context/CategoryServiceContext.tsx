@@ -1,4 +1,3 @@
-// context/CategoryServiceContext.js
 import React, { createContext, useContext } from "react";
 import { CategoryService } from "../primary/Category/index";
 
