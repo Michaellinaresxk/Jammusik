@@ -109,3 +109,17 @@ export const globalStyles = StyleSheet.create({
     color: globalColors.primary,
   },
 });
+
+export const ThemeDark = StyleSheet.create({
+  titulos: {
+    color: globalColors.light,
+  },
+
+  bgColor: {
+    backgroundColor: globalColors.secondary,
+  },
+
+  greyTitle: {
+    color: globalColors.terceary,
+  },
+});
