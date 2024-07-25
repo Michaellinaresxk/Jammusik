@@ -134,23 +134,6 @@ export const CategorySelectedScreen = () => {
     </TouchableOpacity>
   );
 
-  const handleResetSongs = async () => {
-    try {
-      setIsLoading(true);
-      await resetAllSongs(playlistId);
-      setIsDone(false);
-      setTriggerUpdate(true);
-      setIsLoading(false);
-    } catch (error) {
-      console.error("Fallo al resetear las canciones:", error);
-      Alert.alert(
-        "Error",
-        "Fallo al resetear las canciones. Por favor intente de nuevo.",
-      );
-      setIsLoading(false);
-    }
-  };
-
   return (
     <>
       <KeyboardAvoidingView
@@ -208,13 +191,6 @@ export const CategorySelectedScreen = () => {
                   );
                 }}
               />
-              <View>
-                <TouchableOpacity
-                  style={styles.resetBtn}
-                  onPress={handleResetSongs}>
-                  <Text style={styles.resetBtnText}>RESET SONGS</Text>
-                </TouchableOpacity>
-              </View>
             </View>
           </View>
         </ScrollView>

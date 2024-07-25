@@ -35,7 +35,7 @@ export const globalFormStyles = StyleSheet.create({
   },
 
   form: {
-    width: "95%",
+    width: "100%",
     padding: 10,
     alignSelf: "center",
     marginTop: 20,

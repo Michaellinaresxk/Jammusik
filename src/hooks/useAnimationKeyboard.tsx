@@ -1,4 +1,7 @@
-import { useKeyboardAnimation, KeyboardGestureArea } from "react-native-keyboard-controller";
+import {
+  useKeyboardAnimation,
+  KeyboardGestureArea,
+} from "react-native-keyboard-controller";
 
 export default function useAnimationKeyboard() {
   const { height, progress } = useKeyboardAnimation();
@@ -8,7 +11,8 @@ export default function useAnimationKeyboard() {
     outputRange: [1, 1],
   });
   return {
-    height, scale, KeyboardGestureArea
-  }
-
+    height,
+    scale,
+    KeyboardGestureArea,
+  };
 }
