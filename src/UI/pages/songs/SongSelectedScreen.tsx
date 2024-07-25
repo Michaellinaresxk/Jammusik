@@ -10,6 +10,9 @@ import {
   Alert,
   FlatList,
   Animated,
+  Linking,
+  TouchableOpacity,
+  Pressable,
 } from "react-native";
 import { GlobalHeader } from "../../components/shared/GlobalHeader";
 import { FloatingActionButton } from "../../components/shared/FloatingActionButton";
@@ -45,8 +48,7 @@ export const SongSelectedScreen = () => {
   const userId = auth.currentUser ? auth.currentUser.uid : "";
   const songId = params.songId;
   const songDetailsService = useSongDetailsService();
-  const { KeyboardGestureArea, height, scale } = useAnimationKeyboard()
-
+  const { KeyboardGestureArea, height, scale } = useAnimationKeyboard();
 
   const closeModal = () => {
     setIsVisible(false);
@@ -140,6 +142,16 @@ export const SongSelectedScreen = () => {
       <Text style={styles.chord}>{item}</Text>
     </View>
   );
+
+  const handleOpenLink = useCallback(async (url: string) => {
+    const supported = await Linking.canOpenURL(url);
+
+    if (supported) {
+      await Linking.openURL(url);
+    } else {
+      Alert.alert(`Unable to open URL: ${url}`);
+    }
+  }, []);
   return (
     <>
       <KeyboardAvoidingView
@@ -196,40 +208,36 @@ export const SongSelectedScreen = () => {
           <View style={styles.linksContent}>
             <View style={{ ...styles.container, marginBottom: 30 }}>
               <Text style={styles.title}>Lyric link:</Text>
-              <Text style={styles.links}>{lyricLink}</Text>
+              <Pressable onPress={() => handleOpenLink(lyricLink)}>
+                <Text style={styles.links}>{lyricLink}</Text>
+              </Pressable>
             </View>
             <View style={styles.container}>
-              <Text style={styles.title}>Tab link: </Text>
-              <Text style={styles.links}>{tabLink}</Text>
+              <Text style={styles.title}>Tab link:</Text>
+              <Pressable onPress={() => handleOpenLink(tabLink)}>
+                <Text style={styles.links}>{tabLink}</Text>
+              </Pressable>
             </View>
           </View>
-        </ScrollView >
-
+        </ScrollView>
       </KeyboardAvoidingView>
-
-
 
       <Modal
         visible={isVisible}
         animationType="slide"
-        presentationStyle="formSheet" style={{ flex: 1 }}>
-
-        <KeyboardGestureArea
-          interpolator="ios"
-        >
-
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            horizontal={false}
-          >
+        presentationStyle="formSheet"
+        style={{ flex: 1 }}>
+        <KeyboardGestureArea interpolator="ios">
+          <ScrollView showsVerticalScrollIndicator={false} horizontal={false}>
             <Animated.View
               style={{
                 flex: 1,
                 transform: [{ translateY: height }, { scale }],
-
               }}>
               <View style={styles.modalBtnContainer}>
-                <Text style={styles.modalFormHeaderTitle}>Add Song Details</Text>
+                <Text style={styles.modalFormHeaderTitle}>
+                  Add Song Details
+                </Text>
                 <PrimaryButton
                   label="Close"
                   btnFontSize={20}
@@ -253,9 +261,7 @@ export const SongSelectedScreen = () => {
             </Animated.View>
           </ScrollView>
         </KeyboardGestureArea>
-      </Modal >
-
-
+      </Modal>
     </>
   );
 };
