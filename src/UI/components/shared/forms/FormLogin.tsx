@@ -1,14 +1,20 @@
 /* eslint-disable */
 
-import { Text, View, TextInput, ActivityIndicator, Button, Pressable } from "react-native";
+import {
+  Text,
+  View,
+  TextInput,
+  ActivityIndicator,
+  Button,
+  Pressable,
+} from "react-native";
 import { PrimaryButton } from "../PrimaryButton";
 import { globalColors, globalFormStyles } from "../../../theme/Theme";
 import React from "react";
-import Ionicons from 'react-native-vector-icons/Ionicons'
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 import { Formik } from "formik";
 import { validationLoginForm } from "./yup/validation_login_yup";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 interface FormLoginProps {
   email: string;
@@ -20,11 +26,8 @@ interface FormLoginProps {
   onLogin: () => Promise<void>;
   isLoading: boolean;
   showPassword: boolean;
-  toggleShowPassword: () => void
-
+  toggleShowPassword: () => void;
 }
-
-
 
 export const Formlogin = ({
   email,
@@ -32,12 +35,12 @@ export const Formlogin = ({
   password,
   setPassword,
   onLogin,
-  isLoading, error, setError, showPassword, toggleShowPassword
+  isLoading,
+  error,
+  setError,
+  showPassword,
+  toggleShowPassword,
 }: FormLoginProps) => {
-
-
-
-
   return (
     <View style={globalFormStyles.containerForm}>
       <Text style={globalFormStyles.labelTitle}></Text>
@@ -65,17 +68,16 @@ export const Formlogin = ({
                 autoCorrect={false}
                 autoCapitalize="none"
                 onChangeText={handleChange("email")}
-                onFocus={() => setError('')}
+                onFocus={() => setError("")}
               />
               {errors.email && touched.email ? (
                 <Text style={{ color: "red" }}>{errors.email}</Text>
               ) : null}
 
-              <View style={{
-                position: 'relative',
-
-
-              }}>
+              <View
+                style={{
+                  position: "relative",
+                }}>
                 <TextInput
                   style={globalFormStyles.inputLogin}
                   placeholder="Password"
@@ -85,31 +87,40 @@ export const Formlogin = ({
                   secureTextEntry={!showPassword ? true : false}
                   placeholderTextColor="#838282"
                   onChangeText={handleChange("password")}
-                  onFocus={() => setError('')}
+                  onFocus={() => setError("")}
                 />
-                <Pressable style={{
-                  width: 30,
-                  position: 'absolute',
-                  right: 10,
-                  bottom: 37
-
-
-                }} onPress={toggleShowPassword} >
+                <Pressable
+                  style={{
+                    width: 30,
+                    position: "absolute",
+                    right: 10,
+                    bottom: 37,
+                  }}
+                  onPress={toggleShowPassword}>
                   <Ionicons
-                    name={showPassword ? "eye-outline" : 'eye-off-outline'}
-                    size={24} color={'gray'}
+                    name={showPassword ? "eye-outline" : "eye-off-outline"}
+                    size={24}
+                    color={"gray"}
                   />
                 </Pressable>
-
-
               </View>
               {errors.password && touched.password ? (
                 <Text style={{ color: "red" }}>{errors.password}</Text>
               ) : null}
             </View>
-            {error ? <View style={{ marginTop: 10, padding: 10, backgroundColor: globalColors.danger }}>
-              <Text style={{ color: globalColors.light, textAlign: 'center' }}>{error}</Text>
-            </View> : null}
+            {error ? (
+              <View
+                style={{
+                  marginTop: 10,
+                  padding: 10,
+                  backgroundColor: globalColors.danger,
+                }}>
+                <Text
+                  style={{ color: globalColors.light, textAlign: "center" }}>
+                  {error}
+                </Text>
+              </View>
+            ) : null}
             <View style={{ marginTop: 20 }}>
               <PrimaryButton
                 label={
