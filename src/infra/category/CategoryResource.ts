@@ -39,6 +39,26 @@ export class CategoryResource implements CategoryRepository {
     );
   }
 
+  async getAllSongsByUserId(userId: string): Promise<Song[]> {
+    const apiSongs = await this.categoryCaller.getAllSongsByUserId(userId);
+    return apiSongs.map(
+      (apiSong: {
+        id: string;
+        categoryId: string;
+        playlistId: string;
+        title: string;
+        artist: string;
+      }) =>
+        new Song(
+          apiSong.id,
+          apiSong.categoryId,
+          apiSong.playlistId,
+          apiSong.title,
+          apiSong.artist,
+        ),
+    );
+  }
+
   async deleteCategory(userId: string, categoryId: string) {
     return await this.categoryCaller.deleteCategory(userId, categoryId);
   }

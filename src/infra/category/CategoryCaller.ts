@@ -89,6 +89,21 @@ export class CategoryCaller {
     }
   }
 
+  async getAllSongsByUserId(userId: string): Promise<ApiSong[]> {
+    const db = getFirestore();
+    try {
+      const songsCollection = collection(db, "songs");
+      const songsQuery = query(songsCollection, where("userId", "==", userId));
+      const querySnapshot = await getDocs(songsQuery);
+      return querySnapshot.docs.map(doc => {
+        return { id: doc.id, ...doc.data() } as ApiSong;
+      });
+    } catch (error) {
+      console.error("Error fetching songs:", error);
+      throw error;
+    }
+  }
+
   async deleteCategory(userId: string, categoryId: string) {
     if (!this.db || !userId || !categoryId) {
       throw new Error("Firestore instance or categoryId is undefined!");

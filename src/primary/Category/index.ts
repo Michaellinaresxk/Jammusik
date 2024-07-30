@@ -3,6 +3,7 @@ import { CreateCategoryUseCase } from "./CreateCategoryUseCase";
 import { GetCategoriesUseCase } from "./GetCategoriesUseCase";
 import { GetSongListByCategoryUseCase } from "./GetSongListByCategoryUseCase";
 import { DeleteCategoryUseCase } from "./DeleteCategoryUseCase";
+import { GetAllSongsUseCase } from "./GetAllSongsUseCase";
 
 import type { CategoryView } from "../../views/CategoryView";
 import { SongView } from "../../views/SongView";
@@ -11,6 +12,7 @@ export class CategoryService {
   private createCategoryUseCase: CreateCategoryUseCase;
   private getCategoriesUseCase: GetCategoriesUseCase;
   private getSongListByCategoryUseCase: GetSongListByCategoryUseCase;
+  private getAllSongsUseCase: GetAllSongsUseCase;
   private deleteCategoryUseCase: DeleteCategoryUseCase;
 
   constructor(private readonly categoryResource: CategoryResource) {
@@ -19,6 +21,7 @@ export class CategoryService {
     this.getSongListByCategoryUseCase = new GetSongListByCategoryUseCase(
       categoryResource,
     );
+    this.getAllSongsUseCase = new GetAllSongsUseCase(categoryResource);
     this.deleteCategoryUseCase = new DeleteCategoryUseCase(categoryResource);
   }
 
@@ -35,6 +38,10 @@ export class CategoryService {
     categoryId: string,
   ): Promise<SongView[]> {
     return await this.getSongListByCategoryUseCase.execute(userId, categoryId);
+  }
+
+  async getAllSongsByUserId(userId: string): Promise<SongView[]> {
+    return await this.getAllSongsUseCase.execute(userId);
   }
 
   async deleteCategory(userId: string, categoryId: string): Promise<void> {

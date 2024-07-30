@@ -49,17 +49,21 @@ export const CategorySelectedScreen = () => {
   const [isDone, setIsDone] = useState(false);
   const playlistId = params.id as string;
   const resetSongsState = useResetSongsState();
+
   const { resetToggle, resetAllSongs } = resetSongsState;
 
+  const categoryAll = "All";
   const categoryId = params.id as string;
 
   const valueWidth = useWindowDimensions().width;
 
   const loadSongList = useCallback(async () => {
+    setIsLoading(true);
     try {
-      const [fetchedSongs] = await Promise.all([
-        categoryService.getSongListByCategory(userId, categoryId),
-      ]);
+      const fetchedSongs =
+        categoryId === categoryAll
+          ? await categoryService.getAllSongsByUserId(userId)
+          : await categoryService.getSongListByCategory(userId, categoryId);
 
       const songsWithIsDone = await Promise.all(
         fetchedSongs.map(async song => ({
@@ -71,12 +75,14 @@ export const CategorySelectedScreen = () => {
       setSongList(songsWithIsDone);
     } catch (error) {
       console.error("Failed to fetch song lists:", error);
+    } finally {
+      setIsLoading(false);
     }
   }, [categoryId, categoryService, userId]);
 
   useEffect(() => {
     loadSongList();
-  }, [loadSongList]);
+  }, [categoryId, userId, loadSongList]);
 
   useEffect(() => {
     if (triggerUpdate) {
@@ -112,7 +118,7 @@ export const CategorySelectedScreen = () => {
     }
   };
 
-  const deleteConfirmation = (songId: string, isWithoutPlaylist: boolean) =>
+  const deleteConfirmation = (songId: string) =>
     Alert.alert("Are you sure?", "Do you want to remove this song?", [
       {
         text: "UPS! BY MISTAKE",
@@ -121,15 +127,15 @@ export const CategorySelectedScreen = () => {
       },
       {
         text: "YES, DELETE!",
-        onPress: () => handleDeleteSong(songId, isWithoutPlaylist),
+        onPress: () => handleDeleteSong(songId),
         style: "destructive",
       },
     ]);
 
-  const swipeRightActions = (songId: string, isWithoutPlaylist: boolean) => (
+  const swipeRightActions = (songId: string) => (
     <TouchableOpacity
       style={styles.deleteButtonContent}
-      onPress={() => deleteConfirmation(songId, isWithoutPlaylist)}>
+      onPress={() => deleteConfirmation(songId)}>
       <Icon name="trash-sharp" size={25} style={styles.deleteIcon} />
     </TouchableOpacity>
   );
@@ -161,9 +167,7 @@ export const CategorySelectedScreen = () => {
                 renderItem={({ item, index }) => {
                   return (
                     <Swipeable
-                      renderRightActions={() =>
-                        swipeRightActions(item.id, false)
-                      }
+                      renderRightActions={() => swipeRightActions(item.id)}
                       onSwipeableWillOpen={() => setCurrentSongId(item.id)}>
                       <View>
                         <SongCard

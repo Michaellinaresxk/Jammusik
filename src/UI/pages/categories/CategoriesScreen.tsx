@@ -150,6 +150,15 @@ export const CategoriesScreen = () => {
             </View>
             <Separator color={globalColors.terceary} />
             <View style={{ marginTop: 30, justifyContent: "center" }}>
+              <CategoryCard
+                title="All"
+                onPress={() =>
+                  navigation.navigate("CategorySelectedScreen", {
+                    id: "All",
+                    title: "All",
+                  })
+                }
+              />
               <FlatList
                 data={categories}
                 keyExtractor={item => item.id}
