@@ -11,6 +11,7 @@ export class SongResource implements SongRepository {
     title: string,
     artist: string,
     isDone: boolean,
+    isFavorite: boolean,
   ): Promise<Song> {
     const apiSong = await this.songCaller.createSong(
       categoryId,
@@ -18,6 +19,7 @@ export class SongResource implements SongRepository {
       title,
       artist,
       isDone,
+      isFavorite,
     );
     return new Song(
       apiSong.id,
@@ -26,6 +28,7 @@ export class SongResource implements SongRepository {
       apiSong.title,
       apiSong.artist,
       apiSong.isDone,
+      apiSong.isFavorite,
     );
   }
 
@@ -45,8 +48,13 @@ export class SongResource implements SongRepository {
           apiSong.title,
           apiSong.artist,
           apiSong.isDone,
+          apiSong.isFavorite,
         ),
     );
+  }
+
+  async favoriteSong(userId: string, songId: string, isFavorite: boolean) {
+    return await this.songCaller.favoriteSong(userId, songId, isFavorite);
   }
 
   async deleteSong(userId: string, songId: string) {

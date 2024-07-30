@@ -4,6 +4,7 @@ export interface Song {
   playlistId: string;
   title: string;
   artist: string;
+  isFavorite?: boolean;
 }
 
 export interface SongCard {

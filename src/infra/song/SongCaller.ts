@@ -1,6 +1,13 @@
 import type { ApiSong } from "./ApiSong";
 import { getFirestore, addDoc, collection } from "@firebase/firestore";
-import { getDocs, where, query, deleteDoc, doc } from "firebase/firestore";
+import {
+  getDocs,
+  where,
+  query,
+  deleteDoc,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
 import { auth } from "../api/firebaseConfig";
 
 export class SongCaller {
@@ -12,6 +19,7 @@ export class SongCaller {
     title: string,
     artist: string,
     isDone: boolean,
+    isFavorite: boolean,
   ): Promise<ApiSong> {
     const userId = auth.currentUser?.uid;
     if (!this.db || !userId) {
@@ -25,6 +33,7 @@ export class SongCaller {
       title,
       artist,
       isDone,
+      isFavorite,
     };
 
     function cleanObject(obj: any) {
@@ -68,6 +77,19 @@ export class SongCaller {
       console.error("Error fetching songs:", error);
       throw error;
     }
+  }
+
+  async favoriteSong(
+    userId: string,
+    songId: string,
+    isFavorite: boolean,
+  ): Promise<void> {
+    if (!this.db || !userId || !songId || !isFavorite) {
+      throw new Error("Firestore instance or playlistId is undefined!");
+    }
+    console.log(userId, songId);
+    const specificSongDoc = doc(this.db, "songs", songId);
+    await updateDoc(specificSongDoc, { isFavorite });
   }
 
   async deleteSong(userId: string, songId: string): Promise<void> {

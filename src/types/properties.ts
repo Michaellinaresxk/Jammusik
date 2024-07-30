@@ -5,8 +5,8 @@ export interface SongProperties {
   categoryId: string;
   playlistId: string;
   isDone: boolean;
+  isFavorite: boolean;
 }
-
 
 export interface SongDetailsProperties {
   userId: string;

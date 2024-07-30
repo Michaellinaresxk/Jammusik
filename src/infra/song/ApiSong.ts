@@ -5,4 +5,5 @@ export type ApiSong = {
   categoryId: string;
   playlistId: string | undefined;
   isDone: boolean;
+  isFavorite: boolean;
 };

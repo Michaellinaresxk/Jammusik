@@ -33,6 +33,7 @@ import { auth } from "../../../infra/api/firebaseConfig";
 import { usePullRefresh } from "../../../hooks/usePullRefresing";
 import { getIsDone } from "../../../hooks/useToggleIsDone";
 import { useResetSongsState } from "../../store/useResetSongsState";
+import { useIsFavoriteState } from "../../store/useIsFavoriteState";
 import useAnimationKeyboard from "../../../hooks/useAnimationKeyboard";
 
 export const PlaylistSelectedScreen = () => {
@@ -52,9 +53,12 @@ export const PlaylistSelectedScreen = () => {
   const [currentSongId, setCurrentSongId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isDone, setIsDone] = useState(false);
+  const [changeIcon, setChangeIcon] = useState(isDone);
   const resetSongsState = useResetSongsState();
   const { resetToggle, resetAllSongs } = resetSongsState;
   const { KeyboardGestureArea, height, scale } = useAnimationKeyboard();
+
+  const { isFavorite, toggleIsFavorite } = useIsFavoriteState();
 
   const valueWidth = useWindowDimensions().width;
 
@@ -69,6 +73,7 @@ export const PlaylistSelectedScreen = () => {
         title,
         artist,
         isDone,
+        isFavorite,
       );
       setCategoryId("");
       setTitle("");
@@ -119,6 +124,36 @@ export const PlaylistSelectedScreen = () => {
       text1: "Song Deleted successfully",
     });
   };
+  const showToastIsFavorite = () => {
+    Toast.show({
+      type: "success",
+      text1: "Song Added to favorite successfully",
+    });
+  };
+
+  const handleAddSongToFavorite = async (songId: string) => {
+    try {
+      const currentStatus = isFavorite[songId] || false;
+      await toggleIsFavorite(userId, songId, currentStatus);
+      showToastIsFavorite();
+    } catch (error) {
+      console.error("Failed to update favorite status:", error);
+    }
+  };
+
+  const addToFavoriteConfirmation = (songId: string) =>
+    Alert.alert("Are you sure?", "Do you want to add this song to favorite?", [
+      {
+        text: "UPS! BY MISTAKE",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      {
+        text: "YES, Add to favorite!",
+        onPress: () => handleAddSongToFavorite(songId),
+        style: "destructive",
+      },
+    ]);
 
   const handleDeleteSong = async (songId: string) => {
     console.log("Deleting playlist", songId);
@@ -142,11 +177,22 @@ export const PlaylistSelectedScreen = () => {
     ]);
 
   const swipeRightActions = (songId: string) => (
-    <TouchableOpacity
-      style={styles.deleteButtonContent}
-      onPress={() => deleteConfirmation(songId)}>
-      <Icon name="trash-sharp" size={25} style={styles.deleteIcon} />
-    </TouchableOpacity>
+    <>
+      <TouchableOpacity
+        style={styles.deleteButtonContent}
+        onPress={() => deleteConfirmation(songId)}>
+        <Icon name="trash-sharp" size={25} style={styles.deleteIcon} />
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.favoriteButtonContent}
+        onPress={() => addToFavoriteConfirmation(songId)}>
+        <Icon
+          style={styles.deleteIcon}
+          name={isFavorite[songId] ? "heart-sharp" : "heart-outline"}
+          size={25}
+        />
+      </TouchableOpacity>
+    </>
   );
   const handleResetSongs = async () => {
     try {
@@ -214,6 +260,7 @@ export const PlaylistSelectedScreen = () => {
                           artist: item.artist,
                           categoryId: item.categoryId,
                           songId: item.id,
+                          isFavorite: item.isFavorite,
                         })
                       }
                     />
@@ -302,6 +349,14 @@ const styles = StyleSheet.create({
   },
   deleteButtonContent: {
     backgroundColor: globalColors.danger,
+    borderRadius: 10,
+    height: 85,
+    width: 80,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  favoriteButtonContent: {
+    backgroundColor: globalColors.info,
     borderRadius: 10,
     height: 85,
     width: 80,

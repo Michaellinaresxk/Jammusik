@@ -47,6 +47,8 @@ export const SongSelectedScreen = () => {
 
   const userId = auth.currentUser ? auth.currentUser.uid : "";
   const songId = params.songId;
+  const isFavorite = params.isFavorite;
+  console.log(isFavorite);
   const songDetailsService = useSongDetailsService();
   const { KeyboardGestureArea, height, scale } = useAnimationKeyboard();
 
@@ -173,6 +175,7 @@ export const SongSelectedScreen = () => {
             <GlobalHeader headerTitle={params.title} artist={params.artist} />
             <FloatingActionButton onPress={() => setIsVisible(true)} />
           </View>
+
           <View style={styles.layout}>
             <View style={styles.titleContainer}>
               <Text style={styles.title}>Category:</Text>
@@ -191,6 +194,10 @@ export const SongSelectedScreen = () => {
                 <Text style={styles.category}>{songKey}</Text>
               </View>
             </View>
+          </View>
+          <View style={styles.favorite}>
+            <Text style={styles.title}>Favorite:</Text>
+            <Text style={styles.category}> {isFavorite}</Text>
           </View>
           <View style={styles.notesContent}>
             <Text style={styles.title}>Notes:</Text>
@@ -295,6 +302,10 @@ const styles = StyleSheet.create({
   },
   chordLayout: {
     marginTop: 30,
+    padding: 30,
+    width: "100%",
+  },
+  favorite: {
     padding: 30,
     width: "100%",
   },

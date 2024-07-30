@@ -19,7 +19,7 @@ export const MenuItem = ({
   component,
   isFirst = false,
   isLast = false,
-  isOnly = false
+  isOnly = false,
 }: Props) => {
   const navigation = useNavigation<any>();
 
@@ -44,7 +44,7 @@ export const MenuItem = ({
             borderBottomRightRadius: 10,
             borderTopLeftRadius: 10,
             borderTopRightRadius: 10,
-          })
+          }),
         }}>
         <Icon name={icon} color={globalColors.primary} size={25} />
         <Text
@@ -62,9 +62,16 @@ export const MenuItem = ({
           size={25}
         />
       </View>
-      {
-        isFirst && !isOnly && <View style={{ height: 0.3, width: '100%', backgroundColor: 'gray', alignSelf: 'center' }} />
-      }
+      {isFirst && !isOnly && (
+        <View
+          style={{
+            height: 0.3,
+            width: "100%",
+            backgroundColor: globalColors.primaryAlt,
+            alignSelf: "center",
+          }}
+        />
+      )}
     </Pressable>
   );
 };
