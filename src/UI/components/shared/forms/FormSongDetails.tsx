@@ -1,14 +1,5 @@
 import React, { useState } from "react";
-import {
-  TextInput,
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-} from "react-native";
+import { TextInput, View, Text, FlatList, StyleSheet } from "react-native";
 import { globalColors, globalFormStyles } from "../../../theme/Theme";
 import { PrimaryButton } from "../PrimaryButton";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -54,10 +45,8 @@ export const FormSongDetails = ({
   };
 
   return (
-
     <View style={globalFormStyles.containerForm}>
       <View style={globalFormStyles.form}>
-
         <TextInput
           style={globalFormStyles.inputLogin}
           placeholderTextColor="#838282"
@@ -81,11 +70,7 @@ export const FormSongDetails = ({
           renderItem={({ item }) => (
             <Text style={styles.chord}>
               {item}{" "}
-              <Icon
-                name="stop-sharp"
-                color={globalColors.primary}
-                size={5}
-              />{" "}
+              <Icon name="stop-sharp" color={globalColors.primary} size={5} />{" "}
             </Text>
           )}
           keyExtractor={(item, index) => index.toString()}
@@ -126,7 +111,6 @@ export const FormSongDetails = ({
         />
       </View>
     </View>
-
   );
 };
 
