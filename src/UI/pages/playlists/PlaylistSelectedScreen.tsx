@@ -238,32 +238,26 @@ export const PlaylistSelectedScreen = () => {
         presentationStyle="formSheet">
         <KeyboardGestureArea interpolator="ios" style={{ flex: 1 }}>
           <ScrollView horizontal={false} style={{ flex: 1 }}>
-            <Animated.View
-              style={{
-                flex: 1,
-                transform: [{ translateY: height }, { scale }],
-              }}>
-              <View style={styles.modalBtnContainer}>
-                <Text style={styles.modalFormHeaderTitle}>Add Song Info</Text>
-                <PrimaryButton
-                  label="Close"
-                  btnFontSize={20}
-                  colorText={globalColors.light}
-                  onPress={() => closeModal()}
-                />
-              </View>
-
-              <FormCreateSong
-                title={title}
-                setTitle={setTitle}
-                artist={artist}
-                setArtist={setArtist}
-                categoryId={categoryId}
-                setCategoryId={setCategoryId}
-                onCreateSong={handleCreateSong}
-                isLoading={isLoading}
+            <View style={styles.modalBtnContainer}>
+              <Text style={styles.modalFormHeaderTitle}>Add Song Info</Text>
+              <PrimaryButton
+                label="Close"
+                btnFontSize={20}
+                colorText={globalColors.light}
+                onPress={() => closeModal()}
               />
-            </Animated.View>
+            </View>
+
+            <FormCreateSong
+              title={title}
+              setTitle={setTitle}
+              artist={artist}
+              setArtist={setArtist}
+              categoryId={categoryId}
+              setCategoryId={setCategoryId}
+              onCreateSong={handleCreateSong}
+              isLoading={isLoading}
+            />
           </ScrollView>
         </KeyboardGestureArea>
       </Modal>

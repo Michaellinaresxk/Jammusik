@@ -19,6 +19,7 @@ import { LinkLoginRegister } from "../../components/shared/LinkLoginRegister";
 import { useUserService } from "../../../context/UserServiceContext";
 import { useNavigation } from "@react-navigation/native";
 import useAnimationKeyboard from "../../../hooks/useAnimationKeyboard";
+import { KeyboardStickyView } from "react-native-keyboard-controller";
 
 export const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -60,7 +61,7 @@ export const LoginScreen = () => {
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
-
+  const offset = { closed: 0, opened: 100 };
   return (
     <ImageBackground source={image} resizeMode="cover" alt="Imagen de fondo">
       <View style={globalStyles.overlay}>
@@ -68,11 +69,9 @@ export const LoginScreen = () => {
           <ScrollView>
             <KeyboardAvoidingView
               behavior={Platform.OS === "ios" ? "padding" : undefined}>
-              <Animated.View
-                style={{
-                  ...styles.containerLoginScreen,
-                  transform: [{ translateY: height }, { scale }],
-                }}>
+              <KeyboardStickyView
+                offset={offset}
+                style={styles.containerLoginScreen}>
                 <View style={styles.containerLogo}>
                   <BrandLogo />
                 </View>
@@ -97,7 +96,7 @@ export const LoginScreen = () => {
                     goTo={"RegisterScreen"}
                   />
                 </View>
-              </Animated.View>
+              </KeyboardStickyView>
             </KeyboardAvoidingView>
           </ScrollView>
         </KeyboardGestureArea>

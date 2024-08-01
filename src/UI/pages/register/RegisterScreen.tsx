@@ -17,6 +17,7 @@ import { FormRegister } from "../../components/shared/forms/FormRegister";
 import { LinkLoginRegister } from "../../components/shared/LinkLoginRegister";
 import { useUserService } from "../../../context/UserServiceContext";
 import useAnimationKeyboard from "../../../hooks/useAnimationKeyboard";
+import { KeyboardStickyView } from "react-native-keyboard-controller";
 
 export const RegisterScreen = () => {
   const [email, setEmail] = useState("");
@@ -24,7 +25,7 @@ export const RegisterScreen = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [showPassword, setShowPassword] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
 
   const userService = useUserService();
 
@@ -59,13 +60,11 @@ export const RegisterScreen = () => {
     }
   };
 
-  const { height, scale, KeyboardGestureArea } = useAnimationKeyboard()
-
-
   const toggleShowPassword = () => {
-    setShowPassword(!showPassword)
-  }
+    setShowPassword(!showPassword);
+  };
 
+  const offset = { closed: 0, opened: 100 };
   return (
     <ImageBackground
       source={image}
@@ -75,41 +74,37 @@ export const RegisterScreen = () => {
       <View style={globalStyles.overlay}>
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : undefined}>
-          <KeyboardGestureArea interpolator="ios">
-            <ScrollView showsVerticalScrollIndicator={false} horizontal={false}>
-              <Animated.View style={{
-                ...styles.containerLoginScreen,
-                transform: [{ translateY: height }, { scale }],
-              }}>
-
-                <View style={styles.containerLogo}>
-                  <BrandLogo />
-                </View>
-                <Text style={styles.labelTitle}>Register</Text>
-                <View style={{ marginBottom: 100 }}>
-                  <FormRegister
-                    email={email}
-                    setEmail={setEmail}
-                    userName={userName}
-                    setUserName={setUserName}
-                    password={password}
-                    setPassword={setPassword}
-                    isLoading={isLoading}
-                    onRegister={handleRegister}
-                    error={error}
-                    setError={setError}
-                    showPassword={showPassword}
-                    toggleShowPassword={toggleShowPassword}
-                  />
-                  <LinkLoginRegister
-                    text="Have an account?"
-                    link="Login"
-                    goTo="LoginScreen"
-                  />
-                </View>
-              </Animated.View>
-            </ScrollView>
-          </KeyboardGestureArea>
+          <ScrollView showsVerticalScrollIndicator={false} horizontal={false}>
+            <KeyboardStickyView
+              offset={offset}
+              style={styles.containerLoginScreen}>
+              <View style={styles.containerLogo}>
+                <BrandLogo />
+              </View>
+              <Text style={styles.labelTitle}>Register</Text>
+              <View style={{ marginBottom: 50 }}>
+                <FormRegister
+                  email={email}
+                  setEmail={setEmail}
+                  userName={userName}
+                  setUserName={setUserName}
+                  password={password}
+                  setPassword={setPassword}
+                  isLoading={isLoading}
+                  onRegister={handleRegister}
+                  error={error}
+                  setError={setError}
+                  showPassword={showPassword}
+                  toggleShowPassword={toggleShowPassword}
+                />
+                <LinkLoginRegister
+                  text="Have an account?"
+                  link="Login"
+                  goTo="LoginScreen"
+                />
+              </View>
+            </KeyboardStickyView>
+          </ScrollView>
         </KeyboardAvoidingView>
       </View>
     </ImageBackground>

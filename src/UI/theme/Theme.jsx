@@ -24,7 +24,7 @@ export const globalColors = {
 export const globalFormStyles = StyleSheet.create({
   containerForm: {
     flex: 1,
-
+    marginBottom: 100,
     color: "white",
   },
   labelTitle: {
