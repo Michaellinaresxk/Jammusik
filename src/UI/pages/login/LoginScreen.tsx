@@ -47,7 +47,7 @@ export const LoginScreen = () => {
       setPassword("");
       navigation.navigate("HomeScreen");
       setIsLoading(false);
-    } catch (error) {
+    } catch (error: any) {
       if (error.code === "auth/invalid-credential") {
         setError("Invalid credentials");
       }
