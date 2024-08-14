@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   playlistCardText: {
     color: globalColors.light,
     paddingHorizontal: 5,
-    fontSize: 23,
+    fontSize: 20,
   },
   containerIcons: {
     padding: 10,
