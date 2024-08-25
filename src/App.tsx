@@ -6,6 +6,7 @@
  */
 
 import React from "react";
+import { LogBox } from "react-native";
 import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { UserServiceProvider } from "./context/UserServiceContext";
@@ -25,6 +26,13 @@ import { ToastConfig } from "./UI/theme/ToastConfig";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 
 function App(): React.JSX.Element {
+  // Captura global de excepciones no manejadas
+  ErrorUtils.setGlobalHandler((error, isFatal) => {
+    console.error("Excepción no manejada:", error);
+  });
+
+  LogBox.ignoreAllLogs();
+
   return (
     <KeyboardProvider>
       <ProviderComposer
