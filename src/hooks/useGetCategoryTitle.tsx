@@ -10,7 +10,6 @@ export const useGetCategoryTitle = async (
   const db = getFirestore();
   const categoryDocRef = doc(db, "categories", categoryId);
   const categoryDoc = await getDoc(categoryDocRef);
-  console.log(categoryDoc);
   if (!categoryDoc.exists()) {
     throw new Error("Category not found!");
   }

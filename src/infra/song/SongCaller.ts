@@ -74,7 +74,6 @@ export class SongCaller {
     if (!this.db || !userId || !songId) {
       throw new Error("Firestore instance or playlistId is undefined!");
     }
-    console.log(userId, songId);
     const specificSongDoc = doc(this.db, "songs", songId);
     await deleteDoc(specificSongDoc);
   }

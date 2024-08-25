@@ -121,7 +121,6 @@ export const PlaylistSelectedScreen = () => {
   };
 
   const handleDeleteSong = async (songId: string) => {
-    console.log("Deleting playlist", songId);
     await songService.deleteSong(userId, songId);
     setTriggerUpdate(true);
     showToast();

@@ -109,8 +109,6 @@ export class UserCaller {
             "We hope to see you soon...",
           );
         });
-
-        console.log(userId);
       } catch (error) {
         console.error("Error deleting user:", error);
         throw error;

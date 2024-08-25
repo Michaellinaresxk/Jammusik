@@ -116,7 +116,6 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
 
   const logoutUser = async () => {
     try {
-      console.log("logout");
       await userService.logout();
       navigation.navigate("LoginScreen");
     } catch (error) {
@@ -144,10 +143,8 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
       <Separator color="white" />
       <DrawerItemList {...props} />
       <View style={styles.buttonContainer}>
-
-
-        <TouchableOpacity style={styles.btnContainer}
-
+        <TouchableOpacity
+          style={styles.btnContainer}
           onPress={() => logOutConfirmation()}>
           <Text style={styles.btnText}>Logout</Text>
         </TouchableOpacity>
@@ -181,20 +178,18 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
   btnContainer: {
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
     width: 100,
     padding: 10,
     borderRadius: 5,
     borderWidth: 1,
     borderColor: globalColors.primary,
 
-    alignSelf: 'center'
+    alignSelf: "center",
   },
   btnText: {
-
     color: globalColors.primary,
-    margin: 'auto',
-    textAlign: 'center'
-
-  }
+    margin: "auto",
+    textAlign: "center",
+  },
 });

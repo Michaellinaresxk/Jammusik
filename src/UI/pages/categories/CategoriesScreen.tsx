@@ -72,7 +72,6 @@ export const CategoriesScreen = () => {
     const user = auth.currentUser;
     if (user) {
       const userId = user.uid;
-      console.log("Creating category...");
       setIsLoading(true);
       await categoryService.createCategory(userId, title);
       setTitle("");
@@ -90,7 +89,6 @@ export const CategoriesScreen = () => {
   };
 
   const handleDeleteCategory = async (categoryId: string) => {
-    console.log("Deleting category", categoryId);
     const userId = auth.currentUser;
     await categoryService.deleteCategory(userId, categoryId);
     setTriggerUpdate(true);

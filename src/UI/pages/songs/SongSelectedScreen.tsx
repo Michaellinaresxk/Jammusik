@@ -73,7 +73,6 @@ export const SongSelectedScreen = () => {
         lyricLink,
         tabLink,
       );
-      console.log(songDetails);
       showToast();
       closeModal();
       setHasSavedData(true);
@@ -109,7 +108,6 @@ export const SongSelectedScreen = () => {
         setLyricLink("");
         setTabLink("");
       }
-      console.log("Fetched Song Details:", fetchedSongDetails);
     } catch (error) {
       if (hasSavedData) {
         console.error("Failed to fetch songDetails:", error);

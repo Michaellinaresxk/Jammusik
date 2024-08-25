@@ -80,9 +80,5 @@ export class PlaylistCaller {
 
     // Commit the batch
     await batch.commit();
-
-    console.log(
-      `Playlist with ID ${playlistId} and its songs deleted successfully.`,
-    );
   }
 }

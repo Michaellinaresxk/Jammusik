@@ -107,7 +107,6 @@ export const CategorySelectedScreen = () => {
   const handleDeleteSong = async (songId: string) => {
     try {
       if (songId) {
-        console.log("Deleting song with playlist");
         await songService.deleteSong(userId, songId);
       }
       setTriggerUpdate(true);

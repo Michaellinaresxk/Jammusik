@@ -66,7 +66,6 @@ export const HomeScreen = () => {
   };
 
   const handleDeletePlaylist = async (playlistId: string) => {
-    console.log("Deleting playlist", playlistId);
     await playlistService.deletePlaylist(playlistId);
     setTriggerUpdate(prev => !prev); // Trigger the update
     showToast();

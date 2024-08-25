@@ -8,7 +8,6 @@ export const useLogout = () => {
   const userService = useUserService();
   const logoutUser = async () => {
     try {
-      console.log("logout");
       await userService.logout();
       navigation.navigate("LoginScreen");
     } catch (error) {

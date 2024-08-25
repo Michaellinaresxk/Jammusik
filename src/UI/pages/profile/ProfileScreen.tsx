@@ -45,7 +45,6 @@ export const ProfileScreen = () => {
       setUser(userData);
       setUserId(user.uid);
     } else {
-      console.log("No user logged in");
       setUser(null);
     }
   }, [auth.currentUser, userService]);
