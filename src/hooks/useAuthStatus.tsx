@@ -12,7 +12,6 @@ const useAuthStatus = () => {
     const unsubscribe = onAuthStateChanged(auth, user => {
       setIsLoggedIn(!!user);
       setUsername(user?.displayName || "");
-      setUsername(user?.displayName || "");
       setUid(user?.uid || "");
     });
     return () => unsubscribe();
