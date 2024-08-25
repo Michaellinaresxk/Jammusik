@@ -76,7 +76,6 @@ export const PlaylistScreen = () => {
 
   const handleCreatePlaylist = async (values: any) => {
     const { title } = values;
-    console.log("creando playlist");
     setIsLoading(true);
     await playlistService.createPlaylist(title);
     setTitle("");
@@ -87,7 +86,6 @@ export const PlaylistScreen = () => {
   };
 
   const handleDeletePlaylist = async (playlistId: string) => {
-    console.log("Deleting playlist", playlistId);
     await playlistService.deletePlaylist(playlistId);
     setTriggerUpdate(true);
     showToast();

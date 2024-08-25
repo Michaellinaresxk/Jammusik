@@ -7,7 +7,7 @@
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start",
-    "ios:simulator": "npm run ios -- --simulator='iPhone 15 Pro (4762E69E-9A6A-4B5F-A834-0B628B0820BD)'",
+    "ios:simulator": "npx react-native run-ios ios/Jammusik.xcodeproj --simulator='iPhone 15 Pro (4762E69E-9A6A-4B5F-A834-0B628B0820BD)'",
     "test": "jest"
   },
   "dependencies": {

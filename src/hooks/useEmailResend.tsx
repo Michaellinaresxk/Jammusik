@@ -24,7 +24,6 @@ export const useEmailResend = () => {
     email: string, setText: React.Dispatch<React.SetStateAction<string>>
   ) => {
 
-    console.log(email)
     try {
       setIsLoading(true)
       const { data, error } = await resend.emails.send({
@@ -33,8 +32,6 @@ export const useEmailResend = () => {
         subject: "Feedback",
         text: email,
       });
-
-      console.log(error);
 
       if (error) {
         throw new Error("Error sending the email");

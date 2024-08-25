@@ -1,6 +1,5 @@
 /* eslint-disable */
 import {
-  Alert,
   ImageBackground,
   KeyboardAvoidingView,
   Platform,
@@ -8,7 +7,6 @@ import {
   StyleSheet,
   Text,
   View,
-  Animated,
 } from "react-native";
 import { globalColors, globalStyles } from "../../theme/Theme";
 import { Formlogin } from "../../components/shared/forms/FormLogin";
@@ -28,7 +26,7 @@ export const LoginScreen = () => {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const userService = useUserService();
-  const { height, scale, KeyboardGestureArea } = useAnimationKeyboard();
+  const { KeyboardGestureArea } = useAnimationKeyboard();
   const navigation = useNavigation();
 
   const image = {
