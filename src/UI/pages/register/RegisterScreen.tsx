@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import {
-  Animated,
   ImageBackground,
   KeyboardAvoidingView,
   Platform,
@@ -16,7 +15,6 @@ import { BrandLogo } from "../../components/shared/BrandLogo";
 import { FormRegister } from "../../components/shared/forms/FormRegister";
 import { LinkLoginRegister } from "../../components/shared/LinkLoginRegister";
 import { useUserService } from "../../../context/UserServiceContext";
-import useAnimationKeyboard from "../../../hooks/useAnimationKeyboard";
 import { KeyboardStickyView } from "react-native-keyboard-controller";
 
 export const RegisterScreen = () => {
