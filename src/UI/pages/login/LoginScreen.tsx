@@ -37,9 +37,9 @@ export const LoginScreen = () => {
     try {
       setIsLoading(true);
 
-      if (!userService || typeof userService.loginUser !== "function") {
-        throw new Error("El servicio de usuario no está disponible.");
-      }
+      // if (!userService || typeof userService.loginUser !== "function") {
+      //   throw new Error("El servicio de usuario no está disponible.");
+      // }
 
       await userService.loginUser(email, password);
 
