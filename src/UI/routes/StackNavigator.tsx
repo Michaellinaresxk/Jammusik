@@ -1,7 +1,7 @@
 import {createStackNavigator} from '@react-navigation/stack';
 import {LoginScreen} from '../pages/login/LoginScreen';
 import {RegisterScreen} from '../pages/register/RegisterScreen';
-// import { HomeScreen } from "../pages/home/HomeScreen";
+import {HomeScreen} from '../pages/home/HomeScreen';
 // import { CategoriesScreen } from "../pages/categories/CategoriesScreen";
 // import { CategorySelectedScreen } from "../pages/categories/CategorySelectedScreen";
 // import { PlaylistScreen } from "../pages/playlists/PlaylistScreen";

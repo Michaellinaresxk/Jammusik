@@ -14,7 +14,7 @@ import {images} from '../../../assets/img/Images';
 import {BrandLogo} from '../../components/shared/BrandLogo';
 import {FormRegister} from '../../components/shared/forms/FormRegister';
 import {LinkLoginRegister} from '../../components/shared/LinkLoginRegister';
-// import { useUserService } from "../../../context/UserServiceContext";
+import {useUserService} from '../../../context/UserServiceContext';
 import {KeyboardStickyView} from 'react-native-keyboard-controller';
 
 export const RegisterScreen = () => {
@@ -25,7 +25,7 @@ export const RegisterScreen = () => {
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  // const userService = useUserService();
+  const userService = useUserService();
 
   const navigation = useNavigation();
 
@@ -38,12 +38,12 @@ export const RegisterScreen = () => {
     const {email, password, userName} = values;
     setIsLoading(true);
     try {
-      // await userService.registerUser(email, password, userName);
+      await userService.registerUser(email, password, userName);
       setEmail('');
       setUserName('');
       setPassword('');
       setIsLoading(false);
-      // navigation.navigate("HomeScreen");
+      navigation.navigate('HomeScreen');
     } catch (error) {
       console.log(error.code);
       if (error.code === 'auth/email-already-in-use') {
@@ -89,7 +89,7 @@ export const RegisterScreen = () => {
                   password={password}
                   setPassword={setPassword}
                   isLoading={isLoading}
-                  // onRegister={handleRegister}
+                  onRegister={handleRegister}
                   error={error}
                   setError={setError}
                   showPassword={showPassword}

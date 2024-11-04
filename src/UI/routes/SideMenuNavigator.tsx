@@ -23,6 +23,7 @@ import {LoginScreen} from '../pages/login/LoginScreen';
 import {RegisterScreen} from '../pages/register/RegisterScreen';
 import {StackSettingNavigator} from './StackSettingNavigator';
 import {UserAvatar} from '../components/shared/UserAvatar';
+import React from 'react';
 
 const Drawer = createDrawerNavigator();
 
@@ -47,47 +48,47 @@ export const SideMenuNavigator = () => {
       {isLoggedIn ? (
         <>
           <Drawer.Screen
-          // options={{
-          //   drawerIcon: ({focused}) => (
-          //     <Icon
-          //       name="home-sharp"
-          //       color={focused ? globalColors.light : globalColors.terceary}
-          //       size={20}
-          //     />
-          //   ),
-          // }}
-          // name="Home"
-          // component={StackNavigator}
-          />
-          <Drawer.Screen
-          // options={{
-          //   drawerIcon: ({ focused }) => (
-          //     <Icon
-          //       name="musical-notes-sharp"
-          //       color={focused ? globalColors.light : globalColors.terceary}
-          //       size={22}
-          //     />
-          //   ),
-          // }}
-          // name="Playlist"
-          // component={PlaylistScreen}
-          />
-          <Drawer.Screen
-          // options={{
-          //   drawerIcon: ({ focused }) => (
-          //     <Icon
-          //       name="grid-sharp"
-          //       color={focused ? globalColors.light : globalColors.terceary}
-          //       size={20}
-          //     />
-          //   ),
-          // }}
-          // name="Categories"
-          // component={CategoriesScreen}
+            // options={{
+            //   drawerIcon: ({focused}) => (
+            //     <Icon
+            //       name="home-sharp"
+            //       color={focused ? globalColors.light : globalColors.terceary}
+            //       size={20}
+            //     />
+            //   ),
+            // }}
+            name="Home"
+            component={StackNavigator}
           />
           <Drawer.Screen
             // options={{
-            //   drawerIcon: ({ focused }) => (
+            //   drawerIcon: ({focused}) => (
+            //     <Icon
+            //       name="musical-notes-sharp"
+            //       color={focused ? globalColors.light : globalColors.terceary}
+            //       size={22}
+            //     />
+            //   ),
+            // }}
+            name="Playlist"
+            component={PlaylistScreen}
+          />
+          <Drawer.Screen
+            // options={{
+            //   drawerIcon: ({focused}) => (
+            //     <Icon
+            //       name="grid-sharp"
+            //       color={focused ? globalColors.light : globalColors.terceary}
+            //       size={20}
+            //     />
+            //   ),
+            // }}
+            name="Categories"
+            component={CategoriesScreen}
+          />
+          <Drawer.Screen
+            // options={{
+            //   drawerIcon: ({focused}) => (
             //     <Icon
             //       name="settings-sharp"
             //       color={focused ? globalColors.light : globalColors.terceary}
