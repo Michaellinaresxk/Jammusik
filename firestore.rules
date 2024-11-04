@@ -1,0 +1,21 @@
+
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Rules for the 'categories' collection
+    match /categories/{categoryId} {
+      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
+    }
+    
+    // Rules for the 'songs' collection
+    match /songs/{songId} {
+      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
+    }
+    
+    // Generic rule for other collections (if any)
+    match /{document=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
+
