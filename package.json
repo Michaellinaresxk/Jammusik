@@ -22,6 +22,7 @@
     "formik": "^2.4.6",
     "react": "18.3.1",
     "react-native": "0.76.1",
+    "react-native-dotenv": "^3.4.11",
     "react-native-gesture-handler": "^2.20.2",
     "react-native-keyboard-controller": "^1.14.3",
     "react-native-reanimated": "^3.16.1",

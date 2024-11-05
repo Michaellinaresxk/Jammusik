@@ -2,12 +2,12 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {LoginScreen} from '../pages/login/LoginScreen';
 import {RegisterScreen} from '../pages/register/RegisterScreen';
 import {HomeScreen} from '../pages/home/HomeScreen';
-// import { CategoriesScreen } from "../pages/categories/CategoriesScreen";
-// import { CategorySelectedScreen } from "../pages/categories/CategorySelectedScreen";
-// import { PlaylistScreen } from "../pages/playlists/PlaylistScreen";
-// import { PlaylistSelectedScreen } from "../pages/playlists/PlaylistSelectedScreen";
-// import { SongSelectedScreen } from "../pages/songs/SongSelectedScreen";
-// import { ProfileScreen } from "../pages/profile/ProfileScreen";
+import {CategoriesScreen} from '../pages/categories/CategoriesScreen';
+import {CategorySelectedScreen} from '../pages/categories/CategorySelectedScreen';
+import {PlaylistScreen} from '../pages/playlists/PlaylistScreen';
+import {PlaylistSelectedScreen} from '../pages/playlists/PlaylistSelectedScreen';
+import {SongSelectedScreen} from '../pages/songs/SongSelectedScreen';
+import {ProfileScreen} from '../pages/profile/ProfileScreen';
 import type {Song} from '../../types/songTypes';
 import {FeedbackScreen} from '../pages/feedback/FeedbackScreen';
 import useAuthStatus from '../../hooks/useAuthStatus';
@@ -47,7 +47,7 @@ export const StackNavigator = () => {
       {isLoggedIn ? (
         <Stack.Group>
           <Stack.Screen name="HomeScreen" component={HomeScreen} />
-          {/* <Stack.Screen name="CategoriesScreen" component={CategoriesScreen} />
+          <Stack.Screen name="CategoriesScreen" component={CategoriesScreen} />
           <Stack.Screen
             name="CategorySelectedScreen"
             component={CategorySelectedScreen}
@@ -64,7 +64,7 @@ export const StackNavigator = () => {
           <Stack.Screen name="FaqsScreen" component={FaqsScreen} />
           <Stack.Screen name="AboutUsScreen" component={AboutUsScreen} />
           <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
-          <Stack.Screen name="FeedbackScreen" component={FeedbackScreen} /> */}
+          <Stack.Screen name="FeedbackScreen" component={FeedbackScreen} />
         </Stack.Group>
       ) : (
         <Stack.Group screenOptions={{headerShown: false}}>

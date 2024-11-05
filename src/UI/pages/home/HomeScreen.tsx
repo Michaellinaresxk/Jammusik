@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, {useState, useCallback} from 'react';
 import {
   FlatList,
   KeyboardAvoidingView,
@@ -8,25 +8,25 @@ import {
   StyleSheet,
   Text,
   View,
-} from "react-native";
-import { CategoryCardLight } from "../../components/shared/cards/CategoryCardLight";
+} from 'react-native';
+import {CategoryCardLight} from '../../components/shared/cards/CategoryCardLight';
 import {
   type NavigationProp,
   useNavigation,
   useFocusEffect,
-} from "@react-navigation/native";
-import { type RootStackParamsList } from "../../routes/StackNavigator";
-import { GlobalHeader } from "../../components/shared/GlobalHeader";
-import { globalColors } from "../../theme/Theme";
-import { useCategoryService } from "../../../context/CategoryServiceContext";
-import { CategoryView } from "../../../views/CategoryView";
-import { usePlaylistService } from "../../../context/PlaylistServiceContext";
-import { auth } from "../../../infra/api/firebaseConfig";
-import { PlaylistView } from "../../../views/PlaylistView";
-import { PlaylistCard } from "../../components/shared/cards/PlaylistCard";
-import { SliderQuotes } from "../../components/shared/SliderQuotes";
-import { usePullRefresh } from "../../../hooks/usePullRefresing";
-import Toast from "react-native-toast-message";
+} from '@react-navigation/native';
+import {type RootStackParamsList} from '../../routes/StackNavigator';
+import {GlobalHeader} from '../../components/shared/GlobalHeader';
+import {globalColors} from '../../theme/Theme';
+import {useCategoryService} from '../../../context/CategoryServiceContext';
+import {CategoryView} from '../../../views/CategoryView';
+import {usePlaylistService} from '../../../context/PlaylistServiceContext';
+import {auth} from '../../../infra/api/firebaseConfig';
+import {PlaylistView} from '../../../views/PlaylistView';
+import {PlaylistCard} from '../../components/shared/cards/PlaylistCard';
+import {SliderQuotes} from '../../components/shared/SliderQuotes';
+import {usePullRefresh} from '../../../hooks/usePullRefresing';
+import Toast from 'react-native-toast-message';
 
 export const HomeScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
@@ -48,20 +48,20 @@ export const HomeScreen = () => {
       setCategories(fetchedCategories);
       setPlaylists(fetchedPlaylists);
     } catch (error) {
-      console.error("Failed to fetch data:", error);
+      console.error('Failed to fetch data:', error);
     }
   }, [categoryService, playlistService]);
 
   useFocusEffect(
     useCallback(() => {
       loadData();
-    }, [loadData, triggerUpdate]),
+    }, [loadData]),
   );
 
   const showToast = () => {
     Toast.show({
-      type: "success",
-      text1: "Playlist Deleted successfully. 👋",
+      type: 'success',
+      text1: 'Playlist Deleted successfully. 👋',
     });
   };
 
@@ -71,12 +71,12 @@ export const HomeScreen = () => {
     showToast();
   };
 
-  const { isRefreshing, refresh, top } = usePullRefresh(loadData);
+  const {isRefreshing, refresh, top} = usePullRefresh(loadData);
 
   return (
     <>
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : undefined}>
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <ScrollView
           refreshControl={
             <RefreshControl
@@ -99,11 +99,11 @@ export const HomeScreen = () => {
                 data={categories}
                 keyExtractor={item => item.id}
                 horizontal={true}
-                renderItem={({ item }) => (
+                renderItem={({item}) => (
                   <CategoryCardLight
                     title={item.title}
                     onPress={() =>
-                      navigation.navigate("CategorySelectedScreen", {
+                      navigation.navigate('CategorySelectedScreen', {
                         id: item.id,
                         title: item.title,
                       })
@@ -118,7 +118,7 @@ export const HomeScreen = () => {
                   data={playlists}
                   keyExtractor={item => item.id}
                   numColumns={2}
-                  renderItem={({ item, index }) => (
+                  renderItem={({item, index}) => (
                     <PlaylistCard
                       title={item.title}
                       color={
@@ -127,7 +127,7 @@ export const HomeScreen = () => {
                           : globalColors.secondary
                       }
                       onPress={() =>
-                        navigation.navigate("PlaylistSelectedScreen", {
+                        navigation.navigate('PlaylistSelectedScreen', {
                           id: item.id,
                           title: item.title,
                         })
@@ -147,7 +147,7 @@ export const HomeScreen = () => {
 
 const styles = StyleSheet.create({
   text: {
-    color: "red",
+    color: 'red',
     fontSize: 30,
   },
   subTitle: {
