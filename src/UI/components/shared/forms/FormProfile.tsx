@@ -1,10 +1,10 @@
-import React from "react";
-import { Alert, Text, TextInput, View } from "react-native";
-import { globalColors, globalFormStyles } from "../../../theme/Theme";
-import { PrimaryButton } from "../PrimaryButton";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { RootStackParamsList } from "../../../routes/StackNavigator";
-import { useUserService } from "../../../../context/UserServiceContext";
+import React from 'react';
+import {Alert, Text, TextInput, View} from 'react-native';
+import {globalColors, globalFormStyles} from '../../../theme/Theme';
+import {PrimaryButton} from '../PrimaryButton';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
+import {RootStackParamsList} from '../../../routes/StackNavigator';
+import {useUserService} from '../../../../context/UserServiceContext';
 
 type ProfileForm = {
   email: string;
@@ -30,23 +30,23 @@ export const FormProfile = ({
   const logoutUser = async () => {
     try {
       await userService.logout();
-      navigation.navigate("LoginScreen");
+      navigation.navigate('LoginScreen');
     } catch (error) {
-      console.error("Error al cerrar sesión: ", error);
+      console.error('Error al cerrar sesión: ', error);
     }
   };
 
   const logOutConfirmation = () =>
-    Alert.alert("Are you sure?", "Do you want to log-out?", [
+    Alert.alert('Are you sure?', 'Do you want to log-out?', [
       {
-        text: "UPS! BY MISTAKE",
-        onPress: () => console.log("Cancel Pressed"),
-        style: "cancel",
+        text: 'UPS! BY MISTAKE',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
       },
       {
-        text: "YES, LOG-OUT",
+        text: 'YES, LOG-OUT',
         onPress: () => logoutUser(),
-        style: "destructive",
+        style: 'destructive',
       },
     ]);
 
@@ -84,9 +84,9 @@ export const FormProfile = ({
             onChangeText={text => setUserId(text)}
           />
         </View>
-        <View style={{ marginTop: 20 }}>
+        <View style={{marginTop: 20}}>
           <PrimaryButton
-            label={"LOG-OUT"}
+            label={'LOG-OUT'}
             bgColor={globalColors.primary}
             borderRadius={5}
             colorText={globalColors.secondary}

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { View, StyleSheet } from "react-native";
-import DropDownPicker from "react-native-dropdown-picker";
+import React, {useState, useEffect} from 'react';
+import {View, StyleSheet} from 'react-native';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 type DropdownItem = {
   label: string;
@@ -43,7 +43,7 @@ export const CustomDropdown = ({
         placeholder={placeholder}
         style={styles.pickerStyle}
         dropDownContainerStyle={styles.dropdownStyle}
-        placeholderStyle={{ color: "gray" }}
+        placeholderStyle={{color: 'gray'}}
       />
     </View>
   );
@@ -55,10 +55,10 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   pickerStyle: {
-    backgroundColor: "#fafafa",
-    borderColor: "#dfdfdf",
+    backgroundColor: '#fafafa',
+    borderColor: '#dfdfdf',
   },
   dropdownStyle: {
-    backgroundColor: "#fafafa",
+    backgroundColor: '#fafafa',
   },
 });

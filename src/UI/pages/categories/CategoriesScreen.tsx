@@ -24,7 +24,7 @@ import {PrimaryButton} from '../../components/shared/PrimaryButton';
 import {FormCreateCategory} from '../../components/shared/forms/FormCreateCategory';
 import {getAuth} from 'firebase/auth';
 import {Separator} from '../../components/shared/Separator';
-// import Icon from "react-native-vector-icons/Ionicons";
+import Icon from 'react-native-vector-icons/Ionicons';
 import {usePullRefresh} from '../../../hooks/usePullRefresing';
 import Toast from 'react-native-toast-message';
 
@@ -123,19 +123,19 @@ export const CategoriesScreen = () => {
               <Pressable
                 style={styles.goBackContent}
                 onPress={() => navigation.navigate('HomeScreen')}>
-                {/* <Icon
+                <Icon
                   name="arrow-back-sharp"
                   color={globalColors.light}
                   size={30}
-                /> */}
+                />
               </Pressable>
               <View style={styles.containerHeader}>
                 <View style={styles.titleContent}>
-                  {/* <Icon
+                  <Icon
                     name="musical-notes-sharp"
                     color={globalColors.primary}
                     size={30}
-                  /> */}
+                  />
                   <Text style={styles.title}>Categories</Text>
                 </View>
                 <TouchableOpacity

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {globalColors} from '../../theme/Theme';
-// import Icon from "react-native-vector-icons/Ionicons";
+import Icon from 'react-native-vector-icons/Ionicons';
 import {useNavigation} from '@react-navigation/native';
 
 interface Props {
@@ -55,12 +55,12 @@ export const MenuItem = ({
           }}>
           {name}
         </Text>
-        {/* <Icon
+        <Icon
           name="chevron-forward-outline"
           color={globalColors.primary}
-          style={{ marginLeft: "auto" }}
+          style={{marginLeft: 'auto'}}
           size={25}
-        /> */}
+        />
       </View>
       {isFirst && !isOnly && (
         <View

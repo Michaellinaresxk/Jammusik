@@ -1,9 +1,9 @@
-import React from "react";
-import { ActivityIndicator, Text, TextInput, View } from "react-native";
-import { globalColors, globalFormStyles } from "../../../theme/Theme";
-import { PrimaryButton } from "../PrimaryButton";
-import { Formik } from "formik";
-import { validationCreatePlaylistForm } from "./yup/validation_create_playlist";
+import React from 'react';
+import {ActivityIndicator, Text, TextInput, View} from 'react-native';
+import {globalColors, globalFormStyles} from '../../../theme/Theme';
+import {PrimaryButton} from '../PrimaryButton';
+import {Formik} from 'formik';
+import {validationCreatePlaylistForm} from './yup/validation_create_playlist';
 
 type ProfileForm = {
   title: string;
@@ -22,9 +22,9 @@ export const FormCreatePlaylist = ({
     <View style={globalFormStyles.containerForm}>
       <Formik
         validationSchema={validationCreatePlaylistForm}
-        initialValues={{ title: "" }}
+        initialValues={{title: ''}}
         onSubmit={onCreatePlaylist}>
-        {({ values, handleChange, errors, touched, handleSubmit }) => (
+        {({values, handleChange, errors, touched, handleSubmit}) => (
           <View style={globalFormStyles.form}>
             <View>
               <TextInput
@@ -33,18 +33,18 @@ export const FormCreatePlaylist = ({
                 placeholder="Title"
                 value={values.title}
                 autoCorrect={false}
-                onChangeText={handleChange("title")}
+                onChangeText={handleChange('title')}
               />
               {errors.title && touched.title ? (
-                <Text style={{ color: "red" }}>{errors.title}</Text>
+                <Text style={{color: 'red'}}>{errors.title}</Text>
               ) : null}
             </View>
             <PrimaryButton
               label={
                 !isLoading ? (
-                  "Create Playlist"
+                  'Create Playlist'
                 ) : (
-                  <ActivityIndicator size={"large"} />
+                  <ActivityIndicator size={'large'} />
                 )
               }
               bgColor={globalColors.primary}

@@ -11,7 +11,7 @@ import {globalColors, globalFormStyles} from '../../../theme/Theme';
 import {type Register} from '../../../../types/formTypes';
 import {Formik} from 'formik';
 import {validationRegisterForm} from './yup/validation_register_yup';
-// import Ionicons from 'react-native-vector-icons/Ionicons'
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 interface FormRegisterProps {
   email: string;
@@ -105,10 +105,11 @@ export const FormRegister = ({
                     bottom: 37,
                   }}
                   onPress={toggleShowPassword}>
-                  {/* <Ionicons
-                    name={showPassword ? "eye-outline" : 'eye-off-outline'}
-                    size={24} color={'gray'}
-                  /> */}
+                  <Ionicons
+                    name={showPassword ? 'eye-outline' : 'eye-off-outline'}
+                    size={24}
+                    color={'gray'}
+                  />
                 </Pressable>
               </View>
 

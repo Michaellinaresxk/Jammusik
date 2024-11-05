@@ -11,7 +11,7 @@ import {BrandLogo} from '../components/shared/BrandLogo';
 import {Alert, StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import {Separator} from '../components/shared/Separator';
 import {PlaylistScreen} from '../pages/playlists/PlaylistScreen';
-// import Icon from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/Ionicons';
 import {useUserService} from '../../context/UserServiceContext';
 import {type NavigationProp, useNavigation} from '@react-navigation/native';
 import {
@@ -48,54 +48,54 @@ export const SideMenuNavigator = () => {
       {isLoggedIn ? (
         <>
           <Drawer.Screen
-            // options={{
-            //   drawerIcon: ({focused}) => (
-            //     <Icon
-            //       name="home-sharp"
-            //       color={focused ? globalColors.light : globalColors.terceary}
-            //       size={20}
-            //     />
-            //   ),
-            // }}
+            options={{
+              drawerIcon: ({focused}) => (
+                <Icon
+                  name="home-sharp"
+                  color={focused ? globalColors.light : globalColors.terceary}
+                  size={20}
+                />
+              ),
+            }}
             name="Home"
             component={StackNavigator}
           />
           <Drawer.Screen
-            // options={{
-            //   drawerIcon: ({focused}) => (
-            //     <Icon
-            //       name="musical-notes-sharp"
-            //       color={focused ? globalColors.light : globalColors.terceary}
-            //       size={22}
-            //     />
-            //   ),
-            // }}
+            options={{
+              drawerIcon: ({focused}) => (
+                <Icon
+                  name="musical-notes-sharp"
+                  color={focused ? globalColors.light : globalColors.terceary}
+                  size={22}
+                />
+              ),
+            }}
             name="Playlist"
             component={PlaylistScreen}
           />
           <Drawer.Screen
-            // options={{
-            //   drawerIcon: ({focused}) => (
-            //     <Icon
-            //       name="grid-sharp"
-            //       color={focused ? globalColors.light : globalColors.terceary}
-            //       size={20}
-            //     />
-            //   ),
-            // }}
+            options={{
+              drawerIcon: ({focused}) => (
+                <Icon
+                  name="grid-sharp"
+                  color={focused ? globalColors.light : globalColors.terceary}
+                  size={20}
+                />
+              ),
+            }}
             name="Categories"
             component={CategoriesScreen}
           />
           <Drawer.Screen
-            // options={{
-            //   drawerIcon: ({focused}) => (
-            //     <Icon
-            //       name="settings-sharp"
-            //       color={focused ? globalColors.light : globalColors.terceary}
-            //       size={22}
-            //     />
-            //   ),
-            // }}
+            options={{
+              drawerIcon: ({focused}) => (
+                <Icon
+                  name="settings-sharp"
+                  color={focused ? globalColors.light : globalColors.terceary}
+                  size={22}
+                />
+              ),
+            }}
             name="Settings"
             component={StackSettingNavigator}
           />

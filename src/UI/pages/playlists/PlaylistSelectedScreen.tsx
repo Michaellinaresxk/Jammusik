@@ -27,7 +27,7 @@ import {useSongService} from '../../../context/SongServiceContext';
 import {SongView} from '../../../views/SongView';
 import {PrimaryButton} from '../../components/shared/PrimaryButton';
 import {Swipeable} from 'react-native-gesture-handler';
-// import Icon from "react-native-vector-icons/Ionicons";
+import Icon from 'react-native-vector-icons/Ionicons';
 import Toast from 'react-native-toast-message';
 import {auth} from '../../../infra/api/firebaseConfig';
 import {usePullRefresh} from '../../../hooks/usePullRefresing';
@@ -144,7 +144,7 @@ export const PlaylistSelectedScreen = () => {
     <TouchableOpacity
       style={styles.deleteButtonContent}
       onPress={() => deleteConfirmation(songId)}>
-      {/* <Icon name="trash-sharp" size={25} style={styles.deleteIcon} /> */}
+      <Icon name="trash-sharp" size={25} style={styles.deleteIcon} />
     </TouchableOpacity>
   );
   const handleResetSongs = async () => {

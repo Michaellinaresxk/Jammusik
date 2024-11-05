@@ -1,6 +1,6 @@
 import React from 'react';
 import {FlatList, Pressable, StyleSheet, Text, View} from 'react-native';
-// import Icon from "react-native-vector-icons/Ionicons";
+import Icon from 'react-native-vector-icons/Ionicons';
 import {globalColors} from '../../theme/Theme';
 import {useAccordion} from '../../../hooks/useAccordion';
 
@@ -19,11 +19,11 @@ export const AccordionItem = ({askes, setAskes}) => {
               onPress={() => OpenAccordion(item.id, setAskes, askes)}
               style={styles.containerAsk}>
               <Text style={styles.ask}>{item.ask}</Text>
-              {/* <Icon
-                name={item.state ? "chevron-forward" : "chevron-down"}
+              <Icon
+                name={item.state ? 'chevron-forward' : 'chevron-down'}
                 size={25}
                 color={globalColors.light}
-              /> */}
+              />
             </Pressable>
 
             <View

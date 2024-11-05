@@ -1,6 +1,6 @@
-import React from "react";
-import { StyleSheet, View } from "react-native";
-import Svg, { Path } from "react-native-svg";
+import React from 'react';
+import {StyleSheet, View} from 'react-native';
+import Svg, {Path} from 'react-native-svg';
 
 export const BrandLogo = () => {
   return (
@@ -28,9 +28,9 @@ export const BrandLogo = () => {
 
 const styles = StyleSheet.create({
   containerImage: {
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   brandLogo: {
     marginBottom: 5,
