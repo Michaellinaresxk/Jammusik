@@ -1,7 +1,7 @@
-import React from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { globalColors } from "../../theme/Theme";
+import React from 'react';
+import {Pressable, StyleSheet, Text, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {globalColors} from '../../theme/Theme';
 
 type LinkText = {
   text: string;
@@ -9,7 +9,7 @@ type LinkText = {
   goTo: never;
 };
 
-export const LinkLoginRegister = ({ text, link, goTo }: LinkText) => {
+export const LinkLoginRegister = ({text, link, goTo}: LinkText) => {
   const navigation = useNavigation();
   return (
     <View style={styles.containerLink}>
@@ -23,17 +23,17 @@ export const LinkLoginRegister = ({ text, link, goTo }: LinkText) => {
 
 const styles = StyleSheet.create({
   link: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 18,
     color: globalColors.primary,
   },
   containerLink: {
-    display: "flex",
-    flexDirection: "row",
+    display: 'flex',
+    flexDirection: 'row',
     marginTop: 15,
-    alignItems: "center",
+    alignItems: 'center',
     gap: 5,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
   text: {
     color: globalColors.light,

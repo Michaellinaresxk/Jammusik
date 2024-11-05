@@ -1,7 +1,7 @@
 import React from 'react';
 import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {globalColors} from '../../../theme/Theme';
-// import Icon from "react-native-vector-icons/Ionicons";
+import Icon from 'react-native-vector-icons/Ionicons';
 import Toast from 'react-native-toast-message';
 
 type Props = {
@@ -41,7 +41,7 @@ export const PlaylistCard = ({title, onPress, onDelete, color}: Props) => {
       onPress={onPress}>
       <Text style={styles.playlistCardText}>{title}</Text>
       <View style={styles.containerIcons}>
-        {/* <Icon
+        <Icon
           name="share-social-sharp"
           color={globalColors.light}
           onPress={showToast}
@@ -55,7 +55,7 @@ export const PlaylistCard = ({title, onPress, onDelete, color}: Props) => {
             deleteConfirmation();
           }}
           size={20}
-        /> */}
+        />
       </View>
     </TouchableOpacity>
   );

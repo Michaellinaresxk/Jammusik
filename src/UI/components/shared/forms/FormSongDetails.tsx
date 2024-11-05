@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {TextInput, View, Text, FlatList, StyleSheet} from 'react-native';
 import {globalColors, globalFormStyles} from '../../../theme/Theme';
 import {PrimaryButton} from '../PrimaryButton';
-// import Icon from "react-native-vector-icons/Ionicons";
+import Icon from 'react-native-vector-icons/Ionicons';
 
 type SongDetails = {
   songKey: string;
@@ -70,7 +70,7 @@ export const FormSongDetails = ({
           renderItem={({item}) => (
             <Text style={styles.chord}>
               {item}{' '}
-              {/* <Icon name="stop-sharp" color={globalColors.primary} size={5} />{' '} */}
+              <Icon name="stop-sharp" color={globalColors.primary} size={5} />{' '}
             </Text>
           )}
           keyExtractor={(item, index) => index.toString()}

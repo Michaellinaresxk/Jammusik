@@ -67,38 +67,38 @@ export const LoginScreen = () => {
   return (
     <ImageBackground source={image} resizeMode="cover" alt="Imagen de fondo">
       <View style={globalStyles.overlay}>
-        {/* <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : undefined}> */}
-        <ScrollView showsVerticalScrollIndicator={false} horizontal={false}>
-          {/* <KeyboardStickyView
-            offset={offset}
-            style={styles.containerLoginScreen}> */}
-          <View style={styles.containerLogo}>
-            <BrandLogo />
-          </View>
-          <Text style={styles.labelTitle}>Log In</Text>
-          <View style={styles.containerForm}>
-            <Formlogin
-              email={email}
-              setEmail={setEmail}
-              password={password}
-              setPassword={setPassword}
-              onLogin={handleLogin}
-              isLoading={isLoading}
-              error={error}
-              setError={setError}
-              showPassword={showPassword}
-              toggleShowPassword={toggleShowPassword}
-            />
-            <LinkLoginRegister
-              text="Not a member yet?"
-              link="Register"
-              goTo={'RegisterScreen'}
-            />
-          </View>
-          {/* </KeyboardStickyView> */}
-        </ScrollView>
-        {/* </KeyboardAvoidingView> */}
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+          <ScrollView showsVerticalScrollIndicator={false} horizontal={false}>
+            <KeyboardStickyView
+              offset={offset}
+              style={styles.containerLoginScreen}>
+              <View style={styles.containerLogo}>
+                <BrandLogo />
+              </View>
+              <Text style={styles.labelTitle}>Log In</Text>
+              <View style={styles.containerForm}>
+                <Formlogin
+                  email={email}
+                  setEmail={setEmail}
+                  password={password}
+                  setPassword={setPassword}
+                  onLogin={handleLogin}
+                  isLoading={isLoading}
+                  error={error}
+                  setError={setError}
+                  showPassword={showPassword}
+                  toggleShowPassword={toggleShowPassword}
+                />
+                <LinkLoginRegister
+                  text="Not a member yet?"
+                  link="Register"
+                  goTo={'RegisterScreen'}
+                />
+              </View>
+            </KeyboardStickyView>
+          </ScrollView>
+        </KeyboardAvoidingView>
       </View>
     </ImageBackground>
   );

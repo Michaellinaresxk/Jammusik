@@ -3,7 +3,7 @@ import {Alert, Pressable, StyleSheet, Text, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {MenuItem} from '../../components/shared/MenuItem';
 import {BrandLogo} from '../../components/shared/BrandLogo';
-// import Icon from "react-native-vector-icons/Ionicons";
+import Icon from 'react-native-vector-icons/Ionicons';
 import {globalColors} from '../../theme/Theme';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {PrimaryButton} from '../../components/shared/PrimaryButton';
@@ -83,7 +83,7 @@ export const SettingsScreen = () => {
       <Pressable
         style={styles.goBackContent}
         onPress={() => navigation.navigate('HomeScreen')}>
-        {/* <Icon name="arrow-back-sharp" color={globalColors.primary} size={30} /> */}
+        <Icon name="arrow-back-sharp" color={globalColors.primary} size={30} />
       </Pressable>
       <Text style={styles.subTitle}>Account Settings:</Text>
       <View style={styles.mainContainer}>

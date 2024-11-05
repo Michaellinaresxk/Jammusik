@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {globalColors} from '../../../theme/Theme';
-// import Icon from "react-native-vector-icons/Ionicons";
+import Icon from 'react-native-vector-icons/Ionicons';
 import {useSongState} from '../../../store/useSongState';
 import {auth} from '../../../../infra/api/firebaseConfig';
 
@@ -53,12 +53,12 @@ export const SongCard = ({
           <Text style={styles.songCardArtist}>- {artist}</Text>
         </View>
         <View style={styles.buttonContainer}>
-          {/* <Icon
-            name={changeIcon ? "checkmark-done-sharp" : "power-sharp"}
+          <Icon
+            name={changeIcon ? 'checkmark-done-sharp' : 'power-sharp'}
             color={globalColors.light}
             size={30}
             onPress={() => handlePressIcon()}
-          /> */}
+          />
         </View>
       </View>
     </TouchableOpacity>

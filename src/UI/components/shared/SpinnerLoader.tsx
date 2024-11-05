@@ -1,6 +1,5 @@
-import React, { useRef, useEffect } from 'react';
-import { StyleSheet, View, Animated } from 'react-native';
-
+import React, {useRef, useEffect} from 'react';
+import {StyleSheet, View, Animated} from 'react-native';
 
 const Loader = () => {
   const progress = useRef(new Animated.Value(0)).current;
@@ -11,22 +10,19 @@ const Loader = () => {
         toValue: 1,
         duration: 1000,
         useNativeDriver: true, // Optimize for performance
-      })
+      }),
     ).start();
-  }, []);
-  progress.interpolate
+  }, [progress]);
+  progress.interpolate;
   const mask = progress.interpolate({
     inputRange: [0, 1],
-    outputRange: ['#fefefe'
-    ],
+    outputRange: ['#fefefe'],
   });
-
-
 
   return (
     <View style={styles.maskContainer}>
       <View style={styles.loader}>
-        <Animated.View style={[StyleSheet.absoluteFill, /* { mask } */]}>
+        <Animated.View style={[StyleSheet.absoluteFill /* { mask } */]}>
           {/* Empty view to apply the mask */}
         </Animated.View>
       </View>

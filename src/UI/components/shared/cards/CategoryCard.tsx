@@ -1,7 +1,7 @@
 import React from 'react';
 import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {globalColors} from '../../../theme/Theme';
-// import Icon from "react-native-vector-icons/Ionicons";
+import Icon from 'react-native-vector-icons/Ionicons';
 
 type Props = {
   title: string;
@@ -27,7 +27,7 @@ export const CategoryCard = ({title, onPress, onDelete}: Props) => {
     <TouchableOpacity style={styles.categoryCard} onPress={onPress}>
       <Text style={styles.categoryCardText}>{title}</Text>
       <View style={styles.containerIcons}>
-        {/* <Icon
+        <Icon
           name="trash-sharp"
           color={globalColors.light}
           onPress={event => {
@@ -35,7 +35,7 @@ export const CategoryCard = ({title, onPress, onDelete}: Props) => {
             deleteConfirmation();
           }}
           size={20}
-        /> */}
+        />
       </View>
     </TouchableOpacity>
   );

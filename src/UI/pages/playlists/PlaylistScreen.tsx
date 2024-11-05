@@ -12,7 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-// import Icon from "react-native-vector-icons/Ionicons";
+import Icon from 'react-native-vector-icons/Ionicons';
 import {globalColors} from '../../theme/Theme';
 import {type NavigationProp, useNavigation} from '@react-navigation/native';
 import {type RootStackParamsList} from '../../routes/StackNavigator';
@@ -120,25 +120,24 @@ export const PlaylistScreen = () => {
             <Pressable
               style={styles.goBackContent}
               onPress={() => navigation.navigate('HomeScreen')}>
-              {/* <Icon
+              <Icon
                 name="arrow-back-sharp"
                 color={globalColors.primary}
                 size={30}
-              /> */}
+              />
             </Pressable>
             <View style={styles.containerHeader}>
               <View style={styles.titleContent}>
-                {/* <Icon
+                <Icon
                   name="musical-notes-sharp"
                   color={globalColors.primary}
                   size={30}
-                /> */}
+                />
                 <Text style={styles.title}>Playlists</Text>
               </View>
               <TouchableOpacity
                 onPress={() => setIsVisible(true)}
                 style={styles.openModalBtn}>
-                {/* <Icon name="id-card-sharp" color={globalColors.primary} size={23} /> */}
                 <Text style={styles.openModalBtnText}>+</Text>
               </TouchableOpacity>
             </View>

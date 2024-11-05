@@ -1,6 +1,6 @@
 import React from 'react';
 import {Pressable} from 'react-native';
-// import Icon from "react-native-vector-icons/Ionicons";
+import Icon from 'react-native-vector-icons/Ionicons';
 import {globalColors} from '../../theme/Theme';
 
 type Props = {
@@ -23,7 +23,7 @@ export const FloatingActionButton = ({onPress}: Props) => {
         opacity: pressed ? 0.8 : 1,
       })}
       onPress={() => onPress()}>
-      {/* <Icon name="add-sharp" color={globalColors.light} size={35} /> */}
+      <Icon name="add-sharp" color={globalColors.light} size={35} />
     </Pressable>
   );
 };

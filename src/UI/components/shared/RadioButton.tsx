@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { globalColors } from "../../theme/Theme";
+import React, {useState} from 'react';
+import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import {globalColors} from '../../theme/Theme';
 
 type RadioButtonProps = {
-  options: { label: string; value: string }[];
+  options: {label: string; value: string}[];
   setSelectedSkill: (value: string) => void;
   selectedSkill: string;
 };
@@ -30,7 +30,7 @@ const RadioButton = ({
           <View
             style={[
               styles.circle,
-              { borderColor: option.value === value ? "#18998B" : "#ccc" },
+              {borderColor: option.value === value ? '#18998B' : '#ccc'},
             ]}>
             {option.value === value && <View style={styles.checkedCircle} />}
           </View>
@@ -43,12 +43,12 @@ const RadioButton = ({
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   optionContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginRight: 20,
   },
   circle: {
@@ -56,8 +56,8 @@ const styles = StyleSheet.create({
     width: 20,
     borderRadius: 10,
     borderWidth: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     marginRight: 10,
   },
   checkedCircle: {

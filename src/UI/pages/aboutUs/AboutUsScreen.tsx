@@ -1,13 +1,13 @@
-import React from "react";
-import { RefreshControl, StyleSheet, Text, View } from "react-native";
-import { BrandLogo } from "../../components/shared/BrandLogo";
-import { globalColors, globalStyles } from "../../theme/Theme";
-import { ScrollView } from "react-native";
-import { usePullRefresh } from "../../../hooks/usePullRefresing";
-import { GoBackButton } from "../../components/shared/GoBackButton";
+import React from 'react';
+import {RefreshControl, StyleSheet, Text, View} from 'react-native';
+import {BrandLogo} from '../../components/shared/BrandLogo';
+import {globalColors, globalStyles} from '../../theme/Theme';
+import {ScrollView} from 'react-native';
+import {usePullRefresh} from '../../../hooks/usePullRefresing';
+import {GoBackButton} from '../../components/shared/GoBackButton';
 
 export const AboutUsScreen = () => {
-  const { isRefreshing, refresh, top } = usePullRefresh();
+  const {isRefreshing, refresh, top} = usePullRefresh();
   return (
     <>
       <ScrollView
@@ -24,7 +24,7 @@ export const AboutUsScreen = () => {
           />
         }>
         <GoBackButton />
-        <View style={[globalStyles.container, { padding: 24 }]}>
+        <View style={[globalStyles.container, {padding: 24}]}>
           <View style={styles.containerLogo}>
             <BrandLogo />
           </View>
@@ -66,7 +66,7 @@ export const AboutUsScreen = () => {
               filter songs by musical genre, making it easy to search for songs
               by musical category or genre.
             </Text>
-            <Text style={{ ...styles.textos, marginBottom: 100 }}>
+            <Text style={{...styles.textos, marginBottom: 100}}>
               It is important to note that, in this version, the app does not
               play music; its main focus is the management and organization of
               playlists for musicians.
@@ -84,14 +84,14 @@ const styles = StyleSheet.create({
   },
 
   containerTextos: {
-    display: "flex",
-    flexDirection: "column",
+    display: 'flex',
+    flexDirection: 'column',
     gap: 20,
     marginBottom: 20,
   },
   title: {
     color: globalColors.primaryDark,
-    fontWeight: "900",
+    fontWeight: '900',
     fontSize: 18,
   },
   textos: {

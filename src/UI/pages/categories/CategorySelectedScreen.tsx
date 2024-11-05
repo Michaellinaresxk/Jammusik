@@ -27,7 +27,7 @@ import {globalColors} from '../../theme/Theme';
 import {SongCard} from '../../components/shared/cards/SongCard';
 import {GlobalHeader} from '../../components/shared/GlobalHeader';
 import Toast from 'react-native-toast-message';
-// import Icon from "react-native-vector-icons/Ionicons";
+import Icon from 'react-native-vector-icons/Ionicons';
 import {useResetSongsState} from '../../store/useResetSongsState';
 
 export const CategorySelectedScreen = () => {
@@ -135,7 +135,7 @@ export const CategorySelectedScreen = () => {
     <TouchableOpacity
       style={styles.deleteButtonContent}
       onPress={() => deleteConfirmation(songId)}>
-      {/* <Icon name="trash-sharp" size={25} style={styles.deleteIcon} /> */}
+      <Icon name="trash-sharp" size={25} style={styles.deleteIcon} />
     </TouchableOpacity>
   );
 

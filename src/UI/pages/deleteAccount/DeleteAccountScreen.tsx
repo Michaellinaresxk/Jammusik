@@ -1,6 +1,6 @@
 import React from 'react';
 import useAuthStatus from '../../../hooks/useAuthStatus';
-// import Icon from "react-native-vector-icons/Ionicons";
+import Icon from 'react-native-vector-icons/Ionicons';
 import {
   Alert,
   ScrollView,
@@ -70,11 +70,11 @@ export const DeleteAccountScreen = () => {
           </View>
           <View style={styles.dangerZoneContent}>
             <View style={styles.dangerIconContent}>
-              {/* <Icon
+              <Icon
                 name="alert-circle-sharp"
                 color={globalColors.danger}
                 size={25}
-              /> */}
+              />
               <Text style={styles.dangerZoneText}>Danger zone!</Text>
             </View>
             <TouchableOpacity

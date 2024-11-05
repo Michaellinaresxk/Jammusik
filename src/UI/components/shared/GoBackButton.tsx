@@ -1,7 +1,7 @@
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {Pressable, StyleSheet} from 'react-native';
-// import Icon from "react-native-vector-icons/Ionicons";
+import Icon from 'react-native-vector-icons/Ionicons';
 import {RootStackParamsList} from '../../routes/StackNavigator';
 import {globalColors} from '../../theme/Theme';
 import {useRoute} from '@react-navigation/native';
@@ -22,7 +22,7 @@ export const GoBackButton = ({bgColor = globalColors.primary}: Props) => {
           : styles.goBackContent
       }
       onPress={() => navigation.goBack()}>
-      {/* <Icon name="arrow-back-sharp" color={bgColor} size={30} /> */}
+      <Icon name="arrow-back-sharp" color={bgColor} size={30} />
     </Pressable>
   );
 };

@@ -2,18 +2,18 @@ import {
   DrawerActions,
   NavigationProp,
   useNavigation,
-} from "@react-navigation/native";
-import React from "react";
-import { Pressable, StyleSheet, Alert } from "react-native";
-import { RootStackParamsList } from "../../routes/StackNavigator";
-import { PrimaryIcon } from "./PrimaryIcon";
-import { globalColors } from "../../theme/Theme";
+} from '@react-navigation/native';
+import React from 'react';
+import {Pressable, StyleSheet, Alert} from 'react-native';
+import {RootStackParamsList} from '../../routes/StackNavigator';
+import {PrimaryIcon} from './PrimaryIcon';
+import {globalColors} from '../../theme/Theme';
 
 type Props = {
   color?: string;
 };
 
-export const HamburgerMenu = ({ color = globalColors.light }: Props) => {
+export const HamburgerMenu = ({color = globalColors.light}: Props) => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
 
   return (
@@ -28,7 +28,7 @@ export const HamburgerMenu = ({ color = globalColors.light }: Props) => {
 const styles = StyleSheet.create({
   menuButton: {
     marginRight: 10,
-    position: "absolute",
+    position: 'absolute',
     top: 40,
     right: 0,
     padding: 10,

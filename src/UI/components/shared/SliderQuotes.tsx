@@ -1,17 +1,17 @@
-import React, { useState, useEffect, useRef } from "react";
-import { StyleSheet, Text, View, Animated, Dimensions } from "react-native";
-import Svg, { Path } from "react-native-svg";
-import { globalColors } from "../../theme/Theme";
+import React, {useState, useEffect, useRef} from 'react';
+import {StyleSheet, Text, View, Animated, Dimensions} from 'react-native';
+import Svg, {Path} from 'react-native-svg';
+import {globalColors} from '../../theme/Theme';
 
-const { width } = Dimensions.get("window");
+const {width} = Dimensions.get('window');
 
 export const SliderQuotes = () => {
   const [quotes, setQuotes] = useState([
-    "Music is the soundtrack of your life, make it awesome...",
-    "Music is the art of thinking with melodies and sounds.",
-    "Music can change the world, it can change minds.",
-    "Music is the wine that fills the cup of silence.",
-    "Music is the bridge that brings us together and connects us.",
+    'Music is the soundtrack of your life, make it awesome...',
+    'Music is the art of thinking with melodies and sounds.',
+    'Music can change the world, it can change minds.',
+    'Music is the wine that fills the cup of silence.',
+    'Music is the bridge that brings us together and connects us.',
   ]);
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -56,7 +56,7 @@ export const SliderQuotes = () => {
             fill="#56B5A6"
           />
         </Svg>
-        <Animated.View style={{ ...styles.quoteContainer, opacity: fadeAnim }}>
+        <Animated.View style={{...styles.quoteContainer, opacity: fadeAnim}}>
           <Text style={styles.quoteText}>{quotes[currentIndex]}</Text>
         </Animated.View>
       </View>
@@ -66,9 +66,9 @@ export const SliderQuotes = () => {
 
 const styles = StyleSheet.create({
   containerImage: {
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginTop: 50,
   },
   brandLogo: {
@@ -76,12 +76,12 @@ const styles = StyleSheet.create({
   },
   quoteContainer: {
     width: width * 0.8,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   quoteText: {
     fontSize: 18,
-    textAlign: "center",
+    textAlign: 'center',
     color: globalColors.terceary,
   },
 });

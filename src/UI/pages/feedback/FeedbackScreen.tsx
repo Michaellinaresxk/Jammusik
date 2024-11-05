@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from 'react';
 import {
   ImageBackground,
   Text,
@@ -11,27 +11,27 @@ import {
   RefreshControl,
   ActivityIndicator,
   Animated,
-} from "react-native";
-import { globalColors, globalStyles } from "../../theme/Theme";
-import { images } from "../../../assets/img/Images";
-import { BrandLogo } from "../../components/shared/BrandLogo";
-import { PrimaryButton } from "../../components/shared/PrimaryButton";
-import { usePullRefresh } from "../../../hooks/usePullRefresing";
-import { GoBackButton } from "../../components/shared/GoBackButton";
-import { useEmailResend } from "../../../hooks/useEmailResend";
-import useAnimationKeyboard from "../../../hooks/useAnimationKeyboard";
-import { KeyboardGestureArea } from "react-native-keyboard-controller";
+} from 'react-native';
+import {globalColors, globalStyles} from '../../theme/Theme';
+import {images} from '../../../assets/img/Images';
+import {BrandLogo} from '../../components/shared/BrandLogo';
+import {PrimaryButton} from '../../components/shared/PrimaryButton';
+import {usePullRefresh} from '../../../hooks/usePullRefresing';
+import {GoBackButton} from '../../components/shared/GoBackButton';
+import {useEmailResend} from '../../../hooks/useEmailResend';
+import useAnimationKeyboard from '../../../hooks/useAnimationKeyboard';
+import {KeyboardGestureArea} from 'react-native-keyboard-controller';
 
 export const FeedbackScreen = () => {
-  const [text, setText] = useState<string>("");
-  const { sendEmail, isLoading } = useEmailResend();
-  const { height, scale } = useAnimationKeyboard();
+  const [text, setText] = useState<string>('');
+  const {sendEmail, isLoading} = useEmailResend();
+  const {height, scale} = useAnimationKeyboard();
 
   const image = {
     uri: images.loginBackground,
   };
 
-  const { isRefreshing, refresh, top } = usePullRefresh();
+  const {isRefreshing, refresh, top} = usePullRefresh();
 
   return (
     <ImageBackground
@@ -40,14 +40,14 @@ export const FeedbackScreen = () => {
       resizeMode="cover"
       alt="Imagen de fondo">
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : undefined}>
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <View style={globalStyles.overlay}>
           <KeyboardGestureArea interpolator="ios">
             <ScrollView showsVerticalScrollIndicator={false} horizontal={false}>
               <Animated.View
                 style={{
                   flex: 1,
-                  transform: [{ translateY: height }, { scale }],
+                  transform: [{translateY: height}, {scale}],
                 }}>
                 <GoBackButton bgColor={globalColors.primary} />
 
@@ -70,7 +70,7 @@ export const FeedbackScreen = () => {
                     <BrandLogo />
                   </View>
 
-                  <View style={{ ...styles.container, marginBottom: 100 }}>
+                  <View style={{...styles.container, marginBottom: 100}}>
                     <Text style={styles.subTitle}>We Value Your Feedback!</Text>
                     <Text style={styles.text}>
                       We're always striving to improve and provide the best
@@ -82,12 +82,12 @@ export const FeedbackScreen = () => {
                       multiline={true}
                       style={{
                         height: 150,
-                        width: "100%",
+                        width: '100%',
                         padding: 20,
                         marginTop: 10,
-                        textAlignVertical: "top",
-                        backgroundColor: "white",
-                        color: "black",
+                        textAlignVertical: 'top',
+                        backgroundColor: 'white',
+                        color: 'black',
                       }}
                       placeholderTextColor="black"
                       placeholder="Place your feedback here..."
@@ -102,7 +102,7 @@ export const FeedbackScreen = () => {
                             color={globalColors.primaryDark}
                           />
                         ) : (
-                          "SEND FEEDBACK"
+                          'SEND FEEDBACK'
                         )
                       }
                       bgColor="#18998B"
@@ -126,10 +126,10 @@ const styles = StyleSheet.create({
   },
   goBackContent: {
     fontSize: 15,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 30,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   goBackLabel: {
     fontSize: 15,
@@ -147,9 +147,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 50,
-    flexDirection: "column",
+    flexDirection: 'column',
     gap: 20,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

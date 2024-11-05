@@ -16,7 +16,7 @@ import {globalColors, globalStyles} from '../../theme/Theme';
 import {FormProfile} from '../../components/shared/forms/FormProfile';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {RootStackParamsList} from '../../routes/StackNavigator';
-// import Icon from "react-native-vector-icons/Ionicons";
+import Icon from 'react-native-vector-icons/Ionicons';
 import {usePullRefresh} from '../../../hooks/usePullRefresing';
 import {UserAvatar} from '../../components/shared/UserAvatar';
 import {images} from '../../../assets/img/Images';
@@ -86,11 +86,11 @@ export const ProfileScreen = () => {
               <Pressable
                 style={styles.goBackContent}
                 onPress={() => navigation.goBack()}>
-                {/* <Icon
+                <Icon
                   name="arrow-back-sharp"
                   color={globalColors.primary}
                   size={30}
-                /> */}
+                />
               </Pressable>
               <UserAvatar />
               <FormProfile

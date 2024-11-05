@@ -11,7 +11,7 @@ import {
 import {PrimaryButton} from '../PrimaryButton';
 import {globalColors, globalFormStyles} from '../../../theme/Theme';
 import React from 'react';
-// import Ionicons from "react-native-vector-icons/Ionicons";
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import {Formik} from 'formik';
 import {validationLoginForm} from './yup/validation_login_yup';
@@ -97,11 +97,11 @@ export const Formlogin = ({
                     bottom: 37,
                   }}
                   onPress={toggleShowPassword}>
-                  {/* <Ionicons
-                    name={showPassword ? "eye-outline" : "eye-off-outline"}
+                  <Ionicons
+                    name={showPassword ? 'eye-outline' : 'eye-off-outline'}
                     size={24}
-                    color={"gray"}
-                  /> */}
+                    color={'gray'}
+                  />
                 </Pressable>
               </View>
               {errors.password && touched.password ? (
