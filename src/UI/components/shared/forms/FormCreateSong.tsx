@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import {globalColors, globalFormStyles} from '../../../theme/Theme';
 import {PrimaryButton} from '../PrimaryButton';
-// import { CustomDropdown } from "../CustomDropdown";
+import {CustomDropdown} from '../CustomDropdown';
 import {useCategoryService} from '../../../../context/CategoryServiceContext';
 import {auth} from '../../../../infra/api/firebaseConfig';
 import {Formik} from 'formik';
@@ -102,14 +102,14 @@ export const FormCreateSong = ({
               </Text>
             ) : null}
 
-            {/* {categories.length > 0 && (
+            {categories.length > 0 && (
               <CustomDropdown
                 items={categories}
                 defaultValue={categoryId || categories[0].value}
                 placeholder="Choose a category"
                 onChange={handleCategoryChange}
               />
-            )} */}
+            )}
             <PrimaryButton
               label={
                 !isLoading ? (
