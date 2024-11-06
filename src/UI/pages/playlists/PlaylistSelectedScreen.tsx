@@ -34,6 +34,7 @@ import {usePullRefresh} from '../../../hooks/usePullRefresing';
 import {getIsDone} from '../../../hooks/useToggleIsDone';
 import {useResetSongsState} from '../../store/useResetSongsState';
 import useAnimationKeyboard from '../../../hooks/useAnimationKeyboard';
+import {KeyboardGestureArea} from 'react-native-keyboard-controller';
 
 export const PlaylistSelectedScreen = () => {
   const songService = useSongService();
@@ -54,7 +55,7 @@ export const PlaylistSelectedScreen = () => {
   const [isDone, setIsDone] = useState(false);
   const resetSongsState = useResetSongsState();
   const {resetToggle, resetAllSongs} = resetSongsState;
-  const {KeyboardGestureArea, height, scale} = useAnimationKeyboard();
+  const {height, scale} = useAnimationKeyboard();
 
   const valueWidth = useWindowDimensions().width;
 
