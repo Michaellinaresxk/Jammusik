@@ -25,7 +25,7 @@ import {KeyboardGestureArea} from 'react-native-keyboard-controller';
 export const FeedbackScreen = () => {
   const [text, setText] = useState<string>('');
   const {sendEmail, isLoading} = useEmailResend();
-  const {height, scale} = useAnimationKeyboard();
+  const {height} = useAnimationKeyboard();
 
   const image = {
     uri: images.loginBackground,
@@ -47,7 +47,7 @@ export const FeedbackScreen = () => {
               <Animated.View
                 style={{
                   flex: 1,
-                  transform: [{translateY: height}, {scale}],
+                  transform: [{translateY: height}],
                 }}>
                 <GoBackButton bgColor={globalColors.primary} />
 

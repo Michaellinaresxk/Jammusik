@@ -1,9 +1,9 @@
-import React from "react";
-import { ActivityIndicator, Text, TextInput, View } from "react-native";
-import { globalColors, globalFormStyles } from "../../../theme/Theme";
-import { PrimaryButton } from "../PrimaryButton";
-import { Formik } from "formik";
-import { validationCreateCategoryForm } from "./yup/validation_create_category";
+import React from 'react';
+import {ActivityIndicator, Text, TextInput, View} from 'react-native';
+import {globalColors, globalFormStyles} from '../../../theme/Theme';
+import {PrimaryButton} from '../PrimaryButton';
+import {Formik} from 'formik';
+import {validationCreateCategoryForm} from './yup/validation_create_category';
 
 type CategoryForm = {
   title: string;
@@ -22,9 +22,9 @@ export const FormCreateCategory = ({
     <View style={globalFormStyles.containerForm}>
       <Formik
         validationSchema={validationCreateCategoryForm}
-        initialValues={{ title: "" }}
+        initialValues={{title: ''}}
         onSubmit={onCreateCategory}>
-        {({ values, handleChange, errors, touched, handleSubmit }) => (
+        {({values, handleChange, errors, touched, handleSubmit}) => (
           <View style={globalFormStyles.form}>
             <View>
               <TextInput
@@ -33,18 +33,18 @@ export const FormCreateCategory = ({
                 placeholder="Title"
                 value={values.title}
                 autoCorrect={false}
-                onChangeText={handleChange("title")}
+                onChangeText={handleChange('title')}
               />
               {errors.title && touched.title ? (
-                <Text style={{ color: "red" }}>{errors.title}</Text>
+                <Text style={{color: 'red'}}>{errors.title}</Text>
               ) : null}
             </View>
             <PrimaryButton
               label={
                 !isLoading ? (
-                  "Create Category"
+                  'Create Category'
                 ) : (
-                  <ActivityIndicator size={"large"} />
+                  <ActivityIndicator size={'large'} />
                 )
               }
               bgColor={globalColors.primary}
