@@ -10,6 +10,8 @@ type CategoryForm = {
   setTitle: React.Dispatch<React.SetStateAction<string>>;
   onCreateCategory: () => Promise<void>;
   isLoading: boolean;
+  isEditing?: boolean;
+  categoryId?: string;
 };
 
 export const FormCreateCategory = ({
@@ -17,12 +19,14 @@ export const FormCreateCategory = ({
   setTitle,
   onCreateCategory,
   isLoading,
+  isEditing = false,
+  categoryId,
 }: CategoryForm) => {
   return (
     <View style={globalFormStyles.containerForm}>
       <Formik
         validationSchema={validationCreateCategoryForm}
-        initialValues={{title: ''}}
+        initialValues={{title: isEditing ? title : ''}}
         onSubmit={onCreateCategory}>
         {({values, handleChange, errors, touched, handleSubmit}) => (
           <View style={globalFormStyles.form}>
@@ -42,7 +46,11 @@ export const FormCreateCategory = ({
             <PrimaryButton
               label={
                 !isLoading ? (
-                  'Create Category'
+                  isEditing ? (
+                    'Update Category'
+                  ) : (
+                    'Create Category'
+                  )
                 ) : (
                   <ActivityIndicator size={'large'} />
                 )

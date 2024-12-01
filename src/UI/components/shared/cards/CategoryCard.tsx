@@ -6,10 +6,11 @@ import Icon from 'react-native-vector-icons/Ionicons';
 type Props = {
   title: string;
   onPress: () => void;
+  onEdit?: (categoryId: string, title: string) => void;
   onDelete: (categoryId: string) => void;
 };
 
-export const CategoryCard = ({title, onPress, onDelete}: Props) => {
+export const CategoryCard = ({title, onPress, onDelete, onEdit}: Props) => {
   const deleteConfirmation = () =>
     Alert.alert('Are you sure?', 'Do you want to remove this category?', [
       {
@@ -23,10 +24,33 @@ export const CategoryCard = ({title, onPress, onDelete}: Props) => {
         style: 'destructive',
       },
     ]);
+
+  const editConfirmation = () =>
+    Alert.alert('Are you sure?', 'Do you want to edit this category?', [
+      {
+        text: 'UPS! BY MISTAKE',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {
+        text: 'YES, EDIT!',
+        onPress: () => onEdit(),
+        style: 'destructive',
+      },
+    ]);
   return (
     <TouchableOpacity style={styles.categoryCard} onPress={onPress}>
       <Text style={styles.categoryCardText}>{title}</Text>
       <View style={styles.containerIcons}>
+        <Icon
+          name="pencil-sharp"
+          color={globalColors.light}
+          onPress={event => {
+            event.stopPropagation();
+            editConfirmation();
+          }}
+          size={20}
+        />
         <Icon
           name="trash-sharp"
           color={globalColors.light}
