@@ -1,6 +1,6 @@
-import type PlaylistRepository from "../../domain/playlist/PlaylistRepository";
-import { PlaylistCaller } from "./PlaylistCaller";
-import Playlist from "../../domain/playlist/Playlist";
+import type PlaylistRepository from '../../domain/playlist/PlaylistRepository';
+import {PlaylistCaller} from './PlaylistCaller';
+import Playlist from '../../domain/playlist/Playlist';
 
 export class PlaylistResource implements PlaylistRepository {
   constructor(public readonly playlistCaller: PlaylistCaller) {}
@@ -15,6 +15,14 @@ export class PlaylistResource implements PlaylistRepository {
     return apiPlaylists.map(
       apiPlaylist => new Playlist(apiPlaylist.id, apiPlaylist.title),
     );
+  }
+
+  async updatePlaylist(
+    playlistId: string,
+    newTitle: string,
+  ): Promise<Playlist> {
+    await this.playlistCaller.updatePlaylist(playlistId, newTitle);
+    return new Playlist(playlistId, newTitle);
   }
 
   async deletePlaylist(playlistId: string) {

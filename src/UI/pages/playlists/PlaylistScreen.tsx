@@ -28,6 +28,7 @@ import {FormCreatePlaylist} from '../../components/shared/forms/FormCreatePlayli
 import {Separator} from '../../components/shared/Separator';
 import {usePullRefresh} from '../../../hooks/usePullRefresing';
 import Toast from 'react-native-toast-message';
+import {useUpdatePlaylist} from '../../../hooks/useUpdatePlaylist';
 
 export const PlaylistScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
@@ -38,6 +39,13 @@ export const PlaylistScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [title, setTitle] = useState('');
   const [isVisible, setIsVisible] = useState(false);
+
+  const {updatePlaylist, isLoading: isUpdating} = useUpdatePlaylist();
+  // ... existing state
+  const [editingPlaylist, setEditingPlaylist] = useState<{
+    id: string;
+    title: string;
+  } | null>(null);
 
   const loadPlaylists = useCallback(async () => {
     const user = auth.currentUser;
@@ -83,6 +91,21 @@ export const PlaylistScreen = () => {
     setIsLoading(false);
 
     closeModal();
+  };
+
+  const handleUpdatePlaylist = async (values: {title: string}) => {
+    if (editingPlaylist) {
+      await updatePlaylist(editingPlaylist.id, values.title, setPlaylists);
+      setEditingPlaylist(null);
+      setTitle('');
+      setIsVisible(false);
+    }
+  };
+
+  const startEditingPlaylist = (playlist: {id: string; title: string}) => {
+    setEditingPlaylist(playlist);
+    setTitle(playlist.title);
+    setIsVisible(true);
   };
 
   const handleDeletePlaylist = async (playlistId: string) => {
@@ -164,6 +187,9 @@ export const PlaylistScreen = () => {
                         title: item.title,
                       })
                     }
+                    onEdit={() =>
+                      startEditingPlaylist({id: item.id, title: item.title})
+                    }
                     onDelete={() => handleDeletePlaylist(item.id)}
                   />
                 </View>
@@ -175,19 +201,28 @@ export const PlaylistScreen = () => {
             animationType="slide"
             presentationStyle="formSheet">
             <View style={styles.modalBtnContainer}>
-              <Text style={styles.modalFormHeaderTitle}>Add Playlist Info</Text>
+              <Text style={styles.modalFormHeaderTitle}>
+                {editingPlaylist ? 'Edit Playlist' : 'Add Playlist'}
+              </Text>
               <PrimaryButton
                 label="Close"
                 btnFontSize={20}
                 colorText={globalColors.light}
-                onPress={() => closeModal()}
+                onPress={() => {
+                  closeModal();
+                  setEditingPlaylist(null);
+                }}
               />
             </View>
             <FormCreatePlaylist
               title={title}
               setTitle={setTitle}
-              onCreatePlaylist={handleCreatePlaylist}
+              onCreatePlaylist={
+                editingPlaylist ? handleUpdatePlaylist : handleCreatePlaylist
+              }
               isLoading={isLoading}
+              isEditing={!!editingPlaylist}
+              playlistId={editingPlaylist?.id}
             />
           </Modal>
         </ScrollView>
