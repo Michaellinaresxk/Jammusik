@@ -1,7 +1,7 @@
-import type CategoryRepository from "../../domain/category/CategoryRepository";
-import { CategoryCaller } from "./CategoryCaller";
-import Category from "../../domain/category/Category";
-import Song from "../../domain/song/Song";
+import type CategoryRepository from '../../domain/category/CategoryRepository';
+import {CategoryCaller} from './CategoryCaller';
+import Category from '../../domain/category/Category';
+import Song from '../../domain/song/Song';
 
 export class CategoryResource implements CategoryRepository {
   constructor(public readonly categoryCaller: CategoryCaller) {}
@@ -57,6 +57,14 @@ export class CategoryResource implements CategoryRepository {
           apiSong.artist,
         ),
     );
+  }
+
+  async updateCategory(
+    categoryId: string,
+    newTitle: string,
+  ): Promise<Category> {
+    await this.categoryCaller.updateCategory(categoryId, newTitle);
+    return new Category(categoryId, newTitle);
   }
 
   async deleteCategory(userId: string, categoryId: string) {

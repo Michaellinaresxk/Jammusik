@@ -27,6 +27,8 @@ import {Separator} from '../../components/shared/Separator';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {usePullRefresh} from '../../../hooks/usePullRefresing';
 import Toast from 'react-native-toast-message';
+import React from 'react';
+import {useUpdateCategory} from '../../../hooks/useUpdateCategory';
 
 export const CategoriesScreen = () => {
   const backgroundImage = {uri: images.image3};
@@ -38,6 +40,12 @@ export const CategoriesScreen = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [title, setTitle] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  const {updateCategory, isLoading: isUpdating} = useUpdateCategory();
+  const [editingCategory, setEditingCategory] = useState<{
+    id: string;
+    title: string;
+  } | null>(null);
 
   const loadCategories = useCallback(async () => {
     const user = auth.currentUser;
@@ -86,6 +94,21 @@ export const CategoriesScreen = () => {
       type: 'success',
       text1: 'Category Deleted successfully. 👋',
     });
+  };
+
+  const handleUpdateCategory = async (values: {title: string}) => {
+    if (editingCategory) {
+      await updateCategory(editingCategory.id, values.title, setCategories);
+      setEditingCategory(null);
+      setTitle('');
+      setIsVisible(false);
+    }
+  };
+
+  const startEditingCategory = (category: {id: string; title: string}) => {
+    setEditingCategory(category);
+    setTitle(category.title);
+    setIsVisible(true);
   };
 
   const handleDeleteCategory = async (categoryId: string) => {
@@ -164,6 +187,9 @@ export const CategoriesScreen = () => {
                 renderItem={({item}) => (
                   <CategoryCard
                     title={item.title}
+                    onEdit={() =>
+                      startEditingCategory({id: item.id, title: item.title})
+                    }
                     onDelete={() => handleDeleteCategory(item.id)}
                     onPress={() =>
                       navigation.navigate('CategorySelectedScreen', {
@@ -175,7 +201,7 @@ export const CategoriesScreen = () => {
                   />
                 )}
               />
-              <Modal
+              {/* <Modal
                 visible={isVisible}
                 animationType="slide"
                 presentationStyle="formSheet">
@@ -195,6 +221,37 @@ export const CategoriesScreen = () => {
                   setTitle={setTitle}
                   onCreateCategory={handleCreateCategory}
                   isLoading={isLoading}
+                />
+              </Modal> */}
+              <Modal
+                visible={isVisible}
+                animationType="slide"
+                presentationStyle="formSheet">
+                <View style={styles.modalBtnContainer}>
+                  <Text style={styles.modalFormHeaderTitle}>
+                    {editingCategory ? 'Edit Playlist' : 'Add Playlist'}
+                  </Text>
+                  <PrimaryButton
+                    label="Close"
+                    btnFontSize={20}
+                    colorText={globalColors.light}
+                    onPress={() => {
+                      closeModal();
+                      setEditingCategory(null);
+                    }}
+                  />
+                </View>
+                <FormCreateCategory
+                  title={title}
+                  setTitle={setTitle}
+                  onCreateCategory={
+                    editingCategory
+                      ? handleUpdateCategory
+                      : handleUpdateCategory
+                  }
+                  isLoading={isLoading}
+                  isEditing={!!editingCategory}
+                  categoryId={editingCategory?.id}
                 />
               </Modal>
             </View>
