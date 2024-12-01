@@ -5,11 +5,14 @@ import {PrimaryButton} from '../PrimaryButton';
 import {Formik} from 'formik';
 import {validationCreatePlaylistForm} from './yup/validation_create_playlist';
 
+// 2. Update FormCreatePlaylist (FormCreatePlaylist.tsx)
 type ProfileForm = {
   title: string;
   setTitle: React.Dispatch<React.SetStateAction<string>>;
-  onCreatePlaylist: () => Promise<void>;
+  onCreatePlaylist: (values: {title: string}) => Promise<void>;
   isLoading: boolean;
+  isEditing?: boolean;
+  playlistId?: string;
 };
 
 export const FormCreatePlaylist = ({
@@ -17,12 +20,14 @@ export const FormCreatePlaylist = ({
   setTitle,
   onCreatePlaylist,
   isLoading,
+  isEditing = false,
+  playlistId,
 }: ProfileForm) => {
   return (
     <View style={globalFormStyles.containerForm}>
       <Formik
         validationSchema={validationCreatePlaylistForm}
-        initialValues={{title: ''}}
+        initialValues={{title: isEditing ? title : ''}}
         onSubmit={onCreatePlaylist}>
         {({values, handleChange, errors, touched, handleSubmit}) => (
           <View style={globalFormStyles.form}>
@@ -42,7 +47,11 @@ export const FormCreatePlaylist = ({
             <PrimaryButton
               label={
                 !isLoading ? (
-                  'Create Playlist'
+                  isEditing ? (
+                    'Update Playlist'
+                  ) : (
+                    'Create Playlist'
+                  )
                 ) : (
                   <ActivityIndicator size={'large'} />
                 )

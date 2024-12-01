@@ -2,6 +2,7 @@ import React, {useState, useCallback} from 'react';
 import {
   FlatList,
   KeyboardAvoidingView,
+  Modal,
   Platform,
   RefreshControl,
   ScrollView,
@@ -27,6 +28,9 @@ import {PlaylistCard} from '../../components/shared/cards/PlaylistCard';
 import {SliderQuotes} from '../../components/shared/SliderQuotes';
 import {usePullRefresh} from '../../../hooks/usePullRefresing';
 import Toast from 'react-native-toast-message';
+import {useUpdatePlaylist} from '../../../hooks/useUpdatePlaylist';
+import {PrimaryButton} from '../../components/shared/PrimaryButton';
+import {FormCreatePlaylist} from '../../components/shared/forms/FormCreatePlaylist';
 
 export const HomeScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
@@ -35,6 +39,15 @@ export const HomeScreen = () => {
   const [categories, setCategories] = useState<CategoryView[]>([]);
   const [playlists, setPlaylists] = useState<PlaylistView[]>([]);
   const [triggerUpdate, setTriggerUpdate] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const {updatePlaylist, isLoading: isUpdating} = useUpdatePlaylist();
+  const [editingPlaylist, setEditingPlaylist] = useState<{
+    id: string;
+    title: string;
+  } | null>(null);
+  const [title, setTitle] = useState('');
+  const [isVisible, setIsVisible] = useState(false);
 
   const loadData = useCallback(async () => {
     const user = auth.currentUser;
@@ -63,6 +76,20 @@ export const HomeScreen = () => {
       type: 'success',
       text1: 'Playlist Deleted successfully. 👋',
     });
+  };
+
+  const showUpdatedToast = () => {
+    Toast.show({
+      type: 'success',
+      text1: 'Playlist Updated successfully. 👋',
+    });
+  };
+
+  const startEditingPlaylist = (playlist: {id: string; title: string}) => {
+    setEditingPlaylist(playlist);
+    setTitle(playlist.title);
+    setIsVisible(true);
+    showUpdatedToast();
   };
 
   const handleDeletePlaylist = async (playlistId: string) => {
@@ -132,6 +159,9 @@ export const HomeScreen = () => {
                           title: item.title,
                         })
                       }
+                      onEdit={() =>
+                        startEditingPlaylist({id: item.id, title: item.title})
+                      }
                       onDelete={() => handleDeletePlaylist(item.id)}
                     />
                   )}
@@ -139,6 +169,47 @@ export const HomeScreen = () => {
               </View>
             </View>
           </View>
+          <Modal
+            visible={isVisible}
+            animationType="slide"
+            presentationStyle="formSheet">
+            <View style={styles.modalBtnContainer}>
+              <Text style={styles.modalFormHeaderTitle}>Edit Playlist</Text>
+              <PrimaryButton
+                label="Close"
+                btnFontSize={20}
+                colorText={globalColors.light}
+                onPress={() => {
+                  setIsVisible(false);
+                  setEditingPlaylist(null);
+                }}
+              />
+            </View>
+            <FormCreatePlaylist
+              title={title}
+              setTitle={setTitle}
+              onCreatePlaylist={async values => {
+                if (editingPlaylist) {
+                  await updatePlaylist(editingPlaylist.id, values.title);
+
+                  // Update local state
+                  setPlaylists(currentPlaylists =>
+                    currentPlaylists.map(playlist =>
+                      playlist.id === editingPlaylist.id
+                        ? {...playlist, title: values.title}
+                        : playlist,
+                    ),
+                  );
+
+                  setEditingPlaylist(null);
+                  setIsVisible(false);
+                }
+              }}
+              isLoading={isLoading}
+              isEditing={!!editingPlaylist}
+              playlistId={editingPlaylist?.id}
+            />
+          </Modal>
         </ScrollView>
       </KeyboardAvoidingView>
     </>
@@ -160,5 +231,16 @@ const styles = StyleSheet.create({
   },
   playlistContainer: {
     marginTop: 60,
+  },
+  modalBtnContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: globalColors.primary,
+    paddingLeft: 35,
+    paddingRight: 25,
+  },
+  modalFormHeaderTitle: {
+    fontSize: 20,
+    color: globalColors.light,
   },
 });

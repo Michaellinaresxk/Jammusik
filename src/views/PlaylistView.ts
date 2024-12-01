@@ -1,4 +1,4 @@
-import type Playlist from "../domain/playlist/Playlist";
+import type Playlist from '../domain/playlist/Playlist';
 
 export class PlaylistView {
   private constructor(
@@ -7,7 +7,7 @@ export class PlaylistView {
   ) {}
 
   static fromDomain(playlist: Playlist) {
-    const { id, title } = playlist;
+    const {id, title} = playlist;
     return new PlaylistView(id, title);
   }
 }

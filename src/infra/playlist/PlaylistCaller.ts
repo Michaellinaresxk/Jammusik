@@ -5,17 +5,22 @@ import {
   query,
   where,
   writeBatch,
-} from "firebase/firestore";
-import { auth } from "../api/firebaseConfig";
-import type { ApiPlaylist } from "./ApiPlaylist";
-import { getFirestore, collection, getDocs } from "@firebase/firestore";
+} from 'firebase/firestore';
+import {auth} from '../api/firebaseConfig';
+import type {ApiPlaylist} from './ApiPlaylist';
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  updateDoc,
+} from '@firebase/firestore';
 
 export class PlaylistCaller {
   private db = getFirestore();
   async createPlaylist(title: string): Promise<ApiPlaylist> {
     const userId = auth.currentUser?.uid;
     if (!userId) {
-      throw new Error("userId is undefined!");
+      throw new Error('userId is undefined!');
     }
 
     const playlistData = {
@@ -25,7 +30,7 @@ export class PlaylistCaller {
 
     // Save data in firestore
     const playlistRef = await addDoc(
-      collection(this.db, "playlists"),
+      collection(this.db, 'playlists'),
       playlistData,
     );
 
@@ -37,37 +42,54 @@ export class PlaylistCaller {
 
   async getPlaylists(userId: string): Promise<ApiPlaylist[]> {
     if (!this.db || !userId) {
-      throw new Error("Firestore instance or userId is undefined!");
+      throw new Error('Firestore instance or userId is undefined!');
     }
     try {
-      const playlistsCollection = collection(this.db, "playlists");
+      const playlistsCollection = collection(this.db, 'playlists');
       const playlistsQuery = query(
         playlistsCollection,
-        where("userId", "==", userId),
+        where('userId', '==', userId),
       );
       const querySnapshot = await getDocs(playlistsQuery);
       return querySnapshot.docs.map(doc => {
-        return { id: doc.id, ...doc.data() } as ApiPlaylist;
+        return {id: doc.id, ...doc.data()} as ApiPlaylist;
       });
     } catch (error) {
-      console.error("Error fetching playlists:", error);
+      console.error('Error fetching playlists:', error);
+      throw error;
+    }
+  }
+
+  async updatePlaylist(playlistId: string, newTitle: string): Promise<void> {
+    if (!this.db || !playlistId) {
+      throw new Error('Firestore instance or playlistId is undefined!');
+    }
+
+    const playlistDoc = doc(this.db, 'playlists', playlistId);
+
+    try {
+      await updateDoc(playlistDoc, {
+        title: newTitle,
+      });
+    } catch (error) {
+      console.error('Error updating playlist:', error);
       throw error;
     }
   }
 
   async deletePlaylist(playlistId: string): Promise<void> {
     if (!this.db || !playlistId) {
-      throw new Error("Firestore instance or playlistId is undefined!");
+      throw new Error('Firestore instance or playlistId is undefined!');
     }
 
     const db = this.db;
     const batch = writeBatch(db);
 
     // Query for songs with the specified playlistId
-    const songsCollection = collection(db, "songs");
+    const songsCollection = collection(db, 'songs');
     const songsQuery = query(
       songsCollection,
-      where("playlistId", "==", playlistId),
+      where('playlistId', '==', playlistId),
     );
     const querySnapshot = await getDocs(songsQuery);
 
@@ -75,7 +97,7 @@ export class PlaylistCaller {
     querySnapshot.docs.forEach(doc => batch.delete(doc.ref));
 
     // Add playlist delete operation to the batch
-    const specificPlaylistDoc = doc(db, "playlists", playlistId);
+    const specificPlaylistDoc = doc(db, 'playlists', playlistId);
     batch.delete(specificPlaylistDoc);
 
     // Commit the batch

@@ -8,10 +8,17 @@ type Props = {
   title: string;
   onPress: () => void;
   color: string;
+  onEdit?: (playlistId: string, title: string) => void;
   onDelete: (playlistId: string) => void;
 };
 
-export const PlaylistCard = ({title, onPress, onDelete, color}: Props) => {
+export const PlaylistCard = ({
+  title,
+  onPress,
+  onDelete,
+  color,
+  onEdit,
+}: Props) => {
   const showToast = () => {
     Toast.show({
       type: 'success',
@@ -35,12 +42,35 @@ export const PlaylistCard = ({title, onPress, onDelete, color}: Props) => {
       },
     ]);
 
+  const editConfirmation = () =>
+    Alert.alert('Are you sure?', 'Do you want to edit this playlist?', [
+      {
+        text: 'UPS! BY MISTAKE',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {
+        text: 'YES, EDIT!',
+        onPress: () => onEdit(),
+        style: 'destructive',
+      },
+    ]);
+
   return (
     <TouchableOpacity
       style={[styles.playlistCard, {backgroundColor: color}]}
       onPress={onPress}>
       <Text style={styles.playlistCardText}>{title}</Text>
       <View style={styles.containerIcons}>
+        <Icon
+          name="pencil-sharp"
+          color={globalColors.light}
+          onPress={event => {
+            event.stopPropagation();
+            editConfirmation();
+          }}
+          size={20}
+        />
         <Icon
           name="share-social-sharp"
           color={globalColors.light}
