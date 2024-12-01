@@ -8,7 +8,7 @@ type Props = {
   title: string;
   onPress: () => void;
   color: string;
-  onEdit?: () => void;
+  onEdit?: (playlistId: string, title: string) => void;
   onDelete: (playlistId: string) => void;
 };
 
