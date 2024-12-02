@@ -1,12 +1,11 @@
 export interface SongProperties {
   id: string;
+  categoryId: string;
   title: string;
   artist: string;
-  categoryId: string;
-  playlistId: string;
   isDone: boolean;
+  playlistId?: string;
 }
-
 
 export interface SongDetailsProperties {
   userId: string;

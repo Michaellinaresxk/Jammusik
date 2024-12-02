@@ -23,6 +23,7 @@ type SongForm = {
   artist: string;
   setArtist: React.Dispatch<React.SetStateAction<string>>;
   onCreateSong: () => Promise<void>;
+  isEditing?: boolean;
   isLoading: boolean;
 };
 
@@ -39,6 +40,7 @@ export const FormCreateSong = ({
   artist,
   setArtist,
   onCreateSong,
+  isEditing = false,
   isLoading,
 }: SongForm) => {
   const categoryService = useCategoryService();
@@ -68,7 +70,7 @@ export const FormCreateSong = ({
     <View style={globalFormStyles.containerForm}>
       <Formik
         validationSchema={validationCreateSongForm}
-        initialValues={{title: '', artist: ''}}
+        initialValues={{title: isEditing ? title : ''}}
         onSubmit={onCreateSong}>
         {({values, errors, handleChange, handleSubmit, touched}) => (
           <View style={globalFormStyles.form}>
@@ -113,7 +115,11 @@ export const FormCreateSong = ({
             <PrimaryButton
               label={
                 !isLoading ? (
-                  'Create A New Song'
+                  isEditing ? (
+                    'Update Song'
+                  ) : (
+                    'Create Song'
+                  )
                 ) : (
                   <ActivityIndicator size={'large'} />
                 )
