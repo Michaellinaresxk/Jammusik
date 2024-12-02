@@ -1,30 +1,30 @@
-import type { ApiSong } from "./ApiSong";
-import { getFirestore, addDoc, collection } from "@firebase/firestore";
-import { getDocs, where, query, deleteDoc, doc } from "firebase/firestore";
-import { auth } from "../api/firebaseConfig";
+import type {ApiSong} from './ApiSong';
+import {getFirestore, addDoc, collection, updateDoc} from '@firebase/firestore';
+import {getDocs, where, query, deleteDoc, doc} from 'firebase/firestore';
+import {auth} from '../api/firebaseConfig';
 
 export class SongCaller {
   private db = getFirestore();
 
   async createSong(
     categoryId: string,
-    playlistId: string,
     title: string,
     artist: string,
     isDone: boolean,
+    playlistId?: string,
   ): Promise<ApiSong> {
     const userId = auth.currentUser?.uid;
     if (!this.db || !userId) {
-      throw new Error("Firestore instance or user ID is undefined!");
+      throw new Error('Firestore instance or user ID is undefined!');
     }
 
     const songData: any = {
       userId,
       categoryId,
-      playlistId,
       title,
       artist,
       isDone,
+      playlistId,
     };
 
     function cleanObject(obj: any) {
@@ -39,7 +39,7 @@ export class SongCaller {
       return cleanObj;
     }
 
-    const songsCollection = collection(this.db, "songs");
+    const songsCollection = collection(this.db, 'songs');
     const cleanedSongData = cleanObject(songData);
     const docRef = await addDoc(songsCollection, cleanedSongData);
 
@@ -51,30 +51,56 @@ export class SongCaller {
 
   async getSongs(playlistId: string): Promise<ApiSong[]> {
     if (!this.db || !playlistId) {
-      throw new Error("Firestore instance or playlistId is undefined!");
+      throw new Error('Firestore instance or playlistId is undefined!');
     }
     try {
-      const songsCollection = collection(this.db, "songs");
+      const songsCollection = collection(this.db, 'songs');
       const songsQuery = query(
         songsCollection,
-        where("playlistId", "==", playlistId),
+        where('playlistId', '==', playlistId),
       );
       const querySnapshot = await getDocs(songsQuery);
 
       return querySnapshot.docs.map(doc => {
-        return { id: doc.id, ...doc.data() } as ApiSong;
+        return {id: doc.id, ...doc.data()} as ApiSong;
       });
     } catch (error) {
-      console.error("Error fetching songs:", error);
+      console.error('Error fetching songs:', error);
+      throw error;
+    }
+  }
+
+  async updateSong(
+    songId: string,
+    categoryId: string,
+    newTitle: string,
+    artist: string,
+    playlistId?: string,
+  ): Promise<void> {
+    if (!this.db || !songId) {
+      throw new Error('Firestore instance or songId is undefined!');
+    }
+
+    const songDoc = doc(this.db, 'songs', songId);
+
+    try {
+      await updateDoc(songDoc, {
+        categoryId,
+        title: newTitle,
+        artist,
+        playlistId,
+      });
+    } catch (error) {
+      console.error('Error updating category:', error);
       throw error;
     }
   }
 
   async deleteSong(userId: string, songId: string): Promise<void> {
     if (!this.db || !userId || !songId) {
-      throw new Error("Firestore instance or playlistId is undefined!");
+      throw new Error('Firestore instance or playlistId is undefined!');
     }
-    const specificSongDoc = doc(this.db, "songs", songId);
+    const specificSongDoc = doc(this.db, 'songs', songId);
     await deleteDoc(specificSongDoc);
   }
 }

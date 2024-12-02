@@ -1,6 +1,6 @@
-import type SongRepository from "../../domain/song/SongRepository";
-import { SongCaller } from "./SongCaller";
-import Song from "../../domain/song/Song";
+import type SongRepository from '../../domain/song/SongRepository';
+import {SongCaller} from './SongCaller';
+import Song from '../../domain/song/Song';
 
 export class SongResource implements SongRepository {
   constructor(public readonly songCaller: SongCaller) {}
@@ -31,7 +31,7 @@ export class SongResource implements SongRepository {
 
   async getSongs(playlistId: string): Promise<Song[]> {
     if (!playlistId) {
-      throw new Error("playlistId is undefined or empty!");
+      throw new Error('playlistId is undefined or empty!');
     }
 
     const apiSongList = await this.songCaller.getSongs(playlistId);
@@ -47,6 +47,25 @@ export class SongResource implements SongRepository {
           apiSong.isDone,
         ),
     );
+  }
+
+  async updateSong(
+    userId: string,
+    categoryId: string,
+    songId: string,
+    title: string,
+    artist: string,
+    playlistId?: string,
+  ): Promise<Song> {
+    await this.songCaller.updateSong(
+      userId,
+      categoryId,
+      songId,
+      title,
+      artist,
+      playlistId,
+    );
+    return new Song(userId, categoryId, songId, title, artist, playlistId);
   }
 
   async deleteSong(userId: string, songId: string) {

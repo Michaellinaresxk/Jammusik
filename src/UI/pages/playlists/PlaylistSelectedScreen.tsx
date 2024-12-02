@@ -35,6 +35,7 @@ import {getIsDone} from '../../../hooks/useToggleIsDone';
 import {useResetSongsState} from '../../store/useResetSongsState';
 import useAnimationKeyboard from '../../../hooks/useAnimationKeyboard';
 import {KeyboardGestureArea} from 'react-native-keyboard-controller';
+import {useUpdateSong} from '../../../hooks/useUpdateSong';
 
 export const PlaylistSelectedScreen = () => {
   const songService = useSongService();
@@ -110,6 +111,17 @@ export const PlaylistSelectedScreen = () => {
     }
   }, [triggerUpdate, loadSongList, resetToggle]);
 
+  const {updateSong, isLoading: isUpdating} = useUpdateSong();
+  // ... existing state
+  const [editingSong, setEditingSong] = useState<{
+    userId: string;
+    categoryId: string;
+    songId: string;
+    title: string;
+    artist: string;
+    playlistId?: string;
+  } | null>(null);
+
   const closeModal = () => {
     setIsVisible(!isVisible);
   };
@@ -141,12 +153,63 @@ export const PlaylistSelectedScreen = () => {
       },
     ]);
 
+  const handleUpdateSong = async (values: {title: string; artist: string}) => {
+    if (editingSong) {
+      await updateSong(
+        userId,
+        editingSong.id,
+        values.title,
+        values.artist,
+        categoryId,
+        setSongs,
+      );
+      setEditingSong(null);
+      setTitle('');
+      setArtist('');
+      setIsVisible(false);
+    }
+  };
+
+  const startEditingSong = (song: {
+    id: string;
+    title: string;
+    artist: string;
+    categoryId: string;
+  }) => {
+    setEditingSong(song);
+    setTitle(song.title);
+    setArtist(song.artist);
+    setCategoryId(song.categoryId);
+    setIsVisible(true);
+  };
+
+  const editConfirmation = (songId: string) =>
+    Alert.alert('Are you sure?', 'Do you want to edit this song?', [
+      {
+        text: 'UPS! BY MISTAKE',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {
+        text: 'YES, EDIT!',
+        onPress: () => startEditingSong(songId),
+        style: 'destructive',
+      },
+    ]);
+
   const swipeRightActions = (songId: string) => (
-    <TouchableOpacity
-      style={styles.deleteButtonContent}
-      onPress={() => deleteConfirmation(songId)}>
-      <Icon name="trash-sharp" size={25} style={styles.deleteIcon} />
-    </TouchableOpacity>
+    <>
+      <TouchableOpacity
+        style={styles.deleteButtonContent}
+        onPress={() => deleteConfirmation(songId)}>
+        <Icon name="trash-sharp" size={25} style={styles.deleteIcon} />
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.editButtonContent}
+        onPress={() => editConfirmation(songId)}>
+        <Icon name="pencil-sharp" size={25} style={styles.deleteIcon} />
+      </TouchableOpacity>
+    </>
   );
   const handleResetSongs = async () => {
     try {
@@ -255,8 +318,21 @@ export const PlaylistSelectedScreen = () => {
               setArtist={setArtist}
               categoryId={categoryId}
               setCategoryId={setCategoryId}
-              onCreateSong={handleCreateSong}
+              onCreateSong={async () => {
+                if (editingSong) {
+                  await updateSong(
+                    userId,
+                    categoryId,
+                    editingSong.id,
+                    title,
+                    artist,
+                    setSongs,
+                    playlistId,
+                  );
+                }
+              }}
               isLoading={isLoading}
+              isEditing={!!editingSong}
             />
           </ScrollView>
         </KeyboardGestureArea>
@@ -298,11 +374,22 @@ const styles = StyleSheet.create({
     backgroundColor: globalColors.danger,
     borderRadius: 10,
     height: 85,
-    width: 80,
+    width: 70,
     alignItems: 'center',
     justifyContent: 'center',
   },
   deleteIcon: {
     color: globalColors.light,
   },
+  editButtonContent: {
+    backgroundColor: globalColors.info,
+    borderRadius: 10,
+    height: 85,
+    width: 70,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
+function setSongs(songs: any[]): void {
+  throw new Error('Function not implemented.');
+}

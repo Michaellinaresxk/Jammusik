@@ -1,8 +1,8 @@
 export type ApiSong = {
   id: string;
+  categoryId: string;
   title: string;
   artist: string;
-  categoryId: string;
-  playlistId: string | undefined;
   isDone: boolean;
+  playlistId?: string | undefined;
 };
