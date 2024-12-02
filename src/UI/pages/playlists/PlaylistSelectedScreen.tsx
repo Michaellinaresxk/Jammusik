@@ -200,7 +200,6 @@ export const PlaylistSelectedScreen = () => {
                       resetToggle={resetToggle}
                       title={item.title}
                       artist={item.artist}
-                      categoryId={item.categoryId}
                       isDone={item.isDone}
                       songId={item.id}
                       color={
