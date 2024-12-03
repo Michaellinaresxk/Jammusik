@@ -11,6 +11,7 @@ import {
   Modal,
   Pressable,
   RefreshControl,
+  Alert,
 } from 'react-native';
 import {globalColors, globalStyles} from '../../theme/Theme';
 import {images} from '../../../assets/img/Images';
@@ -95,6 +96,13 @@ export const CategoriesScreen = () => {
       text1: 'Category Deleted successfully. 👋',
     });
   };
+  // const showToastAll = () => {
+  //   Toast.show({
+  //     type: 'danger',
+  //     text1: 'You cannot remove this category',
+  //     topOffset: 90,
+  //   });
+  // };
 
   const handleUpdateCategory = async (values: {title: string}) => {
     if (editingCategory) {
@@ -164,22 +172,25 @@ export const CategoriesScreen = () => {
                 <TouchableOpacity
                   onPress={() => setIsVisible(true)}
                   style={styles.openModalBtn}>
-                  {/* <Icon name="id-card-sharp" color={globalColors.primary} size={23} /> */}
                   <Text style={styles.openModalBtnText}>+</Text>
                 </TouchableOpacity>
               </View>
             </View>
             <Separator color={globalColors.terceary} />
             <View style={{marginTop: 30, justifyContent: 'center'}}>
-              <CategoryCard
+              {/* <CategoryCard
                 title="All"
+                onDelete={() => showToastAll}
+                // onEdit={() =>
+                //   startEditingCategory({id: item.id, title: item.title})
+                // }
                 onPress={() =>
                   navigation.navigate('CategorySelectedScreen', {
                     id: 'All',
                     title: 'All',
                   })
                 }
-              />
+              /> */}
               <FlatList
                 data={categories}
                 keyExtractor={item => item.id}
@@ -201,28 +212,6 @@ export const CategoriesScreen = () => {
                   />
                 )}
               />
-              {/* <Modal
-                visible={isVisible}
-                animationType="slide"
-                presentationStyle="formSheet">
-                <View style={styles.modalBtnContainer}>
-                  <Text style={styles.modalFormHeaderTitle}>
-                    Add Category Info
-                  </Text>
-                  <PrimaryButton
-                    label="Close"
-                    btnFontSize={20}
-                    colorText={globalColors.light}
-                    onPress={() => closeModal()}
-                  />
-                </View>
-                <FormCreateCategory
-                  title={title}
-                  setTitle={setTitle}
-                  onCreateCategory={handleCreateCategory}
-                  isLoading={isLoading}
-                />
-              </Modal> */}
               <Modal
                 visible={isVisible}
                 animationType="slide"

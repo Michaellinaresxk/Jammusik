@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   KeyboardAvoidingView,
   Modal,
@@ -13,53 +13,55 @@ import {
   Linking,
   TouchableOpacity,
   Pressable,
-} from "react-native";
-import { GlobalHeader } from "../../components/shared/GlobalHeader";
-import { FloatingActionButton } from "../../components/shared/FloatingActionButton";
-import { type RootStackParamsList } from "../../routes/StackNavigator";
-import { RouteProp, useRoute } from "@react-navigation/native";
-import { Text } from "react-native";
-import { PrimaryIcon } from "../../components/shared/PrimaryIcon";
-import { globalColors } from "../../theme/Theme";
-import { usePullRefresh } from "../../../hooks/usePullRefresing";
-import { PrimaryButton } from "../../components/shared/PrimaryButton";
-import { FormSongDetails } from "../../components/shared/forms/FormSongDetails";
-import Toast from "react-native-toast-message";
-import { auth } from "../../../infra/api/firebaseConfig";
-import { useSongDetailsService } from "../../../context/SongDetailsServiceContext";
-import { SongDetailsView } from "../../../views/SongDetailsView";
-import { useGetCategoryTitle } from "../../../hooks/useGetCategoryTitle";
+} from 'react-native';
+import {GlobalHeader} from '../../components/shared/GlobalHeader';
+import {FloatingActionButton} from '../../components/shared/FloatingActionButton';
+import {type RootStackParamsList} from '../../routes/StackNavigator';
+import {RouteProp, useRoute} from '@react-navigation/native';
+import {Text} from 'react-native';
+import {PrimaryIcon} from '../../components/shared/PrimaryIcon';
+import {globalColors} from '../../theme/Theme';
+import {usePullRefresh} from '../../../hooks/usePullRefresing';
+import {PrimaryButton} from '../../components/shared/PrimaryButton';
+import {FormSongDetails} from '../../components/shared/forms/FormSongDetails';
+import Toast from 'react-native-toast-message';
+import {auth} from '../../../infra/api/firebaseConfig';
+import {useSongDetailsService} from '../../../context/SongDetailsServiceContext';
+import {SongDetailsView} from '../../../views/SongDetailsView';
+import {useGetCategoryTitle} from '../../../hooks/useGetCategoryTitle';
 import {
   KeyboardGestureArea,
   KeyboardStickyView,
-} from "react-native-keyboard-controller";
-import useAnimationKeyboard from "../../../hooks/useAnimationKeyboard";
+} from 'react-native-keyboard-controller';
+import useAnimationKeyboard from '../../../hooks/useAnimationKeyboard';
+import BottomSheet from '../../components/shared/BottomSheets';
 export const SongSelectedScreen = () => {
   const params =
-    useRoute<RouteProp<RootStackParamsList, "PlaylistSelectedScreen">>().params;
+    useRoute<RouteProp<RootStackParamsList, 'PlaylistSelectedScreen'>>().params;
   const [isVisible, setIsVisible] = useState(false);
   const [songDetails, setSongDetails] = useState<SongDetailsView[]>();
-  const [songKey, setSongKey] = useState("");
+  const [songKey, setSongKey] = useState('');
   const [chordList, setChordList] = useState<string[]>([]);
-  const [notes, setNotes] = useState("");
-  const [lyricLink, setLyricLink] = useState("");
-  const [tabLink, setTabLink] = useState("");
+  const [notes, setNotes] = useState('');
+  const [lyricLink, setLyricLink] = useState('');
+  const [tabLink, setTabLink] = useState('');
   const [triggerUpdate, setTriggerUpdate] = useState(false);
   const [hasSavedData, setHasSavedData] = useState(false);
-  const [category, setCategory] = useState("");
+  const [category, setCategory] = useState('');
 
-  const userId = auth.currentUser ? auth.currentUser.uid : "";
+  const userId = auth.currentUser ? auth.currentUser.uid : '';
   const songId = params.songId;
+  const categoryId = params.categoryId;
   const songDetailsService = useSongDetailsService();
-  const { KeyboardGestureArea, height, scale } = useAnimationKeyboard();
+  const {KeyboardGestureArea, height, scale} = useAnimationKeyboard();
 
   const closeModal = () => {
     setIsVisible(false);
   };
   const showToast = () => {
     Toast.show({
-      type: "success",
-      text1: "Updated song Info successfully!",
+      type: 'success',
+      text1: 'Updated song Info successfully!',
     });
   };
   const onCreateSongDetails = async () => {
@@ -79,12 +81,12 @@ export const SongSelectedScreen = () => {
       setTriggerUpdate(true);
     } catch (error) {
       console.error(error);
-      Alert.alert("Error", "Failed to create the song. Please try again.");
+      Alert.alert('Error', 'Failed to create the song. Please try again.');
     }
   };
   const loadSongDetails = useCallback(async () => {
     if (!userId || !songId) {
-      console.error("userId or songId is undefined or empty!");
+      console.error('userId or songId is undefined or empty!');
       return;
     }
     try {
@@ -94,24 +96,24 @@ export const SongSelectedScreen = () => {
       );
       if (fetchedSongDetails) {
         setSongDetails(fetchedSongDetails);
-        setSongKey(fetchedSongDetails.key || "");
+        setSongKey(fetchedSongDetails.key || '');
         setChordList(fetchedSongDetails.chordList || []);
-        setNotes(fetchedSongDetails.notes || "");
-        setLyricLink(fetchedSongDetails.lyricLink || "");
-        setTabLink(fetchedSongDetails.tabLink || "");
+        setNotes(fetchedSongDetails.notes || '');
+        setLyricLink(fetchedSongDetails.lyricLink || '');
+        setTabLink(fetchedSongDetails.tabLink || '');
         setHasSavedData(true);
       } else {
         setSongDetails(null);
-        setSongKey("");
+        setSongKey('');
         setChordList([]);
-        setNotes("");
-        setLyricLink("");
-        setTabLink("");
+        setNotes('');
+        setLyricLink('');
+        setTabLink('');
       }
     } catch (error) {
       if (hasSavedData) {
-        console.error("Failed to fetch songDetails:", error);
-        Alert.alert("Error", "Failed to fetch song details.");
+        console.error('Failed to fetch songDetails:', error);
+        Alert.alert('Error', 'Failed to fetch song details.');
       }
     }
   }, [userId, songId, songDetailsService, hasSavedData]);
@@ -131,14 +133,14 @@ export const SongSelectedScreen = () => {
         const categoryTitle = await useGetCategoryTitle(params.categoryId);
         setCategory(categoryTitle);
       } catch (error) {
-        Alert.alert("Error", "Failed to fetch category title.");
+        Alert.alert('Error', 'Failed to fetch category title.');
       }
     };
     getCategoryTitle();
   }, [params.categoryId]);
 
-  const { isRefreshing, refresh, top } = usePullRefresh(loadSongDetails);
-  const renderChordItem = ({ item }: { item: string }) => (
+  const {isRefreshing, refresh, top} = usePullRefresh(loadSongDetails);
+  const renderChordItem = ({item}: {item: string}) => (
     <View style={styles.chordConntent}>
       <Text style={styles.chord}>{item}</Text>
     </View>
@@ -154,11 +156,11 @@ export const SongSelectedScreen = () => {
     }
   }, []);
 
-  const offset = { closed: 0, opened: 250 };
+  const offset = {closed: 0, opened: 250};
   return (
     <>
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : undefined}>
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <ScrollView
           refreshControl={
             <RefreshControl
@@ -185,7 +187,9 @@ export const SongSelectedScreen = () => {
                   size={22}
                   color={globalColors.primary}
                 />
-                <Text style={styles.category}> {category}</Text>
+                <Text style={styles.category}>
+                  {category || params.categoryId || 'Unknown Category'}
+                </Text>
               </View>
             </View>
             <View>
@@ -197,7 +201,7 @@ export const SongSelectedScreen = () => {
           </View>
           <View style={styles.notesContent}>
             <Text style={styles.title}>Notes:</Text>
-            <Text style={{ ...styles.category, marginTop: 10 }}>{notes}</Text>
+            <Text style={{...styles.category, marginTop: 10}}>{notes}</Text>
           </View>
           <View style={styles.chordLayout}>
             <Text style={styles.title}>Chords:</Text>
@@ -209,7 +213,7 @@ export const SongSelectedScreen = () => {
             />
           </View>
           <View style={styles.linksContent}>
-            <View style={{ ...styles.container, marginBottom: 30 }}>
+            <View style={{...styles.container, marginBottom: 30}}>
               <Text style={styles.title}>Lyric link:</Text>
               <Pressable onPress={() => handleOpenLink(lyricLink)}>
                 <Text style={styles.links}>{lyricLink}</Text>
@@ -229,7 +233,7 @@ export const SongSelectedScreen = () => {
         visible={isVisible}
         animationType="slide"
         presentationStyle="formSheet"
-        style={{ flex: 1 }}>
+        style={{flex: 1}}>
         <ScrollView showsVerticalScrollIndicator={false} horizontal={false}>
           <KeyboardStickyView offset={offset}>
             <View style={styles.modalBtnContainer}>
@@ -264,23 +268,23 @@ const styles = StyleSheet.create({
   layout: {
     padding: 30,
     marginTop: 40,
-    width: "100%",
-    flexDirection: "row",
-    justifyContent: "space-between",
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   container: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   titleContainer: {},
   title: {
     fontSize: 16,
     marginRight: 10,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     color: globalColors.primaryDark,
   },
   titleContent: {
-    flexDirection: "row",
+    flexDirection: 'row',
     gap: 5,
     backgroundColor: globalColors.primaryAlt,
     padding: 5,
@@ -291,10 +295,10 @@ const styles = StyleSheet.create({
   chordLayout: {
     marginTop: 30,
     padding: 30,
-    width: "100%",
+    width: '100%',
   },
   chordConntent: {
-    flexDirection: "row",
+    flexDirection: 'row',
     gap: 20,
     marginTop: 15,
   },
@@ -316,7 +320,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     borderRadius: 10,
     padding: 30,
-    width: "90%",
+    width: '90%',
   },
   notesText: {
     color: globalColors.primary,
@@ -338,11 +342,11 @@ const styles = StyleSheet.create({
   openModalBtnText: {
     color: globalColors.primary,
     fontSize: 30,
-    fontWeight: "300",
+    fontWeight: '300',
   },
   modalBtnContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: globalColors.primary,
     paddingLeft: 22,
     paddingRight: 40,
