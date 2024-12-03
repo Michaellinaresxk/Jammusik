@@ -1,4 +1,4 @@
-import type Song from "./Song";
+import type Song from './Song';
 
 export default interface SongRepository {
   createSong(
@@ -9,5 +9,13 @@ export default interface SongRepository {
     isDone: boolean,
   ): Promise<Song>;
   getSongs(playlistId: string): Promise<Song[]>;
+  updateSong(
+    userId: string,
+    categoryId: string,
+    songId: string,
+    title: string,
+    artist: string,
+    playlistId?: string,
+  ): Promise<Song>;
   deleteSong(userId: string, songId: string): Promise<void>;
 }
