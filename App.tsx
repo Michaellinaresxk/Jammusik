@@ -26,12 +26,6 @@ import Toast from 'react-native-toast-message';
 import {ToastConfig} from './src/UI/theme/ToastConfig';
 
 function App(): React.JSX.Element {
-  // const isDarkMode = useColorScheme() === 'dark';
-
-  // const backgroundStyle = {
-  //   backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  // };
-
   return (
     <ProviderComposer
       contexts={[

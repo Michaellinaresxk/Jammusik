@@ -3,6 +3,7 @@ import {TextInput, View, Text, FlatList, StyleSheet} from 'react-native';
 import {globalColors, globalFormStyles} from '../../../theme/Theme';
 import {PrimaryButton} from '../PrimaryButton';
 import Icon from 'react-native-vector-icons/Ionicons';
+import BottomSheets from '../BottomSheets';
 
 type SongDetails = {
   songKey: string;
@@ -47,13 +48,17 @@ export const FormSongDetails = ({
   return (
     <View style={globalFormStyles.containerForm}>
       <View style={globalFormStyles.form}>
-        <TextInput
+        {/* <TextInput
           style={globalFormStyles.inputLogin}
           placeholderTextColor="#838282"
           placeholder="Key"
           value={songKey}
           autoCorrect={false}
           onChangeText={setSongKey}
+        /> */}
+        <BottomSheets
+          onSelectKey={setSongKey} // Pasa directamente la función de actualización
+          value={songKey}
         />
         <TextInput
           style={globalFormStyles.inputLogin}

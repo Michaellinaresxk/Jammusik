@@ -34,6 +34,7 @@ import {
   KeyboardStickyView,
 } from 'react-native-keyboard-controller';
 import useAnimationKeyboard from '../../../hooks/useAnimationKeyboard';
+import BottomSheet from '../../components/shared/BottomSheets';
 export const SongSelectedScreen = () => {
   const params =
     useRoute<RouteProp<RootStackParamsList, 'PlaylistSelectedScreen'>>().params;
