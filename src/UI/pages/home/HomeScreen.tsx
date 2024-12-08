@@ -31,6 +31,8 @@ import Toast from 'react-native-toast-message';
 import {useUpdatePlaylist} from '../../../hooks/useUpdatePlaylist';
 import {PrimaryButton} from '../../components/shared/PrimaryButton';
 import {FormCreatePlaylist} from '../../components/shared/forms/FormCreatePlaylist';
+import {TopTracksList} from '../../components/shared/TopTracksList';
+import {useTopTracks} from '../../../hooks/useTopTrasks';
 
 export const HomeScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
@@ -42,6 +44,7 @@ export const HomeScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const {updatePlaylist, isLoading: isUpdating} = useUpdatePlaylist();
+  const {tracks} = useTopTracks();
   const [editingPlaylist, setEditingPlaylist] = useState<{
     id: string;
     title: string;
@@ -121,6 +124,16 @@ export const HomeScreen = () => {
             <GlobalHeader headerTitle="Home" />
 
             <View style={styles.categoryCardContainer}>
+              <View>
+                <Text style={styles.subTitle}>Top 10 Songs of the Week:</Text>
+                <FlatList
+                  horizontal
+                  data={tracks}
+                  keyExtractor={item => item.id}
+                  renderItem={({item}) => <TopTracksList track={item} />}
+                  showsHorizontalScrollIndicator={false}
+                />
+              </View>
               <Text style={styles.subTitle}>Categories:</Text>
               <FlatList
                 data={categories}
@@ -217,6 +230,9 @@ export const HomeScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  textTopSongs: {
+    marginBottom: 10,
+  },
   text: {
     color: 'red',
     fontSize: 30,
