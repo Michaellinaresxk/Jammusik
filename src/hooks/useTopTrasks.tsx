@@ -1,12 +1,20 @@
-// src/hooks/useTopTracks.js
+// hooks/useTopTracks.ts
 import {useState, useEffect} from 'react';
 import axios from 'axios';
 import {API_CONFIG} from '../infra/api/apikeyLastFM';
 
+interface Track {
+  id: string;
+  name: string;
+  artist: string;
+  imageUrl: string | null;
+}
+
 export const useTopTracks = () => {
-  const [tracks, setTracks] = useState([]);
+  const [tracks, setTracks] = useState<Track[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
     const fetchTopTracks = async () => {
       try {
@@ -18,26 +26,29 @@ export const useTopTracks = () => {
             limit: 10,
           },
         });
-        console.log('Trying to connect to:', API_CONFIG.BASE_URL);
-        console.log('Params:', response.data);
+
         if (!response.data?.tracks?.track) {
           throw new Error('Invalid response format');
         }
+
         const formattedTracks = response.data.tracks.track.map(track => ({
           id: track.mbid || String(Math.random()),
           name: track.name,
           artist: track.artist.name,
           imageUrl: track.image?.[2]?.['#text'] || null,
         }));
+
         setTracks(formattedTracks);
       } catch (err) {
         setError(err.message);
-        console.error('Detailed error:', err);
+        console.error('Error fetching tracks:', err);
       } finally {
         setLoading(false);
       }
     };
+
     fetchTopTracks();
   }, []);
+
   return {tracks, loading, error};
 };
