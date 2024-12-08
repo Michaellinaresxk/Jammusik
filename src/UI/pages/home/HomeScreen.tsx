@@ -31,7 +31,6 @@ import Toast from 'react-native-toast-message';
 import {useUpdatePlaylist} from '../../../hooks/useUpdatePlaylist';
 import {PrimaryButton} from '../../components/shared/PrimaryButton';
 import {FormCreatePlaylist} from '../../components/shared/forms/FormCreatePlaylist';
-import {TopTracksList} from '../../components/shared/TopTracksList';
 import {useTopTracks} from '../../../hooks/useTopTrasks';
 import {TopTrackCard} from '../../components/shared/cards/TopTrackCard';
 
@@ -138,7 +137,12 @@ export const HomeScreen = () => {
                       name={item.name}
                       artist={item.artist}
                       imageUrl={item.imageUrl}
-                      onPress={() => console.log('Selected track:', item.name)}
+                      onPress={() =>
+                        navigation.navigate('TrackDetailsScreen', {
+                          trackName: item.name,
+                          artistName: item.artist,
+                        })
+                      }
                     />
                   )}
                   showsHorizontalScrollIndicator={false}

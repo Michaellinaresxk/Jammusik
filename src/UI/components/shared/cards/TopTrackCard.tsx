@@ -7,7 +7,7 @@ interface TopTrackCardProps {
   name: string;
   artist: string;
   imageUrl: string | null;
-  onPress?: () => void;
+  onPress: () => void;
 }
 
 export const TopTrackCard: React.FC<TopTrackCardProps> = ({
