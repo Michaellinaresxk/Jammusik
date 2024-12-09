@@ -2,6 +2,7 @@ import React, {useState, useEffect, useCallback, useRef} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import Slider from '@react-native-community/slider';
 import Sound from 'react-native-sound';
+import {globalColors} from '../../theme/Theme';
 
 interface MetronomeProps {
   minBPM?: number;
@@ -16,18 +17,24 @@ export const Metronome: React.FC<MetronomeProps> = ({
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [bpm, setBpm] = useState(defaultBPM);
-  const [beat, setBeat] = useState(1);
-  const [beatsPerMeasure, setBeatsPerMeasure] = useState(4);
+  const [currentBeat, setCurrentBeat] = useState(1);
+  const [timeSignature, setTimeSignature] = useState(4); // 4/4 o 3/4
 
-  const timerRef = useRef<any>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const clickSoundRef = useRef<Sound | null>(null);
   const accentSoundRef = useRef<Sound | null>(null);
-  const lastTickTime = useRef<number>(0);
-  const nextTickTime = useRef<number>(0);
 
-  // Inicializar sonidos una sola vez
+  const stopMetronome = useCallback(() => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+    setCurrentBeat(1);
+    setIsPlaying(false);
+  }, []);
+
   useEffect(() => {
-    Sound.setCategory('Playback');
+    Sound.setCategory('Playback', true);
 
     clickSoundRef.current = new Sound('click.wav', Sound.MAIN_BUNDLE, error => {
       if (error) console.log('Error loading click sound');
@@ -44,56 +51,52 @@ export const Metronome: React.FC<MetronomeProps> = ({
     return () => {
       clickSoundRef.current?.release();
       accentSoundRef.current?.release();
-      if (timerRef.current) {
-        cancelAnimationFrame(timerRef.current);
-      }
+      stopMetronome();
     };
-  }, []);
+  }, [stopMetronome]);
 
-  const scheduleNextTick = useCallback(() => {
-    const now = performance.now();
-    const interval = (60 / bpm) * 1000;
+  const playBeat = useCallback(() => {
+    // Usar acento solo en el primer tiempo
+    const isAccent = currentBeat === 1;
+    const soundToPlay = isAccent
+      ? accentSoundRef.current
+      : clickSoundRef.current;
 
-    if (now >= nextTickTime.current) {
-      // Reproducir el sonido
-      const soundToPlay =
-        beat === 1 ? accentSoundRef.current : clickSoundRef.current;
-      soundToPlay?.play(success => {
-        if (!success) console.log('Error playing sound');
+    if (soundToPlay) {
+      soundToPlay.stop();
+      soundToPlay.play(success => {
+        if (!success) {
+          console.log('Error playing sound');
+        }
       });
-
-      // Actualizar el beat
-      setBeat(prev => (prev >= beatsPerMeasure ? 1 : prev + 1));
-
-      // Calcular el próximo tick
-      lastTickTime.current = now;
-      nextTickTime.current = now + interval;
     }
 
-    if (isPlaying) {
-      timerRef.current = requestAnimationFrame(scheduleNextTick);
-    }
-  }, [bpm, beat, beatsPerMeasure, isPlaying]);
+    // Actualizar al siguiente tiempo
+    setCurrentBeat(prev => {
+      if (prev >= timeSignature) {
+        return 1; // Volver al primer tiempo
+      }
+      return prev + 1;
+    });
+  }, [currentBeat, timeSignature]);
 
-  // Control del metrónomo
   const startMetronome = useCallback(() => {
-    if (!isPlaying) {
-      setIsPlaying(true);
-      lastTickTime.current = performance.now();
-      nextTickTime.current = lastTickTime.current;
-      scheduleNextTick();
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
     }
-  }, [isPlaying, scheduleNextTick]);
 
-  const stopMetronome = useCallback(() => {
-    setIsPlaying(false);
-    setBeat(1);
-    if (timerRef.current) {
-      cancelAnimationFrame(timerRef.current);
-    }
+    setCurrentBeat(1); // Empezar siempre desde el primer tiempo (acento)
+    const interval = (60 / bpm) * 1000;
+    playBeat(); // Reproducir el primer beat inmediatamente
+    intervalRef.current = setInterval(playBeat, interval);
+    setIsPlaying(true);
+  }, [bpm, playBeat]);
+
+  const toggleTimeSignature = useCallback(() => {
+    setTimeSignature(prev => (prev === 4 ? 3 : 4));
+    setCurrentBeat(1);
   }, []);
 
-  // Efecto para manejar cambios en BPM
   useEffect(() => {
     if (isPlaying) {
       stopMetronome();
@@ -108,17 +111,12 @@ export const Metronome: React.FC<MetronomeProps> = ({
       <View style={styles.controlsContainer}>
         <TouchableOpacity
           style={[styles.button, isPlaying && styles.buttonActive]}
-          onPress={isPlaying ? stopMetronome : startMetronome}>
+          onPress={() => (isPlaying ? stopMetronome() : startMetronome())}>
           <Text style={styles.buttonText}>{isPlaying ? 'Stop' : 'Start'}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            setBeatsPerMeasure(prev => (prev === 4 ? 3 : 4));
-            setBeat(1);
-          }}>
-          <Text style={styles.buttonText}>{beatsPerMeasure}/4</Text>
+        <TouchableOpacity style={styles.button} onPress={toggleTimeSignature}>
+          <Text style={styles.buttonText}>{timeSignature}/4</Text>
         </TouchableOpacity>
       </View>
 
@@ -133,13 +131,13 @@ export const Metronome: React.FC<MetronomeProps> = ({
       />
 
       <View style={styles.beatsContainer}>
-        {Array.from({length: beatsPerMeasure}).map((_, index) => (
+        {Array.from({length: timeSignature}).map((_, index) => (
           <View
             key={index}
             style={[
               styles.beatIndicator,
-              beat === index + 1 && styles.activeBeat,
-              index === 0 && styles.accentBeat,
+              currentBeat === index + 1 && styles.activeBeat,
+              index === 0 && styles.accentBeat, // El primer tiempo siempre es acento
             ]}
           />
         ))}
@@ -152,7 +150,7 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: globalColors.primaryAlt,
     borderRadius: 16,
   },
   bpmText: {
@@ -166,7 +164,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   button: {
-    backgroundColor: '#007AFF',
+    backgroundColor: globalColors.primaryDark,
     padding: 15,
     borderRadius: 12,
     marginHorizontal: 10,
@@ -197,10 +195,13 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
   },
   activeBeat: {
-    backgroundColor: '#007AFF',
+    backgroundColor: globalColors.primary,
     transform: [{scale: 1.2}],
   },
   accentBeat: {
-    backgroundColor: '#FF3B30',
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: globalColors.primary,
   },
 });
