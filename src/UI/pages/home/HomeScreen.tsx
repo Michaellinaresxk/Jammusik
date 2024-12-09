@@ -31,8 +31,8 @@ import Toast from 'react-native-toast-message';
 import {useUpdatePlaylist} from '../../../hooks/useUpdatePlaylist';
 import {PrimaryButton} from '../../components/shared/PrimaryButton';
 import {FormCreatePlaylist} from '../../components/shared/forms/FormCreatePlaylist';
-import {TopTracksList} from '../../components/shared/TopTracksList';
 import {useTopTracks} from '../../../hooks/useTopTrasks';
+import {TopTrackCard} from '../../components/shared/cards/TopTrackCard';
 
 export const HomeScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
@@ -124,13 +124,27 @@ export const HomeScreen = () => {
             <GlobalHeader headerTitle="Home" />
 
             <View style={styles.categoryCardContainer}>
-              <View>
-                <Text style={styles.subTitle}>Top 10 Songs of the Week:</Text>
+              <View style={styles.topTrackList}>
+                <Text style={styles.subTitleToTrack}>
+                  Top 10 Songs of the Week:
+                </Text>
                 <FlatList
                   horizontal
                   data={tracks}
                   keyExtractor={item => item.id}
-                  renderItem={({item}) => <TopTracksList track={item} />}
+                  renderItem={({item}) => (
+                    <TopTrackCard
+                      name={item.name}
+                      artist={item.artist}
+                      imageUrl={item.imageUrl}
+                      onPress={() =>
+                        navigation.navigate('TrackDetailsScreen', {
+                          trackName: item.name,
+                          artistName: item.artist,
+                        })
+                      }
+                    />
+                  )}
                   showsHorizontalScrollIndicator={false}
                 />
               </View>
@@ -241,6 +255,14 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontSize: 18,
     color: globalColors.terceary,
+  },
+  subTitleToTrack: {
+    marginBottom: 10,
+    fontSize: 18,
+    color: globalColors.terceary,
+  },
+  topTrackList: {
+    marginBottom: 50,
   },
   categoryCardContainer: {
     padding: 30,

@@ -1,17 +1,25 @@
-// TopTrackCard
+// components/TopTrackCard.tsx
 import React from 'react';
 import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
 import {globalColors} from '../../../theme/Theme';
 
-export const TopTrackCard = ({track}) => {
-  const {name, artist, imageUrl} = track;
-  // We use a placeholder URL instead of a local image
+interface TopTrackCardProps {
+  name: string;
+  artist: string;
+  imageUrl: string | null;
+  onPress: () => void;
+}
+
+export const TopTrackCard: React.FC<TopTrackCardProps> = ({
+  name,
+  artist,
+  imageUrl,
+  onPress,
+}) => {
   const defaultImageUrl = 'https://via.placeholder.com/60';
+
   return (
-    <TouchableOpacity
-      style={styles.card}
-      onPress={() => console.log('Selected track:', name)}
-      activeOpacity={0.7}>
+    <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.7}>
       <Image
         source={{
           uri: imageUrl || defaultImageUrl,
@@ -29,6 +37,7 @@ export const TopTrackCard = ({track}) => {
     </TouchableOpacity>
   );
 };
+
 const styles = StyleSheet.create({
   card: {
     backgroundColor: '#ffffff',
@@ -37,6 +46,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginHorizontal: 8,
+    width: 250, // Fixed width for consistency
   },
   image: {
     width: 60,
@@ -49,7 +59,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   trackName: {
-    flexWrap: 'wrap',
     fontSize: 16,
     fontWeight: '600',
     color: '#1a1a1a',

@@ -13,6 +13,7 @@ import {FeedbackScreen} from '../pages/feedback/FeedbackScreen';
 import useAuthStatus from '../../hooks/useAuthStatus';
 import {AboutUsScreen} from '../pages/aboutUs/AboutUsScreen';
 import {FaqsScreen} from '../pages/faqs/FaqsScreen';
+import {TrackDetailsScreen} from '../pages/trackDetails/TrackDetailsScreen';
 
 export type RootStackParamsList = {
   LoginScreen: undefined;
@@ -27,6 +28,7 @@ export type RootStackParamsList = {
   AboutUsScreen: undefined;
   FeedbackScreen: undefined;
   FaqsScreen: undefined;
+  TrackDetailsScreen: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamsList>();
@@ -65,6 +67,11 @@ export const StackNavigator = () => {
           <Stack.Screen name="AboutUsScreen" component={AboutUsScreen} />
           <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
           <Stack.Screen name="FeedbackScreen" component={FeedbackScreen} />
+          <Stack.Screen
+            name="TrackDetailsScreen"
+            component={TrackDetailsScreen}
+            options={{title: 'Track Details'}}
+          />
         </Stack.Group>
       ) : (
         <Stack.Group screenOptions={{headerShown: false}}>
