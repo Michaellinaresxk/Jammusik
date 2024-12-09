@@ -33,6 +33,7 @@ import {PrimaryButton} from '../../components/shared/PrimaryButton';
 import {FormCreatePlaylist} from '../../components/shared/forms/FormCreatePlaylist';
 import {useTopTracks} from '../../../hooks/useTopTrasks';
 import {TopTrackCard} from '../../components/shared/cards/TopTrackCard';
+import {Metronome} from '../../components/shared/Metronome';
 
 export const HomeScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
@@ -194,6 +195,9 @@ export const HomeScreen = () => {
                 />
               </View>
               <SliderQuotes />
+              <View style={styles.content}>
+                <Metronome />
+              </View>
             </View>
           </View>
           <Modal
@@ -246,6 +250,10 @@ export const HomeScreen = () => {
 const styles = StyleSheet.create({
   textTopSongs: {
     marginBottom: 10,
+  },
+  content: {
+    flex: 1,
+    padding: 20,
   },
   text: {
     color: 'red',

@@ -13,6 +13,7 @@
   "dependencies": {
     "@react-email/components": "^0.0.26",
     "@react-native-community/masked-view": "^0.1.11",
+    "@react-native-community/slider": "^4.5.5",
     "@react-native-vector-icons/ionicons": "^7.4.0-alpha.36",
     "@react-navigation/drawer": "^6.7.2",
     "@react-navigation/native": "^6.1.18",
@@ -30,6 +31,7 @@
     "react-native-reanimated": "^3.16.1",
     "react-native-safe-area-context": "^4.14.0",
     "react-native-screens": "^3.35.0",
+    "react-native-sound": "^0.11.2",
     "react-native-svg": "^15.8.0",
     "react-native-toast-message": "^2.2.1",
     "react-native-vector-icons": "^10.2.0",
