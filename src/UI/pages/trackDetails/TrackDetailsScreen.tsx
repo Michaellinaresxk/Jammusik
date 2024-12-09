@@ -9,12 +9,15 @@ import {
   ActivityIndicator,
   Pressable,
 } from 'react-native';
+import {type NavigationProp, useNavigation} from '@react-navigation/native';
 import {useTrackDetails} from '../../../hooks/useTrackDetails';
 import {globalColors} from '../../theme/Theme';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {RootStackParamsList} from '../../routes/StackNavigator';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 export const TrackDetailsScreen = () => {
+  const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
   const params =
     useRoute<RouteProp<RootStackParamsList, 'TrackDetailsScreen'>>().params;
 
@@ -39,6 +42,15 @@ export const TrackDetailsScreen = () => {
 
   return (
     <ScrollView style={styles.container}>
+      <Pressable
+        style={styles.goBackContent}
+        onPress={() => navigation.navigate('HomeScreen')}>
+        <Icon
+          name="arrow-back-sharp"
+          color={globalColors.primaryDark}
+          size={30}
+        />
+      </Pressable>
       <Image
         source={{uri: details.imageUrl || 'https://via.placeholder.com/300'}}
         style={styles.image}
@@ -93,7 +105,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '100%',
-    height: 300,
+    height: 270,
     resizeMode: 'cover',
   },
   infoContainer: {
@@ -135,5 +147,17 @@ const styles = StyleSheet.create({
   error: {
     color: 'red',
     fontSize: 16,
+  },
+  goBackContent: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    marginTop: 40,
+    marginBottom: 10,
+    marginHorizontal: 10,
+    flexDirection: 'row',
+  },
+  goBackLabel: {
+    fontSize: 15,
+    color: globalColors.primaryDark,
   },
 });
