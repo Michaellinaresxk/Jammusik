@@ -148,7 +148,7 @@ export const HomeScreen = () => {
                   showsHorizontalScrollIndicator={false}
                 />
               </View>
-              <Text style={styles.subTitle}>Categories:</Text>
+              <Text style={styles.subTitle}>My Categories:</Text>
               <FlatList
                 data={categories}
                 keyExtractor={item => item.id}
@@ -165,9 +165,8 @@ export const HomeScreen = () => {
                   />
                 )}
               />
-              <SliderQuotes />
               <View style={styles.playlistContainer}>
-                <Text style={styles.subTitle}>Playlists:</Text>
+                <Text style={styles.subTitle}>My Playlists:</Text>
                 <FlatList
                   data={playlists}
                   keyExtractor={item => item.id}
@@ -194,6 +193,7 @@ export const HomeScreen = () => {
                   )}
                 />
               </View>
+              <SliderQuotes />
             </View>
           </View>
           <Modal
