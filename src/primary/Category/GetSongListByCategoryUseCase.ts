@@ -1,6 +1,6 @@
-import type { UseCase } from "../../primary/UseCase";
-import { CategoryResource } from "../../infra/category/CategoryResource";
-import { SongView } from "../../views/SongView";
+import type {UseCase} from '../../primary/UseCase';
+import {CategoryResource} from '../../infra/category/CategoryResource';
+import {SongView} from '../../views/SongView';
 
 export class GetSongListByCategoryUseCase implements UseCase {
   constructor(private categoryRepository: CategoryResource) {}

@@ -74,22 +74,25 @@ export class CategoryCaller {
       const db = getFirestore();
       const songCollection = collection(db, 'songs');
 
-      const songQuery = query(
-        songCollection,
-        where('categoryId', '==', categoryId),
-        where('userId', '==', userId),
-      );
+      let songQuery;
+      if (categoryId === 'All') {
+        songQuery = query(songCollection, where('userId', '==', userId));
+      } else {
+        songQuery = query(
+          songCollection,
+          where('categoryId', '==', categoryId),
+          where('userId', '==', userId),
+        );
+      }
+
       const querySnapshot = await getDocs(songQuery);
 
       return querySnapshot.docs.map(doc => ({
         id: doc.id,
-        ...doc.data(),
+        ...doc.data(), // Solo esto es necesario
       })) as ApiSong[];
     } catch (error) {
-      console.error(
-        `Error fetching songs for category ${categoryId} and user ${userId}:`,
-        error,
-      );
+      console.error(`Error fetching songs:`, error);
       throw error;
     }
   }

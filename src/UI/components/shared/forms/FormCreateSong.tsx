@@ -18,11 +18,7 @@ import {validationCreateSongForm} from './yup/validation_create_song';
 type SongForm = {
   categoryId: string;
   setCategoryId: React.Dispatch<React.SetStateAction<string>>;
-  title: string;
-  setTitle: React.Dispatch<React.SetStateAction<string>>;
-  artist: string;
-  setArtist: React.Dispatch<React.SetStateAction<string>>;
-  onCreateSong: () => Promise<void>;
+  onCreateSong: (values: {title: string; artist: string}) => Promise<void>;
   isLoading: boolean;
 };
 
@@ -34,10 +30,6 @@ type DropdownItem = {
 export const FormCreateSong = ({
   categoryId,
   setCategoryId,
-  title,
-  setTitle,
-  artist,
-  setArtist,
   onCreateSong,
   isLoading,
 }: SongForm) => {
@@ -69,7 +61,7 @@ export const FormCreateSong = ({
       <Formik
         validationSchema={validationCreateSongForm}
         initialValues={{title: '', artist: ''}}
-        onSubmit={onCreateSong}>
+        onSubmit={values => onCreateSong(values)}>
         {({values, errors, handleChange, handleSubmit, touched}) => (
           <View style={globalFormStyles.form}>
             <TextInput
@@ -81,7 +73,6 @@ export const FormCreateSong = ({
               value={values.title}
               onChangeText={handleChange('title')}
             />
-
             {errors.title && touched.title ? (
               <Text style={{color: 'red', marginBottom: 5}}>
                 {errors.title}
@@ -101,11 +92,10 @@ export const FormCreateSong = ({
                 {errors.artist}
               </Text>
             ) : null}
-
             {categories.length > 0 && (
               <CustomDropdown
                 items={categories}
-                defaultValue={categoryId || categories[0].value}
+                defaultValue=""
                 placeholder="Choose a category"
                 onChange={handleCategoryChange}
               />

@@ -64,28 +64,40 @@ export const PlaylistSelectedScreen = () => {
 
     try {
       setIsLoading(true);
-      await songService.createSong(
+      // Verifica que estos parámetros estén en el orden correcto
+      console.log('Creating song with:', {
         categoryId,
-        playlistId,
         title,
         artist,
         isDone,
+        playlistId,
+      });
+
+      const result = await songService.createSong(
+        categoryId,
+        title,
+        artist,
+        isDone,
+        playlistId, // Asegúrate que playlistId no sea undefined
       );
+
+      console.log('Song created:', result);
       setCategoryId('');
       setTitle('');
       setArtist('');
       setTriggerUpdate(true);
-      setIsLoading(false);
-
       closeModal();
     } catch (error) {
       console.error('Failed to create song:', error);
       Alert.alert('Error', 'Failed to create the song. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const loadSongList = useCallback(async () => {
     try {
+      // Si estamos en un playlist, filtramos por él
       const fetchedSongs = await songService.getSongs(playlistId);
       const songsWithIsDone = await Promise.all(
         fetchedSongs.map(async song => ({

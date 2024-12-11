@@ -3,10 +3,9 @@ export interface SongProperties {
   title: string;
   artist: string;
   categoryId: string;
-  playlistId: string;
   isDone: boolean;
+  playlistId?: string;
 }
-
 
 export interface SongDetailsProperties {
   userId: string;
@@ -26,6 +25,7 @@ export type PlaylistProperties = {
 export type CategoryProperties = {
   id: string;
   title: string;
+  userId: string;
 };
 
 export type UserProperties = {

@@ -1,10 +1,12 @@
-export interface Song {
-  songId: string;
+export type Song = {
+  id: string;
+  title: string; // Asegúrate que estos nombres
+  artist: string; // coincidan con los que usas
   categoryId: string;
-  playlistId: string;
-  title: string;
-  artist: string;
-}
+  isDone: boolean;
+  playlistId?: string;
+  userId: string;
+};
 
 export interface SongCard {
   id: string;

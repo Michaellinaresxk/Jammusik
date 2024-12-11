@@ -46,7 +46,7 @@ export const CategorySelectedScreen = () => {
   const [currentSongId, setCurrentSongId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isDone, setIsDone] = useState(false);
-  const playlistId = params.id as string;
+
   const resetSongsState = useResetSongsState();
 
   const {resetToggle, resetAllSongs} = resetSongsState;
@@ -170,8 +170,8 @@ export const CategorySelectedScreen = () => {
                       <View>
                         <SongCard
                           resetToggle={resetToggle}
-                          title={item.title}
-                          artist={item.artist}
+                          title={item.title} // Asegúrate que estos campos
+                          artist={item.artist} // coincidan con los de tu modelo Song
                           isDone={item.isDone}
                           songId={item.id}
                           color={
@@ -182,8 +182,8 @@ export const CategorySelectedScreen = () => {
                           onPress={() =>
                             navigation.navigate('SongSelectedScreen', {
                               id: item.id,
-                              title: item.title,
-                              artist: item.artist,
+                              title: item.title, // Aquí también
+                              artist: item.artist, // asegura los campos correctos
                               categoryId: item.categoryId,
                             })
                           }
