@@ -3,6 +3,6 @@ export type ApiSong = {
   title: string;
   artist: string;
   categoryId: string;
-  playlistId: string | undefined;
   isDone: boolean;
+  playlistId?: string | undefined;
 };

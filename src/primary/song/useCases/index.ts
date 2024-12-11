@@ -1,8 +1,8 @@
-import type { SongResource } from "../../../infra/song/SongResource";
-import { CreateSongUseCase } from "./CreateSongUseCase";
-import { GetSongListUseCase } from "./GetSongListUseCase";
-import type { SongView } from "../../../views/SongView";
-import { DeleteSongUseCase } from "./DeleteSongUseCase";
+import type {SongResource} from '../../../infra/song/SongResource';
+import {CreateSongUseCase} from './CreateSongUseCase';
+import {GetSongListUseCase} from './GetSongListUseCase';
+import type {SongView} from '../../../views/SongView';
+import {DeleteSongUseCase} from './DeleteSongUseCase';
 
 export class SongService {
   private songCreateUseCase: CreateSongUseCase;
@@ -17,21 +17,21 @@ export class SongService {
 
   async createSong(
     categoryId: string,
-    playlistId: string,
     title: string,
     artist: string,
     isDone: boolean,
+    playlistId?: string,
   ) {
     return await this.songCreateUseCase.execute(
       categoryId,
-      playlistId,
       title,
       artist,
       isDone,
+      playlistId,
     );
   }
 
-  async getSongs(playlistId: string): Promise<SongView[]> {
+  async getSongs(playlistId?: string): Promise<SongView[]> {
     return this.getSongListUseCase.execute(playlistId);
   }
   async deleteSong(userId: string, songId: string): Promise<void> {

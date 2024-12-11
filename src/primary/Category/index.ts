@@ -37,10 +37,10 @@ export class CategoryService {
   }
 
   async getSongListByCategory(
-    userId: string,
-    categoryId: string,
+    categoryId: string, // Primero categoryId
+    userId: string, // Después userId
   ): Promise<SongView[]> {
-    return await this.getSongListByCategoryUseCase.execute(userId, categoryId);
+    return await this.getSongListByCategoryUseCase.execute(categoryId, userId); // Orden correcto
   }
 
   async getAllSongsByUserId(userId: string): Promise<SongView[]> {

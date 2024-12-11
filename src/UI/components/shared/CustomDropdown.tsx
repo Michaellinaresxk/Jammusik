@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 
@@ -21,15 +21,13 @@ export const CustomDropdown = ({
   onChange,
 }: Props) => {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(defaultValue);
+  const [value, setValue] = useState(null);
 
-  useEffect(() => {
-    setValue(defaultValue); // Correctly update internal state when defaultValue changes
-  }, [defaultValue]);
-
-  const onValueChange = (newValue: string) => {
+  const onValueChange = (newValue: string | null) => {
     setValue(newValue);
-    onChange(newValue); // Correctly pass the new value up to the parent component
+    if (newValue) {
+      onChange(newValue);
+    }
   };
 
   return (
@@ -44,6 +42,10 @@ export const CustomDropdown = ({
         style={styles.pickerStyle}
         dropDownContainerStyle={styles.dropdownStyle}
         placeholderStyle={{color: 'gray'}}
+        listMode="SCROLLVIEW"
+        scrollViewProps={{
+          nestedScrollEnabled: true,
+        }}
       />
     </View>
   );
