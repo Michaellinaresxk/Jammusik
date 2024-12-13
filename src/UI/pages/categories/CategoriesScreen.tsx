@@ -76,17 +76,21 @@ export const CategoriesScreen = () => {
     setIsVisible(!isVisible);
   };
 
-  const handleCreateCategory = async values => {
-    const {title} = values;
+  const handleCreateCategory = async (values: {title: string}) => {
     const user = auth.currentUser;
     if (user) {
       const userId = user.uid;
       setIsLoading(true);
-      await categoryService.createCategory(userId, title);
-      setTitle('');
-      setTriggerUpdate(true); // Trigger the update to reload categories
-      setIsLoading(false);
-      closeModal();
+      try {
+        await categoryService.createCategory(userId, values.title);
+        setTitle('');
+        setTriggerUpdate(true);
+        setIsLoading(false);
+        closeModal();
+      } catch (error) {
+        console.error('Error creating category:', error);
+        setIsLoading(false);
+      }
     }
   };
 
@@ -197,6 +201,7 @@ export const CategoriesScreen = () => {
                 numColumns={2}
                 renderItem={({item}) => (
                   <CategoryCard
+                    categoryId={item.id} // Agregar esta prop
                     title={item.title}
                     onEdit={() =>
                       startEditingCategory({id: item.id, title: item.title})
@@ -236,7 +241,7 @@ export const CategoriesScreen = () => {
                   onCreateCategory={
                     editingCategory
                       ? handleUpdateCategory
-                      : handleUpdateCategory
+                      : handleCreateCategory
                   }
                   isLoading={isLoading}
                   isEditing={!!editingCategory}

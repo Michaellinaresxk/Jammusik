@@ -6,31 +6,24 @@ export class CategoryResource implements CategoryRepository {
   constructor(public readonly categoryCaller: CategoryCaller) {}
 
   async createCategory(userId: string, title: string): Promise<Category> {
-    const apiCategory = await this.categoryCaller.createCategory(title); // categoryCaller solo recibe title
-    return new Category(
-      apiCategory.id, // id de la categoría creada
-      apiCategory.title, // título de la categoría
-    );
+    const apiCategory = await this.categoryCaller.createCategory(title);
+    return new Category(apiCategory.id, apiCategory.title, userId);
   }
 
   async getCategories(userId: string): Promise<Category[]> {
     const apiCategories = await this.categoryCaller.getCategories(userId);
     return apiCategories.map(
-      category =>
-        new Category(
-          category.id, // id de cada categoría
-          category.title, // título de cada categoría
-        ),
+      category => new Category(category.id, category.title, userId),
     );
   }
 
   async getSongListByCategory(
-    userId: string,
     categoryId: string,
+    userId: string,
   ): Promise<Song[]> {
     const apiSongs = await this.categoryCaller.getSongListByCategory(
-      userId,
       categoryId,
+      userId,
     );
     return apiSongs.map(
       song =>

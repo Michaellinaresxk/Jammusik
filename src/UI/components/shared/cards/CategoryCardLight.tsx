@@ -3,10 +3,10 @@ import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {globalColors} from '../../../theme/Theme';
 
 type Props = {
+  categoryId?: string;
   title: string;
   onPress: () => void;
 };
-
 export const CategoryCardLight = ({title, onPress}: Props) => {
   return (
     <TouchableOpacity style={styles.categoryCard} onPress={onPress}>

@@ -4,6 +4,7 @@ import {globalColors} from '../../../theme/Theme';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 type Props = {
+  categoryId: string;
   title: string;
   onPress: () => void;
   onEdit?: (categoryId: string, title: string) => void;
@@ -11,7 +12,7 @@ type Props = {
 };
 
 export const CategoryCard = ({title, onPress, onDelete, onEdit}: Props) => {
-  const deleteConfirmation = () =>
+  const deleteConfirmation = (categoryId: string) =>
     Alert.alert('Are you sure?', 'Do you want to remove this category?', [
       {
         text: 'UPS! BY MISTAKE',
@@ -20,12 +21,12 @@ export const CategoryCard = ({title, onPress, onDelete, onEdit}: Props) => {
       },
       {
         text: 'YES, DELETE!',
-        onPress: () => onDelete(),
+        onPress: () => onDelete(categoryId),
         style: 'destructive',
       },
     ]);
 
-  const editConfirmation = () =>
+  const editConfirmation = (categoryId: string, title: string) =>
     Alert.alert('Are you sure?', 'Do you want to edit this category?', [
       {
         text: 'UPS! BY MISTAKE',
@@ -34,10 +35,11 @@ export const CategoryCard = ({title, onPress, onDelete, onEdit}: Props) => {
       },
       {
         text: 'YES, EDIT!',
-        onPress: () => onEdit(),
+        onPress: () => onEdit && onEdit(categoryId, title), // Pasar ambos parámetros
         style: 'destructive',
       },
     ]);
+
   return (
     <TouchableOpacity style={styles.categoryCard} onPress={onPress}>
       <Text style={styles.categoryCardText}>{title}</Text>
@@ -47,7 +49,7 @@ export const CategoryCard = ({title, onPress, onDelete, onEdit}: Props) => {
           color={globalColors.light}
           onPress={event => {
             event.stopPropagation();
-            editConfirmation();
+            editConfirmation(categoryId, title); // Necesitamos estas props
           }}
           size={20}
         />
@@ -56,7 +58,7 @@ export const CategoryCard = ({title, onPress, onDelete, onEdit}: Props) => {
           color={globalColors.light}
           onPress={event => {
             event.stopPropagation();
-            deleteConfirmation();
+            deleteConfirmation(categoryId);
           }}
           size={20}
         />

@@ -8,7 +8,7 @@ import {validationCreateCategoryForm} from './yup/validation_create_category';
 type CategoryForm = {
   title: string;
   setTitle: React.Dispatch<React.SetStateAction<string>>;
-  onCreateCategory: () => Promise<void>;
+  onCreateCategory: (values: {title: string}) => Promise<void>; // Corregido el tipo
   isLoading: boolean;
   isEditing?: boolean;
   categoryId?: string;
@@ -27,7 +27,8 @@ export const FormCreateCategory = ({
       <Formik
         validationSchema={validationCreateCategoryForm}
         initialValues={{title: isEditing ? title : ''}}
-        onSubmit={onCreateCategory}>
+        onSubmit={onCreateCategory}
+        enableReinitialize={true}>
         {({values, handleChange, errors, touched, handleSubmit}) => (
           <View style={globalFormStyles.form}>
             <View>
@@ -37,7 +38,10 @@ export const FormCreateCategory = ({
                 placeholder="Title"
                 value={values.title}
                 autoCorrect={false}
-                onChangeText={handleChange('title')}
+                onChangeText={text => {
+                  handleChange('title')(text);
+                  setTitle(text);
+                }}
               />
               {errors.title && touched.title ? (
                 <Text style={{color: 'red'}}>{errors.title}</Text>
