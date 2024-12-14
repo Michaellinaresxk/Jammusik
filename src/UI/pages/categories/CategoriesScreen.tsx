@@ -96,13 +96,20 @@ export const CategoriesScreen = () => {
       text1: 'Category Deleted successfully. 👋',
     });
   };
-  // const showToastAll = () => {
-  //   Toast.show({
-  //     type: 'danger',
-  //     text1: 'You cannot remove this category',
-  //     topOffset: 90,
-  //   });
-  // };
+  const showToastAll = () => {
+    Toast.show({
+      type: 'danger',
+      text1: 'You cannot remove this category',
+      topOffset: 90,
+    });
+  };
+  const editCategoryAll = () => {
+    Toast.show({
+      type: 'danger',
+      text1: 'You cannot edit this category',
+      topOffset: 90,
+    });
+  };
 
   const handleUpdateCategory = async (values: {title: string}) => {
     if (editingCategory) {
@@ -178,19 +185,17 @@ export const CategoriesScreen = () => {
             </View>
             <Separator color={globalColors.terceary} />
             <View style={{marginTop: 30, justifyContent: 'center'}}>
-              {/* <CategoryCard
+              <CategoryCard
                 title="All"
                 onDelete={() => showToastAll}
-                // onEdit={() =>
-                //   startEditingCategory({id: item.id, title: item.title})
-                // }
+                onEdit={() => editCategoryAll}
                 onPress={() =>
                   navigation.navigate('CategorySelectedScreen', {
                     id: 'All',
                     title: 'All',
                   })
                 }
-              /> */}
+              />
               <FlatList
                 data={categories}
                 keyExtractor={item => item.id}
@@ -218,7 +223,7 @@ export const CategoriesScreen = () => {
                 presentationStyle="formSheet">
                 <View style={styles.modalBtnContainer}>
                   <Text style={styles.modalFormHeaderTitle}>
-                    {editingCategory ? 'Edit Playlist' : 'Add Playlist'}
+                    {editingCategory ? 'Edit Category' : 'Add Category'}
                   </Text>
                   <PrimaryButton
                     label="Close"

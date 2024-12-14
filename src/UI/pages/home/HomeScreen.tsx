@@ -150,6 +150,17 @@ export const HomeScreen = () => {
               </View>
               <Text style={styles.subTitle}>My Categories:</Text>
               <FlatList
+                ListHeaderComponent={
+                  <CategoryCardLight
+                    title="All"
+                    onPress={() =>
+                      navigation.navigate('CategorySelectedScreen', {
+                        id: 'All',
+                        title: 'All',
+                      })
+                    }
+                  />
+                }
                 data={categories}
                 keyExtractor={item => item.id}
                 horizontal={true}

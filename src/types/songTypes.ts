@@ -1,10 +1,9 @@
 export type Song = {
   id: string;
-  title: string; // Asegúrate que estos nombres
-  artist: string; // coincidan con los que usas
+  title: string;
+  artist: string;
   categoryId: string;
   isDone: boolean;
-  playlistId?: string;
   userId: string;
 };
 

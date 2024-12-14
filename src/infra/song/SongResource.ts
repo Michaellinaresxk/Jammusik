@@ -10,14 +10,12 @@ export class SongResource implements SongRepository {
     title: string,
     artist: string,
     isDone: boolean,
-    playlistId?: string,
   ): Promise<Song> {
     const apiSong = await this.songCaller.createSong(
       categoryId,
       title,
       artist,
       isDone,
-      playlistId,
     );
     return new Song(
       apiSong.id,
@@ -25,7 +23,6 @@ export class SongResource implements SongRepository {
       apiSong.title,
       apiSong.artist,
       apiSong.isDone,
-      apiSong.playlistId,
     );
   }
 
@@ -40,7 +37,6 @@ export class SongResource implements SongRepository {
           apiSong.title,
           apiSong.artist,
           apiSong.isDone,
-          apiSong.playlistId,
         ),
     );
   }

@@ -4,8 +4,8 @@ import {
   View,
   Text,
   ActivityIndicator,
-  Animated,
-  ScrollView,
+  StyleSheet,
+  Alert,
 } from 'react-native';
 import {globalColors, globalFormStyles} from '../../../theme/Theme';
 import {PrimaryButton} from '../PrimaryButton';
@@ -17,7 +17,6 @@ import {validationCreateSongForm} from './yup/validation_create_song';
 
 type SongForm = {
   categoryId: string;
-  setCategoryId: React.Dispatch<React.SetStateAction<string>>;
   onCreateSong: (values: {title: string; artist: string}) => Promise<void>;
   isLoading: boolean;
 };
@@ -29,12 +28,13 @@ type DropdownItem = {
 
 export const FormCreateSong = ({
   categoryId,
-  setCategoryId,
   onCreateSong,
   isLoading,
 }: SongForm) => {
   const categoryService = useCategoryService();
   const [categories, setCategories] = useState<DropdownItem[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>(categoryId);
+  const isAllCategory = categoryId === 'All';
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -49,11 +49,37 @@ export const FormCreateSong = ({
       }
     };
 
-    loadCategories();
-  });
+    if (isAllCategory) {
+      loadCategories();
+    }
+  }, [categoryService, isAllCategory]);
 
-  const handleCategoryChange = (selectedCategoryId: string) => {
-    setCategoryId(selectedCategoryId);
+  const handleCategoryChange = (newCategoryId: string) => {
+    setSelectedCategory(newCategoryId);
+  };
+
+  const handleCreateSong = async (values: {title: string; artist: string}) => {
+    try {
+      if (isAllCategory && !selectedCategory) {
+        Alert.alert('Error', 'Please select a category');
+        return;
+      }
+      const finalCategoryId = isAllCategory ? selectedCategory : categoryId;
+      await onCreateSong({
+        title: values.title,
+        artist: values.artist,
+        categoryId: finalCategoryId
+      });
+
+    } catch (error) {
+      console.error('Error creating song:', error);
+      Alert.alert('Error', 'Failed to create song. Please try again.');
+    }
+  };
+
+  const getCurrentCategoryName = () => {
+    const category = categories.find(cat => cat.value === categoryId);
+    return category ? category.label : '';
   };
 
   return (
@@ -61,7 +87,7 @@ export const FormCreateSong = ({
       <Formik
         validationSchema={validationCreateSongForm}
         initialValues={{title: '', artist: ''}}
-        onSubmit={values => onCreateSong(values)}>
+        onSubmit={handleCreateSong}>
         {({values, errors, handleChange, handleSubmit, touched}) => (
           <View style={globalFormStyles.form}>
             <TextInput
@@ -73,11 +99,11 @@ export const FormCreateSong = ({
               value={values.title}
               onChangeText={handleChange('title')}
             />
-            {errors.title && touched.title ? (
+            {errors.title && touched.title && (
               <Text style={{color: 'red', marginBottom: 5}}>
                 {errors.title}
               </Text>
-            ) : null}
+            )}
             <TextInput
               style={globalFormStyles.inputLogin}
               placeholder="Artist"
@@ -87,25 +113,34 @@ export const FormCreateSong = ({
               value={values.artist}
               onChangeText={handleChange('artist')}
             />
-            {errors.artist && touched.artist ? (
+            {errors.artist && touched.artist && (
               <Text style={{color: 'red', marginBottom: 5}}>
                 {errors.artist}
               </Text>
-            ) : null}
-            {categories.length > 0 && (
-              <CustomDropdown
-                items={categories}
-                defaultValue=""
-                placeholder="Choose a category"
-                onChange={handleCategoryChange}
-              />
             )}
+
+            {/* Only show dropdown in "All" category view */}
+            {isAllCategory ? (
+              categories.length > 0 && (
+                <CustomDropdown
+                  items={categories}
+                  defaultValue={selectedCategory}
+                  placeholder="Choose a category"
+                  onChange={handleCategoryChange}
+                />
+              )
+            ) : (
+              <Text style={styles.categoryText}>
+                Category: {getCurrentCategoryName()}
+              </Text>
+            )}
+
             <PrimaryButton
               label={
-                !isLoading ? (
-                  'Create A New Song'
+                isLoading ? (
+                  <ActivityIndicator size="large" />
                 ) : (
-                  <ActivityIndicator size={'large'} />
+                  'Create A New Song'
                 )
               }
               bgColor={globalColors.primary}
@@ -113,6 +148,7 @@ export const FormCreateSong = ({
               colorText={globalColors.light}
               btnFontSize={20}
               onPress={handleSubmit}
+              disabled={isAllCategory && !selectedCategory} // Disable if in All view and no category selected
             />
           </View>
         )}
@@ -120,3 +156,13 @@ export const FormCreateSong = ({
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  categoryText: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: globalColors.terceary,
+    marginBottom: 30,
+    textAlign: 'center',
+  }
+});

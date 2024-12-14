@@ -4,7 +4,6 @@ export interface SongProperties {
   artist: string;
   categoryId: string;
   isDone: boolean;
-  playlistId?: string;
 }
 
 export interface SongDetailsProperties {

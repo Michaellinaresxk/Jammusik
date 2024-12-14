@@ -6,7 +6,6 @@ export default interface SongRepository {
     title: string,
     artist: string,
     isDone: boolean,
-    playlistId?: string,
   ): Promise<Song>;
   getSongs(playlistId?: string): Promise<Song[]>;
   deleteSong(userId: string, songId: string): Promise<void>;

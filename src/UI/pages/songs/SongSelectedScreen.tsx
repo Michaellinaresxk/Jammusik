@@ -130,14 +130,14 @@ export const SongSelectedScreen = () => {
   useEffect(() => {
     const getCategoryTitle = async () => {
       try {
-        const categoryTitle = await useGetCategoryTitle(params.categoryId);
+        const categoryTitle = await useGetCategoryTitle(params.id);
         setCategory(categoryTitle);
       } catch (error) {
         Alert.alert('Error', 'Failed to fetch category title.');
       }
     };
     getCategoryTitle();
-  }, [params.categoryId]);
+  }, [params.id]);
 
   const {isRefreshing, refresh, top} = usePullRefresh(loadSongDetails);
   const renderChordItem = ({item}: {item: string}) => (
