@@ -62,7 +62,7 @@ export const CategorySelectedScreen = () => {
       const fetchedSongs =
         categoryId === categoryAll
           ? await categoryService.getAllSongsByUserId(userId)
-          : await categoryService.getSongListByCategory(userId, categoryId);
+          : await categoryService.getSongListByCategory(categoryId, userId);
 
       const songsWithIsDone = await Promise.all(
         fetchedSongs.map(async song => ({
@@ -170,8 +170,8 @@ export const CategorySelectedScreen = () => {
                       <View>
                         <SongCard
                           resetToggle={resetToggle}
-                          title={item.title} // Asegúrate que estos campos
-                          artist={item.artist} // coincidan con los de tu modelo Song
+                          title={item.title}
+                          artist={item.artist}
                           isDone={item.isDone}
                           songId={item.id}
                           color={
@@ -182,8 +182,8 @@ export const CategorySelectedScreen = () => {
                           onPress={() =>
                             navigation.navigate('SongSelectedScreen', {
                               id: item.id,
-                              title: item.title, // Aquí también
-                              artist: item.artist, // asegura los campos correctos
+                              title: item.title,
+                              artist: item.artist,
                               categoryId: item.categoryId,
                             })
                           }

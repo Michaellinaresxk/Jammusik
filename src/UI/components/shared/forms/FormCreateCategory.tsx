@@ -1,17 +1,15 @@
-import React from 'react';
-import {ActivityIndicator, Text, TextInput, View} from 'react-native';
-import {globalColors, globalFormStyles} from '../../../theme/Theme';
-import {PrimaryButton} from '../PrimaryButton';
-import {Formik} from 'formik';
-import {validationCreateCategoryForm} from './yup/validation_create_category';
+import React from "react";
+import { ActivityIndicator, Text, TextInput, View } from "react-native";
+import { globalColors, globalFormStyles } from "../../../theme/Theme";
+import { PrimaryButton } from "../PrimaryButton";
+import { Formik } from "formik";
+import { validationCreateCategoryForm } from "./yup/validation_create_category";
 
 type CategoryForm = {
   title: string;
   setTitle: React.Dispatch<React.SetStateAction<string>>;
-  onCreateCategory: (values: {title: string}) => Promise<void>; // Corregido el tipo
+  onCreateCategory: () => Promise<void>;
   isLoading: boolean;
-  isEditing?: boolean;
-  categoryId?: string;
 };
 
 export const FormCreateCategory = ({
@@ -19,17 +17,14 @@ export const FormCreateCategory = ({
   setTitle,
   onCreateCategory,
   isLoading,
-  isEditing = false,
-  categoryId,
 }: CategoryForm) => {
   return (
     <View style={globalFormStyles.containerForm}>
       <Formik
         validationSchema={validationCreateCategoryForm}
-        initialValues={{title: isEditing ? title : ''}}
-        onSubmit={onCreateCategory}
-        enableReinitialize={true}>
-        {({values, handleChange, errors, touched, handleSubmit}) => (
+        initialValues={{ title: "" }}
+        onSubmit={onCreateCategory}>
+        {({ values, handleChange, errors, touched, handleSubmit }) => (
           <View style={globalFormStyles.form}>
             <View>
               <TextInput
@@ -38,25 +33,18 @@ export const FormCreateCategory = ({
                 placeholder="Title"
                 value={values.title}
                 autoCorrect={false}
-                onChangeText={text => {
-                  handleChange('title')(text);
-                  setTitle(text);
-                }}
+                onChangeText={handleChange("title")}
               />
               {errors.title && touched.title ? (
-                <Text style={{color: 'red'}}>{errors.title}</Text>
+                <Text style={{ color: "red" }}>{errors.title}</Text>
               ) : null}
             </View>
             <PrimaryButton
               label={
                 !isLoading ? (
-                  isEditing ? (
-                    'Update Category'
-                  ) : (
-                    'Create Category'
-                  )
+                  "Create Category"
                 ) : (
-                  <ActivityIndicator size={'large'} />
+                  <ActivityIndicator size={"large"} />
                 )
               }
               bgColor={globalColors.primary}

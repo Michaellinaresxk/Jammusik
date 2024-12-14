@@ -1,39 +1,40 @@
-import type CategoryRepository from '../../domain/category/CategoryRepository';
-import {CategoryCaller} from './CategoryCaller';
-import Category from '../../domain/category/Category';
-import Song from '../../domain/song/Song';
+import type CategoryRepository from "../../domain/category/CategoryRepository";
+import { CategoryCaller } from "./CategoryCaller";
+import Category from "../../domain/category/Category";
+import Song from "../../domain/song/Song";
+
 export class CategoryResource implements CategoryRepository {
   constructor(public readonly categoryCaller: CategoryCaller) {}
 
   async createCategory(userId: string, title: string): Promise<Category> {
-    const apiCategory = await this.categoryCaller.createCategory(title);
-    return new Category(apiCategory.id, apiCategory.title, userId);
+    const apiCategory = await this.categoryCaller.createCategory(userId, title);
+    return new Category(apiCategory.userId, apiCategory.title);
   }
 
   async getCategories(userId: string): Promise<Category[]> {
-    const apiCategories = await this.categoryCaller.getCategories(userId);
-    return apiCategories.map(
-      category => new Category(category.id, category.title, userId),
+    const apiCategory = await this.categoryCaller.getCategories(userId);
+    return apiCategory.map(
+      apiCategory => new Category(apiCategory.id, apiCategory.title),
     );
   }
 
   async getSongListByCategory(
-    categoryId: string,
     userId: string,
+    categoryId: string,
   ): Promise<Song[]> {
     const apiSongs = await this.categoryCaller.getSongListByCategory(
-      categoryId,
       userId,
+      categoryId,
     );
     return apiSongs.map(
-      song =>
+      apiSong =>
         new Song(
-          song.id,
-          song.categoryId,
-          song.title,
-          song.artist,
-          song.isDone,
-          song.playlistId,
+          apiSong.id,
+          apiSong.categoryId,
+          apiSong.title,
+          apiSong.artist,
+          apiSong.isDone,
+          apiSong.playlistId,
         ),
     );
   }
@@ -41,21 +42,21 @@ export class CategoryResource implements CategoryRepository {
   async getAllSongsByUserId(userId: string): Promise<Song[]> {
     const apiSongs = await this.categoryCaller.getAllSongsByUserId(userId);
     return apiSongs.map(
-      song =>
+      (apiSong: {
+        id: string;
+        categoryId: string;
+        title: string;
+        artist: string;
+        playlistId: string;
+      }) =>
         new Song(
-          song.id,
-          song.categoryId,
-          song.title,
-          song.artist,
-          song.isDone,
-          song.playlistId,
+          apiSong.id,
+          apiSong.categoryId,
+          apiSong.title,
+          apiSong.artist,
+          apiSong.playlistId,
         ),
     );
-  }
-
-  async updateCategory(categoryId: string, title: string): Promise<Category> {
-    await this.categoryCaller.updateCategory(categoryId, title);
-    return new Category(categoryId, title);
   }
 
   async deleteCategory(userId: string, categoryId: string) {

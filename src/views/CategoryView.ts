@@ -1,9 +1,6 @@
 import type Category from "../domain/category/Category";
 
 export class CategoryView {
-  categoryId: any;
-  label: any;
-  value: any;
   private constructor(
     public readonly id: string,
     public readonly title: string,
@@ -11,6 +8,12 @@ export class CategoryView {
 
   static fromDomain(category: Category) {
     const { id, title } = category;
-    return new CategoryView(id, title);
+    if (!title) {
+        console.warn(`Category with ID ${id} is missing a title`);
+    }
+    return new CategoryView(id, title || 'Untitled');
   }
 }
+
+
+

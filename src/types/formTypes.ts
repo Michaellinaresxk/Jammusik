@@ -17,5 +17,5 @@ export interface Login {
 
 export interface Category {
   id: string;
-  name: string;
+  title: string;
 }
