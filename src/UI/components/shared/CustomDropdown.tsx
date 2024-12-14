@@ -13,7 +13,6 @@ type Props = {
   placeholder: string;
   onChange: (value: string) => void;
 };
-
 export const CustomDropdown = ({
   items,
   defaultValue,

@@ -64,21 +64,12 @@ export const PlaylistSelectedScreen = () => {
 
     try {
       setIsLoading(true);
-      // Verifica que estos parámetros estén en el orden correcto
-      console.log('Creating song with:', {
-        categoryId,
-        title,
-        artist,
-        isDone,
-        playlistId,
-      });
-
       const result = await songService.createSong(
         categoryId,
         title,
         artist,
         isDone,
-        playlistId, // Asegúrate que playlistId no sea undefined
+        playlistId,
       );
 
       console.log('Song created:', result);
@@ -97,7 +88,6 @@ export const PlaylistSelectedScreen = () => {
 
   const loadSongList = useCallback(async () => {
     try {
-      // Si estamos en un playlist, filtramos por él
       const fetchedSongs = await songService.getSongs(playlistId);
       const songsWithIsDone = await Promise.all(
         fetchedSongs.map(async song => ({

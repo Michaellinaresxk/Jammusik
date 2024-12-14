@@ -11,7 +11,6 @@ export class SongCaller {
     title: string,
     artist: string,
     isDone: boolean,
-    playlistId?: string,
   ): Promise<ApiSong> {
     const userId = auth.currentUser?.uid;
     if (!this.db || !userId) {
@@ -24,7 +23,6 @@ export class SongCaller {
       title,
       artist,
       isDone,
-      playlistId, // Guárdalo como campo directo
     };
 
     console.log('Creating song with data:', songData);

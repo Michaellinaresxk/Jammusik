@@ -3,13 +3,14 @@ import {
   Alert,
   FlatList,
   KeyboardAvoidingView,
+  Modal,
   Platform,
   RefreshControl,
   ScrollView,
   StyleSheet,
+  Text,
   TouchableOpacity,
   View,
-  useWindowDimensions,
 } from 'react-native';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {RootStackParamsList} from '../../routes/StackNavigator';
@@ -28,41 +29,72 @@ import {GlobalHeader} from '../../components/shared/GlobalHeader';
 import Toast from 'react-native-toast-message';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useResetSongsState} from '../../store/useResetSongsState';
+import {FloatingActionButton} from '../../components/shared/FloatingActionButton';
+import {KeyboardGestureArea} from 'react-native-keyboard-controller';
+import {PrimaryButton} from '../../components/shared/PrimaryButton';
+import {FormCreateSong} from '../../components/shared/forms/FormCreateSong';
 
 export const CategorySelectedScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
-  const params =
-    useRoute<RouteProp<RootStackParamsList, 'CategoriesScreen'>>().params;
+  const route = useRoute<RouteProp<RootStackParamsList, 'CategoriesScreen'>>();
   const auth = getAuth();
   const userId = auth.currentUser?.uid as string;
 
+  // Services
   const categoryService = useCategoryService();
   const songService = useSongService();
 
-  const [songList, setSongList] = useState<SongView[]>([]);
+  // Route params
+  const {id: categoryId, title: categoryTitle} = route.params;
+  const isAllCategory = categoryId === 'All';
 
+  // States
+  const [songList, setSongList] = useState<SongView[]>([]);
   const [isVisible, setIsVisible] = useState(false);
-  const [triggerUpdate, setTriggerUpdate] = useState(false);
-  const [currentSongId, setCurrentSongId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isDone, setIsDone] = useState(false);
 
   const resetSongsState = useResetSongsState();
+  const {resetToggle} = resetSongsState;
 
-  const {resetToggle, resetAllSongs} = resetSongsState;
+  // Create song handler
+  const handleCreateSong = async (values: { title: string; artist: string; categoryId?: string }) => {
+    try {
+      setIsLoading(true);
 
-  const categoryAll = 'All';
-  const categoryId = params.id as string;
+      // If we are in “All”, use the category selected in the form.
+      // If not, use the current category of the route
+      const finalCategoryId = isAllCategory ? values.categoryId : categoryId;
+      if (isAllCategory && !values.categoryId) {
+        Alert.alert('Error', 'Please select a category');
+        return;
+      }
+  
+      const result = await songService.createSong(
+        finalCategoryId!,
+        values.title,
+        values.artist,
+        isDone
+      );
+  
+      console.log('Song created:', result);
+      await loadSongList();
+      closeModal();
+    } catch (error) {
+      console.error('Failed to create song:', error);
+      Alert.alert('Error', 'Failed to create the song. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  const valueWidth = useWindowDimensions().width;
-
+  // Load songs list
   const loadSongList = useCallback(async () => {
     setIsLoading(true);
     try {
-      const fetchedSongs =
-        categoryId === categoryAll
-          ? await categoryService.getAllSongsByUserId(userId)
-          : await categoryService.getSongListByCategory(userId, categoryId);
+      const fetchedSongs = isAllCategory
+        ? await categoryService.getAllSongsByUserId(userId)
+        : await categoryService.getSongListByCategory(userId, categoryId);
 
       const songsWithIsDone = await Promise.all(
         fetchedSongs.map(async song => ({
@@ -77,39 +109,25 @@ export const CategorySelectedScreen = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [categoryId, categoryService, userId]);
+  }, [categoryId, isAllCategory, categoryService, userId]);
 
+  // Effects
   useEffect(() => {
     loadSongList();
-  }, [categoryId, userId, loadSongList]);
+  }, [loadSongList]);
 
-  useEffect(() => {
-    if (triggerUpdate) {
-      loadSongList();
-      setTriggerUpdate(false);
-    }
-  }, [triggerUpdate, loadSongList]);
-
-  const {isRefreshing, refresh, top} = usePullRefresh(loadSongList);
-
-  const closeModal = () => {
-    setIsVisible(!isVisible);
-  };
-
-  const showToast = () => {
-    Toast.show({
-      type: 'success',
-      text1: 'Song Deleted successfully',
-    });
-  };
+  // Handlers
+  const closeModal = () => setIsVisible(false);
+  const openModal = () => setIsVisible(true);
 
   const handleDeleteSong = async (songId: string) => {
     try {
-      if (songId) {
-        await songService.deleteSong(userId, songId);
-      }
-      setTriggerUpdate(true);
-      showToast();
+      await songService.deleteSong(userId, songId);
+      await loadSongList(); // Refresh list after deletion
+      Toast.show({
+        type: 'success',
+        text1: 'Song Deleted successfully',
+      });
     } catch (error) {
       console.error('Failed to delete song:', error);
       Alert.alert('Error', 'Failed to delete the song. Please try again.');
@@ -120,7 +138,6 @@ export const CategorySelectedScreen = () => {
     Alert.alert('Are you sure?', 'Do you want to remove this song?', [
       {
         text: 'UPS! BY MISTAKE',
-        onPress: () => console.log('Cancel Pressed'),
         style: 'cancel',
       },
       {
@@ -137,6 +154,8 @@ export const CategorySelectedScreen = () => {
       <Icon name="trash-sharp" size={25} style={styles.deleteIcon} />
     </TouchableOpacity>
   );
+
+  const {isRefreshing, refresh, top} = usePullRefresh(loadSongList);
 
   return (
     <>
@@ -156,47 +175,68 @@ export const CategorySelectedScreen = () => {
             />
           }>
           <View>
-            <GlobalHeader headerTitle={params.title} />
+            <GlobalHeader headerTitle={categoryTitle} />
+            <FloatingActionButton onPress={openModal} />
             <View style={styles.songCardContainer}>
               <SongCounter songCounter={songList.length} />
               <FlatList
                 data={songList}
                 keyExtractor={item => item.id}
-                renderItem={({item, index}) => {
-                  return (
-                    <Swipeable
-                      renderRightActions={() => swipeRightActions(item.id)}
-                      onSwipeableWillOpen={() => setCurrentSongId(item.id)}>
-                      <View>
-                        <SongCard
-                          resetToggle={resetToggle}
-                          title={item.title} // Asegúrate que estos campos
-                          artist={item.artist} // coincidan con los de tu modelo Song
-                          isDone={item.isDone}
-                          songId={item.id}
-                          color={
-                            index % 2 === 0
-                              ? globalColors.primary
-                              : globalColors.secondary
-                          }
-                          onPress={() =>
-                            navigation.navigate('SongSelectedScreen', {
-                              id: item.id,
-                              title: item.title, // Aquí también
-                              artist: item.artist, // asegura los campos correctos
-                              categoryId: item.categoryId,
-                            })
-                          }
-                        />
-                      </View>
-                    </Swipeable>
-                  );
-                }}
+                renderItem={({item, index}) => (
+                  <Swipeable
+                    renderRightActions={() => swipeRightActions(item.id)}>
+                    <SongCard
+                      resetToggle={resetToggle}
+                      title={item.title}
+                      artist={item.artist}
+                      isDone={item.isDone}
+                      songId={item.id}
+                      color={
+                        index % 2 === 0
+                          ? globalColors.primary
+                          : globalColors.secondary
+                      }
+                      onPress={() =>
+                        navigation.navigate('SongSelectedScreen', {
+                          id: item.id,
+                          title: item.title,
+                          artist: item.artist,
+                          categoryId: item.categoryId,
+                        })
+                      }
+                    />
+                  </Swipeable>
+                )}
               />
             </View>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+
+      <Modal
+        visible={isVisible}
+        animationType="slide"
+        presentationStyle="formSheet">
+        <KeyboardGestureArea interpolator="ios" style={{flex: 1}}>
+          <ScrollView horizontal={false} style={{flex: 1}}>
+            <View style={styles.modalBtnContainer}>
+              <Text style={styles.modalFormHeaderTitle}>Add Song Info</Text>
+              <PrimaryButton
+                label="Close"
+                btnFontSize={20}
+                colorText={globalColors.light}
+                onPress={closeModal}
+              />
+            </View>
+
+            <FormCreateSong
+              categoryId={categoryId}
+              onCreateSong={handleCreateSong}
+              isLoading={isLoading}
+            />
+          </ScrollView>
+        </KeyboardGestureArea>
+      </Modal>
     </>
   );
 };

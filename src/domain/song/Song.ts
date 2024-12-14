@@ -7,11 +7,10 @@ class Song {
     public readonly title: string,
     public readonly artist: string,
     public readonly isDone: boolean,
-    public readonly playlistId?: string,
   ) {}
   static fromProperties(properties: SongProperties) {
-    const {id, categoryId, title, artist, isDone, playlistId} = properties;
-    return new Song(id, categoryId, title, artist, isDone, playlistId);
+    const {id, categoryId, title, artist, isDone} = properties;
+    return new Song(id, categoryId, title, artist, isDone);
   }
   get properties(): SongProperties {
     return Object.freeze({
@@ -20,7 +19,6 @@ class Song {
       title: this.title,
       artist: this.artist,
       isDone: this.isDone,
-      playlistId: this.playlistId,
     });
   }
 }
