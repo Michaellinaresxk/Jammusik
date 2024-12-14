@@ -11,7 +11,6 @@ import {
   Modal,
   Pressable,
   RefreshControl,
-  Alert,
 } from 'react-native';
 import {globalColors, globalStyles} from '../../theme/Theme';
 import {images} from '../../../assets/img/Images';

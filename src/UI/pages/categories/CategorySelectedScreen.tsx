@@ -33,12 +33,28 @@ import {FloatingActionButton} from '../../components/shared/FloatingActionButton
 import {KeyboardGestureArea} from 'react-native-keyboard-controller';
 import {PrimaryButton} from '../../components/shared/PrimaryButton';
 import {FormCreateSong} from '../../components/shared/forms/FormCreateSong';
+import { SongOptionsModal } from '../../components/shared/SongOptionsModal';
 
 export const CategorySelectedScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
   const route = useRoute<RouteProp<RootStackParamsList, 'CategoriesScreen'>>();
   const auth = getAuth();
   const userId = auth.currentUser?.uid as string;
+
+  const [isOptionsVisible, setIsOptionsVisible] = useState(false);
+  const [selectedSongId, setSelectedSongId] = useState<string | null>(null);
+
+  const handleShare = async () => {
+    Alert.alert('Error', 'Functionality comming soon...');
+  };
+
+  const handleAddToPlaylist = () => {
+    Alert.alert('Error', 'Functionality comming soon...');
+  };
+
+  const handleEdit = () => {
+    Alert.alert('Error', 'Functionality comming soon...');
+  };
 
   // Services
   const categoryService = useCategoryService();
@@ -77,7 +93,6 @@ export const CategorySelectedScreen = () => {
         values.artist,
         isDone
       );
-  
       console.log('Song created:', result);
       await loadSongList();
       closeModal();
@@ -147,13 +162,22 @@ export const CategorySelectedScreen = () => {
         style: 'destructive',
       },
     ]);
-
   const swipeRightActions = (songId: string) => (
+    <>
     <TouchableOpacity
-      style={styles.deleteButtonContent}
-      onPress={() => deleteConfirmation(songId)}>
-      <Icon name="trash-sharp" size={25} style={styles.deleteIcon} />
-    </TouchableOpacity>
+        style={styles.editButtonContent}
+        onPress={() => {
+          setSelectedSongId(songId);
+          setIsOptionsVisible(true);
+        }}>
+        <Icon name="ellipsis-vertical-sharp" size={25} style={styles.actionIcon} />
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.deleteButtonContent}
+        onPress={() => deleteConfirmation(songId)}>
+        <Icon name="trash-sharp" size={25} style={styles.actionIcon} />
+      </TouchableOpacity>
+  </>
   );
 
   const {isRefreshing, refresh, top} = usePullRefresh(loadSongList);
@@ -238,6 +262,23 @@ export const CategorySelectedScreen = () => {
           </ScrollView>
         </KeyboardGestureArea>
       </Modal>
+        <SongOptionsModal
+          isVisible={isOptionsVisible}
+          onClose={() => setIsOptionsVisible(false)}
+          onEdit={() => {
+            if (selectedSongId) handleEdit(selectedSongId);
+            setIsOptionsVisible(false);
+          }}
+          onShare={() => {
+            if (selectedSongId) handleShare(selectedSongId);
+            setIsOptionsVisible(false);
+          }}
+          onAddToPlaylist={() => {
+            if (selectedSongId) handleAddToPlaylist(selectedSongId);
+            setIsOptionsVisible(false);
+          }}
+          songId={selectedSongId || ''}
+        />
     </>
   );
 };
@@ -302,6 +343,44 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   deleteIcon: {
+    color: globalColors.light,
+  },
+  editButtonContent: {
+    backgroundColor: globalColors.info,
+    borderRadius: 10,
+    height: 85,
+    width: 80,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+    width: '80%',
+    elevation: 5,
+  },
+  option: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+  },
+  optionText: {
+    marginLeft: 15,
+    fontSize: 16,
+    color: globalColors.primaryDark,
+  },
+  actionIcon: {
     color: globalColors.light,
   },
 });
