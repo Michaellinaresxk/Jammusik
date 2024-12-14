@@ -68,7 +68,7 @@ export const FormCreateSong = ({
       await onCreateSong({
         title: values.title,
         artist: values.artist,
-        categoryId: finalCategoryId
+        categoryId: finalCategoryId,
       });
 
     } catch (error) {
@@ -76,7 +76,6 @@ export const FormCreateSong = ({
       Alert.alert('Error', 'Failed to create song. Please try again.');
     }
   };
-
   const getCurrentCategoryName = () => {
     const category = categories.find(cat => cat.value === categoryId);
     return category ? category.label : '';

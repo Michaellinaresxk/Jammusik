@@ -130,14 +130,20 @@ export const SongSelectedScreen = () => {
   useEffect(() => {
     const getCategoryTitle = async () => {
       try {
-        const categoryTitle = await useGetCategoryTitle(params.id);
+        // Usar categoryId en lugar de params.id
+        const categoryTitle = await useGetCategoryTitle(categoryId);
         setCategory(categoryTitle);
       } catch (error) {
+        console.error('Error fetching category title:', error);
         Alert.alert('Error', 'Failed to fetch category title.');
       }
     };
-    getCategoryTitle();
-  }, [params.id]);
+
+    // Solo llamar si tenemos un categoryId
+    if (categoryId) {
+      getCategoryTitle();
+    }
+  }, [categoryId]); // Cambiar la dependencia a categoryId
 
   const {isRefreshing, refresh, top} = usePullRefresh(loadSongDetails);
   const renderChordItem = ({item}: {item: string}) => (
@@ -188,7 +194,7 @@ export const SongSelectedScreen = () => {
                   color={globalColors.primary}
                 />
                 <Text style={styles.category}>
-                  {category || params.categoryId || 'Unknown Category'}
+                  {category || params.categoryId || 'Unknown'}
                 </Text>
               </View>
             </View>
