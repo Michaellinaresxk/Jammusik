@@ -65,11 +65,12 @@ export const CategorySelectedScreen = () => {
       // If we are in “All”, use the category selected in the form.
       // If not, use the current category of the route
       const finalCategoryId = isAllCategory ? values.categoryId : categoryId;
+
       if (isAllCategory && !values.categoryId) {
         Alert.alert('Error', 'Please select a category');
         return;
       }
-  
+
       const result = await songService.createSong(
         finalCategoryId!,
         values.title,
