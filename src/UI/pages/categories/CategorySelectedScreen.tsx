@@ -74,11 +74,10 @@ export const CategorySelectedScreen = () => {
   const {id: categoryId, title: categoryTitle} = route.params;
   const isAllCategory = categoryId === 'All';
 
-  
   // Crea una nueva función para manejar la adición a un playlist específico
   const handleAddToSelectedPlaylist = async (playlistId: string) => {
     if (!selectedSongData) return;
-  
+
     try {
       await playlistService.addSongToPlaylist(playlistId, selectedSongData);
       Toast.show({
@@ -91,8 +90,6 @@ export const CategorySelectedScreen = () => {
       Alert.alert('Error', 'Failed to add song to playlist');
     }
   };
-
-  
 
   // Create song handler
   const handleCreateSong = async (values: { title: string; artist: string; categoryId?: string }) => {
@@ -153,7 +150,6 @@ export const CategorySelectedScreen = () => {
     loadSongList();
   }, [loadSongList]);
 
-  
 
   // Handlers
   const closeModal = () => setIsVisible(false);
@@ -195,11 +191,11 @@ export const CategorySelectedScreen = () => {
         }}>
         <Icon name="ellipsis-vertical-sharp" size={25} style={styles.actionIcon} />
       </TouchableOpacity>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={styles.deleteButtonContent}
         onPress={() => deleteConfirmation(songId)}>
         <Icon name="trash-sharp" size={25} style={styles.actionIcon} />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
   </>
   );
 
@@ -286,35 +282,39 @@ export const CategorySelectedScreen = () => {
         </KeyboardGestureArea>
       </Modal>
       <SongOptionsModal
-  isVisible={isOptionsVisible}
-  onClose={() => setIsOptionsVisible(false)}
-  onEdit={() => {
-    if (selectedSongId) handleEdit(selectedSongId);
-    setIsOptionsVisible(false);
-  }}
-  onShare={() => {
-    if (selectedSongId) handleShare(selectedSongId);
-    setIsOptionsVisible(false);
-  }}
-  onAddToPlaylist={() => {
-    const song = songList.find(s => s.id === selectedSongId);
-    if (song) {
-      setSelectedSongData({
-        id: song.id,
-        title: song.title,
-        artist: song.artist,
-        categoryId: song.categoryId,
-        originalSongId: song.id,
-      });
-      setIsOptionsVisible(false);
-      // Aumentar el tiempo de espera si es necesario
-      setTimeout(() => {
-        setIsPlaylistSelectorVisible(true);
-      }, 500); // Aumentado a 500ms
-    }
-  }}
-  songId={selectedSongId || ''}
-/>
+            isVisible={isOptionsVisible}
+            onClose={() => setIsOptionsVisible(false)}
+            onEdit={() => {
+              handleEdit();
+              setIsOptionsVisible(false);
+            }}
+            onShare={() => {
+              handleShare();
+              setIsOptionsVisible(false);
+            }}
+            onAddToPlaylist={() => {
+              const song = songList.find(s => s.id === selectedSongId);
+              if (song) {
+                setSelectedSongData({
+                  id: song.id,
+                  title: song.title,
+                  artist: song.artist,
+                  categoryId: song.categoryId,
+                  originalSongId: song.id,
+                });
+                setIsOptionsVisible(false);
+                setTimeout(() => {
+                  setIsPlaylistSelectorVisible(true);
+                }, 500);
+              }
+            }}
+            onDelete={() => {
+              setIsOptionsVisible(false);
+              deleteConfirmation(selectedSongId!);
+            }}
+            songId={selectedSongId || ''}
+            variant="library"
+          />
         <PlaylistSelectorModal
           isVisible={isPlaylistSelectorVisible}
           onClose={() => setIsPlaylistSelectorVisible(false)}

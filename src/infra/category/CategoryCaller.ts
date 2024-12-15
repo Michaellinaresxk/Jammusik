@@ -43,16 +43,19 @@ export class CategoryCaller {
 
     try {
       const categoriesCollection = collection(db, 'categories');
-
       const categoriesQuery = query(
         categoriesCollection,
         where('userId', '==', userId),
       );
 
       const querySnapshot = await getDocs(categoriesQuery);
-
       return querySnapshot.docs.map(doc => {
-        return {id: doc.id, ...doc.data()} as ApiCategory;
+        const data = doc.data();
+        return {
+          id: doc.id,
+          title: data.title,
+          userId: data.userId
+        } as ApiCategory;
       });
     } catch (error) {
       console.error('Error fetching categories:', error);
@@ -89,7 +92,7 @@ export class CategoryCaller {
 
       return querySnapshot.docs.map(doc => ({
         id: doc.id,
-        ...doc.data(), // Solo esto es necesario
+        ...doc.data(),
       })) as ApiSong[];
     } catch (error) {
       console.error(`Error fetching songs:`, error);

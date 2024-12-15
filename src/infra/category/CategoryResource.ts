@@ -6,21 +6,22 @@ export class CategoryResource implements CategoryRepository {
   constructor(public readonly categoryCaller: CategoryCaller) {}
 
   async createCategory(userId: string, title: string): Promise<Category> {
-    const apiCategory = await this.categoryCaller.createCategory(title); // categoryCaller solo recibe title
+    const apiCategory = await this.categoryCaller.createCategory(title);
     return new Category(
-      apiCategory.id, // id de la categoría creada
-      apiCategory.title, // título de la categoría
+      apiCategory.id,
+      apiCategory.title,
+      userId
     );
   }
 
   async getCategories(userId: string): Promise<Category[]> {
     const apiCategories = await this.categoryCaller.getCategories(userId);
     return apiCategories.map(
-      category =>
-        new Category(
-          category.id, // id de cada categoría
-          category.title, // título de cada categoría
-        ),
+      category => new Category(
+        category.id,
+        category.title,
+        category.userId
+      ),
     );
   }
 
@@ -60,9 +61,9 @@ export class CategoryResource implements CategoryRepository {
     );
   }
 
-  async updateCategory(categoryId: string, title: string): Promise<Category> {
+  async updateCategory(categoryId: string, title: string, userId: string): Promise<Category> {
     await this.categoryCaller.updateCategory(categoryId, title);
-    return new Category(categoryId, title);
+    return new Category(categoryId, title, userId);
   }
 
   async deleteCategory(userId: string, categoryId: string) {

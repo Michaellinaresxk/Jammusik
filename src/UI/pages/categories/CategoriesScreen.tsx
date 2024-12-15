@@ -52,6 +52,7 @@ export const CategoriesScreen = () => {
     const userId = user?.uid as string;
     try {
       const fetchedCategories = await categoryService.getCategories(userId);
+      console.log('Fetched categories:', fetchedCategories);
       setCategories(fetchedCategories);
     } catch (error) {
       console.error('Failed to fetch playlists:', error);
@@ -75,15 +76,16 @@ export const CategoriesScreen = () => {
     setIsVisible(!isVisible);
   };
 
-  const handleCreateCategory = async values => {
-    const {title} = values;
+  const handleCreateCategory = async (values: { title: string; }) => {
+    console.log('Creating category with values:', values);
     const user = auth.currentUser;
     if (user) {
       const userId = user.uid;
       setIsLoading(true);
-      await categoryService.createCategory(userId, title);
+      // Use values.title instead of title state
+      await categoryService.createCategory(userId, values.title);
       setTitle('');
-      setTriggerUpdate(true); // Trigger the update to reload categories
+      setTriggerUpdate(true);
       setIsLoading(false);
       closeModal();
     }
@@ -238,9 +240,7 @@ export const CategoriesScreen = () => {
                   title={title}
                   setTitle={setTitle}
                   onCreateCategory={
-                    editingCategory
-                      ? handleUpdateCategory
-                      : handleUpdateCategory
+                    editingCategory ? handleUpdateCategory : handleCreateCategory
                   }
                   isLoading={isLoading}
                   isEditing={!!editingCategory}

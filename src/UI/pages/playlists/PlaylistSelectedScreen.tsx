@@ -7,7 +7,6 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Platform,
-  Modal,
   Text,
   TouchableOpacity,
   RefreshControl,
@@ -22,7 +21,6 @@ import {SongCard} from '../../components/shared/cards/SongCard';
 import {globalColors} from '../../theme/Theme';
 import {FloatingActionButton} from '../../components/shared/FloatingActionButton';
 import {SongCounter} from '../../components/shared/SongCounter';
-import {FormCreateSong} from '../../components/shared/forms/FormCreateSong';
 import {useSongService} from '../../../context/SongServiceContext';
 import {usePlaylistService} from '../../../context/PlaylistServiceContext';
 import {SongView} from '../../../views/SongView';
@@ -37,6 +35,7 @@ import {useResetSongsState} from '../../store/useResetSongsState';
 import useAnimationKeyboard from '../../../hooks/useAnimationKeyboard';
 import {KeyboardGestureArea} from 'react-native-keyboard-controller';
 import { SongSelectorModal } from '../../components/shared/modals/SongSelectorModal';
+import { SongOptionsModal } from '../../components/shared/SongOptionsModal';
 
 export const PlaylistSelectedScreen = () => {
   const songService = useSongService();
@@ -61,6 +60,9 @@ export const PlaylistSelectedScreen = () => {
   const {height, scale} = useAnimationKeyboard();
   const [isSongSelectorVisible, setIsSongSelectorVisible] = useState(false);
 
+  const [isOptionsVisible, setIsOptionsVisible] = useState(false);
+  const [selectedSongId, setSelectedSongId] = useState<string | null>(null);
+
   const valueWidth = useWindowDimensions().width;
 
   const handleAddSongToPlaylist = async (songData: SongView) => {
@@ -84,7 +86,6 @@ export const PlaylistSelectedScreen = () => {
       Alert.alert('Error', 'Failed to add song to playlist');
     }
   };
-  
 
   const loadSongList = useCallback(async () => {
     try {
@@ -119,33 +120,51 @@ export const PlaylistSelectedScreen = () => {
     });
   };
 
-  const handleDeleteSong = async (songId: string) => {
-    await songService.deleteSong(userId, songId);
-    setTriggerUpdate(true);
-    showToast();
+  const handleRemoveFromPlaylist = async (songId: string) => {
+    try {
+      // Aquí irá la lógica de remover del playlist cuando la implementemos
+      Alert.alert('Coming soon', 'This functionality will be available soon');
+      // Cuando esté implementado:
+      // await playlistService.removeSongFromPlaylist(playlistId, songId);
+      // setTriggerUpdate(true);
+      Toast.show({
+        type: 'success',
+        text1: 'Song removed from playlist successfully',
+      });
+    } catch (error) {
+      console.error('Failed to remove song from playlist:', error);
+      Alert.alert('Error', 'Failed to remove song from playlist');
+    }
   };
 
-  const deleteConfirmation = (songId: string) =>
-    Alert.alert('Are you sure?', 'Do you want to remove this song?', [
-      {
-        text: 'UPS! BY MISTAKE',
-        onPress: () => console.log('Cancel Pressed'),
-        style: 'cancel',
-      },
-      {
-        text: 'YES, DELETE!',
-        onPress: () => handleDeleteSong(songId),
-        style: 'destructive',
-      },
-    ]);
 
-  const swipeRightActions = (songId: string) => (
-    <TouchableOpacity
-      style={styles.deleteButtonContent}
-      onPress={() => deleteConfirmation(songId)}>
-      <Icon name="trash-sharp" size={25} style={styles.deleteIcon} />
-    </TouchableOpacity>
-  );
+  const deleteConfirmation = (songId: string) =>
+    Alert.alert(
+      'Remove from Playlist',
+      'Are you sure you want to remove this song from the playlist?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Remove',
+          style: 'destructive',
+          onPress: () => handleRemoveFromPlaylist(songId),
+        },
+      ],
+    );
+
+    const swipeRightActions = (songId: string) => (
+      <TouchableOpacity
+        style={styles.editButtonContent}
+        onPress={() => {
+          setSelectedSongId(songId);
+          setIsOptionsVisible(true);
+        }}>
+        <Icon name="ellipsis-vertical-sharp" size={25} style={styles.actionIcon} />
+      </TouchableOpacity>
+    );
   const handleResetSongs = async () => {
     try {
       setIsLoading(true);
@@ -235,6 +254,24 @@ export const PlaylistSelectedScreen = () => {
         onAddSong={handleAddSongToPlaylist}
         playlistId={playlistId}
       />
+
+<SongOptionsModal
+  isVisible={isOptionsVisible}
+  onClose={() => setIsOptionsVisible(false)}
+  onDelete={() => {
+    setIsOptionsVisible(false);
+    if (selectedSongId) {
+      deleteConfirmation(selectedSongId);
+    }
+  }}
+  onToggleFavorite={() => {
+    setIsOptionsVisible(false);
+    Alert.alert('Coming soon', 'This functionality will be available soon');
+  }}
+  songId={selectedSongId || ''}
+  variant="playlist"
+/>
+
     </>
   );
 };
@@ -279,4 +316,15 @@ const styles = StyleSheet.create({
   deleteIcon: {
     color: globalColors.light,
   },
+  editButtonContent: {
+    backgroundColor: globalColors.info,
+    borderRadius: 10,
+    height: 85,
+    width: 80,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  actionIcon: {
+    color: globalColors.light,
+  }
 });

@@ -104,7 +104,7 @@ export const PlaylistSelectorModal: React.FC<PlaylistSelectorModalProps> = ({
     <KeyboardGestureArea interpolator="ios" style={{flex: 1}}>
       <ScrollView horizontal={false} style={{flex: 1}}>
         <View style={styles.modalBtnContainer}>
-          <Text style={styles.modalFormHeaderTitle}>Add to Playlist</Text>
+          <Text style={styles.modalFormHeaderTitle}>Add to a Playlist</Text>
           <PrimaryButton
             label="Close"
             btnFontSize={20}
