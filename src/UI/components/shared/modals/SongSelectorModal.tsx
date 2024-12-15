@@ -79,19 +79,19 @@ export const SongSelectorModal: React.FC<SongSelectorModalProps> = ({
       onPress={() => handleSongSelection(item)}
       disabled={isLoading}
     >
-      <View >
-        <Icon name="musical-note" size={24} color={globalColors.primary} />
-        <View style={styles.songItemContent}>
-          <Text style={styles.songTitle}>{item.title}</Text>
-          <Text>{item.artist}</Text>
-        </View>
-        <Icon
-          name="add-circle-outline"
-          size={24}
-          color={globalColors.primary}
-          style={styles.addIcon}
-        />
+    <View style={styles.container}>
+      <Icon name="musical-note" size={24} color={globalColors.primary} />
+      <View style={styles.songItemContent}>
+        <Text style={styles.songTitle}>{item.title}</Text>
+        <Text style={styles.artistName}>{item.artist}</Text>
       </View>
+      <Icon
+        name="add-circle-outline"
+        size={24}
+        color={globalColors.primary}
+        style={styles.addIcon}
+      />
+    </View>
     </TouchableOpacity>
   );
 
@@ -169,20 +169,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 2,
   },
-  songItemContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 16,
-  },
-  songTitle: {
-    marginLeft: 12,
-    fontSize: 16,
-    color: globalColors.primaryDark,
-    flex: 1,
-  },
-  addIcon: {
-    marginLeft: 'auto',
-  },
   separator: {
     height: 1,
     backgroundColor: globalColors.terceary,
@@ -210,5 +196,32 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 8,
     textAlign: 'center',
+  },
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderBottomWidth: 0.5,
+    borderBottomColor: 'rgba(0,0,0,0.1)',
+  },
+  songItemContent: {
+    flex: 1,
+    marginLeft: 12,
+    justifyContent: 'center',
+  },
+  songTitle: {
+    fontSize: 16,
+    fontWeight: '500',
+    marginBottom: 4,
+    color: '#000',
+  },
+  artistName: {
+    fontSize: 14,
+    color: '#666',
+  },
+  addIcon: {
+    marginLeft: 'auto',
+    paddingLeft: 12,
   },
 });
