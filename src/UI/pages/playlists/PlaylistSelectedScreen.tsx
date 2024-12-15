@@ -36,6 +36,7 @@ import {getIsDone} from '../../../hooks/useToggleIsDone';
 import {useResetSongsState} from '../../store/useResetSongsState';
 import useAnimationKeyboard from '../../../hooks/useAnimationKeyboard';
 import {KeyboardGestureArea} from 'react-native-keyboard-controller';
+import { SongSelectorModal } from '../../components/shared/modals/SongSelectorModal';
 
 export const PlaylistSelectedScreen = () => {
   const songService = useSongService();
@@ -58,35 +59,32 @@ export const PlaylistSelectedScreen = () => {
   const resetSongsState = useResetSongsState();
   const {resetToggle, resetAllSongs} = resetSongsState;
   const {height, scale} = useAnimationKeyboard();
+  const [isSongSelectorVisible, setIsSongSelectorVisible] = useState(false);
 
   const valueWidth = useWindowDimensions().width;
 
-  const handleCreateSong = async values => {
-    const {title, artist} = values;
-
+  const handleAddSongToPlaylist = async (songData: SongView) => {
     try {
-      setIsLoading(true);
-      const result = await songService.createSong(
-        categoryId,
-        title,
-        artist,
-        isDone,
-        playlistId,
-      );
+      await playlistService.addSongToPlaylist(playlistId, {
+        id: songData.id,
+        title: songData.title,
+        artist: songData.artist,
+        categoryId: songData.categoryId,
+        originalSongId: songData.id,
+      });
 
-      console.log('Song created:', result);
-      setCategoryId('');
-      setTitle('');
-      setArtist('');
-      setTriggerUpdate(true);
-      closeModal();
+      Toast.show({
+        type: 'success',
+        text1: 'Song added to playlist successfully',
+      });
+      setIsSongSelectorVisible(false);
+      loadSongList(); // Recargar la lista de canciones del playlist
     } catch (error) {
-      console.error('Failed to create song:', error);
-      Alert.alert('Error', 'Failed to create the song. Please try again.');
-    } finally {
-      setIsLoading(false);
+      console.error('Failed to add song to playlist:', error);
+      Alert.alert('Error', 'Failed to add song to playlist');
     }
   };
+  
 
   const loadSongList = useCallback(async () => {
     try {
@@ -185,7 +183,7 @@ export const PlaylistSelectedScreen = () => {
           }>
           <GlobalHeader headerTitle={params.title} />
 
-          <FloatingActionButton onPress={() => setIsVisible(true)} />
+          <FloatingActionButton onPress={() => setIsSongSelectorVisible(true)} />
           <View style={styles.songCardContainer}>
             <SongCounter songCounter={songList.length} />
             <FlatList
@@ -231,35 +229,12 @@ export const PlaylistSelectedScreen = () => {
         </ScrollView>
       </KeyboardAvoidingView>
 
-      <Modal
-        visible={isVisible}
-        animationType="slide"
-        presentationStyle="formSheet">
-        <KeyboardGestureArea interpolator="ios" style={{flex: 1}}>
-          <ScrollView horizontal={false} style={{flex: 1}}>
-            <View style={styles.modalBtnContainer}>
-              <Text style={styles.modalFormHeaderTitle}>Add Song Info</Text>
-              <PrimaryButton
-                label="Close"
-                btnFontSize={20}
-                colorText={globalColors.light}
-                onPress={() => closeModal()}
-              />
-            </View>
-
-            <FormCreateSong
-              title={title}
-              setTitle={setTitle}
-              artist={artist}
-              setArtist={setArtist}
-              categoryId={categoryId}
-              setCategoryId={setCategoryId}
-              onCreateSong={handleCreateSong}
-              isLoading={isLoading}
-            />
-          </ScrollView>
-        </KeyboardGestureArea>
-      </Modal>
+      <SongSelectorModal
+        isVisible={isSongSelectorVisible}
+        onClose={() => setIsSongSelectorVisible(false)}
+        onAddSong={handleAddSongToPlaylist}
+        playlistId={playlistId}
+      />
     </>
   );
 };
