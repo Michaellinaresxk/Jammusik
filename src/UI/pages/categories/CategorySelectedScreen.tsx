@@ -34,6 +34,9 @@ import {KeyboardGestureArea} from 'react-native-keyboard-controller';
 import {PrimaryButton} from '../../components/shared/PrimaryButton';
 import {FormCreateSong} from '../../components/shared/forms/FormCreateSong';
 import { SongOptionsModal } from '../../components/shared/SongOptionsModal';
+import { PlaylistSelectorModal } from '../../components/shared/modals/PlaylistSelectorModal';
+import {usePlaylistService} from '../../../context/PlaylistServiceContext';
+import type { SongData } from '../../../types/songTypes';
 
 export const CategorySelectedScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
@@ -43,12 +46,17 @@ export const CategorySelectedScreen = () => {
 
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const [selectedSongId, setSelectedSongId] = useState<string | null>(null);
+  const [selectedSongData, setSelectedSongData] = useState<SongData | null>(null);
+
+  const [songList, setSongList] = useState<SongView[]>([]);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDone, setIsDone] = useState(false);
+  const [isPlaylistSelectorVisible, setIsPlaylistSelectorVisible] = useState(false);
+
+  const playlistService = usePlaylistService();
 
   const handleShare = async () => {
-    Alert.alert('Error', 'Functionality comming soon...');
-  };
-
-  const handleAddToPlaylist = () => {
     Alert.alert('Error', 'Functionality comming soon...');
   };
 
@@ -59,19 +67,32 @@ export const CategorySelectedScreen = () => {
   // Services
   const categoryService = useCategoryService();
   const songService = useSongService();
+  const resetSongsState = useResetSongsState();
+  const {resetToggle} = resetSongsState;
 
   // Route params
   const {id: categoryId, title: categoryTitle} = route.params;
   const isAllCategory = categoryId === 'All';
 
-  // States
-  const [songList, setSongList] = useState<SongView[]>([]);
-  const [isVisible, setIsVisible] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isDone, setIsDone] = useState(false);
+  
+  // Crea una nueva función para manejar la adición a un playlist específico
+  const handleAddToSelectedPlaylist = async (playlistId: string) => {
+    if (!selectedSongData) return;
+  
+    try {
+      await playlistService.addSongToPlaylist(playlistId, selectedSongData);
+      Toast.show({
+        type: 'success',
+        text1: 'Song added to playlist successfully',
+      });
+      setIsPlaylistSelectorVisible(false); // Cierra el modal después de añadir
+    } catch (error) {
+      console.error('Failed to add song to playlist:', error);
+      Alert.alert('Error', 'Failed to add song to playlist');
+    }
+  };
 
-  const resetSongsState = useResetSongsState();
-  const {resetToggle} = resetSongsState;
+  
 
   // Create song handler
   const handleCreateSong = async (values: { title: string; artist: string; categoryId?: string }) => {
@@ -131,6 +152,8 @@ export const CategorySelectedScreen = () => {
   useEffect(() => {
     loadSongList();
   }, [loadSongList]);
+
+  
 
   // Handlers
   const closeModal = () => setIsVisible(false);
@@ -262,22 +285,41 @@ export const CategorySelectedScreen = () => {
           </ScrollView>
         </KeyboardGestureArea>
       </Modal>
-        <SongOptionsModal
-          isVisible={isOptionsVisible}
-          onClose={() => setIsOptionsVisible(false)}
-          onEdit={() => {
-            if (selectedSongId) handleEdit(selectedSongId);
-            setIsOptionsVisible(false);
-          }}
-          onShare={() => {
-            if (selectedSongId) handleShare(selectedSongId);
-            setIsOptionsVisible(false);
-          }}
-          onAddToPlaylist={() => {
-            if (selectedSongId) handleAddToPlaylist(selectedSongId);
-            setIsOptionsVisible(false);
-          }}
-          songId={selectedSongId || ''}
+      <SongOptionsModal
+  isVisible={isOptionsVisible}
+  onClose={() => setIsOptionsVisible(false)}
+  onEdit={() => {
+    if (selectedSongId) handleEdit(selectedSongId);
+    setIsOptionsVisible(false);
+  }}
+  onShare={() => {
+    if (selectedSongId) handleShare(selectedSongId);
+    setIsOptionsVisible(false);
+  }}
+  onAddToPlaylist={() => {
+    const song = songList.find(s => s.id === selectedSongId);
+    if (song) {
+      setSelectedSongData({
+        id: song.id,
+        title: song.title,
+        artist: song.artist,
+        categoryId: song.categoryId,
+        originalSongId: song.id,
+      });
+      setIsOptionsVisible(false);
+      // Aumentar el tiempo de espera si es necesario
+      setTimeout(() => {
+        setIsPlaylistSelectorVisible(true);
+      }, 500); // Aumentado a 500ms
+    }
+  }}
+  songId={selectedSongId || ''}
+/>
+        <PlaylistSelectorModal
+          isVisible={isPlaylistSelectorVisible}
+          onClose={() => setIsPlaylistSelectorVisible(false)}
+          songData={selectedSongData}
+          onAddToPlaylist={handleAddToSelectedPlaylist}
         />
     </>
   );

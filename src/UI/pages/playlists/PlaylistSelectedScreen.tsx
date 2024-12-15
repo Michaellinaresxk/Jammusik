@@ -24,6 +24,7 @@ import {FloatingActionButton} from '../../components/shared/FloatingActionButton
 import {SongCounter} from '../../components/shared/SongCounter';
 import {FormCreateSong} from '../../components/shared/forms/FormCreateSong';
 import {useSongService} from '../../../context/SongServiceContext';
+import {usePlaylistService} from '../../../context/PlaylistServiceContext';
 import {SongView} from '../../../views/SongView';
 import {PrimaryButton} from '../../components/shared/PrimaryButton';
 import {Swipeable} from 'react-native-gesture-handler';
@@ -38,6 +39,7 @@ import {KeyboardGestureArea} from 'react-native-keyboard-controller';
 
 export const PlaylistSelectedScreen = () => {
   const songService = useSongService();
+  const playlistService = usePlaylistService();
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
   const params =
     useRoute<RouteProp<RootStackParamsList, 'PlaylistScreen'>>().params;
@@ -88,7 +90,9 @@ export const PlaylistSelectedScreen = () => {
 
   const loadSongList = useCallback(async () => {
     try {
-      const fetchedSongs = await songService.getSongs(playlistId);
+      console.log('Fetching songs...');
+      const fetchedSongs = await playlistService.getPlaylistSongs(playlistId);
+      console.log('Fetched songs:', fetchedSongs);
       const songsWithIsDone = await Promise.all(
         fetchedSongs.map(async song => ({
           ...song,
@@ -97,24 +101,18 @@ export const PlaylistSelectedScreen = () => {
       );
       setSongList(songsWithIsDone);
     } catch (error) {
-      console.error('Failed to fetch songList:', error);
+      console.error('Failed to fetch songs from playlist:', error);
     }
-  }, [playlistId, songService]);
-
-  useEffect(() => {
-    loadSongList();
-  }, [loadSongList, resetToggle]);
-
-  useEffect(() => {
-    if (triggerUpdate) {
-      loadSongList();
-      setTriggerUpdate(false);
-    }
-  }, [triggerUpdate, loadSongList, resetToggle]);
+  }, [playlistId, playlistService]);
 
   const closeModal = () => {
     setIsVisible(!isVisible);
   };
+
+  useEffect(() => {
+    console.log('Loading songs for playlist:', playlistId);
+    loadSongList();
+  }, [loadSongList, playlistId, triggerUpdate]); 
 
   const showToast = () => {
     Toast.show({
