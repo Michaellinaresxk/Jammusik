@@ -7,6 +7,7 @@ class Song {
     public readonly title: string,
     public readonly artist: string,
     public readonly isDone: boolean,
+    public readonly originalSongId?: string
   ) {}
   static fromProperties(properties: SongProperties) {
     const {id, categoryId, title, artist, isDone} = properties;

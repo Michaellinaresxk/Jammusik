@@ -25,6 +25,14 @@ export interface SongDetails {
   tabLink?: string;
 }
 
+export interface SongData {
+  id: string;
+  title: string;
+  artist: string;
+  categoryId: string;
+  originalSongId: string;
+}
+
 export interface Playlist {
   id: string;
   title: string;
