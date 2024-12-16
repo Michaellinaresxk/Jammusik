@@ -1,6 +1,6 @@
 import React from 'react';
-import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {globalColors} from '../../../theme/Theme';
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { globalColors } from '../../../theme/Theme';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 type Props = {
@@ -10,7 +10,7 @@ type Props = {
   onDelete: (categoryId: string) => void;
 };
 
-export const CategoryCard = ({title, onPress, onDelete, onEdit}: Props) => {
+export const CategoryCard = ({ title, onPress, onDelete, onEdit }: Props) => {
   const deleteConfirmation = () =>
     Alert.alert('Are you sure?', 'Do you want to remove this category?', [
       {
@@ -38,29 +38,32 @@ export const CategoryCard = ({title, onPress, onDelete, onEdit}: Props) => {
         style: 'destructive',
       },
     ]);
+
   return (
     <TouchableOpacity style={styles.categoryCard} onPress={onPress}>
       <Text style={styles.categoryCardText}>{title}</Text>
-      <View style={styles.containerIcons}>
-        <Icon
-          name="pencil-sharp"
-          color={globalColors.light}
-          onPress={event => {
-            event.stopPropagation();
-            editConfirmation();
-          }}
-          size={20}
-        />
-        <Icon
-          name="trash-sharp"
-          color={globalColors.light}
-          onPress={event => {
-            event.stopPropagation();
-            deleteConfirmation();
-          }}
-          size={20}
-        />
-      </View>
+      {title !== 'All' && ( // Conditionally render the icons
+        <View style={styles.containerIcons}>
+          <Icon
+            name="pencil-sharp"
+            color={globalColors.light}
+            onPress={event => {
+              event.stopPropagation();
+              editConfirmation();
+            }}
+            size={20}
+          />
+          <Icon
+            name="trash-sharp"
+            color={globalColors.light}
+            onPress={event => {
+              event.stopPropagation();
+              deleteConfirmation();
+            }}
+            size={20}
+          />
+        </View>
+      )}
     </TouchableOpacity>
   );
 };

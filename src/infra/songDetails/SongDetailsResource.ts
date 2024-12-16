@@ -56,4 +56,8 @@ export class SongDetailsResource implements SongDetailsRepository {
       return null;
     }
   }
+
+  async getSongKeys(): Promise<{ id: string; key: string; order: number }[]> {
+    return this.songDetailsCaller.getSongKeys();
+  }
 }

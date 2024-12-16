@@ -1,6 +1,4 @@
-import {globalColors, globalFormStyles} from '../../theme/Theme';
-
-import React, {useState} from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -8,30 +6,32 @@ import {
   Text,
   Modal,
   FlatList,
-} from 'react-native';
+} from "react-native";
+import { globalColors, globalFormStyles } from "../../theme/Theme";
+import { useSongDetailsService } from "../../../context/SongDetailsServiceContext";
 
-const MUSIC_KEYS = [
-  'C',
-  'C#',
-  'D',
-  'D#',
-  'E',
-  'F',
-  'F#',
-  'G',
-  'G#',
-  'A',
-  'A#',
-  'B',
-];
-
-interface BottomSheetsProps {
-  onSelectKey: (key: string) => void;
-  value: string;
-}
-
-const BottomSheets: React.FC<BottomSheetsProps> = ({onSelectKey, value}) => {
+const BottomSheets = ({ onSelectKey, value }) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [keys, setKeys] = useState<{ id: string; key: string; order: number }[]>(
+    []
+  );
+  const [loading, setLoading] = useState(true);
+
+  const songDetailsService = useSongDetailsService();
+
+  useEffect(() => {
+    const fetchKeys = async () => {
+      try {
+        const fetchedKeys = await songDetailsService.getSongKeys();
+        setKeys(fetchedKeys);
+      } catch (error) {
+        console.error("Error fetching keys:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchKeys();
+  }, [songDetailsService]);
 
   const handleKeySelection = (key: string) => {
     onSelectKey(key);
@@ -42,9 +42,10 @@ const BottomSheets: React.FC<BottomSheetsProps> = ({onSelectKey, value}) => {
     <View>
       <TouchableOpacity
         style={styles.selectButton}
-        onPress={() => setModalVisible(true)}>
+        onPress={() => setModalVisible(true)}
+      >
         <Text style={styles.buttonText}>
-          {value ? `Key: ${value}` : 'Select Key'}
+          {value ? `Key: ${value}` : "Select Key"}
         </Text>
       </TouchableOpacity>
 
@@ -52,25 +53,32 @@ const BottomSheets: React.FC<BottomSheetsProps> = ({onSelectKey, value}) => {
         animationType="slide"
         transparent={true}
         visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}>
+        onRequestClose={() => setModalVisible(false)}
+      >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Choose a Key</Text>
-            <FlatList
-              data={MUSIC_KEYS}
-              keyExtractor={item => item}
-              numColumns={4}
-              renderItem={({item}) => (
-                <TouchableOpacity
-                  style={styles.keyItem}
-                  onPress={() => handleKeySelection(item)}>
-                  <Text style={styles.keyItemText}>{item}</Text>
-                </TouchableOpacity>
-              )}
-            />
+            {loading ? (
+              <Text>Loading...</Text>
+            ) : (
+              <FlatList
+                data={keys}
+                keyExtractor={item => item.id}
+                numColumns={4}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    style={styles.keyItem}
+                    onPress={() => handleKeySelection(item.key)}
+                  >
+                    <Text style={styles.keyItemText}>{item.key}</Text>
+                  </TouchableOpacity>
+                )}
+              />
+            )}
             <TouchableOpacity
               style={styles.cancelButton}
-              onPress={() => setModalVisible(false)}>
+              onPress={() => setModalVisible(false)}
+            >
               <Text style={styles.cancelButtonText}>Cancel</Text>
             </TouchableOpacity>
           </View>
@@ -83,28 +91,28 @@ const BottomSheets: React.FC<BottomSheetsProps> = ({onSelectKey, value}) => {
 const styles = StyleSheet.create({
   selectButton: {
     ...globalFormStyles.inputLogin,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   buttonText: {
-    color: '#838282',
+    color: "#838282",
     fontSize: 18,
   },
   modalContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
   },
   modalContent: {
-    width: '90%',
-    backgroundColor: 'white',
+    width: "90%",
+    backgroundColor: "white",
     borderRadius: 10,
     padding: 20,
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
     marginBottom: 15,
     color: globalColors.primary,
   },
@@ -114,7 +122,7 @@ const styles = StyleSheet.create({
     margin: 5,
     backgroundColor: globalColors.primaryAlt,
     borderRadius: 5,
-    alignItems: 'center',
+    alignItems: "center",
   },
   keyItemText: {
     fontSize: 16,
@@ -125,11 +133,11 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: globalColors.primary,
     borderRadius: 8,
-    alignItems: 'center',
+    alignItems: "center",
   },
   cancelButtonText: {
     color: globalColors.light,
-    fontWeight: 'light',
+    fontWeight: "light",
     fontSize: 20,
   },
 });

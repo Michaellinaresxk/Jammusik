@@ -1,6 +1,6 @@
 import { getDocs, query, where } from "firebase/firestore";
 import type { ApiSongDetails } from "./ApiSongDetails";
-import { getFirestore, addDoc, collection } from "@firebase/firestore";
+import { getFirestore, addDoc, collection, orderBy } from "@firebase/firestore";
 
 export class SongDetailsCaller {
   private db = getFirestore();
@@ -79,4 +79,21 @@ export class SongDetailsCaller {
       throw error;
     }
   }
+
+  async getSongKeys(): Promise<{ id: string; key: string; order: number }[]> {
+    try {
+      const songKeysCollection = collection(this.db, "songKeys");
+      const songKeysQuery = query(songKeysCollection, orderBy("order"));
+      const querySnapshot = await getDocs(songKeysQuery);
+
+      return querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...(doc.data() as { key: string; order: number }),
+      }));
+    } catch (error) {
+      console.error("Error fetching song keys:", error);
+      throw error;
+    }
+  }
 }
+

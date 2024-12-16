@@ -139,11 +139,10 @@ export const SongSelectedScreen = () => {
       }
     };
 
-    // Solo llamar si tenemos un categoryId
     if (categoryId) {
       getCategoryTitle();
     }
-  }, [categoryId]); // Cambiar la dependencia a categoryId
+  }, [categoryId]);
 
   const {isRefreshing, refresh, top} = usePullRefresh(loadSongDetails);
   const renderChordItem = ({item}: {item: string}) => (

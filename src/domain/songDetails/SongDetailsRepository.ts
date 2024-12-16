@@ -10,6 +10,5 @@ export default interface SongDetailsRepository {
     skills?: string,
     instrument?: string,
   ): Promise<SongDetails>;
-
   getCurrentSongInfo(userId: string, songId: string): Promise<SongDetails>;
 }
