@@ -40,7 +40,7 @@ export class CategoryService {
     categoryId: string,
     userId: string,
   ): Promise<SongView[]> {
-    return await this.getSongListByCategoryUseCase.execute(categoryId, userId); // Orden correcto
+    return await this.getSongListByCategoryUseCase.execute(categoryId, userId);
   }
 
   async getAllSongsByUserId(userId: string): Promise<SongView[]> {

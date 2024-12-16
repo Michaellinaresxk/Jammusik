@@ -186,26 +186,26 @@ export const CategoriesScreen = () => {
             </View>
             <Separator color={globalColors.terceary} />
             <View style={{marginTop: 30, justifyContent: 'center'}}>
-              <CategoryCard
-                title="All"
-                onDelete={() => showToastAll}
-                onEdit={() => editCategoryAll}
-                onPress={() =>
-                  navigation.navigate('CategorySelectedScreen', {
-                    id: 'All',
-                    title: 'All',
-                  })
-                }
-              />
+            <CategoryCard
+              title="All"
+              onDelete={() => showToastAll()}
+              onEdit={() => editCategoryAll()}
+              onPress={() =>
+                navigation.navigate('CategorySelectedScreen', {
+                  id: 'All',
+                  title: 'All',
+                })
+              }
+            />
               <FlatList
                 data={categories}
                 keyExtractor={item => item.id}
                 numColumns={2}
-                renderItem={({item}) => (
+                renderItem={({ item }) => (
                   <CategoryCard
                     title={item.title}
                     onEdit={() =>
-                      startEditingCategory({id: item.id, title: item.title})
+                      startEditingCategory({ id: item.id, title: item.title })
                     }
                     onDelete={() => handleDeleteCategory(item.id)}
                     onPress={() =>
