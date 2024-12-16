@@ -9,9 +9,11 @@ type SongOptionsModalProps = {
   onEdit: () => void;
   onShare: () => void;
   onAddToPlaylist: () => void;
-  onDelete?: () => void; // Agregamos onDelete opcional
+  onRemoveSong: () => void;
+  onDelete?: () => void;
   songId: string;
-  variant?: 'library' | 'playlist'; // Para diferenciar el comportamiento
+  variant?: 'library' | 'playlist';
+  onToggleFavorite: () => void;
 };
 
 export const SongOptionsModal = ({
@@ -20,8 +22,10 @@ export const SongOptionsModal = ({
   onEdit,
   onShare,
   onAddToPlaylist,
+  onRemoveSong,
   onDelete,
   songId,
+  onToggleFavorite,
   variant = 'library'
 }: SongOptionsModalProps) => {
   return (
@@ -34,7 +38,6 @@ export const SongOptionsModal = ({
       <Pressable style={styles.overlay} onPress={onClose}>
         <View style={styles.modalContent}>
           {variant === 'library' ? (
-            // Opciones para la biblioteca
             <>
               <TouchableOpacity style={styles.option} onPress={onEdit}>
                 <Icon name="create-outline" size={24} color={globalColors.primary} />
@@ -51,8 +54,8 @@ export const SongOptionsModal = ({
                 <Text style={styles.optionText}>Add to Playlist</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity 
-                style={[styles.option, styles.deleteOption]} 
+              <TouchableOpacity
+                style={[styles.option, styles.deleteOption]}
                 onPress={onDelete}
               >
                 <Icon name="trash-outline" size={24} color={globalColors.danger} />
@@ -61,20 +64,20 @@ export const SongOptionsModal = ({
             </>
           ) : (
             <View>
-            <TouchableOpacity 
-              style={[styles.option, styles.deleteOption]} 
-              onPress={onDelete}
-            >
-             <Icon name="list-outline" size={24} color={globalColors.primary} />
-             <Text style={styles.optionText}>Add to Playlist</Text>
-            </TouchableOpacity>
-            <TouchableOpacity 
-              style={[styles.option, styles.deleteOption]} 
-              onPress={onDelete}
-            >
-              <Icon name="remove-circle-outline" size={24} color={globalColors.danger} />
-              <Text style={[styles.optionText, styles.deleteText]}>Remove from Playlist</Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.option}
+                onPress={onAddToPlaylist}
+              >
+              <Icon name="list-outline" size={24} color={globalColors.primary} />
+              <Text style={styles.optionText}>Add to Playlist</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                 style={[styles.option, styles.deleteOption]}
+                onPress={onRemoveSong}
+              >
+                <Icon name="remove-circle-outline" size={24} color={globalColors.danger} />
+                <Text style={[styles.optionText, styles.deleteText]}>Remove from Playlist</Text>
+              </TouchableOpacity>
             </View>
           )}
         </View>
@@ -113,7 +116,7 @@ const styles = StyleSheet.create({
     color: globalColors.light,
   },
   deleteOption: {
-    borderBottomWidth: 0, // Último elemento sin borde
+    borderBottomWidth: 0,
   },
   deleteText: {
     color: globalColors.danger,

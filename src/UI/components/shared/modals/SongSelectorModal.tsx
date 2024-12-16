@@ -1,4 +1,3 @@
-// src/components/shared/modals/SongSelectorModal.tsx
 import React, { useCallback, useEffect, useState } from 'react';
 import {
   Modal,
@@ -15,7 +14,6 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { globalColors } from '../../../theme/Theme';
 import { useCategoryService } from '../../../../context/CategoryServiceContext';
 import { SongView } from '../../../../views/SongView';
-import Toast from 'react-native-toast-message';
 import { PrimaryButton } from '../PrimaryButton';
 import { KeyboardGestureArea } from 'react-native-keyboard-controller';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -31,7 +29,6 @@ export const SongSelectorModal: React.FC<SongSelectorModalProps> = ({
   isVisible,
   onClose,
   onAddSong,
-  playlistId
 }) => {
   const [songs, setSongs] = useState<SongView[]>([]);
   const [isLoading, setIsLoading] = useState(false);

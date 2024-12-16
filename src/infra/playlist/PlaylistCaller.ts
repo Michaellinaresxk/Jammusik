@@ -1,6 +1,5 @@
 import {
   addDoc,
-  deleteDoc,
   doc,
   query,
   where,
@@ -14,6 +13,7 @@ import {
   collection,
   getDocs,
   updateDoc,
+  deleteDoc,
 } from '@firebase/firestore';
 import { ApiSong } from '../song/ApiSong';
 
@@ -92,7 +92,7 @@ export class PlaylistCaller {
     if (!this.db || !playlistId) {
       throw new Error('Firestore instance or playlistId is undefined!');
     }
-  
+
     try {
       const playlistSongsCollection = collection(
         this.db,
@@ -100,7 +100,7 @@ export class PlaylistCaller {
         playlistId,
         'songs'
       );
-  
+
       await addDoc(playlistSongsCollection, {
         ...songData,
         isDone: false, // Agregar isDone
@@ -131,6 +131,27 @@ export class PlaylistCaller {
       } as ApiSong));
     } catch (error) {
       console.error('Error fetching songs from playlist:', error);
+      throw error;
+    }
+  }
+
+  async removeSongFromPlaylist(playlistId: string, songId: string): Promise<void> {
+    if (!this.db || !playlistId || !songId) {
+      throw new Error('Firestore instance or required parameters are undefined!');
+    }
+    const db = this.db;
+    const batch = writeBatch(db);
+    try {
+      // Reference the specific song in the playlist
+      const songDocRef = doc(db, 'playlists', playlistId, 'songs', songId);
+      console.log('Deleting song document at path:', songDocRef.path);
+      // Add the delete operation to the batch
+      batch.delete(songDocRef);
+      // Commit the batch to delete the song
+      await batch.commit();
+      console.log(`Song with ID ${songId} successfully removed from playlist ${playlistId}`);
+    } catch (error) {
+      console.error('Error removing song from playlist:', error);
       throw error;
     }
   }

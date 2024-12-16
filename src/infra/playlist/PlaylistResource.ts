@@ -53,6 +53,11 @@ export class PlaylistResource implements PlaylistRepository {
     );
   }
 
+  async removeSongFromPlaylist(userId: string, playlistId: string, songId: string): Promise<void> {
+    return await this.playlistCaller.removeSongFromPlaylist(userId, playlistId, songId);
+  }
+
+
   async deletePlaylist(playlistId: string) {
     return await this.playlistCaller.deletePlaylist(playlistId);
   }

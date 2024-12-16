@@ -40,11 +40,10 @@ export class SongCaller {
     const songsCollection = collection(this.db, 'songs');
     let songsQuery;
 
-    // Si hay playlistId, buscar canciones que lo contengan en su array
     if (playlistId) {
       songsQuery = query(
         songsCollection,
-        where('playlistId', '==', playlistId), // Aquí está usando playlistId como campo directo
+        where('playlistId', '==', playlistId),
       );
     } else {
       songsQuery = query(songsCollection);
