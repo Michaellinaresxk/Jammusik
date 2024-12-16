@@ -191,11 +191,6 @@ export const CategorySelectedScreen = () => {
         }}>
         <Icon name="ellipsis-vertical-sharp" size={25} style={styles.actionIcon} />
       </TouchableOpacity>
-      {/* <TouchableOpacity
-        style={styles.deleteButtonContent}
-        onPress={() => deleteConfirmation(songId)}>
-        <Icon name="trash-sharp" size={25} style={styles.actionIcon} />
-      </TouchableOpacity> */}
   </>
   );
 

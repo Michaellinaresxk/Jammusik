@@ -57,7 +57,7 @@ export const FormSongDetails = ({
           onChangeText={setSongKey}
         /> */}
         <BottomSheets
-          onSelectKey={setSongKey} // Pasa directamente la función de actualización
+          onSelectKey={setSongKey}
           value={songKey}
         />
         <TextInput

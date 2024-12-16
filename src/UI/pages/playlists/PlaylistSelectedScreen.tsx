@@ -11,7 +11,6 @@ import {
   TouchableOpacity,
   RefreshControl,
   useWindowDimensions,
-  Animated,
 } from 'react-native';
 import {type NavigationProp, useNavigation} from '@react-navigation/native';
 import {type RootStackParamsList} from '../../routes/StackNavigator';
@@ -21,10 +20,8 @@ import {SongCard} from '../../components/shared/cards/SongCard';
 import {globalColors} from '../../theme/Theme';
 import {FloatingActionButton} from '../../components/shared/FloatingActionButton';
 import {SongCounter} from '../../components/shared/SongCounter';
-import {useSongService} from '../../../context/SongServiceContext';
 import {usePlaylistService} from '../../../context/PlaylistServiceContext';
 import {SongView} from '../../../views/SongView';
-import {PrimaryButton} from '../../components/shared/PrimaryButton';
 import {Swipeable} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Toast from 'react-native-toast-message';
@@ -33,22 +30,17 @@ import {usePullRefresh} from '../../../hooks/usePullRefresing';
 import {getIsDone} from '../../../hooks/useToggleIsDone';
 import {useResetSongsState} from '../../store/useResetSongsState';
 import useAnimationKeyboard from '../../../hooks/useAnimationKeyboard';
-import {KeyboardGestureArea} from 'react-native-keyboard-controller';
 import { SongSelectorModal } from '../../components/shared/modals/SongSelectorModal';
 import { SongOptionsModal } from '../../components/shared/SongOptionsModal';
 
 export const PlaylistSelectedScreen = () => {
-  const songService = useSongService();
+
   const playlistService = usePlaylistService();
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
   const params =
     useRoute<RouteProp<RootStackParamsList, 'PlaylistScreen'>>().params;
   const playlistId = params.id as string;
-  const userId = auth.currentUser;
 
-  const [categoryId, setCategoryId] = useState('');
-  const [title, setTitle] = useState('');
-  const [artist, setArtist] = useState('');
   const [songList, setSongList] = useState<SongView[]>([]);
   const [isVisible, setIsVisible] = useState(false);
   const [triggerUpdate, setTriggerUpdate] = useState(false);
@@ -80,7 +72,7 @@ export const PlaylistSelectedScreen = () => {
         text1: 'Song added to playlist successfully',
       });
       setIsSongSelectorVisible(false);
-      loadSongList(); // Recargar la lista de canciones del playlist
+      loadSongList();
     } catch (error) {
       console.error('Failed to add song to playlist:', error);
       Alert.alert('Error', 'Failed to add song to playlist');
@@ -104,43 +96,59 @@ export const PlaylistSelectedScreen = () => {
     }
   }, [playlistId, playlistService]);
 
-  const closeModal = () => {
-    setIsVisible(!isVisible);
-  };
-
   useEffect(() => {
     console.log('Loading songs for playlist:', playlistId);
     loadSongList();
-  }, [loadSongList, playlistId, triggerUpdate]); 
-
-  const showToast = () => {
-    Toast.show({
-      type: 'success',
-      text1: 'Song Deleted successfully',
-    });
-  };
+  }, [loadSongList, playlistId, triggerUpdate]);
 
   const handleRemoveFromPlaylist = async (songId: string) => {
+    if (!songId) {
+      console.error('User is not authenticated.');
+      Alert.alert('Error', 'Song ID is missing.');
+      return;
+    }
+    const userId = auth.currentUser;
     try {
-      // Aquí irá la lógica de remover del playlist cuando la implementemos
-      Alert.alert('Coming soon', 'This functionality will be available soon');
-      // Cuando esté implementado:
-      // await playlistService.removeSongFromPlaylist(playlistId, songId);
-      // setTriggerUpdate(true);
+      console.log('Calling removeSongFromPlaylist with:', {
+        userId,
+        playlistId,
+        songId,
+      });
+      await playlistService.removeSongFromPlaylist(userId, playlistId, songId);
+
       Toast.show({
         type: 'success',
         text1: 'Song removed from playlist successfully',
       });
+      // Refresh the playlist to reflect changes
+      loadSongList();
     } catch (error) {
-      console.error('Failed to remove song from playlist:', error);
-      Alert.alert('Error', 'Failed to remove song from playlist');
+      console.error('Error removing song:', error);
+      Alert.alert('Error', 'Failed to remove song from playlist. Please try again.');
+    }
+  };
+
+  const handleResetSongs = async () => {
+    try {
+      setIsLoading(true);
+      await resetAllSongs(playlistId);
+      setIsDone(false);
+      setTriggerUpdate(true);
+      setIsLoading(false);
+    } catch (error) {
+      console.error('Fallo al resetear las canciones:', error);
+      Alert.alert(
+        'Error',
+        'Fallo al resetear las canciones. Por favor intente de nuevo.',
+      );
+      setIsLoading(false);
     }
   };
 
 
-  const deleteConfirmation = (songId: string) =>
+  const removeSongConfirmation = (songId: string) =>
     Alert.alert(
-      'Remove from Playlist',
+      'Remove song from Playlist',
       'Are you sure you want to remove this song from the playlist?',
       [
         {
@@ -165,22 +173,6 @@ export const PlaylistSelectedScreen = () => {
         <Icon name="ellipsis-vertical-sharp" size={25} style={styles.actionIcon} />
       </TouchableOpacity>
     );
-  const handleResetSongs = async () => {
-    try {
-      setIsLoading(true);
-      await resetAllSongs(playlistId);
-      setIsDone(false);
-      setTriggerUpdate(true);
-      setIsLoading(false);
-    } catch (error) {
-      console.error('Fallo al resetear las canciones:', error);
-      Alert.alert(
-        'Error',
-        'Fallo al resetear las canciones. Por favor intente de nuevo.',
-      );
-      setIsLoading(false);
-    }
-  };
 
   const {isRefreshing, refresh, top} = usePullRefresh(loadSongList);
   return (
@@ -255,23 +247,24 @@ export const PlaylistSelectedScreen = () => {
         playlistId={playlistId}
       />
 
-<SongOptionsModal
-  isVisible={isOptionsVisible}
-  onClose={() => setIsOptionsVisible(false)}
-  onDelete={() => {
-    setIsOptionsVisible(false);
-    if (selectedSongId) {
-      deleteConfirmation(selectedSongId);
-    }
-  }}
-  onToggleFavorite={() => {
-    setIsOptionsVisible(false);
-    Alert.alert('Coming soon', 'This functionality will be available soon');
-  }}
-  songId={selectedSongId || ''}
-  variant="playlist"
-/>
-
+    <SongOptionsModal
+      isVisible={isOptionsVisible}
+      onClose={() => setIsOptionsVisible(false)}
+      onRemoveSong={() => {
+        setIsOptionsVisible(false);
+        if (selectedSongId) {
+          removeSongConfirmation(selectedSongId);
+        } else {
+          console.error('No song selected for removal.');
+        }
+      }}
+      onToggleFavorite={() => {
+        setIsOptionsVisible(false);
+        Alert.alert('Coming soon', 'This functionality will be available soon');
+      }}
+      songId={selectedSongId || ''}
+      variant="playlist"
+    />
     </>
   );
 };

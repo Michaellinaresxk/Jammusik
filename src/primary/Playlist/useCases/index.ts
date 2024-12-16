@@ -4,6 +4,7 @@ import {CreatePlaylistUseCase} from './CreatePlaylistUseCase';
 import {UpdatePlaylistUseCase} from './UpdatePlaylistUseCase';
 import { AddSongToPlaylistUseCase } from './AddSongToPlaylistUseCase';
 import { GetPlaylistSongsUseCase } from './GetPlaylistSongsUseCase';
+import { RemoveSongFromPlaylistUseCase } from './RemoveSongFromPlaylistUseCase';
 import {DeletePlaylistUseCase} from './DeletePlaylistUseCase';
 
 import type {PlaylistView} from '../../../views/PlaylistView';
@@ -15,6 +16,7 @@ export class PlaylistService {
   private updatePlaylistUseCase: UpdatePlaylistUseCase;
   private addSongToPlaylistUseCase: AddSongToPlaylistUseCase;
   private getPlaylistSongsUseCase: GetPlaylistSongsUseCase;
+  private removeSongFromPlaylistUseCase: RemoveSongFromPlaylistUseCase;
   private deletePlaylistUseCase: DeletePlaylistUseCase;
 
   constructor(private readonly playlistResource: PlaylistResource) {
@@ -23,6 +25,7 @@ export class PlaylistService {
     this.updatePlaylistUseCase = new UpdatePlaylistUseCase(playlistResource);
     this.addSongToPlaylistUseCase = new AddSongToPlaylistUseCase(playlistResource);
     this.getPlaylistSongsUseCase = new GetPlaylistSongsUseCase(playlistResource);
+    this.removeSongFromPlaylistUseCase = new RemoveSongFromPlaylistUseCase(playlistResource);
     this.deletePlaylistUseCase = new DeletePlaylistUseCase(playlistResource);
   }
   async createPlaylist(title: string) {
@@ -55,6 +58,10 @@ export class PlaylistService {
 
   async getPlaylistSongs(playlistId: string): Promise<SongView[]> {
     return await this.getPlaylistSongsUseCase.execute(playlistId);
+  }
+
+  async removeSongFromPlaylist(userId: string, playlistId: string, songId: string): Promise<void> {
+    return await this.getPlaylistSongsUseCase.execute(userId, playlistId, songId);
   }
 
   async deletePlaylist(playlistId: string): Promise<void> {
