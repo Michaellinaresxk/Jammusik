@@ -101,33 +101,33 @@ export const PlaylistSelectedScreen = () => {
     loadSongList();
   }, [loadSongList, playlistId, triggerUpdate]);
 
+
   const handleRemoveFromPlaylist = async (songId: string) => {
-    if (!songId) {
-      console.error('User is not authenticated.');
-      Alert.alert('Error', 'Song ID is missing.');
+    const userId = auth.currentUser?.uid;
+
+    if (!userId) {
+      Alert.alert('Error', 'You must be logged in to remove songs');
       return;
     }
-    const userId = auth.currentUser;
+
     try {
-      console.log('Calling removeSongFromPlaylist with:', {
-        userId,
-        playlistId,
-        songId,
-      });
+      setIsLoading(true);
+      setSongList(prevSongs => prevSongs.filter(song => song.id !== songId));
+
       await playlistService.removeSongFromPlaylist(userId, playlistId, songId);
 
       Toast.show({
         type: 'success',
-        text1: 'Song removed from playlist successfully',
+        text1: 'Song removed successfully',
       });
-      // Refresh the playlist to reflect changes
-      loadSongList();
     } catch (error) {
+      loadSongList();
       console.error('Error removing song:', error);
-      Alert.alert('Error', 'Failed to remove song from playlist. Please try again.');
+      Alert.alert('Error', 'Failed to remove song from playlist');
+    } finally {
+      setIsLoading(false);
     }
   };
-
   const handleResetSongs = async () => {
     try {
       setIsLoading(true);
@@ -148,21 +148,17 @@ export const PlaylistSelectedScreen = () => {
 
   const removeSongConfirmation = (songId: string) =>
     Alert.alert(
-      'Remove song from Playlist',
+      'Remove Song',
       'Are you sure you want to remove this song from the playlist?',
       [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
+        { text: 'Cancel', style: 'cancel' },
         {
           text: 'Remove',
           style: 'destructive',
-          onPress: () => handleRemoveFromPlaylist(songId),
-        },
-      ],
+          onPress: () => handleRemoveFromPlaylist(songId)
+        }
+      ]
     );
-
     const swipeRightActions = (songId: string) => (
       <TouchableOpacity
         style={styles.editButtonContent}
@@ -251,11 +247,9 @@ export const PlaylistSelectedScreen = () => {
       isVisible={isOptionsVisible}
       onClose={() => setIsOptionsVisible(false)}
       onRemoveSong={() => {
-        setIsOptionsVisible(false);
         if (selectedSongId) {
-          removeSongConfirmation(selectedSongId);
-        } else {
-          console.error('No song selected for removal.');
+          setIsOptionsVisible(false); // Cerrar modal primero
+          removeSongConfirmation(selectedSongId); // Luego mostrar confirmación
         }
       }}
       onToggleFavorite={() => {

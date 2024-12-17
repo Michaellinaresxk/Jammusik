@@ -14,11 +14,17 @@ import {
   getDocs,
   updateDoc,
   deleteDoc,
+  arrayRemove,
+  arrayUnion,
+  getDoc,
+  setDoc,
 } from '@firebase/firestore';
 import { ApiSong } from '../song/ApiSong';
 
 export class PlaylistCaller {
   private db = getFirestore();
+
+  // Crear un nuevo playlist
   async createPlaylist(title: string): Promise<ApiPlaylist> {
     const userId = auth.currentUser?.uid;
     if (!userId) {
@@ -28,9 +34,9 @@ export class PlaylistCaller {
     const playlistData = {
       title,
       userId,
+      createdAt: serverTimestamp(),
     };
 
-    // Save data in firestore
     const playlistRef = await addDoc(
       collection(this.db, 'playlists'),
       playlistData,
@@ -42,39 +48,25 @@ export class PlaylistCaller {
     };
   }
 
+  // Obtener todos los playlists del usuario
   async getPlaylists(userId: string): Promise<ApiPlaylist[]> {
-    if (!this.db || !userId) {
-      throw new Error('Firestore instance or userId is undefined!');
+    if (!userId) {
+      throw new Error('userId is undefined!');
     }
+
     try {
-      const playlistsCollection = collection(this.db, 'playlists');
       const playlistsQuery = query(
-        playlistsCollection,
-        where('userId', '==', userId),
+        collection(this.db, 'playlists'),
+        where('userId', '==', userId)
       );
+
       const querySnapshot = await getDocs(playlistsQuery);
-      return querySnapshot.docs.map(doc => {
-        return {id: doc.id, ...doc.data()} as ApiPlaylist;
-      });
+      return querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      } as ApiPlaylist));
     } catch (error) {
       console.error('Error fetching playlists:', error);
-      throw error;
-    }
-  }
-
-  async updatePlaylist(playlistId: string, newTitle: string): Promise<void> {
-    if (!this.db || !playlistId) {
-      throw new Error('Firestore instance or playlistId is undefined!');
-    }
-
-    const playlistDoc = doc(this.db, 'playlists', playlistId);
-
-    try {
-      await updateDoc(playlistDoc, {
-        title: newTitle,
-      });
-    } catch (error) {
-      console.error('Error updating playlist:', error);
       throw error;
     }
   }
@@ -86,26 +78,42 @@ export class PlaylistCaller {
       title: string;
       artist: string;
       categoryId: string;
-      originalSongId: string;
     }
   ): Promise<void> {
     if (!this.db || !playlistId) {
       throw new Error('Firestore instance or playlistId is undefined!');
     }
-
+  
     try {
-      const playlistSongsCollection = collection(
-        this.db,
-        'playlists',
-        playlistId,
-        'songs'
-      );
-
-      await addDoc(playlistSongsCollection, {
-        ...songData,
-        isDone: false, // Agregar isDone
-        addedAt: serverTimestamp(),
-      });
+      const songRef = doc(this.db, 'songs', songData.id);
+      
+      // Verificar si la canción existe
+      const songDoc = await getDoc(songRef);
+      if (!songDoc.exists()) {
+        console.log('Song not found, creating new document');
+        // Si la canción no existe, la creamos con el array playlistIds
+        await setDoc(songRef, {
+          ...songData,
+          playlistIds: [playlistId],
+          updatedAt: serverTimestamp(),
+        });
+      } else {
+        // Si la canción existe, verificamos si ya está en el playlist
+        const currentData = songDoc.data();
+        const playlistIds = currentData.playlistIds || [];
+        
+        if (playlistIds.includes(playlistId)) {
+          throw new Error('Song already exists in playlist');
+        }
+  
+        // Añadimos el nuevo playlistId
+        await updateDoc(songRef, {
+          playlistIds: arrayUnion(playlistId),
+          updatedAt: serverTimestamp(),
+        });
+      }
+  
+      console.log(`Song ${songData.id} added to playlist ${playlistId}`);
     } catch (error) {
       console.error('Error adding song to playlist:', error);
       throw error;
@@ -118,13 +126,13 @@ export class PlaylistCaller {
     }
 
     try {
-      const playlistSongsCollection = collection(
-        this.db,
-        'playlists',
-        playlistId,
-        'songs'
+      // Obtenemos todas las canciones que tienen este playlistId
+      const songsQuery = query(
+        collection(this.db, 'songs'),
+        where('playlistIds', 'array-contains', playlistId)
       );
-      const querySnapshot = await getDocs(playlistSongsCollection);
+
+      const querySnapshot = await getDocs(songsQuery);
       return querySnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
@@ -135,51 +143,78 @@ export class PlaylistCaller {
     }
   }
 
-  async removeSongFromPlaylist(playlistId: string, songId: string): Promise<void> {
-    if (!this.db || !playlistId || !songId) {
-      throw new Error('Firestore instance or required parameters are undefined!');
+  async removeSongFromPlaylist(userId: string, playlistId: string, songId: string): Promise<void> {
+    if (!this.db || !playlistId || !songId || !userId) {
+      throw new Error('Required parameters are undefined!');
     }
-    const db = this.db;
-    const batch = writeBatch(db);
+  
     try {
-      // Reference the specific song in the playlist
-      const songDocRef = doc(db, 'playlists', playlistId, 'songs', songId);
-      console.log('Deleting song document at path:', songDocRef.path);
-      // Add the delete operation to the batch
-      batch.delete(songDocRef);
-      // Commit the batch to delete the song
-      await batch.commit();
-      console.log(`Song with ID ${songId} successfully removed from playlist ${playlistId}`);
+      const songRef = doc(this.db, 'songs', songId);
+      const songDoc = await getDoc(songRef);
+  
+      if (!songDoc.exists()) {
+        throw new Error('Song document not found');
+      }
+  
+      // Eliminar el playlistId del array
+      await updateDoc(songRef, {
+        playlistIds: arrayRemove(playlistId)
+      });
+  
+      // Verificar la actualización
+      const verifyDoc = await getDoc(songRef);
+      console.log('Song updated:', verifyDoc.data());
+  
     } catch (error) {
       console.error('Error removing song from playlist:', error);
       throw error;
     }
   }
 
+  // Borrar un playlist completo
   async deletePlaylist(playlistId: string): Promise<void> {
-    if (!this.db || !playlistId) {
-      throw new Error('Firestore instance or playlistId is undefined!');
+    if (!playlistId) {
+      throw new Error('PlaylistId is required!');
     }
 
-    const db = this.db;
-    const batch = writeBatch(db);
+    const batch = writeBatch(this.db);
 
-    // Query for songs with the specified playlistId
-    const songsCollection = collection(db, 'songs');
-    const songsQuery = query(
-      songsCollection,
-      where('playlistId', '==', playlistId),
-    );
-    const querySnapshot = await getDocs(songsQuery);
+    try {
+      // Borrar todas las relaciones playlist-song
+      const playlistSongsQuery = query(
+        collection(this.db, 'playlist_songs'),
+        where('playlistId', '==', playlistId)
+      );
+      
+      const playlistSongsSnapshot = await getDocs(playlistSongsQuery);
+      playlistSongsSnapshot.docs.forEach(doc => {
+        batch.delete(doc.ref);
+      });
 
-    // Add delete operations to the batch
-    querySnapshot.docs.forEach(doc => batch.delete(doc.ref));
+      // Borrar el playlist
+      batch.delete(doc(this.db, 'playlists', playlistId));
 
-    // Add playlist delete operation to the batch
-    const specificPlaylistDoc = doc(db, 'playlists', playlistId);
-    batch.delete(specificPlaylistDoc);
+      await batch.commit();
+    } catch (error) {
+      console.error('Error deleting playlist:', error);
+      throw error;
+    }
+  }
 
-    // Commit the batch
-    await batch.commit();
+  // Actualizar el título de un playlist
+  async updatePlaylist(playlistId: string, newTitle: string): Promise<void> {
+    if (!playlistId) {
+      throw new Error('PlaylistId is required!');
+    }
+
+    try {
+      await updateDoc(doc(this.db, 'playlists', playlistId), {
+        title: newTitle,
+        updatedAt: serverTimestamp()
+      });
+    } catch (error) {
+      console.error('Error updating playlist:', error);
+      throw error;
+    }
   }
 }
