@@ -18,6 +18,7 @@ import { PrimaryIcon } from '../PrimaryIcon';
 
 type SongForm = {
   categoryId: string;
+  categoryTitle?: string;
   onCreateSong: (values: {title: string; artist: string}) => Promise<void>;
   isLoading: boolean;
 };
@@ -31,6 +32,7 @@ export const FormCreateSong = ({
   categoryId,
   onCreateSong,
   isLoading,
+  categoryTitle,
 }: SongForm) => {
   const categoryService = useCategoryService();
   const [categories, setCategories] = useState<DropdownItem[]>([]);
@@ -133,7 +135,7 @@ export const FormCreateSong = ({
                   color={globalColors.primary}
                 />
                 <Text style={styles.categoryText}>
-                  Category: {categoryId || 'Unknown'}
+                Category: {categoryTitle || 'Unknown'}
                 </Text>
               </View>
             )}

@@ -280,6 +280,7 @@ export const CategorySelectedScreen = () => {
 
             <FormCreateSong
               categoryId={categoryId}
+              categoryTitle={categoryTitle}
               onCreateSong={handleCreateSong}
               isLoading={isLoading}
             />
