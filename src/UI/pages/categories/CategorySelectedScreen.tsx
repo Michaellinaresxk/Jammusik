@@ -44,15 +44,27 @@ export const CategorySelectedScreen = () => {
   const auth = getAuth();
   const userId = auth.currentUser?.uid as string;
 
+  // Route params
+  const {id: categoryId, title: categoryTitle} = route.params;
+  const isAllCategory = categoryId === 'All';
+
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const [selectedSongId, setSelectedSongId] = useState<string | null>(null);
   const [selectedSongData, setSelectedSongData] = useState<SongData | null>(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(categoryId || '');
 
   const [songList, setSongList] = useState<SongView[]>([]);
   const [isVisible, setIsVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isDone, setIsDone] = useState(false);
   const [isPlaylistSelectorVisible, setIsPlaylistSelectorVisible] = useState(false);
+
+
+  useEffect(() => {
+    // If categoryId is "All", the user can select a category
+    // Otherwise, pre-select the passed category
+    setSelectedCategoryId(categoryId || '');
+  }, [categoryId]);
 
   const playlistService = usePlaylistService();
 
@@ -70,9 +82,7 @@ export const CategorySelectedScreen = () => {
   const resetSongsState = useResetSongsState();
   const {resetToggle} = resetSongsState;
 
-  // Route params
-  const {id: categoryId, title: categoryTitle} = route.params;
-  const isAllCategory = categoryId === 'All';
+
 
   // Crea una nueva función para manejar la adición a un playlist específico
   const handleAddToSelectedPlaylist = async (playlistId: string) => {

@@ -15,4 +15,6 @@ export default interface PlaylistRepository {
   getPlaylistSongs(playlistId: string): Promise<Song[]>;
   removeSongFromPlaylist(userId: string, playlistId: string, songId: string): Promise<void>;
   deletePlaylist(playlistId: string): Promise<void>;
-}
+};
+
+

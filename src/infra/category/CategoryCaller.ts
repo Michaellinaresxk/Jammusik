@@ -8,6 +8,7 @@ import {
   getDocs,
   updateDoc,
 } from '@firebase/firestore';
+import Category from '../../domain/category/Category';
 
 export class CategoryCaller {
   private db = getFirestore();
@@ -18,8 +19,8 @@ export class CategoryCaller {
     }
 
     const categoryData = {
-      title,
-      userId,
+      title: title,
+      userId: userId,
     };
 
     // Save data in firestore
@@ -34,34 +35,25 @@ export class CategoryCaller {
     };
   }
 
-  getCategories = async (userId: string): Promise<ApiCategory[]> => {
-    if (!userId) {
-      throw new Error('userId is undefined!');
-    }
-
-    const db = getFirestore();
-
+  async getCategories(userId: string): Promise<Category[]> {
     try {
-      const categoriesCollection = collection(db, 'categories');
-      const categoriesQuery = query(
-        categoriesCollection,
-        where('userId', '==', userId),
-      );
+      const categoriesRef = collection(this.db, 'categories');
+      const q = query(categoriesRef, where('userId', '==', userId));
+      const querySnapshot = await getDocs(q);
 
-      const querySnapshot = await getDocs(categoriesQuery);
       return querySnapshot.docs.map(doc => {
         const data = doc.data();
-        return {
-          id: doc.id,
-          title: data.title,
-          userId: data.userId
-        } as ApiCategory;
+        return new Category(
+          doc.id,
+          data.title,
+          data.userId
+        );
       });
     } catch (error) {
       console.error('Error fetching categories:', error);
       throw error;
     }
-  };
+  }
   async getSongListByCategory(
     userId: string,
     categoryId: string,
