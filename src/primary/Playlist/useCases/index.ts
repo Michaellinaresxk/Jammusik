@@ -61,7 +61,7 @@ export class PlaylistService {
   }
 
   async removeSongFromPlaylist(userId: string, playlistId: string, songId: string): Promise<void> {
-    return await this.getPlaylistSongsUseCase.execute(userId, playlistId, songId);
+    return await this.removeSongFromPlaylistUseCase.execute(userId, playlistId, songId);
   }
 
   async deletePlaylist(playlistId: string): Promise<void> {

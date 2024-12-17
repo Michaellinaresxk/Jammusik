@@ -49,23 +49,30 @@ export const CategoriesScreen = () => {
 
   const loadCategories = useCallback(async () => {
     const user = auth.currentUser;
-    const userId = user?.uid as string;
+    if (!user) return;
+
     try {
-      const fetchedCategories = await categoryService.getCategories(userId);
+      const fetchedCategories = await categoryService.getCategories(user.uid);
       console.log('Fetched categories:', fetchedCategories);
-      setCategories(fetchedCategories);
+      const validCategories = fetchedCategories.filter(category =>
+        category.title && typeof category.title === 'string'
+      );
+
+      setCategories(validCategories);
     } catch (error) {
-      console.error('Failed to fetch playlists:', error);
+      console.error('Failed to fetch categories:', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Failed to load categories'
+      });
     }
   }, [auth.currentUser, categoryService]);
 
   useEffect(() => {
-    // Load categories when the component mounts
     loadCategories();
   }, [loadCategories]);
 
   useEffect(() => {
-    //  Load categories when triggerUpdate changes
     if (triggerUpdate) {
       loadCategories();
       setTriggerUpdate(false);
@@ -76,18 +83,50 @@ export const CategoriesScreen = () => {
     setIsVisible(!isVisible);
   };
 
-  const handleCreateCategory = async (values: { title: string; }) => {
-    console.log('Creating category with values:', values);
+  const handleCreateCategory = async (values: { title: string }) => {
     const user = auth.currentUser;
-    if (user) {
-      const userId = user.uid;
+    if (!user) {
+      Toast.show({
+        type: 'error',
+        text1: 'Must be logged in to create categories'
+      });
+      return;
+    }
+  
+    try {
       setIsLoading(true);
-      // Use values.title instead of title state
-      await categoryService.createCategory(userId, values.title);
-      setTitle('');
-      setTriggerUpdate(true);
+      
+      // Log para debugging
+      console.log('Creating category with values:', {
+        title: values.title,
+        userId: user.uid
+      });
+  
+      const newCategory = await categoryService.createCategory(
+        user.uid,
+        values.title
+      );
+  
+      // Log para verificar el resultado
+      console.log('New category created:', newCategory);
+  
+      // Actualizamos el estado local
+      setCategories(prev => [...prev, newCategory]);
+      
+      Toast.show({
+        type: 'success',
+        text1: 'Category created successfully'
+      });
+  
+      setIsVisible(false);
+    } catch (error) {
+      console.error('Error creating category:', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Failed to create category'
+      });
+    } finally {
       setIsLoading(false);
-      closeModal();
     }
   };
 
@@ -95,20 +134,6 @@ export const CategoriesScreen = () => {
     Toast.show({
       type: 'success',
       text1: 'Category Deleted successfully. 👋',
-    });
-  };
-  const showToastAll = () => {
-    Toast.show({
-      type: 'danger',
-      text1: 'You cannot remove this category',
-      topOffset: 90,
-    });
-  };
-  const editCategoryAll = () => {
-    Toast.show({
-      type: 'danger',
-      text1: 'You cannot edit this category',
-      topOffset: 90,
     });
   };
 
@@ -187,13 +212,15 @@ export const CategoriesScreen = () => {
             <Separator color={globalColors.terceary} />
             <View style={{marginTop: 30, justifyContent: 'center'}}>
             <CategoryCard
-              title="All"
-              onDelete={() => showToastAll()}
-              onEdit={() => editCategoryAll()}
+              category={{
+                id: 'all',
+                title: 'All',
+                userId: auth.currentUser?.uid || ''
+              }}
               onPress={() =>
                 navigation.navigate('CategorySelectedScreen', {
-                  id: 'All',
-                  title: 'All',
+                  id: 'all',
+                  title: 'All'
                 })
               }
             />
@@ -203,16 +230,13 @@ export const CategoriesScreen = () => {
                 numColumns={2}
                 renderItem={({ item }) => (
                   <CategoryCard
-                    title={item.title}
-                    onEdit={() =>
-                      startEditingCategory({ id: item.id, title: item.title })
-                    }
-                    onDelete={() => handleDeleteCategory(item.id)}
+                    category={item}
+                    onEdit={(category) => startEditingCategory(category)}
+                    onDelete={(categoryId) => handleDeleteCategory(categoryId)}
                     onPress={() =>
                       navigation.navigate('CategorySelectedScreen', {
                         id: item.id,
                         title: item.title,
-                        categoryId: item.categoryId,
                       })
                     }
                   />

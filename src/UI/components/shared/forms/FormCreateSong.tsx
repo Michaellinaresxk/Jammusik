@@ -14,6 +14,7 @@ import {useCategoryService} from '../../../../context/CategoryServiceContext';
 import {auth} from '../../../../infra/api/firebaseConfig';
 import {Formik} from 'formik';
 import {validationCreateSongForm} from './yup/validation_create_song';
+import { PrimaryIcon } from '../PrimaryIcon';
 
 type SongForm = {
   categoryId: string;
@@ -76,10 +77,6 @@ export const FormCreateSong = ({
       Alert.alert('Error', 'Failed to create song. Please try again.');
     }
   };
-  const getCurrentCategoryName = () => {
-    const category = categories.find(cat => cat.value === categoryId);
-    return category ? category.label : '';
-  };
 
   return (
     <View style={globalFormStyles.containerForm}>
@@ -124,14 +121,21 @@ export const FormCreateSong = ({
                 <CustomDropdown
                   items={categories}
                   defaultValue={selectedCategory}
-                  placeholder="Choose a category"
+                  placeholder="Select a category"
                   onChange={handleCategoryChange}
                 />
               )
             ) : (
-              <Text style={styles.categoryText}>
-                Category: {getCurrentCategoryName()}
-              </Text>
+              <View style={styles.titleContent}>
+                <PrimaryIcon
+                  name="musical-notes-sharp"
+                  size={22}
+                  color={globalColors.primary}
+                />
+                <Text style={styles.categoryText}>
+                  Category: {categoryId || 'Unknown'}
+                </Text>
+              </View>
             )}
 
             <PrimaryButton
@@ -157,11 +161,19 @@ export const FormCreateSong = ({
 };
 
 const styles = StyleSheet.create({
-  categoryText: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    color: globalColors.terceary,
-    marginBottom: 30,
+  titleContent: {
     textAlign: 'center',
-  }
+    flexDirection: 'row',
+    gap: 5,
+    backgroundColor: globalColors.primaryAlt,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    marginTop: 14,
+    marginBottom: 30,
+  },
+  categoryText: {
+    fontSize: 18,
+    color: globalColors.primary,
+  },
 });
