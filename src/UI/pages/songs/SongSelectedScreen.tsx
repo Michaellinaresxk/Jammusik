@@ -66,7 +66,11 @@ export const SongSelectedScreen = () => {
   };
   const onCreateSongDetails = async () => {
     try {
-      const songDetails = await songDetailsService.setSongDetails(
+      if (!songKey) {
+        Alert.alert('Error', 'Please select a song key');
+        return;
+      }
+      await songDetailsService.setSongDetails(
         userId,
         songId,
         songKey,
@@ -130,7 +134,6 @@ export const SongSelectedScreen = () => {
   useEffect(() => {
     const getCategoryTitle = async () => {
       try {
-        // Usar categoryId en lugar de params.id
         const categoryTitle = await useGetCategoryTitle(categoryId);
         setCategory(categoryTitle);
       } catch (error) {

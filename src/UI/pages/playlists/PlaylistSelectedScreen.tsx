@@ -248,8 +248,8 @@ export const PlaylistSelectedScreen = () => {
       onClose={() => setIsOptionsVisible(false)}
       onRemoveSong={() => {
         if (selectedSongId) {
-          setIsOptionsVisible(false); // Cerrar modal primero
-          removeSongConfirmation(selectedSongId); // Luego mostrar confirmación
+          setIsOptionsVisible(false);
+          removeSongConfirmation(selectedSongId);
         }
       }}
       onToggleFavorite={() => {

@@ -92,32 +92,26 @@ export const CategoriesScreen = () => {
       });
       return;
     }
-  
     try {
       setIsLoading(true);
-      
-      // Log para debugging
+
       console.log('Creating category with values:', {
         title: values.title,
-        userId: user.uid
+        userId: user.uid,
       });
-  
+
       const newCategory = await categoryService.createCategory(
         user.uid,
         values.title
       );
-  
-      // Log para verificar el resultado
-      console.log('New category created:', newCategory);
-  
-      // Actualizamos el estado local
+
+      // Update local state
       setCategories(prev => [...prev, newCategory]);
-      
+
       Toast.show({
         type: 'success',
         text1: 'Category created successfully'
       });
-  
       setIsVisible(false);
     } catch (error) {
       console.error('Error creating category:', error);

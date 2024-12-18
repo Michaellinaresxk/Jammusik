@@ -12,9 +12,8 @@ import { useSongDetailsService } from "../../../context/SongDetailsServiceContex
 
 const BottomSheets = ({ onSelectKey, value }) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [keys, setKeys] = useState<{ id: string; key: string; order: number }[]>(
-    []
-  );
+  const [selectedKey, setSelectedKey] = useState(value || '');
+  const [keys, setKeys] = useState<{ id: string; key: string; order: number }[]>([]);
   const [loading, setLoading] = useState(true);
 
   const songDetailsService = useSongDetailsService();
@@ -24,6 +23,11 @@ const BottomSheets = ({ onSelectKey, value }) => {
       try {
         const fetchedKeys = await songDetailsService.getSongKeys();
         setKeys(fetchedKeys);
+        
+        // Si hay un valor inicial, lo mantenemos
+        if (value) {
+          setSelectedKey(value);
+        }
       } catch (error) {
         console.error("Error fetching keys:", error);
       } finally {
@@ -31,10 +35,11 @@ const BottomSheets = ({ onSelectKey, value }) => {
       }
     };
     fetchKeys();
-  }, [songDetailsService]);
+  }, [songDetailsService, value]);
 
   const handleKeySelection = (key: string) => {
-    onSelectKey(key);
+    setSelectedKey(key);
+    onSelectKey(key); // Esto actualiza el estado en el componente padre
     setModalVisible(false);
   };
 
