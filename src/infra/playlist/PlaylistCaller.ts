@@ -13,7 +13,6 @@ import {
   collection,
   getDocs,
   updateDoc,
-  deleteDoc,
   arrayRemove,
   arrayUnion,
   getDoc,
@@ -24,7 +23,7 @@ import { ApiSong } from '../song/ApiSong';
 export class PlaylistCaller {
   private db = getFirestore();
 
-  // Crear un nuevo playlist
+  // Create a new playlist
   async createPlaylist(title: string): Promise<ApiPlaylist> {
     const userId = auth.currentUser?.uid;
     if (!userId) {
@@ -48,7 +47,7 @@ export class PlaylistCaller {
     };
   }
 
-  // Obtener todos los playlists del usuario
+  // Get all the user's playlists
   async getPlaylists(userId: string): Promise<ApiPlaylist[]> {
     if (!userId) {
       throw new Error('userId is undefined!');
@@ -83,11 +82,10 @@ export class PlaylistCaller {
     if (!this.db || !playlistId) {
       throw new Error('Firestore instance or playlistId is undefined!');
     }
-  
     try {
       const songRef = doc(this.db, 'songs', songData.id);
-      
-      // Verificar si la canción existe
+
+      // Check if the song exists
       const songDoc = await getDoc(songRef);
       if (!songDoc.exists()) {
         console.log('Song not found, creating new document');
@@ -98,21 +96,21 @@ export class PlaylistCaller {
           updatedAt: serverTimestamp(),
         });
       } else {
-        // Si la canción existe, verificamos si ya está en el playlist
+        // If the song does not exist, we create it with the array playlistIds
         const currentData = songDoc.data();
         const playlistIds = currentData.playlistIds || [];
-        
+
         if (playlistIds.includes(playlistId)) {
           throw new Error('Song already exists in playlist');
         }
-  
-        // Añadimos el nuevo playlistId
+
+        // Add the new playlistId
         await updateDoc(songRef, {
           playlistIds: arrayUnion(playlistId),
           updatedAt: serverTimestamp(),
         });
       }
-  
+
       console.log(`Song ${songData.id} added to playlist ${playlistId}`);
     } catch (error) {
       console.error('Error adding song to playlist:', error);
@@ -126,7 +124,6 @@ export class PlaylistCaller {
     }
 
     try {
-      // Obtenemos todas las canciones que tienen este playlistId
       const songsQuery = query(
         collection(this.db, 'songs'),
         where('playlistIds', 'array-contains', playlistId)
@@ -147,31 +144,31 @@ export class PlaylistCaller {
     if (!this.db || !playlistId || !songId || !userId) {
       throw new Error('Required parameters are undefined!');
     }
-  
+
     try {
       const songRef = doc(this.db, 'songs', songId);
       const songDoc = await getDoc(songRef);
-  
+
       if (!songDoc.exists()) {
         throw new Error('Song document not found');
       }
-  
-      // Eliminar el playlistId del array
+
+      // Remove the playlistId from the array
       await updateDoc(songRef, {
         playlistIds: arrayRemove(playlistId)
       });
-  
-      // Verificar la actualización
+
+      // Verify the update
       const verifyDoc = await getDoc(songRef);
       console.log('Song updated:', verifyDoc.data());
-  
+
     } catch (error) {
       console.error('Error removing song from playlist:', error);
       throw error;
     }
   }
 
-  // Borrar un playlist completo
+  // Delete a complete playlist
   async deletePlaylist(playlistId: string): Promise<void> {
     if (!playlistId) {
       throw new Error('PlaylistId is required!');
@@ -180,18 +177,18 @@ export class PlaylistCaller {
     const batch = writeBatch(this.db);
 
     try {
-      // Borrar todas las relaciones playlist-song
+      // Delete all playlist-song relationships
       const playlistSongsQuery = query(
         collection(this.db, 'playlist_songs'),
         where('playlistId', '==', playlistId)
       );
-      
+
       const playlistSongsSnapshot = await getDocs(playlistSongsQuery);
       playlistSongsSnapshot.docs.forEach(doc => {
         batch.delete(doc.ref);
       });
 
-      // Borrar el playlist
+      // Delete playlist
       batch.delete(doc(this.db, 'playlists', playlistId));
 
       await batch.commit();
@@ -201,7 +198,7 @@ export class PlaylistCaller {
     }
   }
 
-  // Actualizar el título de un playlist
+  // Update playlist title
   async updatePlaylist(playlistId: string, newTitle: string): Promise<void> {
     if (!playlistId) {
       throw new Error('PlaylistId is required!');

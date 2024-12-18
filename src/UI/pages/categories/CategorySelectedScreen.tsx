@@ -60,13 +60,13 @@ export const CategorySelectedScreen = () => {
   const [isPlaylistSelectorVisible, setIsPlaylistSelectorVisible] = useState(false);
 
 
-  useEffect(() => {
-    // If categoryId is "All", the user can select a category
-    // Otherwise, pre-select the passed category
-    setSelectedCategoryId(categoryId || '');
-  }, [categoryId]);
-
+  // Services
+  const categoryService = useCategoryService();
+  const songService = useSongService();
+  const resetSongsState = useResetSongsState();
   const playlistService = usePlaylistService();
+
+  const {resetToggle} = resetSongsState;
 
   const handleShare = async () => {
     Alert.alert('Error', 'Functionality comming soon...');
@@ -76,15 +76,7 @@ export const CategorySelectedScreen = () => {
     Alert.alert('Error', 'Functionality comming soon...');
   };
 
-  // Services
-  const categoryService = useCategoryService();
-  const songService = useSongService();
-  const resetSongsState = useResetSongsState();
-  const {resetToggle} = resetSongsState;
 
-
-
-  // Crea una nueva función para manejar la adición a un playlist específico
   const handleAddToSelectedPlaylist = async (playlistId: string) => {
     if (!selectedSongData) return;
 
@@ -94,14 +86,13 @@ export const CategorySelectedScreen = () => {
         type: 'success',
         text1: 'Song added to playlist successfully',
       });
-      setIsPlaylistSelectorVisible(false); // Cierra el modal después de añadir
+      setIsPlaylistSelectorVisible(false); // Close the modal after adding
     } catch (error) {
       console.error('Failed to add song to playlist:', error);
       Alert.alert('Error', 'Failed to add song to playlist');
     }
   };
 
-  // Create song handler
   const handleCreateSong = async (values: { title: string; artist: string; categoryId?: string }) => {
     try {
       setIsLoading(true);
@@ -132,7 +123,6 @@ export const CategorySelectedScreen = () => {
     }
   };
 
-  // Load songs list
   const loadSongList = useCallback(async () => {
     setIsLoading(true);
     try {
@@ -155,13 +145,7 @@ export const CategorySelectedScreen = () => {
     }
   }, [categoryId, isAllCategory, categoryService, userId]);
 
-  // Effects
-  useEffect(() => {
-    loadSongList();
-  }, [loadSongList]);
 
-
-  // Handlers
   const closeModal = () => setIsVisible(false);
   const openModal = () => setIsVisible(true);
 
@@ -203,6 +187,17 @@ export const CategorySelectedScreen = () => {
       </TouchableOpacity>
   </>
   );
+
+  // Effects
+  useEffect(() => {
+    loadSongList();
+  }, [loadSongList]);
+
+  useEffect(() => {
+    // If categoryId is "All", the user can select a category
+    // Otherwise, pre-select the passed category
+    setSelectedCategoryId(categoryId || '');
+  }, [categoryId]);
 
   const {isRefreshing, refresh, top} = usePullRefresh(loadSongList);
 

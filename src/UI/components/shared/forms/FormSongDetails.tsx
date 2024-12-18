@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {TextInput, View, Text, FlatList, StyleSheet} from 'react-native';
+import {TextInput, View, Text, FlatList, StyleSheet, Alert} from 'react-native';
 import {globalColors, globalFormStyles} from '../../../theme/Theme';
 import {PrimaryButton} from '../PrimaryButton';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -45,17 +45,18 @@ export const FormSongDetails = ({
     }
   };
 
+  const handleSaveDetails = async () => {
+    if (!songKey) {
+      // Puedes mostrar un error o alerta si la key es requerida
+      Alert.alert('Error', 'Please select a song key');
+      return;
+    }
+    await onCreateSongDetails();
+  };
+
   return (
     <View style={globalFormStyles.containerForm}>
       <View style={globalFormStyles.form}>
-        {/* <TextInput
-          style={globalFormStyles.inputLogin}
-          placeholderTextColor="#838282"
-          placeholder="Key"
-          value={songKey}
-          autoCorrect={false}
-          onChangeText={setSongKey}
-        /> */}
         <BottomSheets
           onSelectKey={setSongKey}
           value={songKey}
@@ -112,7 +113,7 @@ export const FormSongDetails = ({
           borderRadius={5}
           colorText={globalColors.light}
           btnFontSize={20}
-          onPress={onCreateSongDetails}
+          onPress={handleSaveDetails}
         />
       </View>
     </View>
