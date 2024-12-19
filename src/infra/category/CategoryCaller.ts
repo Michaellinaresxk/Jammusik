@@ -43,11 +43,7 @@ export class CategoryCaller {
 
       return querySnapshot.docs.map(doc => {
         const data = doc.data();
-        return new Category(
-          doc.id,
-          data.title,
-          data.userId
-        );
+        return new Category(doc.id, data.title, data.userId);
       });
     } catch (error) {
       console.error('Error fetching categories:', error);
@@ -70,7 +66,7 @@ export class CategoryCaller {
       const songCollection = collection(db, 'songs');
 
       let songQuery;
-      if (categoryId === 'All') {
+      if (categoryId === 'Library') {
         songQuery = query(songCollection, where('userId', '==', userId));
       } else {
         songQuery = query(

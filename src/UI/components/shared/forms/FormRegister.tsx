@@ -132,7 +132,7 @@ export const FormRegister = ({
             <View style={{marginTop: 20}}>
               <PrimaryButton
                 label={
-                  !isLoading ? 'SIGN IN' : <ActivityIndicator size={'large'} />
+                  !isLoading ? 'SIGN UP' : <ActivityIndicator size={'large'} />
                 }
                 bgColor={globalColors.primary}
                 borderRadius={5}

@@ -207,14 +207,14 @@ export const CategoriesScreen = () => {
             <View style={{marginTop: 30, justifyContent: 'center'}}>
               <CategoryCard
                 category={{
-                  id: 'all',
-                  title: 'All',
+                  id: 'library',
+                  title: 'Library',
                   userId: auth.currentUser?.uid || '',
                 }}
                 onPress={() =>
                   navigation.navigate('CategorySelectedScreen', {
-                    id: 'All',
-                    title: 'All',
+                    id: 'Library',
+                    title: 'Library',
                   })
                 }
               />

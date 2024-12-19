@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@react-email/components": "^0.0.26",
+    "@react-native-async-storage/async-storage": "^1.24.0",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-native-vector-icons/ionicons": "^7.4.0-alpha.36",
     "@react-navigation/drawer": "^6.7.2",
