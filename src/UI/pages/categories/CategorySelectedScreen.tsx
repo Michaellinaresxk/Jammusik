@@ -38,6 +38,11 @@ import {PlaylistSelectorModal} from '../../components/shared/modals/PlaylistSele
 import {usePlaylistService} from '../../../context/PlaylistServiceContext';
 import type {SongData} from '../../../types/songTypes';
 import {useSongDetailsService} from '../../../context/SongDetailsServiceContext';
+import {SongFilter} from '../../components/shared/SongFilter';
+
+interface ExtendedSongView extends SongView {
+  songKey?: string;
+}
 
 export const CategorySelectedScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
@@ -65,12 +70,17 @@ export const CategorySelectedScreen = () => {
   const [isPlaylistSelectorVisible, setIsPlaylistSelectorVisible] =
     useState(false);
 
+  const [searchText, setSearchText] = useState('');
+  const [selectedKey, setSelectedKey] = useState<string | null>(null);
+  const [availableKeys, setAvailableKeys] = useState<string[]>([]);
+  const [allSongs, setAllSongs] = useState<ExtendedSongView[]>([]);
+  const songDetailsService = useSongDetailsService();
+
   // Services
   const categoryService = useCategoryService();
   const songService = useSongService();
   const resetSongsState = useResetSongsState();
   const playlistService = usePlaylistService();
-  const songDetailsService = useSongDetailsService();
 
   const {resetToggle} = resetSongsState;
 
@@ -135,24 +145,120 @@ export const CategorySelectedScreen = () => {
   const loadSongList = useCallback(async () => {
     setIsLoading(true);
     try {
-      const fetchedSongs = isAllCategory
-        ? await categoryService.getAllSongsByUserId(userId)
-        : await categoryService.getSongListByCategory(userId, categoryId);
+      // Verificar el userId
+      if (!userId) {
+        console.error('No user ID found');
+        return;
+      }
 
-      const songsWithIsDone = await Promise.all(
-        fetchedSongs.map(async song => ({
-          ...song,
-          isDone: await getIsDone(song.id),
-        })),
+      // Obtener canciones según la categoría
+      let fetchedSongs;
+      if (isAllCategory) {
+        fetchedSongs = await categoryService.getAllSongsByUserId(userId);
+        console.log('Fetched All Songs:', fetchedSongs); // Debug log
+      } else {
+        fetchedSongs = await categoryService.getSongListByCategory(
+          userId,
+          categoryId,
+        );
+        console.log('Fetched Category Songs:', fetchedSongs); // Debug log
+      }
+
+      // Verificar si fetchedSongs es un array
+      if (!Array.isArray(fetchedSongs)) {
+        console.error('Fetched songs is not an array:', fetchedSongs);
+        return;
+      }
+
+      // Obtener los detalles para cada canción
+      const songsWithDetails = await Promise.all(
+        fetchedSongs.map(async song => {
+          try {
+            const [isDone, songDetails] = await Promise.all([
+              getIsDone(song.id),
+              songDetailsService.getSongDetails(userId, song.id),
+            ]);
+
+            return {
+              ...song,
+              isDone,
+              songKey: songDetails?.key || '',
+            };
+          } catch (error) {
+            console.error(`Error fetching details for song ${song.id}:`, error);
+            return {
+              ...song,
+              isDone: false,
+              songKey: '',
+            };
+          }
+        }),
       );
 
-      setSongList(songsWithIsDone);
+      // Actualizar estados
+      setAllSongs(songsWithDetails);
+
+      // Extraer keys disponibles
+      const uniqueKeys = [
+        ...new Set(
+          songsWithDetails.map(song => song.songKey).filter(key => key !== ''),
+        ),
+      ];
+      setAvailableKeys(uniqueKeys);
+
+      // Aplicar filtros actuales o mostrar todas las canciones si no hay filtros
+      if (searchText || selectedKey) {
+        filterSongs(songsWithDetails, searchText, selectedKey);
+      } else {
+        setSongList(songsWithDetails);
+      }
     } catch (error) {
       console.error('Failed to fetch song lists:', error);
+      Alert.alert('Error', 'Failed to load songs. Please try again.');
     } finally {
       setIsLoading(false);
     }
-  }, [categoryId, isAllCategory, categoryService, userId]);
+  }, [
+    userId,
+    isAllCategory,
+    searchText,
+    selectedKey,
+    categoryService,
+    categoryId,
+    songDetailsService,
+  ]);
+
+  // Asegurarse de que la función filterSongs esté bien definida
+  const filterSongs = (
+    songs: ExtendedSongView[],
+    search: string,
+    key: string | null,
+  ) => {
+    if (!songs) return;
+
+    let filtered = [...songs];
+
+    if (search) {
+      filtered = filtered.filter(song =>
+        song.title.toLowerCase().includes(search.toLowerCase()),
+      );
+    }
+
+    if (key) {
+      filtered = filtered.filter(song => song.songKey === key);
+    }
+
+    setSongList(filtered);
+  };
+  const handleSearch = (text: string) => {
+    setSearchText(text);
+    filterSongs(allSongs, text, selectedKey);
+  };
+
+  const handleKeyFilter = (key: string | null) => {
+    setSelectedKey(key);
+    filterSongs(allSongs, searchText, key);
+  };
 
   const closeModal = () => setIsVisible(false);
   const openModal = () => setIsVisible(true);
@@ -243,6 +349,13 @@ export const CategorySelectedScreen = () => {
           <View>
             <GlobalHeader headerTitle={categoryTitle} />
             <FloatingActionButton onPress={openModal} />
+            <SongFilter
+              searchText={searchText}
+              selectedKey={selectedKey}
+              availableKeys={availableKeys}
+              onSearchChange={handleSearch}
+              onFilterByKey={handleKeyFilter}
+            />
             <View style={styles.songCardContainer}>
               <SongCounter songCounter={songList.length} />
               <FlatList
