@@ -49,10 +49,10 @@ export const Welcome = ({visible, onStart}) => {
             <Text style={styles.iconText}>🎵</Text>
           </View>
 
-          <Text style={styles.title}>¡Bienvenido a tu app de música!</Text>
+          <Text style={styles.title}>Welcome to your music app!</Text>
 
           <Text style={styles.description}>
-            Vamos a ayudarte a organizar tu música en 3 simples pasos:
+            Let us help you organize your music in 3 simple steps:
           </Text>
 
           <View style={styles.steps}>
