@@ -54,8 +54,8 @@ export const CategoriesScreen = () => {
     try {
       const fetchedCategories = await categoryService.getCategories(user.uid);
       console.log('Fetched categories:', fetchedCategories);
-      const validCategories = fetchedCategories.filter(category =>
-        category.title && typeof category.title === 'string'
+      const validCategories = fetchedCategories.filter(
+        category => category.title && typeof category.title === 'string',
       );
 
       setCategories(validCategories);
@@ -63,7 +63,7 @@ export const CategoriesScreen = () => {
       console.error('Failed to fetch categories:', error);
       Toast.show({
         type: 'error',
-        text1: 'Failed to load categories'
+        text1: 'Failed to load categories',
       });
     }
   }, [auth.currentUser, categoryService]);
@@ -83,12 +83,12 @@ export const CategoriesScreen = () => {
     setIsVisible(!isVisible);
   };
 
-  const handleCreateCategory = async (values: { title: string }) => {
+  const handleCreateCategory = async (values: {title: string}) => {
     const user = auth.currentUser;
     if (!user) {
       Toast.show({
         type: 'error',
-        text1: 'Must be logged in to create categories'
+        text1: 'Must be logged in to create categories',
       });
       return;
     }
@@ -102,7 +102,7 @@ export const CategoriesScreen = () => {
 
       const newCategory = await categoryService.createCategory(
         user.uid,
-        values.title
+        values.title,
       );
 
       // Update local state
@@ -110,14 +110,14 @@ export const CategoriesScreen = () => {
 
       Toast.show({
         type: 'success',
-        text1: 'Category created successfully'
+        text1: 'Category created successfully',
       });
       setIsVisible(false);
     } catch (error) {
       console.error('Error creating category:', error);
       Toast.show({
         type: 'error',
-        text1: 'Failed to create category'
+        text1: 'Failed to create category',
       });
     } finally {
       setIsLoading(false);
@@ -205,28 +205,28 @@ export const CategoriesScreen = () => {
             </View>
             <Separator color={globalColors.terceary} />
             <View style={{marginTop: 30, justifyContent: 'center'}}>
-            <CategoryCard
-              category={{
-                id: 'all',
-                title: 'All',
-                userId: auth.currentUser?.uid || ''
-              }}
-              onPress={() =>
-                navigation.navigate('CategorySelectedScreen', {
+              <CategoryCard
+                category={{
                   id: 'all',
-                  title: 'All'
-                })
-              }
-            />
+                  title: 'All',
+                  userId: auth.currentUser?.uid || '',
+                }}
+                onPress={() =>
+                  navigation.navigate('CategorySelectedScreen', {
+                    id: 'All',
+                    title: 'All',
+                  })
+                }
+              />
               <FlatList
                 data={categories}
                 keyExtractor={item => item.id}
                 numColumns={2}
-                renderItem={({ item }) => (
+                renderItem={({item}) => (
                   <CategoryCard
                     category={item}
-                    onEdit={(category) => startEditingCategory(category)}
-                    onDelete={(categoryId) => handleDeleteCategory(categoryId)}
+                    onEdit={category => startEditingCategory(category)}
+                    onDelete={categoryId => handleDeleteCategory(categoryId)}
                     onPress={() =>
                       navigation.navigate('CategorySelectedScreen', {
                         id: item.id,
@@ -258,7 +258,9 @@ export const CategoriesScreen = () => {
                   title={title}
                   setTitle={setTitle}
                   onCreateCategory={
-                    editingCategory ? handleUpdateCategory : handleCreateCategory
+                    editingCategory
+                      ? handleUpdateCategory
+                      : handleCreateCategory
                   }
                   isLoading={isLoading}
                   isEditing={!!editingCategory}

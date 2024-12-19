@@ -456,7 +456,7 @@ export const CategorySelectedScreen = () => {
 
 const styles = StyleSheet.create({
   songCardContainer: {
-    marginTop: 100,
+    marginTop: 50,
     paddingHorizontal: 10,
     display: 'flex',
     justifyContent: 'center',
