@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
 import {
   FlatList,
   KeyboardAvoidingView,
@@ -22,6 +22,7 @@ import {globalColors} from '../../theme/Theme';
 import {useCategoryService} from '../../../context/CategoryServiceContext';
 import {CategoryView} from '../../../views/CategoryView';
 import {usePlaylistService} from '../../../context/PlaylistServiceContext';
+import {useUserService} from '../../../context/UserServiceContext';
 import {auth} from '../../../infra/api/firebaseConfig';
 import {PlaylistView} from '../../../views/PlaylistView';
 import {PlaylistCard} from '../../components/shared/cards/PlaylistCard';
@@ -33,16 +34,37 @@ import {PrimaryButton} from '../../components/shared/PrimaryButton';
 import {FormCreatePlaylist} from '../../components/shared/forms/FormCreatePlaylist';
 import {useTopTracks} from '../../../hooks/useTopTrasks';
 import {TopTrackCard} from '../../components/shared/cards/TopTrackCard';
+import {Welcome} from '../../components/shared/onBoarding/Welcome';
+import {OnboardingTooltip} from '../../components/shared/onBoarding/OnboardingTooltip';
+import {useOnboarding} from '../../../hooks/useOnboarding';
 
 export const HomeScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
+  const {
+    isFirstLogin,
+    showTooltip,
+    currentStep,
+    steps,
+    startOnboarding,
+    nextStep,
+    setShowTooltip,
+  } = useOnboarding();
+  // useEffect for debugging
+  useEffect(() => {
+    console.log('Current status:', {
+      isFirstLogin,
+      showTooltip,
+      currentStep,
+    });
+  }, [isFirstLogin, showTooltip, currentStep]);
+
   const categoryService = useCategoryService();
   const playlistService = usePlaylistService();
+  const userService = useUserService();
   const [categories, setCategories] = useState<CategoryView[]>([]);
   const [playlists, setPlaylists] = useState<PlaylistView[]>([]);
   const [triggerUpdate, setTriggerUpdate] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
   const {updatePlaylist, isLoading: isUpdating} = useUpdatePlaylist();
   const {tracks} = useTopTracks();
   const [editingPlaylist, setEditingPlaylist] = useState<{
@@ -102,7 +124,12 @@ export const HomeScreen = () => {
   };
 
   const {isRefreshing, refresh, top} = usePullRefresh(loadData);
-
+  console.log('Rendering HomeScreen with:', {
+    isFirstLogin,
+    showTooltip,
+    currentStep,
+    steps: steps?.[currentStep],
+  });
   return (
     <>
       <KeyboardAvoidingView
@@ -152,11 +179,11 @@ export const HomeScreen = () => {
               <FlatList
                 ListHeaderComponent={
                   <CategoryCardLight
-                    title="All"
+                    title="Library"
                     onPress={() =>
                       navigation.navigate('CategorySelectedScreen', {
-                        id: 'All',
-                        title: 'All',
+                        id: 'Library',
+                        title: 'Library',
                       })
                     }
                   />
@@ -250,6 +277,25 @@ export const HomeScreen = () => {
           </Modal>
         </ScrollView>
       </KeyboardAvoidingView>
+
+      <Welcome
+        visible={isFirstLogin}
+        onStart={() => {
+          console.log('Welcome onStart llamado');
+          startOnboarding();
+        }}
+      />
+
+      <OnboardingTooltip
+        visible={showTooltip}
+        title={steps[currentStep]?.title}
+        description={steps[currentStep]?.description}
+        position={steps[currentStep]?.position}
+        onClose={() => {
+          console.log('Tooltip onClose llamado');
+          nextStep();
+        }}
+      />
     </>
   );
 };

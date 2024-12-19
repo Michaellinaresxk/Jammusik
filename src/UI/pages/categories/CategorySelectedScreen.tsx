@@ -52,7 +52,7 @@ export const CategorySelectedScreen = () => {
 
   // Route params
   const {id: categoryId, title: categoryTitle} = route.params;
-  const isAllCategory = categoryId === 'All';
+  const isAllCategory = categoryId === 'Library';
 
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const [selectedSongId, setSelectedSongId] = useState<string | null>(null);
@@ -116,7 +116,7 @@ export const CategorySelectedScreen = () => {
     try {
       setIsLoading(true);
 
-      // If we are in “All”, use the category selected in the form.
+      // If we are in “Library”, use the category selected in the form.
       // If not, use the current category of the route
       const finalCategoryId = isAllCategory ? values.categoryId : categoryId;
 
