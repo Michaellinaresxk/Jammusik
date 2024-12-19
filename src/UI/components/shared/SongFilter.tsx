@@ -32,7 +32,7 @@ export const SongFilter: React.FC<SongFilterProps> = ({
     <View style={styles.container}>
       {/* Search by name */}
       <View style={styles.searchContainer}>
-        <Icon name="search" size={30} color={globalColors.terceary} />
+        <Icon name="search" size={25} color={globalColors.terceary} />
         <TextInput
           style={styles.searchInput}
           placeholder="Search by Title..."
@@ -52,7 +52,7 @@ export const SongFilter: React.FC<SongFilterProps> = ({
         <TouchableOpacity
           style={styles.keyButton}
           onPress={() => setShowKeyModal(true)}>
-          <Icon name="musical-note" size={20} color={globalColors.primary} />
+          <Icon name="musical-note" size={22} color={globalColors.primary} />
           <Text style={styles.keyButtonText}>
             {selectedKey || 'Filter by Key'}
           </Text>
@@ -121,12 +121,11 @@ export const SongFilter: React.FC<SongFilterProps> = ({
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    marginTop: 30,
+    marginTop: 50,
   },
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: globalColors.light,
     borderRadius: 8,
     padding: 8,
     marginBottom: 10,
@@ -136,7 +135,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     marginLeft: 8,
-    fontSize: 20,
+    fontSize: 18,
   },
   keyFilterContainer: {
     flexDirection: 'row',
@@ -154,7 +153,7 @@ const styles = StyleSheet.create({
   },
   keyButtonText: {
     color: globalColors.primary,
-    fontSize: 14,
+    fontSize: 16,
   },
   clearKeyButton: {
     marginLeft: 4,
