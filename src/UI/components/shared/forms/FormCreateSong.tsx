@@ -14,7 +14,7 @@ import {useCategoryService} from '../../../../context/CategoryServiceContext';
 import {auth} from '../../../../infra/api/firebaseConfig';
 import {Formik} from 'formik';
 import {validationCreateSongForm} from './yup/validation_create_song';
-import { PrimaryIcon } from '../PrimaryIcon';
+import {PrimaryIcon} from '../PrimaryIcon';
 
 type SongForm = {
   categoryId: string;
@@ -37,7 +37,7 @@ export const FormCreateSong = ({
   const categoryService = useCategoryService();
   const [categories, setCategories] = useState<DropdownItem[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>(categoryId);
-  const isAllCategory = categoryId === 'All';
+  const isLibraryCategory = categoryId === 'Library';
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -52,10 +52,10 @@ export const FormCreateSong = ({
       }
     };
 
-    if (isAllCategory) {
+    if (isLibraryCategory) {
       loadCategories();
     }
-  }, [categoryService, isAllCategory]);
+  }, [categoryService, isLibraryCategory]);
 
   const handleCategoryChange = (newCategoryId: string) => {
     setSelectedCategory(newCategoryId);
@@ -63,17 +63,16 @@ export const FormCreateSong = ({
 
   const handleCreateSong = async (values: {title: string; artist: string}) => {
     try {
-      if (isAllCategory && !selectedCategory) {
+      if (isLibraryCategory && !selectedCategory) {
         Alert.alert('Error', 'Please select a category');
         return;
       }
-      const finalCategoryId = isAllCategory ? selectedCategory : categoryId;
+      const finalCategoryId = isLibraryCategory ? selectedCategory : categoryId;
       await onCreateSong({
         title: values.title,
         artist: values.artist,
         categoryId: finalCategoryId,
       });
-
     } catch (error) {
       console.error('Error creating song:', error);
       Alert.alert('Error', 'Failed to create song. Please try again.');
@@ -117,8 +116,8 @@ export const FormCreateSong = ({
               </Text>
             )}
 
-            {/* Only show dropdown in "All" category view */}
-            {isAllCategory ? (
+            {/* Only show dropdown in "Library" category view */}
+            {isLibraryCategory ? (
               categories.length > 0 && (
                 <CustomDropdown
                   items={categories}
@@ -135,7 +134,7 @@ export const FormCreateSong = ({
                   color={globalColors.primary}
                 />
                 <Text style={styles.categoryText}>
-                Category: {categoryTitle || 'Unknown'}
+                  Category: {categoryTitle || 'Unknown'}
                 </Text>
               </View>
             )}
@@ -153,7 +152,7 @@ export const FormCreateSong = ({
               colorText={globalColors.light}
               btnFontSize={20}
               onPress={handleSubmit}
-              disabled={isAllCategory && !selectedCategory} // Disable if in All view and no category selected
+              disabled={isLibraryCategory && !selectedCategory} // Disable if in Library view and no category selected
             />
           </View>
         )}

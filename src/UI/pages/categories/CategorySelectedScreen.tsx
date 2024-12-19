@@ -52,7 +52,7 @@ export const CategorySelectedScreen = () => {
 
   // Route params
   const {id: categoryId, title: categoryTitle} = route.params;
-  const isAllCategory = categoryId === 'Library';
+  const isLibraryCategory = categoryId === 'Library';
 
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const [selectedSongId, setSelectedSongId] = useState<string | null>(null);
@@ -73,7 +73,7 @@ export const CategorySelectedScreen = () => {
   const [searchText, setSearchText] = useState('');
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [availableKeys, setAvailableKeys] = useState<string[]>([]);
-  const [allSongs, setAllSongs] = useState<ExtendedSongView[]>([]);
+  const [librarySongs, setLibrarySongs] = useState<ExtendedSongView[]>([]);
   const songDetailsService = useSongDetailsService();
 
   // Services
@@ -118,9 +118,11 @@ export const CategorySelectedScreen = () => {
 
       // If we are in “Library”, use the category selected in the form.
       // If not, use the current category of the route
-      const finalCategoryId = isAllCategory ? values.categoryId : categoryId;
+      const finalCategoryId = isLibraryCategory
+        ? values.categoryId
+        : categoryId;
 
-      if (isAllCategory && !values.categoryId) {
+      if (isLibraryCategory && !values.categoryId) {
         Alert.alert('Error', 'Please select a category');
         return;
       }
@@ -145,17 +147,17 @@ export const CategorySelectedScreen = () => {
   const loadSongList = useCallback(async () => {
     setIsLoading(true);
     try {
-      // Verificar el userId
+      // Verify the userId
       if (!userId) {
         console.error('No user ID found');
         return;
       }
 
-      // Obtener canciones según la categoría
+      // Get songs by category
       let fetchedSongs;
-      if (isAllCategory) {
+      if (isLibraryCategory) {
         fetchedSongs = await categoryService.getAllSongsByUserId(userId);
-        console.log('Fetched All Songs:', fetchedSongs); // Debug log
+        console.log('Fetched Library Songs:', fetchedSongs); // Debug log
       } else {
         fetchedSongs = await categoryService.getSongListByCategory(
           userId,
@@ -164,13 +166,13 @@ export const CategorySelectedScreen = () => {
         console.log('Fetched Category Songs:', fetchedSongs); // Debug log
       }
 
-      // Verificar si fetchedSongs es un array
+      // Check if fetchedSongs is an array
       if (!Array.isArray(fetchedSongs)) {
         console.error('Fetched songs is not an array:', fetchedSongs);
         return;
       }
 
-      // Obtener los detalles para cada canción
+      // Get the details for each song
       const songsWithDetails = await Promise.all(
         fetchedSongs.map(async song => {
           try {
@@ -195,10 +197,10 @@ export const CategorySelectedScreen = () => {
         }),
       );
 
-      // Actualizar estados
-      setAllSongs(songsWithDetails);
+      // Update statuses
+      setLibrarySongs(songsWithDetails);
 
-      // Extraer keys disponibles
+      // Extract available keys
       const uniqueKeys = [
         ...new Set(
           songsWithDetails.map(song => song.songKey).filter(key => key !== ''),
@@ -206,7 +208,7 @@ export const CategorySelectedScreen = () => {
       ];
       setAvailableKeys(uniqueKeys);
 
-      // Aplicar filtros actuales o mostrar todas las canciones si no hay filtros
+      // Apply current filters or show all songs if there are no filters
       if (searchText || selectedKey) {
         filterSongs(songsWithDetails, searchText, selectedKey);
       } else {
@@ -220,7 +222,7 @@ export const CategorySelectedScreen = () => {
     }
   }, [
     userId,
-    isAllCategory,
+    isLibraryCategory,
     searchText,
     selectedKey,
     categoryService,
@@ -228,7 +230,7 @@ export const CategorySelectedScreen = () => {
     songDetailsService,
   ]);
 
-  // Asegurarse de que la función filterSongs esté bien definida
+  // Make sure that the filterSongs function is well defined.
   const filterSongs = (
     songs: ExtendedSongView[],
     search: string,
@@ -252,12 +254,12 @@ export const CategorySelectedScreen = () => {
   };
   const handleSearch = (text: string) => {
     setSearchText(text);
-    filterSongs(allSongs, text, selectedKey);
+    filterSongs(librarySongs, text, selectedKey);
   };
 
   const handleKeyFilter = (key: string | null) => {
     setSelectedKey(key);
-    filterSongs(allSongs, searchText, key);
+    filterSongs(librarySongs, searchText, key);
   };
 
   const closeModal = () => setIsVisible(false);
@@ -312,7 +314,7 @@ export const CategorySelectedScreen = () => {
   }, [loadSongList]);
 
   useEffect(() => {
-    // If categoryId is "All", the user can select a category
+    // If categoryId is "Library", the user can select a category
     // Otherwise, pre-select the passed category
     setSelectedCategoryId(categoryId || '');
   }, [categoryId]);
@@ -323,7 +325,7 @@ export const CategorySelectedScreen = () => {
       title: song.title,
       artist: song.artist,
       categoryId: song.categoryId,
-      songId: song.id, // Asegúrate de incluir el songId
+      songId: song.id, // Be sure to include the songId
     });
   };
 
