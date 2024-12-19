@@ -5,15 +5,16 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {useSongState} from '../../../store/useSongState';
 import {auth} from '../../../../infra/api/firebaseConfig';
 
-type Props = {
+interface Props {
   title: string;
   artist: string;
-  onPress: () => void;
-  color: string;
-  resetToggle: boolean;
   isDone: boolean;
   songId: string;
-};
+  songKey?: string;
+  color?: string;
+  onPress?: () => void;
+  resetToggle?: boolean;
+}
 
 export const SongCard = ({
   title,

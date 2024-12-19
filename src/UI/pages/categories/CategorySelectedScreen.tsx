@@ -33,10 +33,11 @@ import {FloatingActionButton} from '../../components/shared/FloatingActionButton
 import {KeyboardGestureArea} from 'react-native-keyboard-controller';
 import {PrimaryButton} from '../../components/shared/PrimaryButton';
 import {FormCreateSong} from '../../components/shared/forms/FormCreateSong';
-import { SongOptionsModal } from '../../components/shared/SongOptionsModal';
-import { PlaylistSelectorModal } from '../../components/shared/modals/PlaylistSelectorModal';
+import {SongOptionsModal} from '../../components/shared/SongOptionsModal';
+import {PlaylistSelectorModal} from '../../components/shared/modals/PlaylistSelectorModal';
 import {usePlaylistService} from '../../../context/PlaylistServiceContext';
-import type { SongData } from '../../../types/songTypes';
+import type {SongData} from '../../../types/songTypes';
+import {useSongDetailsService} from '../../../context/SongDetailsServiceContext';
 
 export const CategorySelectedScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
@@ -50,21 +51,26 @@ export const CategorySelectedScreen = () => {
 
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
   const [selectedSongId, setSelectedSongId] = useState<string | null>(null);
-  const [selectedSongData, setSelectedSongData] = useState<SongData | null>(null);
-  const [selectedCategoryId, setSelectedCategoryId] = useState(categoryId || '');
+  const [selectedSongData, setSelectedSongData] = useState<SongData | null>(
+    null,
+  );
+  const [selectedCategoryId, setSelectedCategoryId] = useState(
+    categoryId || '',
+  );
 
   const [songList, setSongList] = useState<SongView[]>([]);
   const [isVisible, setIsVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isDone, setIsDone] = useState(false);
-  const [isPlaylistSelectorVisible, setIsPlaylistSelectorVisible] = useState(false);
-
+  const [isPlaylistSelectorVisible, setIsPlaylistSelectorVisible] =
+    useState(false);
 
   // Services
   const categoryService = useCategoryService();
   const songService = useSongService();
   const resetSongsState = useResetSongsState();
   const playlistService = usePlaylistService();
+  const songDetailsService = useSongDetailsService();
 
   const {resetToggle} = resetSongsState;
 
@@ -75,7 +81,6 @@ export const CategorySelectedScreen = () => {
   const handleEdit = () => {
     Alert.alert('Error', 'Functionality comming soon...');
   };
-
 
   const handleAddToSelectedPlaylist = async (playlistId: string) => {
     if (!selectedSongData) return;
@@ -93,7 +98,11 @@ export const CategorySelectedScreen = () => {
     }
   };
 
-  const handleCreateSong = async (values: { title: string; artist: string; categoryId?: string }) => {
+  const handleCreateSong = async (values: {
+    title: string;
+    artist: string;
+    categoryId?: string;
+  }) => {
     try {
       setIsLoading(true);
 
@@ -110,7 +119,7 @@ export const CategorySelectedScreen = () => {
         finalCategoryId!,
         values.title,
         values.artist,
-        isDone
+        isDone,
       );
       console.log('Song created:', result);
       await loadSongList();
@@ -145,7 +154,6 @@ export const CategorySelectedScreen = () => {
     }
   }, [categoryId, isAllCategory, categoryService, userId]);
 
-
   const closeModal = () => setIsVisible(false);
   const openModal = () => setIsVisible(true);
 
@@ -177,15 +185,19 @@ export const CategorySelectedScreen = () => {
     ]);
   const swipeRightActions = (songId: string) => (
     <>
-    <TouchableOpacity
+      <TouchableOpacity
         style={styles.editButtonContent}
         onPress={() => {
           setSelectedSongId(songId);
           setIsOptionsVisible(true);
         }}>
-        <Icon name="ellipsis-vertical-sharp" size={25} style={styles.actionIcon} />
+        <Icon
+          name="ellipsis-vertical-sharp"
+          size={25}
+          style={styles.actionIcon}
+        />
       </TouchableOpacity>
-  </>
+    </>
   );
 
   // Effects
@@ -198,6 +210,16 @@ export const CategorySelectedScreen = () => {
     // Otherwise, pre-select the passed category
     setSelectedCategoryId(categoryId || '');
   }, [categoryId]);
+
+  const handleSongPress = (song: SongView) => {
+    navigation.navigate('SongSelectedScreen', {
+      id: song.id,
+      title: song.title,
+      artist: song.artist,
+      categoryId: song.categoryId,
+      songId: song.id, // Asegúrate de incluir el songId
+    });
+  };
 
   const {isRefreshing, refresh, top} = usePullRefresh(loadSongList);
 
@@ -240,14 +262,7 @@ export const CategorySelectedScreen = () => {
                           ? globalColors.primary
                           : globalColors.secondary
                       }
-                      onPress={() =>
-                        navigation.navigate('SongSelectedScreen', {
-                          id: item.id,
-                          title: item.title,
-                          artist: item.artist,
-                          categoryId: item.categoryId,
-                        })
-                      }
+                      onPress={() => handleSongPress(item)}
                     />
                   </Swipeable>
                 )}
@@ -283,45 +298,45 @@ export const CategorySelectedScreen = () => {
         </KeyboardGestureArea>
       </Modal>
       <SongOptionsModal
-            isVisible={isOptionsVisible}
-            onClose={() => setIsOptionsVisible(false)}
-            onEdit={() => {
-              handleEdit();
-              setIsOptionsVisible(false);
-            }}
-            onShare={() => {
-              handleShare();
-              setIsOptionsVisible(false);
-            }}
-            onAddToPlaylist={() => {
-              const song = songList.find(s => s.id === selectedSongId);
-              if (song) {
-                setSelectedSongData({
-                  id: song.id,
-                  title: song.title,
-                  artist: song.artist,
-                  categoryId: song.categoryId,
-                  originalSongId: song.id,
-                });
-                setIsOptionsVisible(false);
-                setTimeout(() => {
-                  setIsPlaylistSelectorVisible(true);
-                }, 500);
-              }
-            }}
-            onDelete={() => {
-              setIsOptionsVisible(false);
-              deleteConfirmation(selectedSongId!);
-            }}
-            songId={selectedSongId || ''}
-            variant="library"
-          />
-        <PlaylistSelectorModal
-          isVisible={isPlaylistSelectorVisible}
-          onClose={() => setIsPlaylistSelectorVisible(false)}
-          songData={selectedSongData}
-          onAddToPlaylist={handleAddToSelectedPlaylist}
-        />
+        isVisible={isOptionsVisible}
+        onClose={() => setIsOptionsVisible(false)}
+        onEdit={() => {
+          handleEdit();
+          setIsOptionsVisible(false);
+        }}
+        onShare={() => {
+          handleShare();
+          setIsOptionsVisible(false);
+        }}
+        onAddToPlaylist={() => {
+          const song = songList.find(s => s.id === selectedSongId);
+          if (song) {
+            setSelectedSongData({
+              id: song.id,
+              title: song.title,
+              artist: song.artist,
+              categoryId: song.categoryId,
+              originalSongId: song.id,
+            });
+            setIsOptionsVisible(false);
+            setTimeout(() => {
+              setIsPlaylistSelectorVisible(true);
+            }, 500);
+          }
+        }}
+        onDelete={() => {
+          setIsOptionsVisible(false);
+          deleteConfirmation(selectedSongId!);
+        }}
+        songId={selectedSongId || ''}
+        variant="library"
+      />
+      <PlaylistSelectorModal
+        isVisible={isPlaylistSelectorVisible}
+        onClose={() => setIsPlaylistSelectorVisible(false)}
+        songData={selectedSongData}
+        onAddToPlaylist={handleAddToSelectedPlaylist}
+      />
     </>
   );
 };
@@ -396,7 +411,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-
 
   overlay: {
     flex: 1,

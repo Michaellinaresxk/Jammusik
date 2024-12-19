@@ -70,6 +70,7 @@ export const SongSelectedScreen = () => {
         Alert.alert('Error', 'Please select a song key');
         return;
       }
+
       await songDetailsService.setSongDetails(
         userId,
         songId,
@@ -79,13 +80,17 @@ export const SongSelectedScreen = () => {
         lyricLink,
         tabLink,
       );
+
       showToast();
       closeModal();
       setHasSavedData(true);
       setTriggerUpdate(true);
+
+      // Recarga los detalles después de guardar
+      await loadSongDetails();
     } catch (error) {
       console.error(error);
-      Alert.alert('Error', 'Failed to create the song. Please try again.');
+      Alert.alert('Error', 'Failed to save song details. Please try again.');
     }
   };
   const loadSongDetails = useCallback(async () => {
