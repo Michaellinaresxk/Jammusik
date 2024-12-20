@@ -1,17 +1,16 @@
-import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { RootStackParamsList } from "../UI/routes/StackNavigator";
-import { useUserService } from "../context/UserServiceContext";
+import {useNavigation} from '@react-navigation/native';
+import {useUserService} from '../context/UserServiceContext';
 
 export const useLogout = () => {
-  const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
+  const navigation = useNavigation();
 
   const userService = useUserService();
   const logoutUser = async () => {
     try {
       await userService.logout();
-      navigation.navigate("LoginScreen");
+      navigation.navigate('LoginScreen');
     } catch (error) {
-      console.error("Error al cerrar sesión: ", error);
+      console.error('Error al cerrar sesión: ', error);
     }
   };
 
