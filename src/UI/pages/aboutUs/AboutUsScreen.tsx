@@ -4,7 +4,6 @@ import {BrandLogo} from '../../components/shared/BrandLogo';
 import {globalColors, globalStyles} from '../../theme/Theme';
 import {ScrollView} from 'react-native';
 import {usePullRefresh} from '../../../hooks/usePullRefresing';
-import {GoBackButton} from '../../components/shared/GoBackButton';
 
 export const AboutUsScreen = () => {
   const {isRefreshing, refresh, top} = usePullRefresh();
@@ -23,7 +22,6 @@ export const AboutUsScreen = () => {
             onRefresh={refresh}
           />
         }>
-        <GoBackButton />
         <View style={[globalStyles.container, {padding: 24}]}>
           <View style={styles.containerLogo}>
             <BrandLogo />

@@ -80,11 +80,6 @@ export const SettingsScreen = () => {
         padding: 20,
         marginTop: top,
       }}>
-      <Pressable
-        style={styles.goBackContent}
-        onPress={() => navigation.navigate('HomeScreen')}>
-        <Icon name="arrow-back-sharp" color={globalColors.primary} size={30} />
-      </Pressable>
       <Text style={styles.subTitle}>Account Settings:</Text>
       <View style={styles.mainContainer}>
         {profileItems.map((item, index) => (
@@ -142,17 +137,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 20,
     marginTop: 40,
-  },
-  goBackContent: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    margin: 'auto',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  goBackLabel: {
-    fontSize: 15,
-    color: globalColors.terceary,
   },
   buttonContainer: {
     marginTop: 30,

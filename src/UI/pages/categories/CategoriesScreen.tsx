@@ -9,7 +9,6 @@ import {
   ScrollView,
   Platform,
   Modal,
-  Pressable,
   RefreshControl,
 } from 'react-native';
 import {globalColors, globalStyles} from '../../theme/Theme';
@@ -178,15 +177,6 @@ export const CategoriesScreen = () => {
                 flex: 1,
                 paddingHorizontal: 10,
               }}>
-              <Pressable
-                style={styles.goBackContent}
-                onPress={() => navigation.navigate('HomeScreen')}>
-                <Icon
-                  name="arrow-back-sharp"
-                  color={globalColors.light}
-                  size={30}
-                />
-              </Pressable>
               <View style={styles.containerHeader}>
                 <View style={styles.titleContent}>
                   <Icon
@@ -281,18 +271,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: 30,
-  },
-  goBackContent: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    margin: 'auto',
-    marginTop: 40,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  goBackLabel: {
-    fontSize: 15,
-    color: globalColors.terceary,
   },
   titleContent: {
     flexDirection: 'row',

@@ -17,7 +17,6 @@ import {images} from '../../../assets/img/Images';
 import {BrandLogo} from '../../components/shared/BrandLogo';
 import {PrimaryButton} from '../../components/shared/PrimaryButton';
 import {usePullRefresh} from '../../../hooks/usePullRefresing';
-import {GoBackButton} from '../../components/shared/GoBackButton';
 import {useEmailResend} from '../../../hooks/useEmailResend';
 import useAnimationKeyboard from '../../../hooks/useAnimationKeyboard';
 import {KeyboardGestureArea} from 'react-native-keyboard-controller';
@@ -49,8 +48,6 @@ export const FeedbackScreen = () => {
                   flex: 1,
                   transform: [{translateY: height}],
                 }}>
-                <GoBackButton bgColor={globalColors.primary} />
-
                 <ScrollView
                   showsVerticalScrollIndicator={false}
                   horizontal={false}
@@ -123,17 +120,6 @@ export const FeedbackScreen = () => {
 const styles = StyleSheet.create({
   logoContainer: {
     marginTop: 100,
-  },
-  goBackContent: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    marginBottom: 30,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  goBackLabel: {
-    fontSize: 15,
-    color: globalColors.terceary,
   },
   text: {
     color: globalColors.light,

@@ -1,15 +1,10 @@
 import React, {useState} from 'react';
-import {Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {AccordionItem} from '../../components/shared/AccodionItems';
 import {globalColors} from '../../theme/Theme';
-import Icon from 'react-native-vector-icons/Ionicons';
-import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {RootStackParamsList} from '../../routes/StackNavigator';
 import {BrandLogo} from '../../components/shared/BrandLogo';
 
 export const FaqsScreen = () => {
-  const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
-
   const [askes, setAskes] = useState([
     {
       id: 0,
@@ -37,15 +32,6 @@ export const FaqsScreen = () => {
   return (
     <ScrollView>
       <View style={styles.containerAsk}>
-        <Pressable
-          style={styles.goBackContent}
-          onPress={() => navigation.goBack()}>
-          <Icon
-            name="arrow-back-sharp"
-            color={globalColors.primary}
-            size={30}
-          />
-        </Pressable>
         <Text style={styles.titleAsk}> Frequently asked questions</Text>
         <Text style={styles.description}>
           Need help with something? Here are the most asked questions
@@ -64,18 +50,6 @@ const styles = StyleSheet.create({
   containerAsk: {
     flex: 1,
     padding: 20,
-  },
-  goBackContent: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    margin: 'auto',
-    marginTop: 40,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  goBackLabel: {
-    fontSize: 15,
-    color: globalColors.terceary,
   },
   titleAsk: {
     color: globalColors.primaryDark,
