@@ -14,8 +14,7 @@ import {
 } from 'react-native';
 import {GlobalHeader} from '../../components/shared/GlobalHeader';
 import {FloatingActionButton} from '../../components/shared/FloatingActionButton';
-import {type RootStackParamsList} from '../../routes/StackNavigator';
-import {RouteProp, useRoute} from '@react-navigation/native';
+import {useRoute} from '@react-navigation/native';
 import {Text} from 'react-native';
 import {PrimaryIcon} from '../../components/shared/PrimaryIcon';
 import {globalColors} from '../../theme/Theme';
@@ -30,8 +29,7 @@ import {useGetCategoryTitle} from '../../../hooks/useGetCategoryTitle';
 import {KeyboardStickyView} from 'react-native-keyboard-controller';
 import useAnimationKeyboard from '../../../hooks/useAnimationKeyboard';
 export const SongSelectedScreen = () => {
-  const params =
-    useRoute<RouteProp<RootStackParamsList, 'PlaylistSelectedScreen'>>().params;
+  const params = useRoute().params;
   const [isVisible, setIsVisible] = useState(false);
   const [songDetails, setSongDetails] = useState<SongDetailsView[]>();
   const [songKey, setSongKey] = useState('');

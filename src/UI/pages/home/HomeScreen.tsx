@@ -16,7 +16,6 @@ import {
   useNavigation,
   useFocusEffect,
 } from '@react-navigation/native';
-import {type RootStackParamsList} from '../../routes/StackNavigator';
 import {GlobalHeader} from '../../components/shared/GlobalHeader';
 import {globalColors} from '../../theme/Theme';
 import {useCategoryService} from '../../../context/CategoryServiceContext';
@@ -36,7 +35,7 @@ import {OnboardingTooltip} from '../../components/shared/onBoarding/OnboardingTo
 import {useOnboarding} from '../../../hooks/useOnboarding';
 
 export const HomeScreen = () => {
-  const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
+  const navigation = useNavigation();
   const {
     isFirstLogin,
     showTooltip,
