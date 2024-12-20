@@ -9,9 +9,7 @@ import {
   View,
   Alert,
   FlatList,
-  Animated,
   Linking,
-  TouchableOpacity,
   Pressable,
 } from 'react-native';
 import {GlobalHeader} from '../../components/shared/GlobalHeader';
@@ -29,12 +27,8 @@ import {auth} from '../../../infra/api/firebaseConfig';
 import {useSongDetailsService} from '../../../context/SongDetailsServiceContext';
 import {SongDetailsView} from '../../../views/SongDetailsView';
 import {useGetCategoryTitle} from '../../../hooks/useGetCategoryTitle';
-import {
-  KeyboardGestureArea,
-  KeyboardStickyView,
-} from 'react-native-keyboard-controller';
+import {KeyboardStickyView} from 'react-native-keyboard-controller';
 import useAnimationKeyboard from '../../../hooks/useAnimationKeyboard';
-import BottomSheet from '../../components/shared/BottomSheets';
 export const SongSelectedScreen = () => {
   const params =
     useRoute<RouteProp<RootStackParamsList, 'PlaylistSelectedScreen'>>().params;
@@ -86,7 +80,7 @@ export const SongSelectedScreen = () => {
       setHasSavedData(true);
       setTriggerUpdate(true);
 
-      // Recarga los detalles después de guardar
+      // Reload details after saving
       await loadSongDetails();
     } catch (error) {
       console.error(error);

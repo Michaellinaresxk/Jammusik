@@ -22,7 +22,6 @@ import {globalColors} from '../../theme/Theme';
 import {useCategoryService} from '../../../context/CategoryServiceContext';
 import {CategoryView} from '../../../views/CategoryView';
 import {usePlaylistService} from '../../../context/PlaylistServiceContext';
-import {useUserService} from '../../../context/UserServiceContext';
 import {auth} from '../../../infra/api/firebaseConfig';
 import {PlaylistView} from '../../../views/PlaylistView';
 import {PlaylistCard} from '../../components/shared/cards/PlaylistCard';
@@ -32,8 +31,6 @@ import Toast from 'react-native-toast-message';
 import {useUpdatePlaylist} from '../../../hooks/useUpdatePlaylist';
 import {PrimaryButton} from '../../components/shared/PrimaryButton';
 import {FormCreatePlaylist} from '../../components/shared/forms/FormCreatePlaylist';
-import {useTopTracks} from '../../../hooks/useTopTrasks';
-import {TopTrackCard} from '../../components/shared/cards/TopTrackCard';
 import {Welcome} from '../../components/shared/onBoarding/Welcome';
 import {OnboardingTooltip} from '../../components/shared/onBoarding/OnboardingTooltip';
 import {useOnboarding} from '../../../hooks/useOnboarding';
@@ -47,7 +44,6 @@ export const HomeScreen = () => {
     steps,
     startOnboarding,
     nextStep,
-    setShowTooltip,
   } = useOnboarding();
   // useEffect for debugging
   useEffect(() => {
@@ -60,13 +56,12 @@ export const HomeScreen = () => {
 
   const categoryService = useCategoryService();
   const playlistService = usePlaylistService();
-  const userService = useUserService();
   const [categories, setCategories] = useState<CategoryView[]>([]);
   const [playlists, setPlaylists] = useState<PlaylistView[]>([]);
   const [triggerUpdate, setTriggerUpdate] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const {updatePlaylist, isLoading: isUpdating} = useUpdatePlaylist();
-  const {tracks} = useTopTracks();
+
   const [editingPlaylist, setEditingPlaylist] = useState<{
     id: string;
     title: string;
@@ -148,33 +143,9 @@ export const HomeScreen = () => {
             />
           }>
           <View>
-            <GlobalHeader headerTitle="Home" />
+            <GlobalHeader headerTitle="Home" hideBackButton={true} />
 
             <View style={styles.categoryCardContainer}>
-              <View style={styles.topTrackList}>
-                <Text style={styles.subTitleToTrack}>
-                  Top 10 Songs of the Week:
-                </Text>
-                <FlatList
-                  horizontal
-                  data={tracks}
-                  keyExtractor={item => item.id}
-                  renderItem={({item}) => (
-                    <TopTrackCard
-                      name={item.name}
-                      artist={item.artist}
-                      imageUrl={item.imageUrl}
-                      onPress={() =>
-                        navigation.navigate('TrackDetailsScreen', {
-                          trackName: item.name,
-                          artistName: item.artist,
-                        })
-                      }
-                    />
-                  )}
-                  showsHorizontalScrollIndicator={false}
-                />
-              </View>
               <Text style={styles.subTitle}>My Categories:</Text>
               <FlatList
                 ListHeaderComponent={
@@ -301,9 +272,6 @@ export const HomeScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  textTopSongs: {
-    marginBottom: 10,
-  },
   text: {
     color: 'red',
     fontSize: 30,
@@ -312,14 +280,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     fontSize: 18,
     color: globalColors.terceary,
-  },
-  subTitleToTrack: {
-    marginBottom: 10,
-    fontSize: 18,
-    color: globalColors.terceary,
-  },
-  topTrackList: {
-    marginBottom: 50,
   },
   categoryCardContainer: {
     padding: 30,

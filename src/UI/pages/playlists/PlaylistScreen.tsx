@@ -4,7 +4,6 @@ import {
   KeyboardAvoidingView,
   Modal,
   Platform,
-  Pressable,
   RefreshControl,
   ScrollView,
   StyleSheet,
@@ -140,15 +139,6 @@ export const PlaylistScreen = () => {
               paddingHorizontal: 15,
               marginTop: 40,
             }}>
-            <Pressable
-              style={styles.goBackContent}
-              onPress={() => navigation.navigate('HomeScreen')}>
-              <Icon
-                name="arrow-back-sharp"
-                color={globalColors.primary}
-                size={30}
-              />
-            </Pressable>
             <View style={styles.containerHeader}>
               <View style={styles.titleContent}>
                 <Icon
@@ -237,19 +227,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 5,
-  },
-  goBackContent: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    margin: 'auto',
-    marginTop: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginLeft: 20,
-  },
-  goBackLabel: {
-    fontSize: 15,
-    color: globalColors.terceary,
   },
   openModalBtn: {
     backgroundColor: globalColors.primaryAlt,
