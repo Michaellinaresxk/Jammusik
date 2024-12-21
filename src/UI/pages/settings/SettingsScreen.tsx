@@ -1,14 +1,23 @@
 import React from 'react';
-import {Alert, Pressable, StyleSheet, Text, View} from 'react-native';
+import {
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {MenuItem} from '../../components/shared/MenuItem';
 import {BrandLogo} from '../../components/shared/BrandLogo';
-import Icon from 'react-native-vector-icons/Ionicons';
 import {globalColors} from '../../theme/Theme';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {PrimaryButton} from '../../components/shared/PrimaryButton';
 import {useUserService} from '../../../context/UserServiceContext';
-import {RootStackParamsList} from '../../routes/StackNavigator';
+import {RootStackParamsList} from '../../routes/AppNavigator';
+import {usePullRefresh} from '../../../hooks/usePullRefresing';
 
 export const SettingsScreen = () => {
   const {top} = useSafeAreaInsets();
@@ -73,62 +82,81 @@ export const SettingsScreen = () => {
       },
     ]);
 
+  const {isRefreshing, refresh} = usePullRefresh();
+
   return (
-    <View
-      style={{
-        flex: 1,
-        padding: 20,
-        marginTop: top,
-      }}>
-      <Text style={styles.subTitle}>Account Settings:</Text>
-      <View style={styles.mainContainer}>
-        {profileItems.map((item, index) => (
-          <MenuItem
-            key={item.component}
-            {...item}
-            isFirst={index === 0}
-            isLast={index === menuItems.length - 1}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            progressViewOffset={top}
+            colors={[
+              globalColors.primary,
+              globalColors.terceary,
+              globalColors.primary,
+            ]}
+            onRefresh={refresh}
           />
-        ))}
-        <View style={{marginTop: 30}} />
+        }>
+        <View
+          style={{
+            flex: 1,
+            padding: 20,
+            marginTop: top,
+          }}>
+          <Text style={styles.subTitle}>Account Settings:</Text>
+          <View style={styles.mainContainer}>
+            {profileItems.map((item, index) => (
+              <MenuItem
+                key={item.component}
+                {...item}
+                isFirst={index === 0}
+                isLast={index === menuItems.length - 1}
+              />
+            ))}
+            <View style={{marginTop: 30}} />
 
-        {menuItems.map((item, index) => (
-          <MenuItem
-            key={item.component}
-            {...item}
-            isFirst={index === 0}
-            isLast={index === menuItems.length - 1}
-          />
-        ))}
-        <View style={{marginTop: 30}} />
+            {menuItems.map((item, index) => (
+              <MenuItem
+                key={item.component}
+                {...item}
+                isFirst={index === 0}
+                isLast={index === menuItems.length - 1}
+              />
+            ))}
+            <View style={{marginTop: 30}} />
 
-        <View style={{marginTop: 30}} />
-        {deleteAccountInfo.map((item, index) => (
-          <MenuItem
-            key={item.component}
-            {...item}
-            isFirst={index === 0}
-            isLast={index === menuItems.length - 1}
-            isOnly={true}
-          />
-        ))}
+            <View style={{marginTop: 30}} />
+            {deleteAccountInfo.map((item, index) => (
+              <MenuItem
+                key={item.component}
+                {...item}
+                isFirst={index === 0}
+                isLast={index === menuItems.length - 1}
+                isOnly={true}
+              />
+            ))}
 
-        <View style={{marginTop: 30}} />
-        <View style={styles.buttonContainer}>
-          <PrimaryButton
-            label="Logout"
-            onPress={() => logOutConfirmation()}
-            borderRadius={5}
-            colorText={globalColors.primary}
-            btnFontSize={17}
-            bgColor={globalColors.primaryAlt}
-          />
+            <View style={{marginTop: 30}} />
+            <View style={styles.buttonContainer}>
+              <PrimaryButton
+                label="Logout"
+                onPress={() => logOutConfirmation()}
+                borderRadius={5}
+                colorText={globalColors.primary}
+                btnFontSize={17}
+                bgColor={globalColors.primaryAlt}
+              />
+            </View>
+            <View style={{marginTop: 10}}>
+              <BrandLogo />
+            </View>
+          </View>
         </View>
-        <View style={{marginTop: 10}}>
-          <BrandLogo />
-        </View>
-      </View>
-    </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

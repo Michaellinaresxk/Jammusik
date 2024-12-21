@@ -15,7 +15,6 @@ import {globalColors, globalStyles} from '../../theme/Theme';
 import {images} from '../../../assets/img/Images';
 import {CategoryCard} from '../../components/shared/cards/CategoryCard';
 import {type NavigationProp, useNavigation} from '@react-navigation/native';
-import {type RootStackParamsList} from '../../routes/StackNavigator';
 import {useCategoryService} from '../../../context/CategoryServiceContext';
 import {useCallback, useEffect, useState} from 'react';
 import {CategoryView} from '../../../views/CategoryView';
@@ -28,6 +27,7 @@ import {usePullRefresh} from '../../../hooks/usePullRefresing';
 import Toast from 'react-native-toast-message';
 import React from 'react';
 import {useUpdateCategory} from '../../../hooks/useUpdateCategory';
+import {RootStackParamsList} from '../../routes/AppNavigator';
 
 export const CategoriesScreen = () => {
   const backgroundImage = {uri: images.image3};
@@ -232,7 +232,9 @@ export const CategoriesScreen = () => {
                 presentationStyle="formSheet">
                 <View style={styles.modalBtnContainer}>
                   <Text style={styles.modalFormHeaderTitle}>
-                    {editingCategory ? 'Edit Category' : 'Add Category'}
+                    {editingCategory
+                      ? 'Edit Category Title'
+                      : 'Add Category Title'}
                   </Text>
                   <PrimaryButton
                     label="Close"

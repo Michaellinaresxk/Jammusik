@@ -14,7 +14,6 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import {globalColors} from '../../theme/Theme';
 import {type NavigationProp, useNavigation} from '@react-navigation/native';
-import {type RootStackParamsList} from '../../routes/StackNavigator';
 
 import {PlaylistCard} from '../../components/shared/cards/PlaylistCard';
 import {TheGreenBorder} from '../../components/shared/TheGreenBorder';
@@ -28,6 +27,7 @@ import {Separator} from '../../components/shared/Separator';
 import {usePullRefresh} from '../../../hooks/usePullRefresing';
 import Toast from 'react-native-toast-message';
 import {useUpdatePlaylist} from '../../../hooks/useUpdatePlaylist';
+import { RootStackParamsList } from '../../routes/AppNavigator';
 
 export const PlaylistScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();

@@ -34,7 +34,7 @@ export const FormCreateCategory = ({
               <TextInput
                 style={globalFormStyles.inputLogin}
                 placeholderTextColor="#838282"
-                placeholder="Title"
+                placeholder="Title..."
                 value={values.title}
                 autoCorrect={false}
                 onChangeText={handleChange('title')}
