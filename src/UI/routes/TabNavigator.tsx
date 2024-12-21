@@ -15,45 +15,66 @@ export const TabNavigator = () => {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarShowLabel: false,
+        tabBarShowLabel: true, // Show text labels
         tabBarStyle: styles.tabBar,
-        tabBarActiveTintColor: globalColors.primary,
-        tabBarInactiveTintColor: globalColors.terceary,
+        tabBarActiveTintColor: globalColors.primary, // Color when active
+        tabBarInactiveTintColor: globalColors.terceary, // Color when inactive
+        tabBarLabelStyle: styles.tabBarLabel,
       }}>
       <Tab.Screen
         name="Home"
         component={HomeScreen}
         options={{
-          tabBarIcon: ({color, size}) => (
-            <Icon name="home-outline" color={color} size={24} />
+          tabBarIcon: ({color, size, focused}) => (
+            <Icon
+              name={focused ? 'home-sharp' : 'home-outline'} // Switch to “sharp” when active
+              color={color}
+              size={24}
+            />
           ),
+          tabBarLabel: 'Home',
         }}
       />
       <Tab.Screen
         name="Categories"
         component={CategoriesScreen}
         options={{
-          tabBarIcon: ({color, size}) => (
-            <Icon name="grid-outline" color={color} size={24} />
+          tabBarIcon: ({color, size, focused}) => (
+            <Icon
+              name={focused ? 'grid-sharp' : 'grid-outline'}
+              color={color}
+              size={24}
+            />
           ),
+          tabBarLabel: 'Categories',
         }}
       />
       <Tab.Screen
         name="Playlists"
         component={PlaylistScreen}
         options={{
-          tabBarIcon: ({color, size}) => (
-            <Icon name="musical-notes-outline" color={color} size={24} />
+          tabBarIcon: ({color, size, focused}) => (
+            <Icon
+              name={focused ? 'musical-notes-sharp' : 'musical-notes-outline'}
+              color={color}
+              size={24}
+            />
           ),
+          tabBarLabel: 'Playlists',
         }}
       />
       <Tab.Screen
         name="Settings"
         component={SettingsScreen}
         options={{
-          tabBarIcon: ({color, size}) => (
-            <Icon name="settings-outline" color={color} size={24} />
+          tabBarIcon: ({color, size, focused}) => (
+            <Icon
+              name={focused ? 'settings-sharp' : 'settings-outline'}
+              color={color}
+              size={24}
+            />
           ),
+          tabBarLabel: 'Settings',
         }}
       />
     </Tab.Navigator>
@@ -79,5 +100,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 12,
     paddingBottom: 0,
+  },
+  tabBarLabel: {
+    fontSize: 12,
+    fontWeight: '600',
+    marginTop: -2,
+    marginBottom: 8,
   },
 });
