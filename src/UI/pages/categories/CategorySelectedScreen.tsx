@@ -298,15 +298,13 @@ export const CategorySelectedScreen = () => {
     setSelectedSongId(null);
   };
 
-  // Único handler para iniciar la edición
   const handleEdit = () => {
     const song = songList.find(s => s.id === selectedSongId);
     if (song) {
-      setIsOptionsVisible(false); // Primero cerrar el modal de opciones
-      // Esperar a que se cierre el primer modal antes de abrir el segundo
+      setIsOptionsVisible(false);
       setTimeout(() => {
         setIsEditModalVisible(true);
-      }, 500); // Dar tiempo suficiente para que el primer modal se cierre
+      }, 500);
     }
   };
 
@@ -341,7 +339,7 @@ export const CategorySelectedScreen = () => {
       <TouchableOpacity
         style={styles.editButtonContent}
         onPress={() => {
-          setSelectedSongId(songId); // Aquí estableces el ID
+          setSelectedSongId(songId);
           setIsOptionsVisible(true);
         }}>
         <Icon
@@ -457,14 +455,14 @@ export const CategorySelectedScreen = () => {
           </ScrollView>
         </KeyboardGestureArea>
       </Modal>
-      {/* Modal para editar una canción existente */}
+      {/* Modal to edit an existing song */}
       <Modal
         visible={isEditModalVisible}
         animationType="slide"
         presentationStyle="formSheet"
         onRequestClose={closeEditModal}>
         {' '}
-        {/* Añadir este handler */}
+        {/* Add this handler */}
         <KeyboardGestureArea interpolator="ios" style={{flex: 1}}>
           <ScrollView horizontal={false} style={{flex: 1}}>
             <View style={styles.modalBtnContainer}>
@@ -473,7 +471,7 @@ export const CategorySelectedScreen = () => {
                 label="Close"
                 btnFontSize={20}
                 colorText={globalColors.light}
-                onPress={closeEditModal} // Usar la función de cierre
+                onPress={closeEditModal}
               />
             </View>
 
@@ -504,7 +502,7 @@ export const CategorySelectedScreen = () => {
       <SongOptionsModal
         isVisible={isOptionsVisible}
         onClose={() => setIsOptionsVisible(false)}
-        onEdit={handleEdit} // Simplificado
+        onEdit={handleEdit}
         onShare={handleShare}
         onAddToPlaylist={() => {
           const song = songList.find(s => s.id === selectedSongId);
