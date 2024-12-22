@@ -1,5 +1,11 @@
 import type {ApiSong} from './ApiSong';
-import {getFirestore, addDoc, collection} from '@firebase/firestore';
+import {
+  getFirestore,
+  addDoc,
+  collection,
+  serverTimestamp,
+  updateDoc,
+} from '@firebase/firestore';
 import {getDocs, where, query, deleteDoc, doc} from 'firebase/firestore';
 import {auth} from '../api/firebaseConfig';
 
@@ -57,6 +63,32 @@ export class SongCaller {
           ...doc.data(),
         } as ApiSong),
     );
+  }
+
+  async updateSong(
+    userId: string,
+    songId: string,
+    updates: {
+      title: string;
+      artist: string;
+      categoryId?: string;
+    },
+  ): Promise<void> {
+    if (!this.db || !userId || !songId) {
+      throw new Error('Firestore instance, userId, or songId is undefined!');
+    }
+
+    const songRef = doc(this.db, 'songs', songId);
+
+    try {
+      await updateDoc(songRef, {
+        ...updates,
+        updatedAt: serverTimestamp(),
+      });
+    } catch (error) {
+      console.error('Error updating song:', error);
+      throw error;
+    }
   }
 
   async deleteSong(userId: string, songId: string): Promise<void> {

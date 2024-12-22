@@ -13,7 +13,6 @@ import {
   View,
 } from 'react-native';
 import {RouteProp, useRoute} from '@react-navigation/native';
-import {RootStackParamsList} from '../../routes/StackNavigator';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {getAuth} from 'firebase/auth';
 import {Swipeable} from 'react-native-gesture-handler';
@@ -39,6 +38,7 @@ import {usePlaylistService} from '../../../context/PlaylistServiceContext';
 import type {SongData} from '../../../types/songTypes';
 import {useSongDetailsService} from '../../../context/SongDetailsServiceContext';
 import {SongFilter} from '../../components/shared/SongFilter';
+import {RootStackParamsList} from '../../routes/AppNavigator';
 
 interface ExtendedSongView extends SongView {
   songKey?: string;
@@ -55,7 +55,6 @@ export const CategorySelectedScreen = () => {
   const isLibraryCategory = categoryId === 'Library';
 
   const [isOptionsVisible, setIsOptionsVisible] = useState(false);
-  const [selectedSongId, setSelectedSongId] = useState<string | null>(null);
   const [selectedSongData, setSelectedSongData] = useState<SongData | null>(
     null,
   );
@@ -69,6 +68,10 @@ export const CategorySelectedScreen = () => {
   const [isDone, setIsDone] = useState(false);
   const [isPlaylistSelectorVisible, setIsPlaylistSelectorVisible] =
     useState(false);
+
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [selectedSongId, setSelectedSongId] = useState<string | null>(null);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const [searchText, setSearchText] = useState('');
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
@@ -85,10 +88,6 @@ export const CategorySelectedScreen = () => {
   const {resetToggle} = resetSongsState;
 
   const handleShare = async () => {
-    Alert.alert('Error', 'Functionality comming soon...');
-  };
-
-  const handleEdit = () => {
     Alert.alert('Error', 'Functionality comming soon...');
   };
 
@@ -147,43 +146,44 @@ export const CategorySelectedScreen = () => {
   const loadSongList = useCallback(async () => {
     setIsLoading(true);
     try {
-      // Verify the userId
-      if (!userId) {
+      // Verificar userId al inicio
+      const currentUser = auth.currentUser;
+      if (!currentUser?.uid) {
         console.error('No user ID found');
         return;
       }
+      const userId = currentUser.uid;
 
       // Get songs by category
       let fetchedSongs;
       if (isLibraryCategory) {
         fetchedSongs = await categoryService.getAllSongsByUserId(userId);
-        console.log('Fetched Library Songs:', fetchedSongs); // Debug log
       } else {
         fetchedSongs = await categoryService.getSongListByCategory(
           userId,
           categoryId,
         );
-        console.log('Fetched Category Songs:', fetchedSongs); // Debug log
       }
 
-      // Check if fetchedSongs is an array
       if (!Array.isArray(fetchedSongs)) {
         console.error('Fetched songs is not an array:', fetchedSongs);
         return;
       }
 
-      // Get the details for each song
+      // Get the details for each song with mejor manejo de errores
       const songsWithDetails = await Promise.all(
         fetchedSongs.map(async song => {
           try {
             const [isDone, songDetails] = await Promise.all([
-              getIsDone(song.id),
-              songDetailsService.getSongDetails(userId, song.id),
+              getIsDone(song.id).catch(() => false),
+              songDetailsService
+                .getSongDetails(userId, song.id)
+                .catch(() => null),
             ]);
 
             return {
               ...song,
-              isDone,
+              isDone: isDone || false,
               songKey: songDetails?.key || '',
             };
           } catch (error) {
@@ -197,23 +197,13 @@ export const CategorySelectedScreen = () => {
         }),
       );
 
-      // Update statuses
       setLibrarySongs(songsWithDetails);
+      setSongList(songsWithDetails);
 
-      // Extract available keys
       const uniqueKeys = [
-        ...new Set(
-          songsWithDetails.map(song => song.songKey).filter(key => key !== ''),
-        ),
+        ...new Set(songsWithDetails.map(song => song.songKey).filter(Boolean)),
       ];
       setAvailableKeys(uniqueKeys);
-
-      // Apply current filters or show all songs if there are no filters
-      if (searchText || selectedKey) {
-        filterSongs(songsWithDetails, searchText, selectedKey);
-      } else {
-        setSongList(songsWithDetails);
-      }
     } catch (error) {
       console.error('Failed to fetch song lists:', error);
       Alert.alert('Error', 'Failed to load songs. Please try again.');
@@ -221,10 +211,8 @@ export const CategorySelectedScreen = () => {
       setIsLoading(false);
     }
   }, [
-    userId,
+    auth.currentUser,
     isLibraryCategory,
-    searchText,
-    selectedKey,
     categoryService,
     categoryId,
     songDetailsService,
@@ -265,6 +253,63 @@ export const CategorySelectedScreen = () => {
   const closeModal = () => setIsVisible(false);
   const openModal = () => setIsVisible(true);
 
+  const handleUpdateSong = async (values: {
+    title: string;
+    artist: string;
+    categoryId?: string;
+  }) => {
+    if (!selectedSongId || !userId) {
+      console.error('No song selected or user not authenticated');
+      return;
+    }
+
+    setIsUpdating(true);
+    try {
+      await songService.updateSong(userId, selectedSongId, {
+        title: values.title,
+        artist: values.artist,
+        categoryId: values.categoryId || categoryId,
+      });
+
+      await loadSongList();
+      setIsEditModalVisible(false);
+      setSelectedSongId(null);
+
+      Toast.show({
+        type: 'success',
+        text1: 'Song updated successfully',
+        topOffset: 90,
+      });
+    } catch (error) {
+      console.error('Failed to update song:', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Failed to update song',
+        text2: 'Please try again',
+        topOffset: 90,
+      });
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const closeEditModal = () => {
+    setIsEditModalVisible(false);
+    setSelectedSongId(null);
+  };
+
+  // Único handler para iniciar la edición
+  const handleEdit = () => {
+    const song = songList.find(s => s.id === selectedSongId);
+    if (song) {
+      setIsOptionsVisible(false); // Primero cerrar el modal de opciones
+      // Esperar a que se cierre el primer modal antes de abrir el segundo
+      setTimeout(() => {
+        setIsEditModalVisible(true);
+      }, 500); // Dar tiempo suficiente para que el primer modal se cierre
+    }
+  };
+
   const handleDeleteSong = async (songId: string) => {
     try {
       await songService.deleteSong(userId, songId);
@@ -296,7 +341,7 @@ export const CategorySelectedScreen = () => {
       <TouchableOpacity
         style={styles.editButtonContent}
         onPress={() => {
-          setSelectedSongId(songId);
+          setSelectedSongId(songId); // Aquí estableces el ID
           setIsOptionsVisible(true);
         }}>
         <Icon
@@ -386,7 +431,6 @@ export const CategorySelectedScreen = () => {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-
       <Modal
         visible={isVisible}
         animationType="slide"
@@ -406,23 +450,62 @@ export const CategorySelectedScreen = () => {
             <FormCreateSong
               categoryId={categoryId}
               categoryTitle={categoryTitle}
-              onCreateSong={handleCreateSong}
+              onSubmit={handleCreateSong}
               isLoading={isLoading}
+              isEditing={false}
             />
+          </ScrollView>
+        </KeyboardGestureArea>
+      </Modal>
+      {/* Modal para editar una canción existente */}
+      <Modal
+        visible={isEditModalVisible}
+        animationType="slide"
+        presentationStyle="formSheet"
+        onRequestClose={closeEditModal}>
+        {' '}
+        {/* Añadir este handler */}
+        <KeyboardGestureArea interpolator="ios" style={{flex: 1}}>
+          <ScrollView horizontal={false} style={{flex: 1}}>
+            <View style={styles.modalBtnContainer}>
+              <Text style={styles.modalFormHeaderTitle}>Edit Song</Text>
+              <PrimaryButton
+                label="Close"
+                btnFontSize={20}
+                colorText={globalColors.light}
+                onPress={closeEditModal} // Usar la función de cierre
+              />
+            </View>
+
+            {selectedSongId && (
+              <FormCreateSong
+                categoryId={categoryId}
+                categoryTitle={categoryTitle}
+                onSubmit={handleUpdateSong}
+                isLoading={isUpdating}
+                isEditing={true}
+                initialValues={
+                  songList.find(s => s.id === selectedSongId)
+                    ? {
+                        title: songList.find(s => s.id === selectedSongId)!
+                          .title,
+                        artist: songList.find(s => s.id === selectedSongId)!
+                          .artist,
+                        categoryId: songList.find(s => s.id === selectedSongId)!
+                          .categoryId,
+                      }
+                    : undefined
+                }
+              />
+            )}
           </ScrollView>
         </KeyboardGestureArea>
       </Modal>
       <SongOptionsModal
         isVisible={isOptionsVisible}
         onClose={() => setIsOptionsVisible(false)}
-        onEdit={() => {
-          handleEdit();
-          setIsOptionsVisible(false);
-        }}
-        onShare={() => {
-          handleShare();
-          setIsOptionsVisible(false);
-        }}
+        onEdit={handleEdit} // Simplificado
+        onShare={handleShare}
         onAddToPlaylist={() => {
           const song = songList.find(s => s.id === selectedSongId);
           if (song) {
@@ -446,6 +529,7 @@ export const CategorySelectedScreen = () => {
         songId={selectedSongId || ''}
         variant="library"
       />
+
       <PlaylistSelectorModal
         isVisible={isPlaylistSelectorVisible}
         onClose={() => setIsPlaylistSelectorVisible(false)}

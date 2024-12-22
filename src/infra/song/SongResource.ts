@@ -41,6 +41,18 @@ export class SongResource implements SongRepository {
     );
   }
 
+  async editSong(
+    userId: string,
+    songId: string,
+    updates: {
+      title: string;
+      artist: string;
+      categoryId?: string;
+    },
+  ): Promise<void> {
+    return await this.songCaller.updateSong(userId, songId, updates);
+  }
+
   async deleteSong(userId: string, songId: string) {
     return await this.songCaller.deleteSong(userId, songId);
   }
