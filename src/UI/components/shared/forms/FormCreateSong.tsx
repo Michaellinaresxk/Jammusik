@@ -16,27 +16,42 @@ import {Formik} from 'formik';
 import {validationCreateSongForm} from './yup/validation_create_song';
 import {PrimaryIcon} from '../PrimaryIcon';
 
-type SongForm = {
-  categoryId: string;
-  categoryTitle?: string;
-  onCreateSong: (values: {title: string; artist: string}) => Promise<void>;
-  isLoading: boolean;
-};
-
 type DropdownItem = {
   label: string;
   value: string;
 };
+// FormCreateSong.tsx
+
+type FormCreateSongProps = {
+  categoryId: string;
+  categoryTitle?: string;
+  onSubmit: (values: {
+    title: string;
+    artist: string;
+    categoryId?: string;
+  }) => Promise<void>;
+  isLoading: boolean;
+  isEditing?: boolean;
+  initialValues?: {
+    title: string;
+    artist: string;
+    categoryId?: string;
+  };
+};
 
 export const FormCreateSong = ({
   categoryId,
-  onCreateSong,
-  isLoading,
   categoryTitle,
-}: SongForm) => {
+  onSubmit,
+  isLoading,
+  isEditing = false,
+  initialValues,
+}: FormCreateSongProps) => {
   const categoryService = useCategoryService();
   const [categories, setCategories] = useState<DropdownItem[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>(categoryId);
+  const [selectedCategory, setSelectedCategory] = useState<string>(
+    initialValues?.categoryId || categoryId,
+  );
   const isLibraryCategory = categoryId === 'Library';
 
   useEffect(() => {
@@ -57,34 +72,36 @@ export const FormCreateSong = ({
     }
   }, [categoryService, isLibraryCategory]);
 
-  const handleCategoryChange = (newCategoryId: string) => {
-    setSelectedCategory(newCategoryId);
-  };
-
-  const handleCreateSong = async (values: {title: string; artist: string}) => {
-    try {
-      if (isLibraryCategory && !selectedCategory) {
-        Alert.alert('Error', 'Please select a category');
-        return;
-      }
-      const finalCategoryId = isLibraryCategory ? selectedCategory : categoryId;
-      await onCreateSong({
-        title: values.title,
-        artist: values.artist,
-        categoryId: finalCategoryId,
-      });
-    } catch (error) {
-      console.error('Error creating song:', error);
-      Alert.alert('Error', 'Failed to create song. Please try again.');
-    }
-  };
-
   return (
     <View style={globalFormStyles.containerForm}>
       <Formik
         validationSchema={validationCreateSongForm}
-        initialValues={{title: '', artist: ''}}
-        onSubmit={handleCreateSong}>
+        initialValues={initialValues || {title: '', artist: ''}}
+        enableReinitialize
+        onSubmit={async values => {
+          try {
+            if (isLibraryCategory && !selectedCategory) {
+              Alert.alert('Error', 'Please select a category');
+              return;
+            }
+
+            const finalCategoryId = isLibraryCategory
+              ? selectedCategory
+              : categoryId;
+            await onSubmit({
+              ...values,
+              categoryId: finalCategoryId,
+            });
+          } catch (error) {
+            console.error('Error with song:', error);
+            Alert.alert(
+              'Error',
+              `Failed to ${
+                isEditing ? 'update' : 'create'
+              } song. Please try again.`,
+            );
+          }
+        }}>
         {({values, errors, handleChange, handleSubmit, touched}) => (
           <View style={globalFormStyles.form}>
             <TextInput
@@ -101,6 +118,7 @@ export const FormCreateSong = ({
                 {errors.title}
               </Text>
             )}
+
             <TextInput
               style={globalFormStyles.inputLogin}
               placeholder="Artist"
@@ -116,14 +134,13 @@ export const FormCreateSong = ({
               </Text>
             )}
 
-            {/* Only show dropdown in "Library" category view */}
             {isLibraryCategory ? (
               categories.length > 0 && (
                 <CustomDropdown
                   items={categories}
                   defaultValue={selectedCategory}
                   placeholder="Select a category"
-                  onChange={handleCategoryChange}
+                  onChange={value => setSelectedCategory(value)}
                 />
               )
             ) : (
@@ -143,6 +160,8 @@ export const FormCreateSong = ({
               label={
                 isLoading ? (
                   <ActivityIndicator size="large" />
+                ) : isEditing ? (
+                  'Update Song'
                 ) : (
                   'Create A New Song'
                 )
@@ -152,7 +171,7 @@ export const FormCreateSong = ({
               colorText={globalColors.light}
               btnFontSize={20}
               onPress={handleSubmit}
-              disabled={isLibraryCategory && !selectedCategory} // Disable if in Library view and no category selected
+              disabled={isLibraryCategory && !selectedCategory}
             />
           </View>
         )}
