@@ -11,11 +11,7 @@ import {
   View,
 } from 'react-native';
 import {CategoryCardLight} from '../../components/shared/cards/CategoryCardLight';
-import {
-  type NavigationProp,
-  useNavigation,
-  useFocusEffect,
-} from '@react-navigation/native';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {GlobalHeader} from '../../components/shared/GlobalHeader';
 import {globalColors} from '../../theme/Theme';
 import {useCategoryService} from '../../../context/CategoryServiceContext';
@@ -43,15 +39,19 @@ export const HomeScreen = () => {
     steps,
     startOnboarding,
     nextStep,
+    userName,
   } = useOnboarding();
   // useEffect for debugging
   useEffect(() => {
-    console.log('Current status:', {
+    console.log('Onboarding state:', {
       isFirstLogin,
       showTooltip,
       currentStep,
+      userName,
     });
-  }, [isFirstLogin, showTooltip, currentStep]);
+  }, [isFirstLogin, showTooltip, currentStep, userName]);
+
+  console.log('user name in home', userName);
 
   const categoryService = useCategoryService();
   const playlistService = usePlaylistService();
@@ -173,6 +173,7 @@ export const HomeScreen = () => {
                   />
                 )}
               />
+              <SliderQuotes />
               <View style={styles.playlistContainer}>
                 <Text style={styles.subTitle}>My Playlists:</Text>
                 <FlatList
@@ -201,7 +202,6 @@ export const HomeScreen = () => {
                   )}
                 />
               </View>
-              <SliderQuotes />
             </View>
           </View>
           <Modal
@@ -250,10 +250,8 @@ export const HomeScreen = () => {
 
       <Welcome
         visible={isFirstLogin}
-        onStart={() => {
-          console.log('Welcome onStart llamado');
-          startOnboarding();
-        }}
+        onStart={startOnboarding}
+        userName={userName}
       />
 
       <OnboardingTooltip
@@ -261,10 +259,7 @@ export const HomeScreen = () => {
         title={steps[currentStep]?.title}
         description={steps[currentStep]?.description}
         position={steps[currentStep]?.position}
-        onClose={() => {
-          console.log('Tooltip onClose llamado');
-          nextStep();
-        }}
+        onClose={nextStep}
       />
     </>
   );

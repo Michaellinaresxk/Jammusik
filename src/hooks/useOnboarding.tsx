@@ -12,31 +12,26 @@ export const useOnboarding = () => {
     const checkUserStatus = async () => {
       try {
         const user = auth.currentUser;
-        if (user) {
-          // We try to get the current user using your service
-          const userData = await userService.getCurrentUser(user.uid);
-          if (userData) {
-            // We compare creation time with last login
-            const creationTime = new Date(user.metadata.creationTime);
-            const lastSignInTime = new Date(user.metadata.lastSignInTime);
-            const timeDifference = Math.abs(
-              lastSignInTime.getTime() - creationTime.getTime(),
-            );
+        // Verificamos el estado del usuario
+        const userData = await userService.getCurrentUser(user.uid);
+        if (userData) {
+          const creationTime = new Date(user.metadata.creationTime);
+          const lastSignInTime = new Date(user.metadata.lastSignInTime);
+          const timeDifference = Math.abs(
+            lastSignInTime.getTime() - creationTime.getTime(),
+          );
 
-            const isNew = timeDifference < 60000; // new user if the difference is less than 1 minute
-            console.log('User status:', {
-              isNew,
-              creationTime,
-              lastSignInTime,
-            });
-            setIsFirstLogin(isNew);
-          }
-        } else {
-          setIsFirstLogin(false);
+          const isNew = timeDifference < 60000;
+          console.log('User status:', {
+            isNew,
+            creationTime,
+            lastSignInTime,
+            userName: user?.displayName,
+          });
+          setIsFirstLogin(isNew);
         }
       } catch (error) {
         console.error('Error verifying user status:', error);
-        setIsFirstLogin(false);
       }
     };
 
@@ -48,21 +43,8 @@ export const useOnboarding = () => {
       id: 'categories',
       title: 'Create your first category!',
       description:
-        'click on “Library” or go to the menu and click on categories, from there you can start creating songs.',
-      position: {top: 280, left: 20},
-    },
-    {
-      id: 'songs',
-      title: 'Add your songs',
-      description: 'Within each category you can add the songs of your choice.',
-      position: {top: 380, left: 20},
-    },
-    {
-      id: 'playlists',
-      title: 'Create your first playlist',
-      description:
-        'Create playlists and combine songs from different categories, go to the playlist view in the menu and let the magic begin.',
-      position: {top: 480, left: 20},
+        'click on "Library" or go to the menu and click on categories, from there you can start creating songs.',
+      position: {top: 420, left: 40},
     },
   ];
 
@@ -76,13 +58,9 @@ export const useOnboarding = () => {
   }, []);
 
   const nextStep = useCallback(() => {
-    if (currentStep < steps.length - 1) {
-      setCurrentStep(prev => prev + 1);
-    } else {
-      setShowTooltip(false);
-      setCurrentStep(0);
-    }
-  }, [currentStep, steps.length]);
+    setShowTooltip(false);
+    setCurrentStep(0);
+  }, []);
 
   return {
     isFirstLogin,
@@ -92,5 +70,6 @@ export const useOnboarding = () => {
     startOnboarding,
     nextStep,
     setShowTooltip,
+    userName: auth.currentUser?.displayName || 'there',
   };
 };

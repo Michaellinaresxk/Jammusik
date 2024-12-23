@@ -33,6 +33,8 @@ export const ProfileScreen = () => {
 
   const fetchUser = useCallback(async () => {
     const user = auth.currentUser;
+    console.log(user);
+    console.log(user?.displayName);
     if (user) {
       const userData = await userService.getCurrentUser(user.uid);
       setUser(userData);

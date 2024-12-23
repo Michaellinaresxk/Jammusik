@@ -17,12 +17,7 @@ export const OnboardingTooltip = ({
         style={styles.tooltipOverlay}
         activeOpacity={1}
         onPress={onClose}>
-        <View
-          style={[
-            styles.tooltipContainer,
-            position, // Asegúrate de que position tenga top y left
-            {zIndex: 1000}, // Añade un zIndex alto para asegurar que esté por encima
-          ]}>
+        <View style={[styles.tooltipContainer, position, {zIndex: 1000}]}>
           <View style={styles.tooltipContent}>
             <Text style={styles.tooltipTitle}>{title}</Text>
             <Text style={styles.tooltipDescription}>{description}</Text>
@@ -30,7 +25,7 @@ export const OnboardingTooltip = ({
               style={styles.tooltipButton}
               onPress={onClose}
               activeOpacity={0.8}>
-              <Text style={styles.tooltipButtonText}>Entendido</Text>
+              <Text style={styles.tooltipButtonText}>Let's Go!</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -40,91 +35,6 @@ export const OnboardingTooltip = ({
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.9)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  content: {
-    backgroundColor: globalColors.light,
-    borderRadius: 20,
-    padding: 24,
-    width: '100%',
-    maxWidth: 400,
-  },
-  iconContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: globalColors.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'center',
-    marginBottom: 24,
-  },
-  iconText: {
-    fontSize: 40,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: globalColors.primary,
-    textAlign: 'center',
-    marginBottom: 12,
-  },
-  description: {
-    fontSize: 16,
-    color: globalColors.terceary,
-    textAlign: 'center',
-    marginBottom: 24,
-  },
-  steps: {
-    marginBottom: 24,
-  },
-  stepItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  stepNumber: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: globalColors.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
-  },
-  stepNumberText: {
-    color: globalColors.light,
-    fontWeight: 'bold',
-  },
-  stepContent: {
-    flex: 1,
-  },
-  stepTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: globalColors.primary,
-    marginBottom: 4,
-  },
-  stepDescription: {
-    fontSize: 14,
-    color: globalColors.terceary,
-  },
-  button: {
-    backgroundColor: globalColors.primary,
-    padding: 16,
-    borderRadius: 12,
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: globalColors.light,
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
   tooltipOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.5)',
