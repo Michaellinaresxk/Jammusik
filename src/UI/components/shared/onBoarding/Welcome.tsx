@@ -9,10 +9,10 @@ import {
 } from 'react-native';
 import {globalColors} from '../../../theme/Theme';
 
-export const Welcome = ({visible, onStart}) => {
+export const Welcome = ({visible, onStart, userName = 'There'}) => {
   const scaleAnim = React.useRef(new Animated.Value(0.9)).current;
   const opacityAnim = React.useRef(new Animated.Value(0)).current;
-
+  console.log('user name in welcome');
   React.useEffect(() => {
     if (visible) {
       Animated.parallel([
@@ -49,7 +49,9 @@ export const Welcome = ({visible, onStart}) => {
             <Text style={styles.iconText}>🎵</Text>
           </View>
 
-          <Text style={styles.title}>Welcome to your music app!</Text>
+          <Text style={styles.title}>
+            Welcome {userName} to your music app!
+          </Text>
 
           <Text style={styles.description}>
             Let us help you organize your music in 3 simple steps:
@@ -95,6 +97,9 @@ const StepItem = ({number, title, description}) => (
 );
 
 const styles = StyleSheet.create({
+  userName: {
+    color: globalColors.primaryDark,
+  },
   container: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.9)',
