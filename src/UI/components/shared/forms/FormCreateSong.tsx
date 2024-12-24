@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   StyleSheet,
   Alert,
+  ScrollView,
 } from 'react-native';
 import {globalColors, globalFormStyles} from '../../../theme/Theme';
 import {PrimaryButton} from '../PrimaryButton';
@@ -20,11 +21,9 @@ type DropdownItem = {
   label: string;
   value: string;
 };
-// FormCreateSong.tsx
-
 type FormCreateSongProps = {
   categoryId: string;
-  categoryTitle?: string;
+  categoryTitle: string;
   onSubmit: (values: {
     title: string;
     artist: string;
@@ -72,115 +71,174 @@ export const FormCreateSong = ({
     }
   }, [categoryService, isLibraryCategory]);
 
+  const [usedCategories, setUsedCategories] = useState<string[]>([]);
+
+  const handleCategoryChange = async (
+    value: string,
+    isNewCategory: boolean,
+  ) => {
+    try {
+      if (isNewCategory && !usedCategories.includes(value)) {
+        const newCategory = await categoryService.createCategory(
+          auth.currentUser!.uid,
+          value,
+          value.toUpperCase(),
+        );
+        const newCategoryItem = {
+          label: value,
+          value: newCategory.id,
+        };
+        setCategories(prev => [...prev, newCategoryItem]);
+        setSelectedCategory(newCategory.id);
+        setUsedCategories(prev => [...prev, value]);
+      } else {
+        setSelectedCategory(value);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      Alert.alert('Error', 'Failed to create category');
+    }
+  };
+
+  const getCategoryTitle = (categoryId: string) => {
+    const category = categories.find(cat => cat.value === categoryId);
+    return category?.label || 'Library';
+  };
+
   return (
-    <View style={globalFormStyles.containerForm}>
-      <Formik
-        validationSchema={validationCreateSongForm}
-        initialValues={initialValues || {title: '', artist: ''}}
-        enableReinitialize
-        onSubmit={async values => {
-          try {
-            if (isLibraryCategory && !selectedCategory) {
-              Alert.alert('Error', 'Please select a category');
+    <ScrollView contentContainerStyle={styles.container}>
+      <View style={globalFormStyles.containerForm}>
+        <Formik
+          validationSchema={validationCreateSongForm}
+          initialValues={{
+            title: '',
+            artist: '',
+            categoryId: '',
+            categoryTitle: '',
+          }}
+          onSubmit={async (values, {setFieldError}) => {
+            if (
+              isLibraryCategory &&
+              !selectedCategory &&
+              !values.categoryTitle
+            ) {
+              setFieldError('categoryTitle', 'The category is required');
               return;
             }
-
-            const finalCategoryId = isLibraryCategory
-              ? selectedCategory
-              : categoryId;
-            await onSubmit({
-              ...values,
-              categoryId: finalCategoryId,
-            });
-          } catch (error) {
-            console.error('Error with song:', error);
-            Alert.alert(
-              'Error',
-              `Failed to ${
-                isEditing ? 'update' : 'create'
-              } song. Please try again.`,
-            );
-          }
-        }}>
-        {({values, errors, handleChange, handleSubmit, touched}) => (
-          <View style={globalFormStyles.form}>
-            <TextInput
-              style={globalFormStyles.inputLogin}
-              placeholderTextColor="#838282"
-              placeholder="Title"
-              autoCorrect={false}
-              autoCapitalize="words"
-              value={values.title}
-              onChangeText={handleChange('title')}
-            />
-            {errors.title && touched.title && (
-              <Text style={{color: 'red', marginBottom: 5}}>
-                {errors.title}
-              </Text>
-            )}
-
-            <TextInput
-              style={globalFormStyles.inputLogin}
-              placeholder="Artist"
-              placeholderTextColor={'gray'}
-              autoCapitalize="words"
-              autoCorrect={false}
-              value={values.artist}
-              onChangeText={handleChange('artist')}
-            />
-            {errors.artist && touched.artist && (
-              <Text style={{color: 'red', marginBottom: 5}}>
-                {errors.artist}
-              </Text>
-            )}
-
-            {isLibraryCategory ? (
-              categories.length > 0 && (
+            try {
+              const finalCategoryId = isLibraryCategory
+                ? selectedCategory
+                : categoryId;
+              await onSubmit({
+                ...values,
+                categoryId: finalCategoryId,
+                categoryTitle: values.categoryTitle,
+              });
+            } catch (error) {
+              console.error('Error:', error);
+              Alert.alert('Error', 'Failed to create song');
+            }
+          }}>
+          {({
+            values,
+            errors,
+            handleChange,
+            handleSubmit,
+            touched,
+            handleBlur,
+            setFieldTouched,
+            setFieldError, // Agregar aquí
+          }) => (
+            <View style={globalFormStyles.form}>
+              <TextInput
+                style={globalFormStyles.inputLogin}
+                placeholderTextColor="#838282"
+                placeholder="Title"
+                autoCorrect={false}
+                autoCapitalize="words"
+                value={values.title}
+                onChangeText={handleChange('title')}
+              />
+              {errors.title && touched.title && (
+                <Text style={{color: 'red', marginBottom: 5}}>
+                  {errors.title}
+                </Text>
+              )}
+              <TextInput
+                style={globalFormStyles.inputLogin}
+                placeholder="Artist"
+                placeholderTextColor={'gray'}
+                autoCapitalize="words"
+                autoCorrect={false}
+                value={values.artist}
+                onChangeText={handleChange('artist')}
+              />
+              {errors.artist && touched.artist && (
+                <Text style={{color: 'red', marginBottom: 5}}>
+                  {errors.artist}
+                </Text>
+              )}
+              {isLibraryCategory ? (
                 <CustomDropdown
                   items={categories}
                   defaultValue={selectedCategory}
-                  placeholder="Select a category"
-                  onChange={value => setSelectedCategory(value)}
+                  placeholder="Select or create category"
+                  onChange={(value, isNewCategory) => {
+                    handleCategoryChange(value, isNewCategory);
+                    handleChange('categoryTitle')(value);
+                    setFieldTouched('categoryTitle', true);
+                  }}
+                  error={
+                    errors.categoryTitle &&
+                    !selectedCategory &&
+                    !newCategory?.trim()
+                      ? 'The category is required'
+                      : undefined
+                  }
+                  touched={touched.categoryTitle}
                 />
-              )
-            ) : (
-              <View style={styles.titleContent}>
-                <PrimaryIcon
-                  name="musical-notes-sharp"
-                  size={22}
-                  color={globalColors.primary}
-                />
-                <Text style={styles.categoryText}>
-                  Category: {categoryTitle || 'Unknown'}
-                </Text>
-              </View>
-            )}
-
-            <PrimaryButton
-              label={
-                isLoading ? (
-                  <ActivityIndicator size="large" />
-                ) : isEditing ? (
-                  'Update Song'
-                ) : (
-                  'Create A New Song'
-                )
-              }
-              bgColor={globalColors.primary}
-              borderRadius={5}
-              colorText={globalColors.light}
-              btnFontSize={20}
-              onPress={handleSubmit}
-              disabled={isLibraryCategory && !selectedCategory}
-            />
-          </View>
-        )}
-      </Formik>
-    </View>
+              ) : (
+                <View style={styles.titleContent}>
+                  <PrimaryIcon
+                    name="musical-notes-sharp"
+                    size={22}
+                    color={globalColors.primary}
+                  />
+                  <Text style={styles.categoryText}>
+                    Category: {getCategoryTitle(selectedCategory)}
+                  </Text>
+                </View>
+              )}
+              <PrimaryButton
+                label={
+                  isLoading ? (
+                    <ActivityIndicator size="large" />
+                  ) : isEditing ? (
+                    'Update Song'
+                  ) : (
+                    'Create A New Song'
+                  )
+                }
+                bgColor={globalColors.primary}
+                borderRadius={5}
+                colorText={globalColors.light}
+                btnFontSize={20}
+                onPress={handleSubmit}
+                disabled={isLibraryCategory && !selectedCategory}
+              />
+            </View>
+          )}
+        </Formik>
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flexGrow: 1,
+    paddingBottom: 20,
+  },
   titleContent: {
     textAlign: 'center',
     flexDirection: 'row',
