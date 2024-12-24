@@ -101,6 +101,9 @@ export const FormCreateSong = ({
   };
 
   const getCategoryTitle = (categoryId: string) => {
+    if (!isLibraryCategory) {
+      return categoryTitle;
+    }
     const category = categories.find(cat => cat.value === categoryId);
     return category?.label || 'Library';
   };

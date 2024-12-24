@@ -38,18 +38,18 @@ export const CustomDropdown = ({
   const [newCategory, setNewCategory] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  // Categorías predeterminadas
+  // Default categories
   const predefinedCategories = React.useMemo(
     () => [
       {label: 'Rock', value: 'ROCK', icon: 'musical-notes'},
       {label: 'Pop', value: 'POP', icon: 'radio'},
       {label: 'Jazz', value: 'JAZZ', icon: 'musical-note'},
-      {label: 'Classical', value: 'CLASSICAL', icon: 'musical-notes'},
-      {label: 'Hip Hop', value: 'HIP_HOP', icon: 'musical-notes'},
-      {label: 'Electronic', value: 'ELECTRONIC', icon: 'musical-notes'},
+      {label: 'Reggae', value: 'Reggae', icon: 'musical-notes'},
+      {label: 'Fusion', value: 'Fusion', icon: 'musical-notes'},
+      {label: 'Funk', value: 'ELECTRONIC', icon: 'musical-notes'},
     ],
     [],
-  ); // Array vacío porque estas categorías nunca cambian
+  ); // Empty array because these categories never change
 
   const allCategories = React.useMemo(() => {
     const userCategories = [...items];
@@ -71,7 +71,7 @@ export const CustomDropdown = ({
   const handleSelectCategory = (category: DropdownItem) => {
     setSelectedCategory(category.value);
     onChange(category.value);
-    onInputChange?.(category.label); // Actualizar valor del formulario
+    onInputChange?.(category.label); // Update form value
   };
 
   const handleCreateCategory = () => {
@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     color: globalColors.primary,
   },
   categoriesScroll: {
-    maxHeight: 120, // Reduced from 120
+    maxHeight: 120,
   },
   categoriesContainer: {
     flexDirection: 'row',
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#ddd', // Changed from globalColors.primary
+    borderColor: '#ddd',
     borderRadius: 25,
     backgroundColor: '#fff',
     paddingLeft: 15,
