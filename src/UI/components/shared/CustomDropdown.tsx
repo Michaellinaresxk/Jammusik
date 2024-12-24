@@ -55,13 +55,13 @@ export const CustomDropdown = ({
     const userCategories = [...items];
 
     const uniquePredefined = predefinedCategories.filter(predef => {
-      const normalizedPredefLabel = predef.label.toLowerCase().trim();
-      const normalizedPredefValue = predef.value.toLowerCase().trim();
-
+      // Agregar normalización de valor y label
       return !userCategories.some(
         userCat =>
-          userCat.label.toLowerCase().trim() === normalizedPredefLabel ||
-          userCat.value.toLowerCase().trim() === normalizedPredefValue,
+          userCat.label.toLowerCase().trim() ===
+            predef.label.toLowerCase().trim() ||
+          userCat.value.toLowerCase().trim() ===
+            predef.value.toLowerCase().trim(),
       );
     });
 
@@ -75,12 +75,10 @@ export const CustomDropdown = ({
   };
 
   const handleCreateCategory = () => {
-    if (!newCategory.trim()) {
-      onInputChange?.('');
-      return;
-    }
+    if (!newCategory.trim()) return;
     onChange(newCategory, true);
     onInputChange?.(newCategory);
+    setNewCategory(''); // Limpiar después de crear
   };
   return (
     <View style={styles.container}>

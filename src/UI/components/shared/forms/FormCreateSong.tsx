@@ -114,28 +114,30 @@ export const FormCreateSong = ({
         <Formik
           validationSchema={validationCreateSongForm}
           initialValues={{
-            title: '',
-            artist: '',
-            categoryId: '',
-            categoryTitle: '',
+            title: initialValues?.title || '',
+            artist: initialValues?.artist || '',
+            categoryId: initialValues?.categoryId || categoryId || '',
+            categoryTitle: initialValues?.categoryTitle || categoryTitle || '',
           }}
           onSubmit={async (values, {setFieldError}) => {
-            if (
-              isLibraryCategory &&
-              !selectedCategory &&
-              !values.categoryTitle
-            ) {
-              setFieldError('categoryTitle', 'The category is required');
-              return;
-            }
             try {
               const finalCategoryId = isLibraryCategory
                 ? selectedCategory
                 : categoryId;
+
+              if (!finalCategoryId) {
+                setFieldError(
+                  'categoryTitle',
+                  isLibraryCategory
+                    ? 'The category is required'
+                    : 'Category ID is missing for this song',
+                );
+                return;
+              }
+
               await onSubmit({
                 ...values,
                 categoryId: finalCategoryId,
-                categoryTitle: values.categoryTitle,
               });
             } catch (error) {
               console.error('Error:', error);
@@ -192,9 +194,7 @@ export const FormCreateSong = ({
                     setFieldTouched('categoryTitle', true);
                   }}
                   error={
-                    errors.categoryTitle &&
-                    !selectedCategory &&
-                    !newCategory?.trim()
+                    errors.categoryTitle && !selectedCategory
                       ? 'The category is required'
                       : undefined
                   }
@@ -208,7 +208,7 @@ export const FormCreateSong = ({
                     color={globalColors.primary}
                   />
                   <Text style={styles.categoryText}>
-                    Category: {getCategoryTitle(selectedCategory)}
+                    Category: {getCategoryTitle(categoryId)}
                   </Text>
                 </View>
               )}
