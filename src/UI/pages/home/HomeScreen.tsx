@@ -38,12 +38,14 @@ export const HomeScreen = () => {
     selectedGenres,
     handleGenreSelect,
     completeOnboarding,
+    finalizeOnboarding,
     setCurrentStep,
     userName,
   } = useEnhancedOnboarding();
 
   const categoryService = useCategoryService();
   const playlistService = usePlaylistService();
+  const songService = useSongService();
   const [categories, setCategories] = useState<CategoryView[]>([]);
   const [playlists, setPlaylists] = useState<PlaylistView[]>([]);
   const [triggerUpdate, setTriggerUpdate] = useState(false);
@@ -252,12 +254,15 @@ export const HomeScreen = () => {
           </Modal>
           <OnboardingModal
             visible={isFirstLogin}
-            onComplete={completeOnboarding}
+            onComplete={finalizeOnboarding}
             userName={userName}
-            selectedGenres={selectedGenres}
+            selectedGenres={selectedGenres || []}
             handleGenreSelect={handleGenreSelect}
             currentStep={currentStep}
             setCurrentStep={setCurrentStep}
+            navigation={navigation}
+            songService={songService}
+            completeOnboarding={completeOnboarding}
           />
         </ScrollView>
       </KeyboardAvoidingView>
