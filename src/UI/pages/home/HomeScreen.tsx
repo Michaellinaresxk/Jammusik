@@ -8,6 +8,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import {CategoryCardLight} from '../../components/shared/cards/CategoryCardLight';
@@ -27,7 +28,7 @@ import {useUpdatePlaylist} from '../../../hooks/useUpdatePlaylist';
 import {PrimaryButton} from '../../components/shared/PrimaryButton';
 import {FormCreatePlaylist} from '../../components/shared/forms/FormCreatePlaylist';
 import {useEnhancedOnboarding} from '../../../hooks/useEnhancedOnboarding';
-import { OnboardingModal } from '../../components/shared/onBoarding/OnboardingModal';
+import {OnboardingModal} from '../../components/shared/onBoarding/OnboardingModal';
 
 export const HomeScreen = () => {
   const navigation = useNavigation();
@@ -128,7 +129,7 @@ export const HomeScreen = () => {
             <GlobalHeader headerTitle="Home" hideBackButton={true} />
 
             <View style={styles.categoryCardContainer}>
-              <Text style={styles.subTitle}>My Categories:</Text>
+              <Text style={styles.subTitle}>My Music Categories:</Text>
               <FlatList
                 ListHeaderComponent={
                   <CategoryCardLight
@@ -156,13 +157,30 @@ export const HomeScreen = () => {
                   />
                 )}
               />
-              <SliderQuotes />
               <View style={styles.playlistContainer}>
                 <Text style={styles.subTitle}>My Playlists:</Text>
                 <FlatList
                   data={playlists}
                   keyExtractor={item => item.id}
                   numColumns={2}
+                  ListEmptyComponent={
+                    <View style={styles.emptyContainer}>
+                      <Text style={styles.emptyMessage}>
+                        No playlists created yet. Add one to organize your
+                        songs!
+                      </Text>
+                      <TouchableOpacity
+                        style={styles.createPlaylistButton}
+                        onPress={() => {
+                          console.log('Navigating to PlaylistScreen');
+                          navigation.navigate('Playlists');
+                        }}>
+                        <Text style={styles.createPlaylistButtonText}>
+                          + Create Playlist
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  }
                   renderItem={({item, index}) => (
                     <PlaylistCard
                       title={item.title}
@@ -184,6 +202,10 @@ export const HomeScreen = () => {
                     />
                   )}
                 />
+              </View>
+              <SliderQuotes />
+              <View style={{marginBottom: 100}}>
+                <></>
               </View>
             </View>
           </View>
@@ -269,5 +291,27 @@ const styles = StyleSheet.create({
   modalFormHeaderTitle: {
     fontSize: 20,
     color: globalColors.light,
+  },
+  emptyContainer: {
+    alignItems: 'center',
+    marginVertical: 20,
+  },
+  emptyMessage: {
+    fontSize: 16,
+    color: globalColors.terceary,
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  createPlaylistButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+    backgroundColor: globalColors.primary,
+    alignItems: 'center',
+  },
+  createPlaylistButtonText: {
+    color: globalColors.light,
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
