@@ -2,24 +2,21 @@ import {useState, useCallback, useEffect} from 'react';
 import {auth} from '../infra/api/firebaseConfig';
 import {useUserService} from '../context/UserServiceContext';
 import {useCategoryService} from '../context/CategoryServiceContext';
+import {ONBOARDING_STEPS} from '../constants/onboarding';
 import Toast from 'react-native-toast-message';
-interface Genre {
-  id: string;
-  name: string;
-  icon: string;
-}
+import {Category} from '../types/songTypes';
 
 export const useEnhancedOnboarding = () => {
+  const [selectedGenres, setSelectedGenres] = useState<Category[]>([]);
   const [isFirstLogin, setIsFirstLogin] = useState(false);
-  const [currentStep, setCurrentStep] = useState(0);
-  const [selectedGenres, setSelectedGenres] = useState<Genre[]>([]);
+  const [currentStep, setCurrentStep] = useState(ONBOARDING_STEPS.WELCOME);
   const userService = useUserService();
   const categoryService = useCategoryService();
 
   useEffect(() => {
     const checkUserStatus = async () => {
       try {
-        const user = auth.currentUser || '';
+        const user = auth.currentUser;
         const userData = await userService.getCurrentUser(user.uid);
         if (userData) {
           const creationTime = new Date(user.metadata.creationTime);
@@ -27,22 +24,19 @@ export const useEnhancedOnboarding = () => {
           const timeDifference = Math.abs(
             lastSignInTime.getTime() - creationTime.getTime(),
           );
+
           const isNew = timeDifference < 60000;
-          console.log('User status:', {
-            isNew,
-            creationTime,
-            lastSignInTime,
-            userName: auth.currentUser?.displayName,
-          });
           setIsFirstLogin(isNew);
         }
       } catch (error) {
         console.error('Error verifying user status:', error);
       }
     };
+
     checkUserStatus();
   }, [userService]);
-  const handleGenreSelect = useCallback((genre: Genre) => {
+
+  const handleGenreSelect = useCallback(genre => {
     setSelectedGenres(prev =>
       prev.includes(genre) ? prev.filter(g => g !== genre) : [...prev, genre],
     );
@@ -53,30 +47,39 @@ export const useEnhancedOnboarding = () => {
       const user = auth.currentUser;
       if (!user) return;
 
-      // Crear las categorías una por una
-      const createPromises = selectedGenres.map(genre =>
-        categoryService.createCategory(user.uid, genre.name),
+      console.log('Starting category creation with genres:', selectedGenres);
+
+      // Create the categories one by one
+      const createdCategories = await Promise.all(
+        selectedGenres.map(async genre => {
+          const newCategory = await categoryService.createCategory(
+            user.uid,
+            genre.name,
+          );
+          console.log('Created category:', newCategory);
+          return {
+            id: newCategory.id,
+            name: genre.name,
+          };
+        }),
       );
 
-      await Promise.all(createPromises);
-
-      setIsFirstLogin(false);
-      setCurrentStep(0);
-
-      // Opcional: Mostrar un Toast de éxito
-      Toast.show({
-        type: 'success',
-        text1: 'Categories created successfully',
-      });
+      console.log('All categories created:', createdCategories);
+      setSelectedGenres(createdCategories);
+      setCurrentStep(ONBOARDING_STEPS.CREATE_SONG);
     } catch (error) {
-      console.error('Error completing onboarding:', error);
-      // Opcional: Mostrar un Toast de error
+      console.error('Error creating categories:', error);
       Toast.show({
         type: 'error',
-        text1: 'Failed to create categories',
+        text1: 'Error creating categories',
       });
     }
   }, [categoryService, selectedGenres]);
+  // New method to completely finalize onboarding
+  const finalizeOnboarding = useCallback(() => {
+    setIsFirstLogin(false);
+    setCurrentStep(ONBOARDING_STEPS.WELCOME);
+  }, []);
 
   return {
     isFirstLogin,
@@ -84,6 +87,7 @@ export const useEnhancedOnboarding = () => {
     selectedGenres,
     handleGenreSelect,
     completeOnboarding,
+    finalizeOnboarding,
     setCurrentStep,
     userName: auth.currentUser?.displayName || 'there',
   };
