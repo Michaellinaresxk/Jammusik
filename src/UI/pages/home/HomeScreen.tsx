@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useEffect} from 'react';
+import React, {useState, useCallback} from 'react';
 import {
   FlatList,
   KeyboardAvoidingView,
@@ -26,32 +26,20 @@ import Toast from 'react-native-toast-message';
 import {useUpdatePlaylist} from '../../../hooks/useUpdatePlaylist';
 import {PrimaryButton} from '../../components/shared/PrimaryButton';
 import {FormCreatePlaylist} from '../../components/shared/forms/FormCreatePlaylist';
-import {Welcome} from '../../components/shared/onBoarding/Welcome';
-import {OnboardingTooltip} from '../../components/shared/onBoarding/OnboardingTooltip';
-import {useOnboarding} from '../../../hooks/useOnboarding';
+import {useEnhancedOnboarding} from '../../../hooks/useEnhancedOnboarding';
+import { OnboardingModal } from '../../components/shared/onBoarding/OnboardingModal';
 
 export const HomeScreen = () => {
   const navigation = useNavigation();
   const {
     isFirstLogin,
-    showTooltip,
     currentStep,
-    steps,
-    startOnboarding,
-    nextStep,
+    selectedGenres,
+    handleGenreSelect,
+    completeOnboarding,
+    setCurrentStep,
     userName,
-  } = useOnboarding();
-  // useEffect for debugging
-  useEffect(() => {
-    console.log('Onboarding state:', {
-      isFirstLogin,
-      showTooltip,
-      currentStep,
-      userName,
-    });
-  }, [isFirstLogin, showTooltip, currentStep, userName]);
-
-  console.log('user name in home', userName);
+  } = useEnhancedOnboarding();
 
   const categoryService = useCategoryService();
   const playlistService = usePlaylistService();
@@ -118,12 +106,7 @@ export const HomeScreen = () => {
   };
 
   const {isRefreshing, refresh, top} = usePullRefresh(loadData);
-  console.log('Rendering HomeScreen with:', {
-    isFirstLogin,
-    showTooltip,
-    currentStep,
-    steps: steps?.[currentStep],
-  });
+
   return (
     <>
       <KeyboardAvoidingView
@@ -245,22 +228,17 @@ export const HomeScreen = () => {
               playlistId={editingPlaylist?.id}
             />
           </Modal>
+          <OnboardingModal
+            visible={isFirstLogin}
+            onComplete={completeOnboarding}
+            userName={userName}
+            selectedGenres={selectedGenres}
+            handleGenreSelect={handleGenreSelect}
+            currentStep={currentStep}
+            setCurrentStep={setCurrentStep}
+          />
         </ScrollView>
       </KeyboardAvoidingView>
-
-      <Welcome
-        visible={isFirstLogin}
-        onStart={startOnboarding}
-        userName={userName}
-      />
-
-      <OnboardingTooltip
-        visible={showTooltip}
-        title={steps[currentStep]?.title}
-        description={steps[currentStep]?.description}
-        position={steps[currentStep]?.position}
-        onClose={nextStep}
-      />
     </>
   );
 };
