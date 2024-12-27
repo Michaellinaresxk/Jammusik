@@ -27,7 +27,8 @@ import {useUpdatePlaylist} from '../../../hooks/useUpdatePlaylist';
 import {PrimaryButton} from '../../components/shared/PrimaryButton';
 import {FormCreatePlaylist} from '../../components/shared/forms/FormCreatePlaylist';
 import {useEnhancedOnboarding} from '../../../hooks/useEnhancedOnboarding';
-import { OnboardingModal } from '../../components/shared/onBoarding/OnboardingModal';
+import {OnboardingModal} from '../../components/shared/onBoarding/OnboardingModal';
+import {useSongService} from '../../../context/SongServiceContext';
 
 export const HomeScreen = () => {
   const navigation = useNavigation();
@@ -37,12 +38,14 @@ export const HomeScreen = () => {
     selectedGenres,
     handleGenreSelect,
     completeOnboarding,
+    finalizeOnboarding,
     setCurrentStep,
     userName,
   } = useEnhancedOnboarding();
 
   const categoryService = useCategoryService();
   const playlistService = usePlaylistService();
+  const songService = useSongService();
   const [categories, setCategories] = useState<CategoryView[]>([]);
   const [playlists, setPlaylists] = useState<PlaylistView[]>([]);
   const [triggerUpdate, setTriggerUpdate] = useState(false);
@@ -128,7 +131,7 @@ export const HomeScreen = () => {
             <GlobalHeader headerTitle="Home" hideBackButton={true} />
 
             <View style={styles.categoryCardContainer}>
-              <Text style={styles.subTitle}>My Categories:</Text>
+              <Text style={styles.subTitle}>My songs by genre:</Text>
               <FlatList
                 ListHeaderComponent={
                   <CategoryCardLight
@@ -230,12 +233,15 @@ export const HomeScreen = () => {
           </Modal>
           <OnboardingModal
             visible={isFirstLogin}
-            onComplete={completeOnboarding}
+            onComplete={finalizeOnboarding}
             userName={userName}
-            selectedGenres={selectedGenres}
+            selectedGenres={selectedGenres || []}
             handleGenreSelect={handleGenreSelect}
             currentStep={currentStep}
             setCurrentStep={setCurrentStep}
+            navigation={navigation}
+            songService={songService}
+            completeOnboarding={completeOnboarding}
           />
         </ScrollView>
       </KeyboardAvoidingView>
