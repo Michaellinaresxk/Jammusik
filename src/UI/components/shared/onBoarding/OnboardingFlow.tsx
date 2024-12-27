@@ -8,7 +8,7 @@ import {
   Dimensions,
 } from 'react-native';
 import {Music, Plus, Sparkles} from 'lucide-react-native';
-import {globalColors} from '../../../theme/Theme'; // Ajusta la ruta según tu estructura
+import {globalColors} from '../../../theme/Theme';
 
 const {height} = Dimensions.get('window');
 
@@ -86,11 +86,6 @@ const OnboardingFlow = ({
                   </Text>
                 </TouchableOpacity>
               ))}
-
-              <TouchableOpacity style={styles.customGenreButton}>
-                <Plus size={20} color={globalColors.terceary} />
-                <Text style={styles.genreText}>Custom Genre</Text>
-              </TouchableOpacity>
             </View>
 
             {selectedGenres.length > 0 && (
@@ -100,7 +95,7 @@ const OnboardingFlow = ({
                 <Text style={styles.alertDescription}>
                   You've selected {selectedGenres.length} genre
                   {selectedGenres.length !== 1 ? 's' : ''}. These will be added
-                  to your library.
+                  to your category selected song and your "Library".
                 </Text>
               </View>
             )}

@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 135,
     width: 150,
-    margin: 10,
+    margin: 7,
   },
   categoryCardText: {
     color: globalColors.primary,
