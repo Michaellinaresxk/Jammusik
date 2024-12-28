@@ -23,9 +23,11 @@ const OnboardingFlow = ({
   const defaultGenres = [
     {id: 'rock', name: 'Rock', icon: '🎸'},
     {id: 'fusion', name: 'Fusion', icon: '🎷'},
+    {id: 'metal', name: 'Metal', icon: '🤘'},
     {id: 'pop', name: 'Pop', icon: '🎤'},
-    {id: 'latin-music', name: 'Latin Music', icon: '🎻'},
-    {id: 'reguae', name: 'Reguae', icon: '🎹'},
+    {id: 'latin-music', name: 'Latin Music', icon: '🥁'},
+    {id: 'reggae', name: 'Reggae', icon: '🌴'},
+    {id: 'reggaeton', name: 'Reggaeton', icon: '🎧'},
   ];
 
   return (
