@@ -51,7 +51,9 @@ export const FormCreateSong = ({
   const [selectedCategory, setSelectedCategory] = useState<string>(
     initialValues?.categoryId || categoryId,
   );
-  const isLibraryCategory = categoryId === 'Library';
+
+  // Modificamos esta condición para incluir cuando estamos en Home
+  const isLibraryOrHome = categoryId === 'Library' || !categoryId;
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -66,10 +68,10 @@ export const FormCreateSong = ({
       }
     };
 
-    if (isLibraryCategory) {
+    if (isLibraryOrHome) {
       loadCategories();
     }
-  }, [categoryService, isLibraryCategory]);
+  }, [categoryService, isLibraryOrHome]);
 
   return (
     <View style={globalFormStyles.containerForm}>
@@ -79,12 +81,12 @@ export const FormCreateSong = ({
         enableReinitialize
         onSubmit={async values => {
           try {
-            if (isLibraryCategory && !selectedCategory) {
+            if (isLibraryOrHome && !selectedCategory) {
               Alert.alert('Error', 'Please select a category');
               return;
             }
 
-            const finalCategoryId = isLibraryCategory
+            const finalCategoryId = isLibraryOrHome
               ? selectedCategory
               : categoryId;
             await onSubmit({
@@ -133,7 +135,7 @@ export const FormCreateSong = ({
               </Text>
             )}
 
-            {isLibraryCategory ? (
+            {isLibraryOrHome ? (
               categories.length > 0 && (
                 <CustomDropdown
                   items={categories}
@@ -170,7 +172,7 @@ export const FormCreateSong = ({
               colorText={globalColors.light}
               btnFontSize={20}
               onPress={handleSubmit}
-              disabled={isLibraryCategory && !selectedCategory}
+              disabled={isLibraryOrHome && !selectedCategory}
             />
           </View>
         )}
