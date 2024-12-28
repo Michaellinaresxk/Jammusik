@@ -29,6 +29,7 @@ import {PrimaryButton} from '../../components/shared/PrimaryButton';
 import {FormCreatePlaylist} from '../../components/shared/forms/FormCreatePlaylist';
 import {useEnhancedOnboarding} from '../../../hooks/useEnhancedOnboarding';
 import {OnboardingModal} from '../../components/shared/onBoarding/OnboardingModal';
+import {useSongService} from '../../../context/SongServiceContext';
 
 export const HomeScreen = () => {
   const navigation = useNavigation();
@@ -38,7 +39,6 @@ export const HomeScreen = () => {
     selectedGenres,
     handleGenreSelect,
     completeOnboarding,
-    finalizeOnboarding,
     setCurrentStep,
     userName,
   } = useEnhancedOnboarding();
@@ -254,14 +254,11 @@ export const HomeScreen = () => {
           </Modal>
           <OnboardingModal
             visible={isFirstLogin}
-            onComplete={finalizeOnboarding}
             userName={userName}
             selectedGenres={selectedGenres || []}
             handleGenreSelect={handleGenreSelect}
             currentStep={currentStep}
             setCurrentStep={setCurrentStep}
-            navigation={navigation}
-            songService={songService}
             completeOnboarding={completeOnboarding}
           />
         </ScrollView>

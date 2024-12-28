@@ -65,8 +65,17 @@ export const useEnhancedOnboarding = () => {
       );
 
       console.log('All categories created:', createdCategories);
-      setSelectedGenres(createdCategories);
-      setCurrentStep(ONBOARDING_STEPS.CREATE_SONG);
+
+      Toast.show({
+        type: 'success',
+        text1: 'Setup Complete!',
+        text2:
+          'You can now create songs in your categories from the Home screen',
+      });
+
+      // Inmediatamente después de crear las categorías, finalizamos el onboarding
+      setIsFirstLogin(false);
+      setCurrentStep(ONBOARDING_STEPS.WELCOME);
     } catch (error) {
       console.error('Error creating categories:', error);
       Toast.show({
@@ -75,11 +84,6 @@ export const useEnhancedOnboarding = () => {
       });
     }
   }, [categoryService, selectedGenres]);
-  // New method to completely finalize onboarding
-  const finalizeOnboarding = useCallback(() => {
-    setIsFirstLogin(false);
-    setCurrentStep(ONBOARDING_STEPS.WELCOME);
-  }, []);
 
   return {
     isFirstLogin,
@@ -87,7 +91,6 @@ export const useEnhancedOnboarding = () => {
     selectedGenres,
     handleGenreSelect,
     completeOnboarding,
-    finalizeOnboarding,
     setCurrentStep,
     userName: auth.currentUser?.displayName || 'there',
   };
