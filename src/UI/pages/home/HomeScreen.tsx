@@ -30,6 +30,10 @@ import {FormCreatePlaylist} from '../../components/shared/forms/FormCreatePlayli
 import {useEnhancedOnboarding} from '../../../hooks/useEnhancedOnboarding';
 import {OnboardingModal} from '../../components/shared/onBoarding/OnboardingModal';
 import {useSongService} from '../../../context/SongServiceContext';
+import Icon from 'react-native-vector-icons/Ionicons';
+import {KeyboardGestureArea} from 'react-native-keyboard-controller';
+import {FormCreateSong} from '../../components/shared/forms/FormCreateSong';
+import {Separator} from '../../components/shared/Separator';
 
 export const HomeScreen = () => {
   const navigation = useNavigation();
@@ -45,12 +49,49 @@ export const HomeScreen = () => {
 
   const categoryService = useCategoryService();
   const playlistService = usePlaylistService();
-  const songService = useSongService();
   const [categories, setCategories] = useState<CategoryView[]>([]);
   const [playlists, setPlaylists] = useState<PlaylistView[]>([]);
   const [triggerUpdate, setTriggerUpdate] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const {updatePlaylist, isLoading: isUpdating} = useUpdatePlaylist();
+
+  const songService = useSongService();
+  const [isSongModalVisible, setIsSongModalVisible] = useState(false);
+  const [isLoadingNewSong, setIsLoadingNewSong] = useState(false);
+
+  // Function to create songs
+  const handleCreateSong = async (values: {
+    title: string;
+    artist: string;
+    categoryId: string;
+  }) => {
+    try {
+      setIsLoadingNewSong(true);
+      await songService.createSong(
+        values.categoryId,
+        values.title,
+        values.artist,
+        false,
+      );
+
+      Toast.show({
+        type: 'success',
+        text1: 'Song created successfully!',
+      });
+
+      setIsSongModalVisible(false);
+      // Reload data after creating the song
+      loadData();
+    } catch (error) {
+      console.error('Error creating song:', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Failed to create song',
+      });
+    } finally {
+      setIsLoadingNewSong(false);
+    }
+  };
 
   const [editingPlaylist, setEditingPlaylist] = useState<{
     id: string;
@@ -129,7 +170,23 @@ export const HomeScreen = () => {
           }>
           <View>
             <GlobalHeader headerTitle="Home" hideBackButton={true} />
-
+            {/* Add this section after the header */}
+            <View style={styles.containerHeader}>
+              <View style={styles.titleContent}>
+                <Icon
+                  name="musical-notes-sharp"
+                  color={globalColors.primary}
+                  size={30}
+                />
+                <Text style={styles.title}>Create new song!</Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => setIsSongModalVisible(true)}
+                style={styles.openModalBtn}>
+                <Text style={styles.openModalBtnText}>+</Text>
+              </TouchableOpacity>
+            </View>
+            <Separator color={globalColors.terceary} />
             <View style={styles.categoryCardContainer}>
               <Text style={styles.subTitle}>My Music Categories:</Text>
               <FlatList
@@ -261,6 +318,33 @@ export const HomeScreen = () => {
             setCurrentStep={setCurrentStep}
             completeOnboarding={completeOnboarding}
           />
+          {/* Modal to create songs */}
+          <Modal
+            visible={isSongModalVisible}
+            animationType="slide"
+            presentationStyle="formSheet">
+            <KeyboardGestureArea interpolator="ios" style={{flex: 1}}>
+              <ScrollView horizontal={false} style={{flex: 1}}>
+                <View style={styles.modalBtnContainer}>
+                  <Text style={styles.modalFormHeaderTitle}>
+                    Create New Song
+                  </Text>
+                  <PrimaryButton
+                    label="Close"
+                    btnFontSize={20}
+                    colorText={globalColors.light}
+                    onPress={() => setIsSongModalVisible(false)}
+                  />
+                </View>
+
+                <FormCreateSong
+                  onSubmit={handleCreateSong}
+                  isLoading={isLoadingNewSong}
+                  isEditing={false}
+                />
+              </ScrollView>
+            </KeyboardGestureArea>
+          </Modal>
         </ScrollView>
       </KeyboardAvoidingView>
     </>
@@ -315,5 +399,52 @@ const styles = StyleSheet.create({
     color: globalColors.light,
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  createSongSection: {
+    paddingHorizontal: 30,
+    paddingTop: 20,
+  },
+  createSongButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: globalColors.primary,
+    padding: 15,
+    borderRadius: 10,
+    gap: 10,
+  },
+  createSongText: {
+    color: globalColors.light,
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  containerHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 5,
+  },
+  titleContent: {
+    flexDirection: 'row',
+    padding: 15,
+    gap: 5,
+    marginTop: 30,
+    marginBottom: 30,
+  },
+  title: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: globalColors.primaryDark,
+  },
+  openModalBtn: {
+    backgroundColor: globalColors.primaryAlt,
+    padding: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginRight: 10,
+  },
+  openModalBtnText: {
+    color: globalColors.primary,
+    fontSize: 30,
+    fontWeight: '300',
   },
 });
