@@ -24,6 +24,21 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import {userService} from './src/services/userService';
+import {categoryService} from './src/services/categoryService';
+import {playlistService} from './src/services/playlistService';
+import {songService} from './src/services/songService';
+import {songDetailsService} from './src/services/songDetailsService';
+import {ProviderComposer} from './src/context/ProviderComposer';
+import {UserServiceProvider} from './src/context/UserServiceContext';
+import {CategoryServiceProvider} from './src/context/CategoryServiceContext';
+import {PlaylistServiceProvider} from './src/context/PlaylistServiceContext';
+import {SongServiceProvider} from './src/context/SongServiceContext';
+import {SongDetailsServiceProvider} from './src/context/SongDetailsServiceContext';
+import {NavigationContainer} from '@react-navigation/native';
+import {AppNavigator} from './src/UI/routes/AppNavigator';
+import {ToastConfig} from './src/UI/theme/ToastConfig';
+import Toast from 'react-native-toast-message';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -63,36 +78,20 @@ function App(): React.JSX.Element {
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <ProviderComposer
+      contexts={[
+        <UserServiceProvider userService={userService} />,
+        <CategoryServiceProvider categoryService={categoryService} />,
+        <PlaylistServiceProvider playlistService={playlistService} />,
+        <SongServiceProvider songService={songService} />,
+        <SongDetailsServiceProvider songDetailsService={songDetailsService} />,
+        // Add other providers here as you create them
+      ]}>
+      <NavigationContainer>
+        <AppNavigator />
+        <Toast config={ToastConfig} />
+      </NavigationContainer>
+    </ProviderComposer>
   );
 }
 

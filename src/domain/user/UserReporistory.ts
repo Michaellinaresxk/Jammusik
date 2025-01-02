@@ -1,0 +1,12 @@
+import type User from './User';
+export default interface UserRepository {
+  registerUser(
+    email: string,
+    password: string,
+    userName: string,
+  ): Promise<User>;
+  loginUser(email: string, password: string): Promise<User>;
+  getCurrentUser(userId: string): Promise<User>;
+  logout(): Promise<void>;
+  deleteAccount(userId: string): Promise<void>;
+}
