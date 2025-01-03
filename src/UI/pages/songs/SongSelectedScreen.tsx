@@ -26,7 +26,7 @@ import {auth} from '../../../infra/api/firebaseConfig';
 import {useSongDetailsService} from '../../../context/SongDetailsServiceContext';
 import {SongDetailsView} from '../../../views/SongDetailsView';
 import {useGetCategoryTitle} from '../../../hooks/useGetCategoryTitle';
-import {KeyboardStickyView} from 'react-native-keyboard-controller';
+import {LyricsView} from '../../components/shared/LyricsView';
 // import useAnimationKeyboard from '../../../hooks/useAnimationKeyboard';
 export const SongSelectedScreen = () => {
   const params = useRoute().params;
@@ -46,6 +46,8 @@ export const SongSelectedScreen = () => {
   const categoryId = params.categoryId;
   const songDetailsService = useSongDetailsService();
   // const {height, scale} = useAnimationKeyboard();
+
+  const [isLyricsModalVisible, setIsLyricsModalVisible] = useState(false);
 
   const closeModal = () => {
     setIsVisible(false);
@@ -217,12 +219,44 @@ export const SongSelectedScreen = () => {
               horizontal
             />
           </View>
-          <View style={styles.linksContent}>
+          {/* <View style={styles.linksContent}>
             <View style={{...styles.container, marginBottom: 30}}>
               <Text style={styles.title}>Lyric link:</Text>
               <Pressable onPress={() => handleOpenLink(lyricLink)}>
                 <Text style={styles.links}>{lyricLink}</Text>
               </Pressable>
+            </View>
+            <View style={styles.container}>
+              <Text style={styles.title}>Tab link:</Text>
+              <Pressable onPress={() => handleOpenLink(tabLink)}>
+                <Text style={styles.links}>{tabLink}</Text>
+              </Pressable>
+            </View>
+          </View> */}
+          <View style={styles.linksContent}>
+            <View style={{...styles.container, marginBottom: 30}}>
+              <Text style={styles.title}>Lyrics:</Text>
+              <View style={styles.lyricsContainer}>
+                {lyricLink ? (
+                  // Si ya existe un link de letras, mostrar botón para ver
+                  <PrimaryButton
+                    label="View Lyrics"
+                    onPress={() => setIsLyricsModalVisible(true)}
+                    btnFontSize={18}
+                    colorText={globalColors.light}
+                  />
+                ) : (
+                  // Si no existe, mostrar botón para generar
+                  <PrimaryButton
+                    label="Generate Lyrics"
+                    onPress={() => setIsLyricsModalVisible(true)}
+                    btnFontSize={18}
+                    bgColor={globalColors.primary}
+                    borderRadius={5}
+                    colorText={globalColors.light}
+                  />
+                )}
+              </View>
             </View>
             <View style={styles.container}>
               <Text style={styles.title}>Tab link:</Text>
@@ -266,6 +300,21 @@ export const SongSelectedScreen = () => {
           {/* </KeyboardStickyView> */}
         </ScrollView>
       </Modal>
+      {/* Modal de letras */}
+      <Modal
+        visible={isLyricsModalVisible}
+        animationType="slide"
+        onRequestClose={() => setIsLyricsModalVisible(false)}
+        presentationStyle="fullScreen">
+        <LyricsView
+          artist={params.artist}
+          title={params.title}
+          onClose={() => {
+            setIsLyricsModalVisible(false);
+            setTriggerUpdate(true);
+          }}
+        />
+      </Modal>
     </>
   );
 };
@@ -278,7 +327,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   container: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
   },
   titleContainer: {},
@@ -359,5 +408,19 @@ const styles = StyleSheet.create({
   modalFormHeaderTitle: {
     fontSize: 20,
     color: globalColors.light,
+  },
+  absoluteFill: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  lyricsContainer: {
+    marginLeft: 10,
+    marginTop: 20,
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: 10,
   },
 });
