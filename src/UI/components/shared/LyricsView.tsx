@@ -9,22 +9,12 @@ import {
   Platform,
   KeyboardAvoidingView,
   SafeAreaView,
+  ActivityIndicator,
 } from 'react-native';
 import {PrimaryIcon} from '../../components/shared/PrimaryIcon';
 import {globalColors} from '../../theme/Theme';
-import {PrimaryButton} from '../../components/shared/PrimaryButton';
-
-interface LyricsViewProps {
-  artist: string;
-  title: string;
-  onClose: () => void;
-}
-
-interface LyricLine {
-  text: string;
-  startTime: number;
-  endTime: number;
-}
+import {LyricLine, LyricsViewProps} from '../../../types/songTypes';
+import {musixmatchService} from '../../../infra/api/Musixmatch';
 
 export const LyricsView: React.FC<LyricsViewProps> = ({
   artist,
@@ -35,25 +25,76 @@ export const LyricsView: React.FC<LyricsViewProps> = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [isSyncMode, setIsSyncMode] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   const scrollViewRef = useRef<ScrollView>(null);
   const animatedValues = useRef<Animated.Value[]>([]);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const fetchLyrics = async () => {
       try {
-        const sampleLyrics: LyricLine[] = [
-          {text: 'Verse 1: Sample lyrics line 1', startTime: 0, endTime: 4000},
-          {text: 'Sample lyrics line 2', startTime: 4000, endTime: 8000},
-        ];
-        setLyrics(sampleLyrics);
-        animatedValues.current = sampleLyrics.map(() => new Animated.Value(0));
+        setIsLoading(true);
+        setError(null);
+        const lyricsData = await musixmatchService.getLyricsByArtistAndTitle(
+          artist,
+          title,
+        );
+        setLyrics(lyricsData);
+        animatedValues.current = lyricsData.map(() => new Animated.Value(0));
       } catch (error) {
         console.error('Error fetching lyrics:', error);
+        setError('No se pudieron cargar las letras');
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchLyrics();
   }, [artist, title]);
+
+  // Manage playback and time
+  useEffect(() => {
+    if (isPlaying) {
+      timerRef.current = setInterval(() => {
+        setCurrentTime(prev => prev + 100);
+      }, 100);
+    } else if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, [isPlaying]);
+
+  // Animate current lines
+  useEffect(() => {
+    lyrics.forEach((line, index) => {
+      if (currentTime >= line.startTime && currentTime <= line.endTime) {
+        Animated.timing(animatedValues.current[index], {
+          toValue: 1,
+          duration: 300,
+          useNativeDriver: true,
+        }).start();
+
+        // Scroll to the current line
+        scrollViewRef.current?.scrollTo({
+          y: index * 40, // Approximate height of each line
+          animated: true,
+        });
+      } else {
+        Animated.timing(animatedValues.current[index], {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }).start();
+      }
+    });
+  }, [currentTime, lyrics]);
 
   const handleSyncToggle = () => {
     setIsSyncMode(!isSyncMode);
@@ -63,6 +104,28 @@ export const LyricsView: React.FC<LyricsViewProps> = ({
 
   const handlePlayPause = () => {
     setIsPlaying(!isPlaying);
+  };
+
+  const handleRetry = () => {
+    const fetchLyrics = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const lyricsData = await musixmatchService.getLyricsByArtistAndTitle(
+          artist,
+          title,
+        );
+        setLyrics(lyricsData);
+        animatedValues.current = lyricsData.map(() => new Animated.Value(0));
+      } catch (error) {
+        console.error('Error fetching lyrics:', error);
+        setError('No se pudieron cargar las letras');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchLyrics();
   };
 
   return (
@@ -98,50 +161,85 @@ export const LyricsView: React.FC<LyricsViewProps> = ({
           </TouchableOpacity>
         </View>
 
-        {/* Lyrics Content */}
-        <ScrollView
-          ref={scrollViewRef}
-          style={styles.lyricsContainer}
-          showsVerticalScrollIndicator={false}>
-          {lyrics.map((line, index) => (
-            <Animated.Text
-              key={index}
-              style={[
-                styles.lyricLine,
-                currentTime >= line.startTime &&
-                  currentTime <= line.endTime &&
-                  styles.activeLine,
-              ]}>
-              {line.text}
-            </Animated.Text>
-          ))}
-        </ScrollView>
+        {/* Content */}
+        {isLoading ? (
+          <View style={styles.centerContainer}>
+            <ActivityIndicator size="large" color={globalColors.primary} />
+          </View>
+        ) : error ? (
+          <View style={styles.centerContainer}>
+            <Text style={styles.errorText}>{error}</Text>
+            <TouchableOpacity style={styles.retryButton} onPress={handleRetry}>
+              <Text style={styles.retryText}>Reintentar</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <ScrollView
+            ref={scrollViewRef}
+            style={styles.lyricsContainer}
+            showsVerticalScrollIndicator={false}>
+            {lyrics.map((line, index) => (
+              <Animated.Text
+                key={index}
+                style={[
+                  styles.lyricLine,
+                  {
+                    transform: [
+                      {
+                        translateY: animatedValues.current[index].interpolate({
+                          inputRange: [0, 1],
+                          outputRange: [0, -5],
+                        }),
+                      },
+                    ],
+                    opacity: animatedValues.current[index].interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [0.6, 1],
+                    }),
+                  },
+                  currentTime >= line.startTime &&
+                    currentTime <= line.endTime &&
+                    styles.activeLine,
+                ]}>
+                {line.text}
+              </Animated.Text>
+            ))}
+          </ScrollView>
+        )}
 
         {/* Controls */}
-        <View style={styles.controls}>
-          <TouchableOpacity onPress={handlePlayPause}>
-            <PrimaryIcon
-              name={isPlaying ? 'pause-circle' : 'play-circle'}
-              size={50}
-              color={globalColors.primary}
-            />
-          </TouchableOpacity>
-
-          {isSyncMode && (
+        {!isLoading && !error && (
+          <View style={styles.controls}>
             <TouchableOpacity
-              onPress={() => {
-                // Implementar guardado de sincronización
-                onClose();
-              }}>
-              <PrimaryIcon name="save" size={40} color={globalColors.primary} />
+              onPress={handlePlayPause}
+              style={styles.controlButton}>
+              <PrimaryIcon
+                name={isPlaying ? 'pause-circle' : 'play-circle'}
+                size={50}
+                color={globalColors.primary}
+              />
             </TouchableOpacity>
-          )}
-        </View>
+
+            {isSyncMode && (
+              <TouchableOpacity
+                onPress={() => {
+                  // Implement synchronization saving
+                  onClose();
+                }}
+                style={styles.controlButton}>
+                <PrimaryIcon
+                  name="save"
+                  size={40}
+                  color={globalColors.primary}
+                />
+              </TouchableOpacity>
+            )}
+          </View>
+        )}
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
-
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -207,5 +305,28 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: globalColors.primaryAlt,
     gap: 40, // Espacio entre iconos
+  },
+  centerContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorText: {
+    color: globalColors.secondary,
+    fontSize: 16,
+    textAlign: 'center',
+    marginBottom: 16,
+  },
+  retryButton: {
+    padding: 12,
+    backgroundColor: globalColors.primary,
+    borderRadius: 8,
+  },
+  retryText: {
+    color: globalColors.light,
+    fontSize: 16,
+  },
+  controlButton: {
+    padding: 10,
   },
 });

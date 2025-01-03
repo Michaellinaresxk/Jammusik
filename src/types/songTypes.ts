@@ -43,3 +43,25 @@ export interface Category {
   id: string;
   title: string;
 }
+
+export interface LyricsViewProps {
+  artist: string;
+  title: string;
+  onClose: () => void;
+}
+
+export interface LyricLine {
+  text: string;
+  startTime: number;
+  endTime: number;
+}
+
+export interface MusixmatchResponse {
+  message: {
+    body: any;
+    header: {
+      status_code: number;
+      execute_time: number;
+    };
+  };
+}
