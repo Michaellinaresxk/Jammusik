@@ -13,20 +13,16 @@ import {
 } from 'react-native';
 import {PrimaryIcon} from '../../components/shared/PrimaryIcon';
 import {globalColors} from '../../theme/Theme';
-import {LyricLine, LyricsViewProps} from '../../../types/songTypes';
-import {musixmatchService} from '../../../infra/api/Musixmatch';
+import {LyricLine} from '../../../types/songTypes';
+import {lyricsService} from '../../../infra/api/LyricsService';
 
-export const LyricsView: React.FC<LyricsViewProps> = ({
-  artist,
-  title,
-  onClose,
-}) => {
+export const LyricsView = ({artist, title, onClose}) => {
   const [lyrics, setLyrics] = useState<LyricLine[]>([]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
-  const [isSyncMode, setIsSyncMode] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [loadingStatus, setLoadingStatus] = useState('Searching for lyrics...');
 
   const scrollViewRef = useRef<ScrollView>(null);
   const animatedValues = useRef<Animated.Value[]>([]);
@@ -35,33 +31,68 @@ export const LyricsView: React.FC<LyricsViewProps> = ({
   useEffect(() => {
     const fetchLyrics = async () => {
       try {
+        console.log('Starting lyrics fetch...');
         setIsLoading(true);
         setError(null);
-        const lyricsData = await musixmatchService.getLyricsByArtistAndTitle(
+        setLoadingStatus('Searching for lyrics...');
+
+        if (!artist || !title) {
+          throw new Error('Artist and song title required');
+        }
+
+        const lyricsData = await lyricsService.getLyricsByArtistAndTitle(
           artist,
           title,
         );
+
+        console.log('Lyrics fetched successfully:', lyricsData.length, 'lines');
+
+        if (lyricsData.length === 0) {
+          throw new Error('No lyrics found');
+        }
+
         setLyrics(lyricsData);
         animatedValues.current = lyricsData.map(() => new Animated.Value(0));
-      } catch (error) {
-        console.error('Error fetching lyrics:', error);
-        setError('No se pudieron cargar las letras');
+        setLoadingStatus('');
+      } catch (error: any) {
+        console.error('Error in fetchLyrics:', error);
+        setError(error.message || 'Error loading lyric');
+        setLyrics([]);
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchLyrics();
+
+    // Cleanup
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
   }, [artist, title]);
 
-  // Manage playback and time
+  // Timer effect for playback
   useEffect(() => {
     if (isPlaying) {
+      console.log('Starting playback');
       timerRef.current = setInterval(() => {
-        setCurrentTime(prev => prev + 100);
-      }, 100);
-    } else if (timerRef.current) {
-      clearInterval(timerRef.current);
+        setCurrentTime(prev => {
+          const lastLine = lyrics[lyrics.length - 1];
+          // Reset if we reach the end
+          if (lastLine && prev >= lastLine.endTime) {
+            setIsPlaying(false);
+            return 0;
+          }
+          return prev + 50; // Smaller increments for smoother animation
+        });
+      }, 50);
+    } else {
+      console.log('Stopping playback');
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
     }
 
     return () => {
@@ -69,59 +100,69 @@ export const LyricsView: React.FC<LyricsViewProps> = ({
         clearInterval(timerRef.current);
       }
     };
-  }, [isPlaying]);
+  }, [isPlaying, lyrics]);
 
-  // Animate current lines
+  // Animation effect for lyrics
   useEffect(() => {
-    lyrics.forEach((line, index) => {
-      if (currentTime >= line.startTime && currentTime <= line.endTime) {
-        Animated.timing(animatedValues.current[index], {
-          toValue: 1,
-          duration: 300,
-          useNativeDriver: true,
-        }).start();
+    if (!lyrics.length) return;
 
-        // Scroll to the current line
-        scrollViewRef.current?.scrollTo({
-          y: index * 40, // Approximate height of each line
-          animated: true,
-        });
-      } else {
+    // Initialize animated values if needed
+    if (animatedValues.current.length !== lyrics.length) {
+      animatedValues.current = lyrics.map(() => new Animated.Value(0));
+    }
+
+    // Find current active line
+    const currentLineIndex = lyrics.findIndex(
+      line => currentTime >= line.startTime && currentTime <= line.endTime,
+    );
+
+    console.log(
+      'Current time:',
+      currentTime,
+      'Current line:',
+      currentLineIndex,
+    );
+
+    if (currentLineIndex !== -1) {
+      // Animate all lines
+      lyrics.forEach((_, index) => {
         Animated.timing(animatedValues.current[index], {
-          toValue: 0,
-          duration: 300,
+          toValue: index === currentLineIndex ? 1 : 0,
+          duration: 200,
           useNativeDriver: true,
         }).start();
-      }
-    });
+      });
+
+      // Scroll to current line
+      scrollViewRef.current?.scrollTo({
+        y: Math.max(0, currentLineIndex * 60 - 100),
+        animated: true,
+      });
+    }
   }, [currentTime, lyrics]);
 
-  const handleSyncToggle = () => {
-    setIsSyncMode(!isSyncMode);
+  const handleRetry = () => {
     setCurrentTime(0);
     setIsPlaying(false);
-  };
+    setError(null);
+    setIsLoading(true);
 
-  const handlePlayPause = () => {
-    setIsPlaying(!isPlaying);
-  };
-
-  const handleRetry = () => {
+    // Re-trigger the useEffect
     const fetchLyrics = async () => {
       try {
-        setIsLoading(true);
-        setError(null);
-        const lyricsData = await musixmatchService.getLyricsByArtistAndTitle(
+        setLoadingStatus('Reintentando...');
+        const lyricsData = await lyricsService.getLyricsByArtistAndTitle(
           artist,
           title,
         );
         setLyrics(lyricsData);
         animatedValues.current = lyricsData.map(() => new Animated.Value(0));
-      } catch (error) {
-        console.error('Error fetching lyrics:', error);
-        setError('No se pudieron cargar las letras');
+        setError(null);
+      } catch (error: any) {
+        setError(error.message || 'Error al cargar la letra');
       } finally {
         setIsLoading(false);
+        setLoadingStatus('');
       }
     };
 
@@ -135,27 +176,31 @@ export const LyricsView: React.FC<LyricsViewProps> = ({
         style={styles.container}>
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity
-            onPress={onClose}
-            style={styles.closeButton}
-            hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
+          <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <PrimaryIcon
               name="close-circle"
-              size={35}
+              size={28}
               color={globalColors.secondary}
             />
           </TouchableOpacity>
           <View style={styles.titleContainer}>
-            <Text style={styles.songTitle}>{title}</Text>
-            <Text style={styles.artistName}>{artist}</Text>
+            <Text
+              style={styles.songTitle}
+              numberOfLines={1}
+              ellipsizeMode="tail">
+              {title}
+            </Text>
+            <Text
+              style={styles.artistName}
+              numberOfLines={1}
+              ellipsizeMode="tail">
+              {artist}
+            </Text>
           </View>
-          <TouchableOpacity
-            onPress={handleSyncToggle}
-            style={styles.syncButton}
-            hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}>
+          <TouchableOpacity onPress={handleRetry}>
             <PrimaryIcon
-              name={isSyncMode ? 'sync' : 'sync-outline'}
-              size={24}
+              name="refresh"
+              size={28}
               color={globalColors.secondary}
             />
           </TouchableOpacity>
@@ -165,12 +210,21 @@ export const LyricsView: React.FC<LyricsViewProps> = ({
         {isLoading ? (
           <View style={styles.centerContainer}>
             <ActivityIndicator size="large" color={globalColors.primary} />
+            <Text style={styles.loadingText}>{loadingStatus}</Text>
           </View>
         ) : error ? (
           <View style={styles.centerContainer}>
+            <Text style={styles.errorIcon}>❌</Text>
             <Text style={styles.errorText}>{error}</Text>
             <TouchableOpacity style={styles.retryButton} onPress={handleRetry}>
-              <Text style={styles.retryText}>Reintentar</Text>
+              <Text style={styles.retryText}>Try again</Text>
+            </TouchableOpacity>
+          </View>
+        ) : lyrics.length === 0 ? (
+          <View style={styles.centerContainer}>
+            <Text style={styles.errorText}>No lyrics found</Text>
+            <TouchableOpacity style={styles.retryButton} onPress={handleRetry}>
+              <Text style={styles.retryText}>Try again</Text>
             </TouchableOpacity>
           </View>
         ) : (
@@ -188,13 +242,17 @@ export const LyricsView: React.FC<LyricsViewProps> = ({
                       {
                         translateY: animatedValues.current[index].interpolate({
                           inputRange: [0, 1],
-                          outputRange: [0, -5],
+                          outputRange: [0, -10],
                         }),
                       },
                     ],
                     opacity: animatedValues.current[index].interpolate({
                       inputRange: [0, 1],
                       outputRange: [0.6, 1],
+                    }),
+                    scale: animatedValues.current[index].interpolate({
+                      inputRange: [0, 1],
+                      outputRange: [1, 1.05],
                     }),
                   },
                   currentTime >= line.startTime &&
@@ -207,11 +265,18 @@ export const LyricsView: React.FC<LyricsViewProps> = ({
           </ScrollView>
         )}
 
-        {/* Controls */}
-        {!isLoading && !error && (
+        {/* Controls - Only show if we have lyrics */}
+        {!isLoading && !error && lyrics.length > 0 && (
           <View style={styles.controls}>
             <TouchableOpacity
-              onPress={handlePlayPause}
+              onPress={() => {
+                console.log('Play/Pause pressed. Current state:', isPlaying);
+                // Reset to beginning if at end
+                if (currentTime >= lyrics[lyrics.length - 1]?.endTime) {
+                  setCurrentTime(0);
+                }
+                setIsPlaying(!isPlaying);
+              }}
               style={styles.controlButton}>
               <PrimaryIcon
                 name={isPlaying ? 'pause-circle' : 'play-circle'}
@@ -219,27 +284,13 @@ export const LyricsView: React.FC<LyricsViewProps> = ({
                 color={globalColors.primary}
               />
             </TouchableOpacity>
-
-            {isSyncMode && (
-              <TouchableOpacity
-                onPress={() => {
-                  // Implement synchronization saving
-                  onClose();
-                }}
-                style={styles.controlButton}>
-                <PrimaryIcon
-                  name="save"
-                  size={40}
-                  color={globalColors.primary}
-                />
-              </TouchableOpacity>
-            )}
           </View>
         )}
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
+
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
@@ -261,9 +312,6 @@ const styles = StyleSheet.create({
   closeButton: {
     padding: 8,
     zIndex: 1,
-  },
-  syncButton: {
-    padding: 8,
   },
   titleContainer: {
     flex: 1,
@@ -295,16 +343,14 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     opacity: 1,
   },
-
   controls: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    // padding: 10,
     backgroundColor: globalColors.light,
     borderTopWidth: 1,
     borderTopColor: globalColors.primaryAlt,
-    gap: 40, // Espacio entre iconos
   },
   centerContainer: {
     flex: 1,
@@ -328,5 +374,14 @@ const styles = StyleSheet.create({
   },
   controlButton: {
     padding: 10,
+  },
+  loadingText: {
+    marginTop: 16,
+    color: globalColors.secondary,
+    fontSize: 16,
+  },
+  errorIcon: {
+    fontSize: 48,
+    marginBottom: 16,
   },
 });

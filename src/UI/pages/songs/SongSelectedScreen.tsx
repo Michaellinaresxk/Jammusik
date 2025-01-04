@@ -14,7 +14,11 @@ import {
 } from 'react-native';
 import {GlobalHeader} from '../../components/shared/GlobalHeader';
 import {FloatingActionButton} from '../../components/shared/FloatingActionButton';
-import {useRoute} from '@react-navigation/native';
+import {
+  NavigationProp,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {Text} from 'react-native';
 import {PrimaryIcon} from '../../components/shared/PrimaryIcon';
 import {globalColors} from '../../theme/Theme';
@@ -27,8 +31,11 @@ import {useSongDetailsService} from '../../../context/SongDetailsServiceContext'
 import {SongDetailsView} from '../../../views/SongDetailsView';
 import {useGetCategoryTitle} from '../../../hooks/useGetCategoryTitle';
 import {LyricsView} from '../../components/shared/LyricsView';
+import {TabNavigatorParamsList} from '../../routes/TabNavigator';
 // import useAnimationKeyboard from '../../../hooks/useAnimationKeyboard';
 export const SongSelectedScreen = () => {
+  const navigation = useNavigation<NavigationProp<TabNavigatorParamsList>>();
+
   const params = useRoute().params;
   const [isVisible, setIsVisible] = useState(false);
   const [songDetails, setSongDetails] = useState<SongDetailsView[]>();
@@ -309,10 +316,7 @@ export const SongSelectedScreen = () => {
         <LyricsView
           artist={params.artist}
           title={params.title}
-          onClose={() => {
-            setIsLyricsModalVisible(false);
-            setTriggerUpdate(true);
-          }}
+          onClose={() => navigation.goBack()}
         />
       </Modal>
     </>
