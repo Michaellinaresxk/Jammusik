@@ -170,6 +170,7 @@ export const HomeScreen = () => {
           }>
           <View>
             <GlobalHeader headerTitle="Home" hideBackButton={true} />
+
             <View style={styles.containerHeader}>
               <View style={styles.titleContent}>
                 <Icon
@@ -187,7 +188,14 @@ export const HomeScreen = () => {
             </View>
             <Separator color={globalColors.terceary} />
             <View style={styles.categoryCardContainer}>
-              <Text style={styles.subTitle}>My Music Categories:</Text>
+              {/* <Text style={styles.subTitle}>My Music Categories:</Text> */}
+              <View style={styles.sectionHeader}>
+                <Text style={styles.sectionTitle}>Your Categories</Text>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('Categories')}>
+                  <Text style={styles.seeAllButton}>See All</Text>
+                </TouchableOpacity>
+              </View>
               <FlatList
                 ListHeaderComponent={
                   <CategoryCardLight
@@ -216,8 +224,9 @@ export const HomeScreen = () => {
                 )}
               />
               <View style={styles.playlistContainer}>
-                <Text style={styles.subTitle}>My Playlists:</Text>
+                <Text style={styles.sectionTitle}>Your Playlists</Text>
                 <FlatList
+                  // horizontal={true}
                   data={playlists}
                   keyExtractor={item => item.id}
                   numColumns={2}
@@ -349,6 +358,16 @@ export const HomeScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: globalColors.primaryDark,
+  },
+  seeAllButton: {
+    // color: '#18998B', // primary
+    color: globalColors.terceary,
+    fontSize: 16,
+  },
   text: {
     color: 'red',
     fontSize: 30,
@@ -360,6 +379,12 @@ const styles = StyleSheet.create({
   },
   categoryCardContainer: {
     padding: 30,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 15,
   },
   playlistContainer: {
     marginTop: 60,
