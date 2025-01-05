@@ -55,6 +55,7 @@ export const SongSelectedScreen = () => {
   // const {height, scale} = useAnimationKeyboard();
 
   const [isLyricsModalVisible, setIsLyricsModalVisible] = useState(false);
+  const [hasLyrics, setHasLyrics] = useState(false);
 
   const closeModal = () => {
     setIsVisible(false);
@@ -233,36 +234,19 @@ export const SongSelectedScreen = () => {
                 <Text style={styles.links}>{lyricLink}</Text>
               </Pressable>
             </View>
-            <View style={styles.container}>
-              <Text style={styles.title}>Tab link:</Text>
-              <Pressable onPress={() => handleOpenLink(tabLink)}>
-                <Text style={styles.links}>{tabLink}</Text>
-              </Pressable>
-            </View>
           </View> */}
           <View style={styles.linksContent}>
             <View style={{...styles.container, marginBottom: 30}}>
               <Text style={styles.title}>Lyrics:</Text>
               <View style={styles.lyricsContainer}>
-                {lyricLink ? (
-                  // Si ya existe un link de letras, mostrar botón para ver
-                  <PrimaryButton
-                    label="View Lyrics"
-                    onPress={() => setIsLyricsModalVisible(true)}
-                    btnFontSize={18}
-                    colorText={globalColors.light}
-                  />
-                ) : (
-                  // Si no existe, mostrar botón para generar
-                  <PrimaryButton
-                    label="Generate Lyrics"
-                    onPress={() => setIsLyricsModalVisible(true)}
-                    btnFontSize={18}
-                    bgColor={globalColors.primary}
-                    borderRadius={5}
-                    colorText={globalColors.light}
-                  />
-                )}
+                <PrimaryButton
+                  label={hasLyrics ? 'View Lyrics' : 'Generate Lyrics'}
+                  onPress={() => setIsLyricsModalVisible(true)}
+                  btnFontSize={18}
+                  colorText={globalColors.light}
+                  bgColor={globalColors.primary}
+                  borderRadius={5}
+                />
               </View>
             </View>
             <View style={styles.container}>
@@ -316,7 +300,12 @@ export const SongSelectedScreen = () => {
         <LyricsView
           artist={params.artist}
           title={params.title}
-          onClose={() => navigation.goBack()}
+          onClose={() => {
+            setIsLyricsModalVisible(false);
+            // Si estás usando navigate en lugar de goBack:
+            // navigation.navigate('SongSelected', params);
+          }}
+          onLyricsLoaded={success => setHasLyrics(success)}
         />
       </Modal>
     </>

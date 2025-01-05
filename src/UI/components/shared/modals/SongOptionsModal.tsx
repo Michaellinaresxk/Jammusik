@@ -85,13 +85,13 @@ export const SongOptionsModal = ({
             </>
           ) : (
             <View>
-              <TouchableOpacity style={styles.option} onPress={onAddToPlaylist}>
+              <TouchableOpacity style={styles.option} onPress={onShare}>
                 <Icon
-                  name="list-outline"
+                  name="share-social-outline"
                   size={24}
                   color={globalColors.primary}
                 />
-                <Text style={styles.optionText}>Add to Playlist</Text>
+                <Text style={styles.optionText}>Share Song</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.option, styles.deleteOption]}

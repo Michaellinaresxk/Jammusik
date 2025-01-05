@@ -3,7 +3,26 @@ import {LyricLine} from '../../types/songTypes';
 
 const BASE_URL = 'https://api.lyrics.ovh/v1';
 
+interface CachedLyrics {
+  lyrics: LyricLine[];
+  timestamp: number;
+}
+
 class LyricsService {
+  // Cache usando Map
+  private cache: Map<string, CachedLyrics> = new Map();
+
+  // Tiempo de expiración: 24 horas en milisegundos
+  private CACHE_EXPIRY = 24 * 60 * 60 * 1000;
+
+  private getCacheKey(artist: string, title: string): string {
+    return `${artist.toLowerCase()}_${title.toLowerCase()}`;
+  }
+
+  private isExpired(timestamp: number): boolean {
+    return Date.now() - timestamp > this.CACHE_EXPIRY;
+  }
+
   async getLyricsByArtistAndTitle(
     artist: string,
     title: string,
@@ -13,30 +32,38 @@ class LyricsService {
     }
 
     try {
-      console.log(`Fetching lyrics for ${artist} - ${title}`);
+      // Verificar caché
+      const cacheKey = this.getCacheKey(artist, title);
+      const cached = this.cache.get(cacheKey);
 
+      // Si existe en caché y no ha expirado, retornarlo
+      if (cached && !this.isExpired(cached.timestamp)) {
+        console.log('Returning lyrics from cache');
+        return cached.lyrics;
+      }
+
+      // Si no está en caché o expiró, hacer la petición
+      console.log(`Fetching lyrics for ${artist} - ${title}`);
       const response = await axios.get(
         `${BASE_URL}/${encodeURIComponent(artist)}/${encodeURIComponent(
           title,
         )}`,
         {
-          timeout: 10000, // 10 segundos
+          timeout: 10000,
         },
       );
-
-      console.log('API Response:', response.data);
 
       if (!response.data || !response.data.lyrics) {
         throw new Error('No lyrics found in response');
       }
 
-      // Convertir letra a nuestro formato con timing
+      // Procesar la letra
       const lines = response.data.lyrics
         .split('\n')
-        .filter(line => line.trim()) // Remover líneas vacías
+        .filter(line => line.trim())
         .map((line, index) => ({
           text: line,
-          startTime: index * 4000, // 4 segundos por línea
+          startTime: index * 4000,
           endTime: (index + 1) * 4000,
         }));
 
@@ -44,7 +71,13 @@ class LyricsService {
         throw new Error('No lyrics content found');
       }
 
-      console.log(`Processed ${lines.length} lines of lyrics`);
+      // Guardar en caché
+      this.cache.set(cacheKey, {
+        lyrics: lines,
+        timestamp: Date.now(),
+      });
+
+      console.log(`Processed and cached ${lines.length} lines of lyrics`);
       return lines;
     } catch (error) {
       console.log('Error details:', error);
@@ -53,25 +86,37 @@ class LyricsService {
         const axiosError = error as AxiosError;
 
         if (axiosError.code === 'ECONNABORTED') {
-          throw new Error(
-            'La solicitud tardó demasiado tiempo. Por favor, intenta de nuevo.',
-          );
+          throw new Error('Request timeout. Please try again.');
         }
 
         switch (axiosError.response?.status) {
           case 404:
-            throw new Error('No se encontró la letra para esta canción');
+            throw new Error('No lyrics found for this song');
           case 504:
-            throw new Error('El servicio no está disponible en este momento');
+            throw new Error('Service is currently unavailable');
           case 500:
-            throw new Error('Error en el servidor de letras');
+            throw new Error('Lyrics server error');
           default:
-            throw new Error(`Error al buscar la letra: ${axiosError.message}`);
+            throw new Error(`Error fetching lyrics: ${axiosError.message}`);
         }
       }
 
-      throw new Error('Error inesperado al buscar la letra');
+      throw new Error('Unexpected error while fetching lyrics');
     }
+  }
+
+  // Método para limpiar el caché si es necesario
+  clearCache(): void {
+    this.cache.clear();
+    console.log('Cache cleared');
+  }
+
+  // Método para ver el estado actual del caché (útil para debugging)
+  getCacheState(): {size: number; entries: string[]} {
+    return {
+      size: this.cache.size,
+      entries: Array.from(this.cache.keys()),
+    };
   }
 }
 
