@@ -66,30 +66,28 @@ export const SongSelectedScreen = () => {
       text1: 'Updated song Info successfully!',
     });
   };
-  const onCreateSongDetails = async () => {
+  const onCreateSongDetails = async (details: {
+    songKey: string;
+    chordList: string[];
+    notes: string;
+    lyricLink: string;
+    tabLink: string;
+  }) => {
     try {
-      if (!songKey) {
-        Alert.alert('Error', 'Please select a song key');
-        return;
-      }
-
       await songDetailsService.setSongDetails(
         userId,
         songId,
-        songKey,
-        chordList,
-        notes,
-        lyricLink,
-        tabLink,
+        details.songKey,
+        details.chordList,
+        details.notes,
+        details.lyricLink,
+        details.tabLink,
       );
 
       showToast();
       closeModal();
       setHasSavedData(true);
       setTriggerUpdate(true);
-
-      // Reload details after saving
-      await loadSongDetails();
     } catch (error) {
       console.error(error);
       Alert.alert('Error', 'Failed to save song details. Please try again.');
