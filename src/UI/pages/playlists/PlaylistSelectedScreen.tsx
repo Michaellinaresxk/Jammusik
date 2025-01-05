@@ -143,6 +143,10 @@ export const PlaylistSelectedScreen = () => {
     }
   };
 
+  const handleShare = async () => {
+    Alert.alert('Error', 'Functionality comming soon...');
+  };
+
   const removeSongConfirmation = (songId: string) =>
     Alert.alert(
       'Remove Song',
@@ -249,6 +253,7 @@ export const PlaylistSelectedScreen = () => {
       <SongOptionsModal
         isVisible={isOptionsVisible}
         onClose={() => setIsOptionsVisible(false)}
+        onShare={handleShare}
         onRemoveSong={() => {
           if (selectedSongId) {
             setIsOptionsVisible(false);

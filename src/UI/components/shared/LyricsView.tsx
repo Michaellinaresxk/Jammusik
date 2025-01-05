@@ -16,11 +16,24 @@ import {globalColors} from '../../theme/Theme';
 import {LyricLine} from '../../../types/songTypes';
 import {lyricsService} from '../../../infra/api/LyricsService';
 
-export const LyricsView = ({artist, title, onClose}) => {
+interface LyricsViewProps {
+  artist: string;
+  title: string;
+  onClose: () => void;
+  onLyricsLoaded?: (hasLyrics: boolean) => void;
+}
+
+export const LyricsView: React.FC<LyricsViewProps> = ({
+  artist,
+  title,
+  onClose,
+  onLyricsLoaded,
+}) => {
   const [lyrics, setLyrics] = useState<LyricLine[]>([]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [isCached, setIsCached] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loadingStatus, setLoadingStatus] = useState('Searching for lyrics...');
 
@@ -30,66 +43,76 @@ export const LyricsView = ({artist, title, onClose}) => {
 
   useEffect(() => {
     const fetchLyrics = async () => {
+      if (!artist || !title) {
+        setError('Artist and song title required');
+        setIsLoading(false);
+        onLyricsLoaded?.(false);
+        return;
+      }
+
       try {
-        console.log('Starting lyrics fetch...');
         setIsLoading(true);
         setError(null);
-        setLoadingStatus('Searching for lyrics...');
 
-        if (!artist || !title) {
-          throw new Error('Artist and song title required');
+        // Verificar si ya tenemos las letras actuales
+        if (lyrics.length > 0) {
+          setLoadingStatus('Loading cached lyrics...');
+          setIsCached(true);
+          onLyricsLoaded?.(true);
+          return;
         }
+
+        setLoadingStatus('Searching for lyrics...');
 
         const lyricsData = await lyricsService.getLyricsByArtistAndTitle(
           artist,
           title,
         );
 
-        console.log('Lyrics fetched successfully:', lyricsData.length, 'lines');
-
         if (lyricsData.length === 0) {
           throw new Error('No lyrics found');
         }
 
-        setLyrics(lyricsData);
+        // Inicializar las animaciones
         animatedValues.current = lyricsData.map(() => new Animated.Value(0));
+
+        // Actualizar los datos
+        setLyrics(lyricsData);
         setLoadingStatus('');
+        onLyricsLoaded?.(true);
       } catch (error: any) {
         console.error('Error in fetchLyrics:', error);
-        setError(error.message || 'Error loading lyric');
+        setError(error.message || 'Error loading lyrics');
         setLyrics([]);
+        onLyricsLoaded?.(false);
       } finally {
         setIsLoading(false);
+        setIsCached(false);
       }
     };
 
     fetchLyrics();
 
-    // Cleanup
     return () => {
       if (timerRef.current) {
         clearInterval(timerRef.current);
       }
     };
-  }, [artist, title]);
+  }, [artist, lyrics.length, onLyricsLoaded, title]);
 
-  // Timer effect for playback
   useEffect(() => {
     if (isPlaying) {
-      console.log('Starting playback');
       timerRef.current = setInterval(() => {
         setCurrentTime(prev => {
           const lastLine = lyrics[lyrics.length - 1];
-          // Reset if we reach the end
           if (lastLine && prev >= lastLine.endTime) {
             setIsPlaying(false);
             return 0;
           }
-          return prev + 50; // Smaller increments for smoother animation
+          return prev + 50;
         });
       }, 50);
     } else {
-      console.log('Stopping playback');
       if (timerRef.current) {
         clearInterval(timerRef.current);
       }
@@ -102,29 +125,14 @@ export const LyricsView = ({artist, title, onClose}) => {
     };
   }, [isPlaying, lyrics]);
 
-  // Animation effect for lyrics
   useEffect(() => {
     if (!lyrics.length) return;
 
-    // Initialize animated values if needed
-    if (animatedValues.current.length !== lyrics.length) {
-      animatedValues.current = lyrics.map(() => new Animated.Value(0));
-    }
-
-    // Find current active line
     const currentLineIndex = lyrics.findIndex(
       line => currentTime >= line.startTime && currentTime <= line.endTime,
     );
 
-    console.log(
-      'Current time:',
-      currentTime,
-      'Current line:',
-      currentLineIndex,
-    );
-
     if (currentLineIndex !== -1) {
-      // Animate all lines
       lyrics.forEach((_, index) => {
         Animated.timing(animatedValues.current[index], {
           toValue: index === currentLineIndex ? 1 : 0,
@@ -133,7 +141,6 @@ export const LyricsView = ({artist, title, onClose}) => {
         }).start();
       });
 
-      // Scroll to current line
       scrollViewRef.current?.scrollTo({
         y: Math.max(0, currentLineIndex * 60 - 100),
         animated: true,
@@ -146,27 +153,8 @@ export const LyricsView = ({artist, title, onClose}) => {
     setIsPlaying(false);
     setError(null);
     setIsLoading(true);
-
-    // Re-trigger the useEffect
-    const fetchLyrics = async () => {
-      try {
-        setLoadingStatus('Reintentando...');
-        const lyricsData = await lyricsService.getLyricsByArtistAndTitle(
-          artist,
-          title,
-        );
-        setLyrics(lyricsData);
-        animatedValues.current = lyricsData.map(() => new Animated.Value(0));
-        setError(null);
-      } catch (error: any) {
-        setError(error.message || 'Error al cargar la letra');
-      } finally {
-        setIsLoading(false);
-        setLoadingStatus('');
-      }
-    };
-
-    fetchLyrics();
+    setIsCached(false);
+    setLyrics([]);
   };
 
   return (
@@ -174,7 +162,6 @@ export const LyricsView = ({artist, title, onClose}) => {
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={styles.container}>
-        {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <PrimaryIcon
@@ -206,11 +193,12 @@ export const LyricsView = ({artist, title, onClose}) => {
           </TouchableOpacity>
         </View>
 
-        {/* Content */}
         {isLoading ? (
           <View style={styles.centerContainer}>
             <ActivityIndicator size="large" color={globalColors.primary} />
-            <Text style={styles.loadingText}>{loadingStatus}</Text>
+            <Text style={styles.loadingText}>
+              {isCached ? 'Loading cached lyrics...' : loadingStatus}
+            </Text>
           </View>
         ) : error ? (
           <View style={styles.centerContainer}>
@@ -265,13 +253,10 @@ export const LyricsView = ({artist, title, onClose}) => {
           </ScrollView>
         )}
 
-        {/* Controls - Only show if we have lyrics */}
         {!isLoading && !error && lyrics.length > 0 && (
           <View style={styles.controls}>
             <TouchableOpacity
               onPress={() => {
-                console.log('Play/Pause pressed. Current state:', isPlaying);
-                // Reset to beginning if at end
                 if (currentTime >= lyrics[lyrics.length - 1]?.endTime) {
                   setCurrentTime(0);
                 }
@@ -290,7 +275,6 @@ export const LyricsView = ({artist, title, onClose}) => {
     </SafeAreaView>
   );
 };
-
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
