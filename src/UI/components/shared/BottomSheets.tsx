@@ -10,12 +10,20 @@ import {
 import {globalColors, globalFormStyles} from '../../theme/Theme';
 import {useSongDetailsService} from '../../../context/SongDetailsServiceContext';
 
-const BottomSheets = ({onSelectKey, value}) => {
+interface BottomSheetsProps {
+  onSelectKey: (key: string) => void;
+  value?: string;
+}
+
+interface SongKey {
+  id: string;
+  key: string;
+  order: number;
+}
+
+const BottomSheets: React.FC<BottomSheetsProps> = ({onSelectKey, value}) => {
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedKey, setSelectedKey] = useState(value || '');
-  const [keys, setKeys] = useState<{id: string; key: string; order: number}[]>(
-    [],
-  );
+  const [keys, setKeys] = useState<SongKey[]>([]);
   const [loading, setLoading] = useState(true);
 
   const songDetailsService = useSongDetailsService();
@@ -25,32 +33,46 @@ const BottomSheets = ({onSelectKey, value}) => {
       try {
         const fetchedKeys = await songDetailsService.getSongKeys();
         setKeys(fetchedKeys);
-
-        // Si hay un valor inicial, lo mantenemos
-        if (value) {
-          setSelectedKey(value);
-        }
       } catch (error) {
         console.error('Error fetching keys:', error);
       } finally {
         setLoading(false);
       }
     };
-    fetchKeys();
-  }, [songDetailsService, value]);
 
-  const handleKeySelection = (key: string) => {
-    setSelectedKey(key);
-    onSelectKey(key); // This updates the state in the parent component.
+    fetchKeys();
+  }, [songDetailsService]);
+
+  const handleKeySelection = (selectedKey: string) => {
+    if (!selectedKey) {
+      console.warn('No key selected');
+      return;
+    }
+
+    onSelectKey(selectedKey);
     setModalVisible(false);
   };
+
+  const renderKeyItem = ({item}: {item: SongKey}) => (
+    <TouchableOpacity
+      style={[styles.keyItem, value === item.key && styles.selectedKeyItem]}
+      onPress={() => handleKeySelection(item.key)}>
+      <Text
+        style={[
+          styles.keyItemText,
+          value === item.key && styles.selectedKeyText,
+        ]}>
+        {item.key}
+      </Text>
+    </TouchableOpacity>
+  );
 
   return (
     <View>
       <TouchableOpacity
         style={styles.selectButton}
         onPress={() => setModalVisible(true)}>
-        <Text style={styles.buttonText}>
+        <Text style={[styles.buttonText, value && styles.selectedButtonText]}>
           {value ? `Key: ${value}` : 'Select Key'}
         </Text>
       </TouchableOpacity>
@@ -63,22 +85,18 @@ const BottomSheets = ({onSelectKey, value}) => {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Choose a Key</Text>
+
             {loading ? (
-              <Text>Loading...</Text>
+              <Text style={styles.loadingText}>Loading...</Text>
             ) : (
               <FlatList
                 data={keys}
                 keyExtractor={item => item.id}
                 numColumns={4}
-                renderItem={({item}) => (
-                  <TouchableOpacity
-                    style={styles.keyItem}
-                    onPress={() => handleKeySelection(item.key)}>
-                    <Text style={styles.keyItemText}>{item.key}</Text>
-                  </TouchableOpacity>
-                )}
+                renderItem={renderKeyItem}
               />
             )}
+
             <TouchableOpacity
               style={styles.cancelButton}
               onPress={() => setModalVisible(false)}>
@@ -95,10 +113,15 @@ const styles = StyleSheet.create({
   selectButton: {
     ...globalFormStyles.inputLogin,
     justifyContent: 'center',
+    marginBottom: 16,
   },
   buttonText: {
     color: '#838282',
-    fontSize: 18,
+    fontSize: 16,
+  },
+  selectedButtonText: {
+    color: globalColors.primaryDark,
+    fontWeight: '500',
   },
   modalContainer: {
     flex: 1,
@@ -111,6 +134,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 10,
     padding: 20,
+    maxHeight: '80%',
   },
   modalTitle: {
     fontSize: 18,
@@ -127,9 +151,21 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
   },
+  selectedKeyItem: {
+    backgroundColor: globalColors.primary,
+  },
   keyItemText: {
     fontSize: 16,
     color: globalColors.primary,
+  },
+  selectedKeyText: {
+    color: globalColors.light,
+    fontWeight: '500',
+  },
+  loadingText: {
+    textAlign: 'center',
+    color: globalColors.primaryDark,
+    padding: 20,
   },
   cancelButton: {
     marginTop: 15,
@@ -140,8 +176,8 @@ const styles = StyleSheet.create({
   },
   cancelButtonText: {
     color: globalColors.light,
-    fontWeight: 'light',
-    fontSize: 20,
+    fontSize: 16,
+    fontWeight: '500',
   },
 });
 

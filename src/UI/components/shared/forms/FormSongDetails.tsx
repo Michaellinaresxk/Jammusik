@@ -12,6 +12,23 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {globalColors} from '../../../theme/Theme';
 import BottomSheets from '../BottomSheets';
 
+interface FormSongDetailsProps {
+  initialValues?: {
+    songKey: string;
+    chordList: string[];
+    notes: string;
+    lyricLink: string;
+    tabLink: string;
+  };
+  onCreateSongDetails: (details: {
+    songKey: string;
+    chordList: string[];
+    notes: string;
+    lyricLink: string;
+    tabLink: string;
+  }) => void;
+}
+
 export const FormSongDetails = ({
   initialValues = {
     songKey: '',
@@ -21,8 +38,9 @@ export const FormSongDetails = ({
     tabLink: '',
   },
   onCreateSongDetails,
-}) => {
+}: FormSongDetailsProps) => {
   const [songKey, setSongKey] = useState(initialValues.songKey);
+
   const [chordList, setChordList] = useState(initialValues.chordList || []);
   const [notes, setNotes] = useState(initialValues.notes);
   const [lyricLink, setLyricLink] = useState(initialValues.lyricLink);
@@ -77,6 +95,10 @@ export const FormSongDetails = ({
     }
   };
 
+  const handleSongKeyChange = (key: string) => {
+    setSongKey(key);
+  };
+
   const handleSubmit = () => {
     onCreateSongDetails({
       songKey,
@@ -90,8 +112,7 @@ export const FormSongDetails = ({
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.content}>
-        <BottomSheets onSelectKey={setSongKey} value={songKey} />
-
+        <BottomSheets onSelectKey={handleSongKeyChange} value={songKey} />
         <View style={styles.inputSection}>
           <TextInput
             style={styles.input}
