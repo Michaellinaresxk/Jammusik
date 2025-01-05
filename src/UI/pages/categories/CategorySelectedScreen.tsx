@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   Alert,
   FlatList,
@@ -84,6 +84,21 @@ export const CategorySelectedScreen = () => {
   const songService = useSongService();
   const resetSongsState = useResetSongsState();
   const playlistService = usePlaylistService();
+
+  // Add this reference for the current Swipeable
+  const swipeableRef = useRef<{[key: string]: Swipeable | null}>({});
+  const currentlyOpenSwipeable = useRef<string | null>(null);
+
+  const closeSwipeable = (songId: string) => {
+    if (
+      currentlyOpenSwipeable.current &&
+      currentlyOpenSwipeable.current !== songId
+    ) {
+      const swipeable = swipeableRef.current[currentlyOpenSwipeable.current];
+      swipeable?.close();
+    }
+    currentlyOpenSwipeable.current = songId;
+  };
 
   const {resetToggle} = resetSongsState;
 
@@ -335,22 +350,21 @@ export const CategorySelectedScreen = () => {
       },
     ]);
   const swipeRightActions = (songId: string) => (
-    <>
-      <TouchableOpacity
-        style={styles.editButtonContent}
-        onPress={() => {
-          setSelectedSongId(songId);
-          setIsOptionsVisible(true);
-        }}>
-        <Icon
-          name="ellipsis-vertical-sharp"
-          size={25}
-          style={styles.actionIcon}
-        />
-      </TouchableOpacity>
-    </>
+    <TouchableOpacity
+      style={styles.editButtonContent}
+      onPress={() => {
+        setSelectedSongId(songId);
+        setIsOptionsVisible(true);
+        // Cerrar el swipeable después de presionar el botón
+        swipeableRef.current[songId]?.close();
+      }}>
+      <Icon
+        name="ellipsis-vertical-sharp"
+        size={25}
+        style={styles.actionIcon}
+      />
+    </TouchableOpacity>
   );
-
   // Effects
   useEffect(() => {
     loadSongList();
@@ -408,7 +422,15 @@ export const CategorySelectedScreen = () => {
                 keyExtractor={item => item.id}
                 renderItem={({item, index}) => (
                   <Swipeable
-                    renderRightActions={() => swipeRightActions(item.id)}>
+                    ref={ref => {
+                      if (ref) {
+                        swipeableRef.current[item.id] = ref;
+                      }
+                    }}
+                    renderRightActions={() => swipeRightActions(item.id)}
+                    onSwipeableWillOpen={() => closeSwipeable(item.id)}
+                    overshootRight={false}
+                    rightThreshold={40}>
                     <SongCard
                       resetToggle={resetToggle}
                       title={item.title}

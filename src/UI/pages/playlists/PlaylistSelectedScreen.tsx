@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   View,
   FlatList,
@@ -55,6 +55,20 @@ export const PlaylistSelectedScreen = () => {
   const [selectedSongId, setSelectedSongId] = useState<string | null>(null);
 
   const valueWidth = useWindowDimensions().width;
+
+  const swipeableRef = useRef<{[key: string]: Swipeable | null}>({});
+  const currentlyOpenSwipeable = useRef<string | null>(null);
+
+  const closeSwipeable = (songId: string) => {
+    if (
+      currentlyOpenSwipeable.current &&
+      currentlyOpenSwipeable.current !== songId
+    ) {
+      const swipeable = swipeableRef.current[currentlyOpenSwipeable.current];
+      swipeable?.close();
+    }
+    currentlyOpenSwipeable.current = songId;
+  };
 
   const handleAddSongToPlaylist = async (songData: SongView) => {
     try {
@@ -166,6 +180,8 @@ export const PlaylistSelectedScreen = () => {
       onPress={() => {
         setSelectedSongId(songId);
         setIsOptionsVisible(true);
+        // Cerrar el swipeable después de presionar el botón
+        swipeableRef.current[songId]?.close();
       }}>
       <Icon
         name="ellipsis-vertical-sharp"
@@ -205,30 +221,35 @@ export const PlaylistSelectedScreen = () => {
               keyExtractor={item => item.id}
               renderItem={({item, index}) => (
                 <Swipeable
+                  ref={ref => {
+                    if (ref) {
+                      swipeableRef.current[item.id] = ref;
+                    }
+                  }}
                   renderRightActions={() => swipeRightActions(item.id)}
-                  onSwipeableWillOpen={() => setCurrentSongId(item.id)}>
-                  <View>
-                    <SongCard
-                      resetToggle={resetToggle}
-                      title={item.title}
-                      artist={item.artist}
-                      isDone={item.isDone}
-                      songId={item.id}
-                      color={
-                        index % 2 === 0
-                          ? globalColors.primary
-                          : globalColors.secondary
-                      }
-                      onPress={() =>
-                        navigation.navigate('SongSelectedScreen', {
-                          title: item.title,
-                          artist: item.artist,
-                          categoryId: item.categoryId,
-                          songId: item.id,
-                        })
-                      }
-                    />
-                  </View>
+                  onSwipeableWillOpen={() => closeSwipeable(item.id)}
+                  overshootRight={false}
+                  rightThreshold={40}>
+                  <SongCard
+                    resetToggle={resetToggle}
+                    title={item.title}
+                    artist={item.artist}
+                    isDone={item.isDone}
+                    songId={item.id}
+                    color={
+                      index % 2 === 0
+                        ? globalColors.primary
+                        : globalColors.secondary
+                    }
+                    onPress={() =>
+                      navigation.navigate('SongSelectedScreen', {
+                        title: item.title,
+                        artist: item.artist,
+                        categoryId: item.categoryId,
+                        songId: item.id,
+                      })
+                    }
+                  />
                 </Swipeable>
               )}
             />
