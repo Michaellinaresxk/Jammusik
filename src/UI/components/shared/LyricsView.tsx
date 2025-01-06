@@ -233,14 +233,16 @@ export const LyricsView: React.FC<LyricsViewProps> = ({
                           outputRange: [0, -10],
                         }),
                       },
+                      {
+                        scale: animatedValues.current[index].interpolate({
+                          inputRange: [0, 1],
+                          outputRange: [1, 1.05],
+                        }),
+                      },
                     ],
                     opacity: animatedValues.current[index].interpolate({
                       inputRange: [0, 1],
                       outputRange: [0.6, 1],
-                    }),
-                    scale: animatedValues.current[index].interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [1, 1.05],
                     }),
                   },
                   currentTime >= line.startTime &&
