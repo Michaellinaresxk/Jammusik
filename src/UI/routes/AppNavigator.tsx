@@ -12,6 +12,7 @@ import {globalColors} from '../theme/Theme';
 import React from 'react';
 import {CategorySelectedScreen} from '../pages/categories/CategorySelectedScreen';
 import {PlaylistSelectedScreen} from '../pages/playlists/PlaylistSelectedScreen';
+import {SharedPlaylistsScreen} from '../pages/playlists/SharedPlaylistsScreen';
 import {SongSelectedScreen} from '../pages/songs/SongSelectedScreen';
 import {ExploreScreen} from '../pages/explore/ExploreScreen';
 
@@ -25,6 +26,7 @@ export type RootStackParamsList = {
   FaqsScreen: undefined;
   ExploreScreen: undefined;
   DeleteAccountScreen: undefined;
+  SharedPlaylistsScreen: undefined;
   CategorySelectedScreen: {id: string; title: string};
   PlaylistSelectedScreen: {id: string; title: string};
   SongSelectedScreen: {title: string; artist: string};
@@ -110,6 +112,11 @@ export const AppNavigator = () => {
           <Stack.Screen
             name="SongSelectedScreen"
             component={SongSelectedScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="SharedPlaylistsScreen"
+            component={SharedPlaylistsScreen}
             options={{headerShown: false}}
           />
           <Stack.Screen

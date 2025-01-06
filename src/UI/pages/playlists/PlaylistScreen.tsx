@@ -27,6 +27,7 @@ import {usePullRefresh} from '../../../hooks/usePullRefresing';
 import Toast from 'react-native-toast-message';
 import {useUpdatePlaylist} from '../../../hooks/useUpdatePlaylist';
 import {RootStackParamsList} from '../../routes/AppNavigator';
+import {SharePlaylistModal} from '../../components/shared/modals/SharedPlaylistModal';
 
 export const PlaylistScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
@@ -38,6 +39,9 @@ export const PlaylistScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [title, setTitle] = useState('');
   const [isVisible, setIsVisible] = useState(false);
+
+  const [isShareModalVisible, setIsShareModalVisible] = useState(false);
+  const [selectedPlaylistId, setSelectedPlaylistId] = useState('');
 
   const {updatePlaylist, isLoading: isUpdating} = useUpdatePlaylist();
   const [editingPlaylist, setEditingPlaylist] = useState<{
@@ -112,6 +116,11 @@ export const PlaylistScreen = () => {
     showToast();
   };
 
+  const handleSharePlaylist = (playlistId: string) => {
+    setSelectedPlaylistId(playlistId);
+    setIsShareModalVisible(true);
+  };
+
   const {isRefreshing, refresh, top} = usePullRefresh(loadPlaylists);
 
   return (
@@ -155,6 +164,12 @@ export const PlaylistScreen = () => {
             </View>
           </View>
           <Separator color={globalColors.terceary} />
+          <TouchableOpacity
+            style={styles.sharedButton}
+            onPress={() => navigation.navigate('SharedPlaylistsScreen')}>
+            <Icon name="share-social" size={24} color={globalColors.primary} />
+            <Text style={styles.sharedButtonText}>Shared Playlists</Text>
+          </TouchableOpacity>
 
           <View>
             <FlatList
@@ -179,6 +194,7 @@ export const PlaylistScreen = () => {
                     onEdit={() =>
                       startEditingPlaylist({id: item.id, title: item.title})
                     }
+                    onShare={() => handleSharePlaylist(item.id)}
                     onDelete={() => handleDeletePlaylist(item.id)}
                   />
                 </View>
@@ -214,6 +230,11 @@ export const PlaylistScreen = () => {
               playlistId={editingPlaylist?.id}
             />
           </Modal>
+          <SharePlaylistModal
+            visible={isShareModalVisible}
+            onClose={() => setIsShareModalVisible(false)}
+            playlistId={selectedPlaylistId}
+          />
         </ScrollView>
       </KeyboardAvoidingView>
     </>
@@ -273,5 +294,21 @@ const styles = StyleSheet.create({
   modalFormHeaderTitle: {
     fontSize: 20,
     color: globalColors.light,
+  },
+
+  sharedButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: globalColors.primaryAlt,
+    padding: 15,
+    borderRadius: 8,
+    margin: 20,
+    marginBottom: 50,
+  },
+  sharedButtonText: {
+    marginLeft: 8,
+    fontSize: 16,
+    color: globalColors.primary,
+    fontWeight: '500',
   },
 });

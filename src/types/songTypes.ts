@@ -56,12 +56,26 @@ export interface LyricLine {
   endTime: number;
 }
 
-export interface MusixmatchResponse {
-  message: {
-    body: any;
-    header: {
-      status_code: number;
-      execute_time: number;
-    };
+export interface SharedPlaylistCardProps {
+  playlist: {
+    id: string;
+    title: string;
+    sharedBy: string;
+    sharedAt: string;
   };
+  onAccept: () => void;
+  onReject: () => void;
+}
+
+export interface SharePlaylistModalProps {
+  visible: boolean;
+  onClose: () => void;
+  playlistId: string;
+}
+export interface SharedPlaylist {
+  playlistId: string;
+  originalOwnerId: string;
+  recipientId: string;
+  status: 'pending' | 'accepted' | 'rejected';
+  sharedAt: string;
 }

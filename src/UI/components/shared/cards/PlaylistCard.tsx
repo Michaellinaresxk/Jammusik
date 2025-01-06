@@ -2,12 +2,12 @@ import React from 'react';
 import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {globalColors} from '../../../theme/Theme';
 import Icon from 'react-native-vector-icons/Ionicons';
-import Toast from 'react-native-toast-message';
 
 type Props = {
   title: string;
   onPress: () => void;
   color: string;
+  onShare: () => void;
   onEdit?: (playlistId: string, title: string) => void;
   onDelete: (playlistId: string) => void;
 };
@@ -18,16 +18,8 @@ export const PlaylistCard = ({
   onDelete,
   color,
   onEdit,
+  onShare,
 }: Props) => {
-  const showToast = () => {
-    Toast.show({
-      type: 'success',
-      text1: 'Comming soon... ',
-      text2: 'Share Funcionality, next release! 👋',
-      topOffset: 90,
-    });
-  };
-
   const deleteConfirmation = () =>
     Alert.alert('Are you sure?', 'Do you want to remove this playlist?', [
       {
@@ -56,6 +48,20 @@ export const PlaylistCard = ({
       },
     ]);
 
+  const shareConfirmation = () =>
+    Alert.alert('Are you sure?', 'Do you want to share this playlist?', [
+      {
+        text: 'UPS! BY MISTAKE',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {
+        text: 'YES, SHARE!',
+        onPress: () => onShare(),
+        style: 'destructive',
+      },
+    ]);
+
   return (
     <TouchableOpacity
       style={[styles.playlistCard, {backgroundColor: color}]}
@@ -74,7 +80,10 @@ export const PlaylistCard = ({
         <Icon
           name="share-social-sharp"
           color={globalColors.light}
-          onPress={showToast}
+          onPress={event => {
+            event.stopPropagation();
+            shareConfirmation();
+          }}
           size={20}
         />
         <Icon
