@@ -73,6 +73,23 @@ export class PlaylistResource implements PlaylistRepository {
     return await this.playlistCaller.sharePlaylist(playlistId, recipientEmail);
   }
 
+  async getSharedPlaylists(userId: string): Promise<Playlist[]> {
+    const sharedPlaylists = await this.playlistCaller.getSharedPlaylists(
+      userId,
+    );
+    return sharedPlaylists.map(
+      playlist => new Playlist(playlist.id, playlist.title),
+    );
+  }
+
+  async acceptSharedPlaylist(sharedPlaylistId: string): Promise<void> {
+    return await this.playlistCaller.acceptSharedPlaylist(sharedPlaylistId);
+  }
+
+  async rejectSharedPlaylist(sharedPlaylistId: string): Promise<void> {
+    return await this.playlistCaller.rejectSharedPlaylist(sharedPlaylistId);
+  }
+
   async deletePlaylist(playlistId: string) {
     return await this.playlistCaller.deletePlaylist(playlistId);
   }

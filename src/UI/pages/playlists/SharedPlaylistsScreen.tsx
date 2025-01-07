@@ -2,32 +2,43 @@ import {FlatList, StyleSheet, Text, View, ImageBackground} from 'react-native';
 import {SharedPlaylistCard} from '../../components/shared/cards/SharedPlaylistCard';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {globalColors, globalStyles} from '../../theme/Theme';
-import {useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {GoBackButton} from '../../components/shared/GoBackButton';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {images} from '../../../assets/img/Images';
+import {PlaylistView} from '../../../views/PlaylistView';
+import {usePlaylistService} from '../../../context/PlaylistServiceContext';
+import {getAuth} from 'firebase/auth';
+import Toast from 'react-native-toast-message';
 
 export const SharedPlaylistsScreen = () => {
+  const [sharedPlaylists, setSharedPlaylists] = useState<PlaylistView[]>([]);
+  const playlistService = usePlaylistService();
+  const auth = getAuth();
+
   const image = {
     uri: images?.loginBackground || '',
   };
 
-  const [sharedPlaylists] = useState([
-    {
-      id: '1',
-      title: 'Rock Classics',
-      sharedBy: 'john@email.com',
-      sharedAt: '2024-01-06',
-      status: 'pending',
-    },
-    {
-      id: '2',
-      title: 'Jazz Collection',
-      sharedBy: 'anna@email.com',
-      sharedAt: '2024-01-05',
-      status: 'pending',
-    },
-  ]);
+  const loadSharedPlaylists = useCallback(async () => {
+    if (!auth.currentUser) return;
+
+    try {
+      const playlists = await playlistService.getSharedPlaylists(
+        auth.currentUser.uid,
+      );
+      setSharedPlaylists(playlists);
+    } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Failed to load shared playlists',
+      });
+    }
+  }, [auth.currentUser, playlistService]);
+
+  useEffect(() => {
+    loadSharedPlaylists();
+  }, [loadSharedPlaylists]);
 
   return (
     <SafeAreaView style={styles.safeArea}>

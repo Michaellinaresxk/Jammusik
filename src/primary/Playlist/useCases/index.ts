@@ -7,6 +7,7 @@ import {GetPlaylistSongsUseCase} from './GetPlaylistSongsUseCase';
 import {RemoveSongFromPlaylistUseCase} from './RemoveSongFromPlaylistUseCase';
 import {DeletePlaylistUseCase} from './DeletePlaylistUseCase';
 import {SharePlaylistUseCase} from './SharePlaylistUseCase';
+import {GetSharedPlaylistsUseCase} from './GetSharedPlaylistsUseCase';
 
 import type {PlaylistView} from '../../../views/PlaylistView';
 import {SongView} from '../../../views/SongView';
@@ -19,6 +20,7 @@ export class PlaylistService {
   private getPlaylistSongsUseCase: GetPlaylistSongsUseCase;
   private removeSongFromPlaylistUseCase: RemoveSongFromPlaylistUseCase;
   private sharePlaylistUseCase: SharePlaylistUseCase;
+  private getSharedPlaylistsUseCase: GetSharedPlaylistsUseCase;
   private deletePlaylistUseCase: DeletePlaylistUseCase;
 
   constructor(private readonly playlistResource: PlaylistResource) {
@@ -26,6 +28,9 @@ export class PlaylistService {
     this.getPlaylistUseCase = new GetPlaylistUseCase(playlistResource);
     this.updatePlaylistUseCase = new UpdatePlaylistUseCase(playlistResource);
     this.sharePlaylistUseCase = new SharePlaylistUseCase(playlistResource);
+    this.getSharedPlaylistsUseCase = new GetSharedPlaylistsUseCase(
+      playlistResource,
+    );
     this.addSongToPlaylistUseCase = new AddSongToPlaylistUseCase(
       playlistResource,
     );
@@ -86,6 +91,10 @@ export class PlaylistService {
     recipientEmail: string,
   ): Promise<void> {
     return await this.sharePlaylistUseCase.execute(playlistId, recipientEmail);
+  }
+
+  async getSharedPlaylists(userId: string): Promise<PlaylistView[]> {
+    return await this.getSharedPlaylistsUseCase.execute(userId);
   }
 
   async deletePlaylist(playlistId: string): Promise<void> {

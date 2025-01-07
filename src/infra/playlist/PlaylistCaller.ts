@@ -19,6 +19,7 @@ import {
   setDoc,
 } from '@firebase/firestore';
 import {ApiSong} from '../song/ApiSong';
+import Playlist from '../../domain/playlist/Playlist';
 
 export class PlaylistCaller {
   private db = getFirestore();
@@ -230,6 +231,8 @@ export class PlaylistCaller {
     recipientEmail: string,
   ): Promise<void> {
     try {
+      console.log('Sharing playlist to:', recipientEmail);
+
       // Find recipient user
       const usersRef = collection(this.db, 'users');
       const q = query(usersRef, where('email', '==', recipientEmail));
@@ -239,7 +242,14 @@ export class PlaylistCaller {
         throw new Error('User not found');
       }
 
-      const recipientId = querySnapshot.docs[0].id;
+      // Obtener el uid del usuario en lugar del ID del documento
+      const recipientData = querySnapshot.docs[0].data();
+      const recipientId = recipientData.uid; // Usar el uid almacenado
+
+      console.log('Recipient found:', {
+        docId: querySnapshot.docs[0].id,
+        uid: recipientId,
+      });
 
       // Update playlist's sharedWith array
       const playlistRef = doc(this.db, 'playlists', playlistId);
@@ -248,15 +258,89 @@ export class PlaylistCaller {
       });
 
       // Create shared playlist record
-      await addDoc(collection(this.db, 'sharedPlaylists'), {
+      const sharedPlaylistData = {
         originalPlaylistId: playlistId,
         sharedBy: auth.currentUser?.uid,
-        sharedWith: recipientId,
+        sharedWith: recipientId, // Usar el uid del usuario
         sharedAt: new Date().toISOString(),
-      });
+        status: 'pending',
+      };
+
+      console.log('Creating shared playlist:', sharedPlaylistData);
+
+      await addDoc(collection(this.db, 'sharedPlaylists'), sharedPlaylistData);
     } catch (error) {
       console.error('Error sharing playlist:', error);
       throw error;
     }
+  }
+
+  // get shared playlist
+  async getSharedPlaylists(userId: string) {
+    try {
+      console.log('Getting shared playlists for userId:', userId);
+
+      const sharedPlaylistsRef = collection(this.db, 'sharedPlaylists');
+      const q = query(
+        sharedPlaylistsRef,
+        where('sharedWith', '==', userId),
+        where('status', '==', 'pending'),
+      );
+
+      const snapshot = await getDocs(q);
+      console.log(
+        'Raw shared docs:',
+        snapshot.docs.map(doc => ({
+          id: doc.id,
+          data: doc.data(),
+        })),
+      );
+
+      const playlists = [];
+
+      for (const docSnapshot of snapshot.docs) {
+        const sharedData = docSnapshot.data();
+        console.log('Shared data:', sharedData);
+
+        const playlistDocRef = doc(
+          this.db,
+          'playlists',
+          sharedData.originalPlaylistId,
+        );
+        const playlistDoc = await getDoc(playlistDocRef);
+        const playlistData = playlistDoc.data();
+        console.log('Playlist data:', playlistData);
+
+        if (playlistData) {
+          playlists.push({
+            id: docSnapshot.id,
+            title: playlistData.title,
+            sharedBy: sharedData.sharedBy,
+            sharedAt: sharedData.sharedAt,
+            status: sharedData.status,
+          });
+        }
+      }
+
+      console.log('Final playlists array:', playlists);
+      return playlists;
+    } catch (error) {
+      console.error('Error getting shared playlists:', error);
+      throw error;
+    }
+  }
+
+  async acceptSharedPlaylist(sharedPlaylistId: string): Promise<void> {
+    const sharedRef = doc(this.db, 'sharedPlaylists', sharedPlaylistId);
+    await updateDoc(sharedRef, {
+      status: 'accepted',
+    });
+  }
+
+  async rejectSharedPlaylist(sharedPlaylistId: string): Promise<void> {
+    const sharedRef = doc(this.db, 'sharedPlaylists', sharedPlaylistId);
+    await updateDoc(sharedRef, {
+      status: 'rejected',
+    });
   }
 }
