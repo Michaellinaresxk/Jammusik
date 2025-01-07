@@ -26,13 +26,13 @@ export const SharedPlaylistCard = ({
 
     <View style={styles.buttonContainer}>
       <TouchableOpacity
-        onPress={onAccept}
+        onPress={() => onAccept(playlist.id)} // Ensure playlist.id is passed
         style={[styles.button, styles.acceptButton]}>
         <Icon name="checkmark" size={20} color="#fff" />
         <Text style={styles.buttonText}>Accept</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={onReject}
+        onPress={() => onReject(playlist.id)} // Ensure playlist.id is passed
         style={[styles.button, styles.rejectButton]}>
         <Icon name="close" size={20} color="#fff" />
         <Text style={styles.buttonText}>Reject</Text>

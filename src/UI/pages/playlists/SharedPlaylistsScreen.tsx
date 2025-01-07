@@ -3,8 +3,6 @@ import {SharedPlaylistCard} from '../../components/shared/cards/SharedPlaylistCa
 import Icon from 'react-native-vector-icons/Ionicons';
 import {globalColors, globalStyles} from '../../theme/Theme';
 import {useCallback, useEffect, useState} from 'react';
-import {GoBackButton} from '../../components/shared/GoBackButton';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {images} from '../../../assets/img/Images';
 import {PlaylistView} from '../../../views/PlaylistView';
 import {usePlaylistService} from '../../../context/PlaylistServiceContext';
@@ -40,79 +38,78 @@ export const SharedPlaylistsScreen = () => {
     loadSharedPlaylists();
   }, [loadSharedPlaylists]);
 
+  const handleAcceptPlaylist = async (sharedPlaylistId: string) => {
+    try {
+      await playlistService.acceptSharedPlaylist(sharedPlaylistId);
+      console.log('Shared playlist accepted successfully.');
+      await loadSharedPlaylists(); // Refresh playlists
+    } catch (error) {
+      console.error('Error accepting playlist:', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Failed to accept shared playlist',
+      });
+    }
+  };
+
+  const handleRejectPlaylist = async (sharedPlaylistId: string) => {
+    try {
+      await playlistService.rejectSharedPlaylist(sharedPlaylistId);
+      console.log('Shared playlist rejected successfully.');
+      await loadSharedPlaylists(); // Refresh playlists
+    } catch (error) {
+      console.error('Error rejecting playlist:', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Failed to reject shared playlist',
+      });
+    }
+  };
+
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <ImageBackground source={image} resizeMode="cover">
-        <View style={globalStyles.overlay}>
-          <View>
-            <GoBackButton bgColor={globalColors.primary} />
-            <View style={styles.subHeader}>
+    <ImageBackground source={image} resizeMode="cover">
+      <View style={globalStyles.overlay}>
+        <View>
+          <View style={styles.header}></View>
+          {sharedPlaylists.length === 0 ? (
+            <View style={styles.noSharedPlaylistContent}>
               <Icon
                 name="musical-notes-outline"
                 size={40}
                 color={globalColors.primaryAlt}
               />
-              <Text style={styles.subHeaderText}>Manage shared playlists</Text>
+              <Text style={styles.emptyTitle}>No shared playlists yet</Text>
+              <Text style={styles.emptySubtitle}>
+                Shared playlists will appear here
+              </Text>
             </View>
-
-            <View style={styles.header}>
-              <Icon
-                name="share-social"
-                size={30}
-                color={globalColors.primary}
-              />
-              <Text style={styles.headerTitle}>Shared Playlists</Text>
-            </View>
-            {sharedPlaylists.length === 0 ? (
-              <View style={styles.emptyState}>
-                <Icon
-                  name="musical-notes"
-                  size={80}
-                  color={globalColors.secondary}
+          ) : (
+            <FlatList
+              data={sharedPlaylists}
+              renderItem={({item}) => (
+                <SharedPlaylistCard
+                  playlist={item}
+                  onAccept={handleAcceptPlaylist}
+                  onReject={handleRejectPlaylist}
                 />
-                <Text style={styles.emptyTitle}>No shared playlists yet</Text>
-                <Text style={styles.emptySubtitle}>
-                  Shared playlists will appear here
-                </Text>
-              </View>
-            ) : (
-              <FlatList
-                data={sharedPlaylists}
-                renderItem={({item}) => (
-                  <SharedPlaylistCard
-                    playlist={item}
-                    onAccept={function (): void {
-                      throw new Error('Function not implemented.');
-                    }}
-                    onReject={function (): void {
-                      throw new Error('Function not implemented.');
-                    }}
-                  />
-                )}
-                contentContainerStyle={styles.list}
-              />
-            )}
-          </View>
+              )}
+              contentContainerStyle={styles.list}
+            />
+          )}
         </View>
-      </ImageBackground>
-    </SafeAreaView>
+      </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
   background: {
     flex: 1,
-  },
-  container: {
-    flex: 1,
-    padding: 16,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     padding: 20,
     borderBottomWidth: 1,
     borderColor: globalColors.secondary + '20',
@@ -126,17 +123,6 @@ const styles = StyleSheet.create({
     marginLeft: 12,
     color: globalColors.light,
   },
-  subHeader: {
-    alignItems: 'center',
-    padding: 20,
-    backgroundColor: globalColors.primaryAlt + '10',
-    marginBottom: 10,
-  },
-  subHeaderText: {
-    fontSize: 16,
-    color: globalColors.light,
-    marginTop: 8,
-  },
 
   list: {
     padding: 16,
@@ -146,15 +132,27 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+
+  noSharedPlaylistContent: {
+    alignItems: 'center',
+    padding: 20,
+    marginBottom: 10,
+    marginTop: 100,
+  },
+  subHeaderText: {
+    fontSize: 16,
+    color: globalColors.light,
+    marginTop: 8,
+  },
   emptyTitle: {
     fontSize: 20,
     fontWeight: '600',
     marginTop: 20,
-    color: globalColors.primaryDark,
+    color: globalColors.primary,
   },
   emptySubtitle: {
-    fontSize: 16,
-    color: globalColors.secondary,
+    fontSize: 18,
+    color: globalColors.light,
     marginTop: 8,
   },
 });

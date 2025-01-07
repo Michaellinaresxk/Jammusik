@@ -15,6 +15,8 @@ import {PlaylistSelectedScreen} from '../pages/playlists/PlaylistSelectedScreen'
 import {SharedPlaylistsScreen} from '../pages/playlists/SharedPlaylistsScreen';
 import {SongSelectedScreen} from '../pages/songs/SongSelectedScreen';
 import {ExploreScreen} from '../pages/explore/ExploreScreen';
+import {StyleSheet, Text, View} from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 export type RootStackParamsList = {
   MainTabs: undefined;
@@ -117,8 +119,22 @@ export const AppNavigator = () => {
           <Stack.Screen
             name="SharedPlaylistsScreen"
             component={SharedPlaylistsScreen}
-            options={{headerShown: false}}
+            options={{
+              headerShown: true,
+              headerTitle: () => (
+                <View style={styles.headerContainer}>
+                  <Icon name="share-social" size={30} color="#18998B" />
+                  <Text style={styles.headerTitle}>Shared Playlist</Text>
+                </View>
+              ),
+              headerTitleAlign: 'center', // Optional: Align title to the center
+              headerStyle: {
+                backgroundColor: '#000', // Customize header background
+              },
+              headerTintColor: '#18998B', // Customize back button and icon color
+            }}
           />
+
           <Stack.Screen
             name="ExploreScreen"
             component={ExploreScreen}
@@ -142,3 +158,16 @@ export const AppNavigator = () => {
     </Stack.Navigator>
   );
 };
+
+const styles = StyleSheet.create({
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginLeft: 8, // Spacing between icon and text
+    color: '#fff',
+  },
+});
