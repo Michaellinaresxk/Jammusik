@@ -2,13 +2,14 @@ import type {PlaylistResource} from '../../../infra/playlist/PlaylistResource';
 import {GetPlaylistUseCase} from './GetPlaylistUseCase';
 import {CreatePlaylistUseCase} from './CreatePlaylistUseCase';
 import {UpdatePlaylistUseCase} from './UpdatePlaylistUseCase';
-import { AddSongToPlaylistUseCase } from './AddSongToPlaylistUseCase';
-import { GetPlaylistSongsUseCase } from './GetPlaylistSongsUseCase';
-import { RemoveSongFromPlaylistUseCase } from './RemoveSongFromPlaylistUseCase';
+import {AddSongToPlaylistUseCase} from './AddSongToPlaylistUseCase';
+import {GetPlaylistSongsUseCase} from './GetPlaylistSongsUseCase';
+import {RemoveSongFromPlaylistUseCase} from './RemoveSongFromPlaylistUseCase';
 import {DeletePlaylistUseCase} from './DeletePlaylistUseCase';
+import {SharePlaylistUseCase} from './SharePlaylistUseCase';
 
 import type {PlaylistView} from '../../../views/PlaylistView';
-import { SongView } from '../../../views/SongView';
+import {SongView} from '../../../views/SongView';
 
 export class PlaylistService {
   private createPlaylistUsecase: CreatePlaylistUseCase;
@@ -17,15 +18,23 @@ export class PlaylistService {
   private addSongToPlaylistUseCase: AddSongToPlaylistUseCase;
   private getPlaylistSongsUseCase: GetPlaylistSongsUseCase;
   private removeSongFromPlaylistUseCase: RemoveSongFromPlaylistUseCase;
+  private sharePlaylistUseCase: SharePlaylistUseCase;
   private deletePlaylistUseCase: DeletePlaylistUseCase;
 
   constructor(private readonly playlistResource: PlaylistResource) {
     this.createPlaylistUsecase = new CreatePlaylistUseCase(playlistResource);
     this.getPlaylistUseCase = new GetPlaylistUseCase(playlistResource);
     this.updatePlaylistUseCase = new UpdatePlaylistUseCase(playlistResource);
-    this.addSongToPlaylistUseCase = new AddSongToPlaylistUseCase(playlistResource);
-    this.getPlaylistSongsUseCase = new GetPlaylistSongsUseCase(playlistResource);
-    this.removeSongFromPlaylistUseCase = new RemoveSongFromPlaylistUseCase(playlistResource);
+    this.sharePlaylistUseCase = new SharePlaylistUseCase(playlistResource);
+    this.addSongToPlaylistUseCase = new AddSongToPlaylistUseCase(
+      playlistResource,
+    );
+    this.getPlaylistSongsUseCase = new GetPlaylistSongsUseCase(
+      playlistResource,
+    );
+    this.removeSongFromPlaylistUseCase = new RemoveSongFromPlaylistUseCase(
+      playlistResource,
+    );
     this.deletePlaylistUseCase = new DeletePlaylistUseCase(playlistResource);
   }
   async createPlaylist(title: string) {
@@ -51,7 +60,7 @@ export class PlaylistService {
       artist: string;
       categoryId: string;
       originalSongId: string;
-    }
+    },
   ): Promise<void> {
     return await this.addSongToPlaylistUseCase.execute(playlistId, songData);
   }
@@ -60,8 +69,23 @@ export class PlaylistService {
     return await this.getPlaylistSongsUseCase.execute(playlistId);
   }
 
-  async removeSongFromPlaylist(userId: string, playlistId: string, songId: string): Promise<void> {
-    return await this.removeSongFromPlaylistUseCase.execute(userId, playlistId, songId);
+  async removeSongFromPlaylist(
+    userId: string,
+    playlistId: string,
+    songId: string,
+  ): Promise<void> {
+    return await this.removeSongFromPlaylistUseCase.execute(
+      userId,
+      playlistId,
+      songId,
+    );
+  }
+
+  async sharePlaylist(
+    playlistId: string,
+    recipientEmail: string,
+  ): Promise<void> {
+    return await this.sharePlaylistUseCase.execute(playlistId, recipientEmail);
   }
 
   async deletePlaylist(playlistId: string): Promise<void> {

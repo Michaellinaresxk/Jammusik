@@ -355,7 +355,6 @@ export const CategorySelectedScreen = () => {
       onPress={() => {
         setSelectedSongId(songId);
         setIsOptionsVisible(true);
-        // Cerrar el swipeable después de presionar el botón
         swipeableRef.current[songId]?.close();
       }}>
       <Icon
@@ -365,6 +364,7 @@ export const CategorySelectedScreen = () => {
       />
     </TouchableOpacity>
   );
+
   // Effects
   useEffect(() => {
     loadSongList();
@@ -621,14 +621,14 @@ const styles = StyleSheet.create({
   deleteIcon: {
     color: globalColors.light,
   },
-  editButtonContent: {
-    backgroundColor: globalColors.info,
-    borderRadius: 10,
-    height: 85,
-    width: 80,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  // editButtonContent: {
+  //   backgroundColor: globalColors.info,
+  //   borderRadius: 10,
+  //   height: 85,
+  //   width: 80,
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  // },
 
   overlay: {
     flex: 1,
@@ -654,6 +654,15 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     fontSize: 16,
     color: globalColors.primaryDark,
+  },
+
+  editButtonContent: {
+    backgroundColor: globalColors.info,
+    borderRadius: 10,
+    height: 85,
+    width: 80,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   actionIcon: {
     color: globalColors.light,

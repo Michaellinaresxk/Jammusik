@@ -49,13 +49,22 @@ export const SongCard = ({
       ]}
       onPress={onPress}>
       <View style={styles.containerCard}>
-        <View>
-          <Text style={styles.songCardTitle}>{title}</Text>
-          <Text style={styles.songCardArtist}>- {artist}</Text>
+        <View style={styles.containerCardContent}>
+          <Icon
+            name={changeIcon ? 'checkmark-done-sharp' : 'musical-note-sharp'}
+            color={globalColors.light}
+            size={30}
+            onPress={() => handlePressIcon()}
+            style={{marginTop: 10}}
+          />
+          <View>
+            <Text style={styles.songCardTitle}>{title}</Text>
+            <Text style={styles.songCardArtist}>- {artist}</Text>
+          </View>
         </View>
         <View style={styles.buttonContainer}>
           <Icon
-            name={changeIcon ? 'checkmark-done-sharp' : 'power-sharp'}
+            name={changeIcon ? 'refresh-sharp' : 'play-sharp'}
             color={globalColors.light}
             size={30}
             onPress={() => handlePressIcon()}
@@ -79,6 +88,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  containerCardContent: {
+    flexDirection: 'row',
+    gap: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   songCardTitle: {
     color: globalColors.light,

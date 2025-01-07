@@ -194,7 +194,7 @@ export const CategoriesScreen = () => {
               </View>
             </View>
             <Separator color={globalColors.terceary} />
-            <View style={{marginTop: 30, justifyContent: 'center'}}>
+            <View style={styles.categoryCardContent}>
               <CategoryCard
                 category={{
                   id: 'library',
@@ -284,6 +284,12 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: 'bold',
     color: globalColors.light,
+  },
+
+  categoryCardContent: {
+    marginTop: 30,
+    justifyContent: 'center',
+    marginBottom: 150,
   },
   buttonContainer: {
     justifyContent: 'center',

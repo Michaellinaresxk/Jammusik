@@ -4,7 +4,7 @@ import {
   query,
   where,
   writeBatch,
-  serverTimestamp
+  serverTimestamp,
 } from 'firebase/firestore';
 import {auth} from '../api/firebaseConfig';
 import type {ApiPlaylist} from './ApiPlaylist';
@@ -18,7 +18,7 @@ import {
   getDoc,
   setDoc,
 } from '@firebase/firestore';
-import { ApiSong } from '../song/ApiSong';
+import {ApiSong} from '../song/ApiSong';
 
 export class PlaylistCaller {
   private db = getFirestore();
@@ -56,14 +56,17 @@ export class PlaylistCaller {
     try {
       const playlistsQuery = query(
         collection(this.db, 'playlists'),
-        where('userId', '==', userId)
+        where('userId', '==', userId),
       );
 
       const querySnapshot = await getDocs(playlistsQuery);
-      return querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      } as ApiPlaylist));
+      return querySnapshot.docs.map(
+        doc =>
+          ({
+            id: doc.id,
+            ...doc.data(),
+          } as ApiPlaylist),
+      );
     } catch (error) {
       console.error('Error fetching playlists:', error);
       throw error;
@@ -77,7 +80,7 @@ export class PlaylistCaller {
       title: string;
       artist: string;
       categoryId: string;
-    }
+    },
   ): Promise<void> {
     if (!this.db || !playlistId) {
       throw new Error('Firestore instance or playlistId is undefined!');
@@ -126,21 +129,28 @@ export class PlaylistCaller {
     try {
       const songsQuery = query(
         collection(this.db, 'songs'),
-        where('playlistIds', 'array-contains', playlistId)
+        where('playlistIds', 'array-contains', playlistId),
       );
 
       const querySnapshot = await getDocs(songsQuery);
-      return querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      } as ApiSong));
+      return querySnapshot.docs.map(
+        doc =>
+          ({
+            id: doc.id,
+            ...doc.data(),
+          } as ApiSong),
+      );
     } catch (error) {
       console.error('Error fetching songs from playlist:', error);
       throw error;
     }
   }
 
-  async removeSongFromPlaylist(userId: string, playlistId: string, songId: string): Promise<void> {
+  async removeSongFromPlaylist(
+    userId: string,
+    playlistId: string,
+    songId: string,
+  ): Promise<void> {
     if (!this.db || !playlistId || !songId || !userId) {
       throw new Error('Required parameters are undefined!');
     }
@@ -155,13 +165,12 @@ export class PlaylistCaller {
 
       // Remove the playlistId from the array
       await updateDoc(songRef, {
-        playlistIds: arrayRemove(playlistId)
+        playlistIds: arrayRemove(playlistId),
       });
 
       // Verify the update
       const verifyDoc = await getDoc(songRef);
       console.log('Song updated:', verifyDoc.data());
-
     } catch (error) {
       console.error('Error removing song from playlist:', error);
       throw error;
@@ -180,7 +189,7 @@ export class PlaylistCaller {
       // Delete all playlist-song relationships
       const playlistSongsQuery = query(
         collection(this.db, 'playlist_songs'),
-        where('playlistId', '==', playlistId)
+        where('playlistId', '==', playlistId),
       );
 
       const playlistSongsSnapshot = await getDocs(playlistSongsQuery);
@@ -207,10 +216,46 @@ export class PlaylistCaller {
     try {
       await updateDoc(doc(this.db, 'playlists', playlistId), {
         title: newTitle,
-        updatedAt: serverTimestamp()
+        updatedAt: serverTimestamp(),
       });
     } catch (error) {
       console.error('Error updating playlist:', error);
+      throw error;
+    }
+  }
+
+  // share playlist
+  async sharePlaylist(
+    playlistId: string,
+    recipientEmail: string,
+  ): Promise<void> {
+    try {
+      // Find recipient user
+      const usersRef = collection(this.db, 'users');
+      const q = query(usersRef, where('email', '==', recipientEmail));
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        throw new Error('User not found');
+      }
+
+      const recipientId = querySnapshot.docs[0].id;
+
+      // Update playlist's sharedWith array
+      const playlistRef = doc(this.db, 'playlists', playlistId);
+      await updateDoc(playlistRef, {
+        sharedWith: arrayUnion(recipientId),
+      });
+
+      // Create shared playlist record
+      await addDoc(collection(this.db, 'sharedPlaylists'), {
+        originalPlaylistId: playlistId,
+        sharedBy: auth.currentUser?.uid,
+        sharedWith: recipientId,
+        sharedAt: new Date().toISOString(),
+      });
+    } catch (error) {
+      console.error('Error sharing playlist:', error);
       throw error;
     }
   }

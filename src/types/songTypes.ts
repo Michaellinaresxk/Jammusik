@@ -71,6 +71,9 @@ export interface SharePlaylistModalProps {
   visible: boolean;
   onClose: () => void;
   playlistId: string;
+  recipientEmail: string;
+  setRecipientEmail: (email: string) => void;
+  onSubmit: () => void;
 }
 export interface SharedPlaylist {
   playlistId: string;

@@ -21,6 +21,7 @@ import {usePlaylistService} from '../../../context/PlaylistServiceContext';
 import {auth} from '../../../infra/api/firebaseConfig';
 import {PlaylistView} from '../../../views/PlaylistView';
 import {PlaylistCard} from '../../components/shared/cards/PlaylistCard';
+import {HomePlaylistCard} from '../../components/shared/cards/HomePlaylistCard';
 import {usePullRefresh} from '../../../hooks/usePullRefresing';
 import Toast from 'react-native-toast-message';
 import {useUpdatePlaylist} from '../../../hooks/useUpdatePlaylist';
@@ -226,10 +227,10 @@ export const HomeScreen = () => {
               <View style={styles.playlistContainer}>
                 <Text style={styles.sectionTitle}>Your Playlists</Text>
                 <FlatList
-                  // horizontal={true}
+                  horizontal={true}
                   data={playlists}
                   keyExtractor={item => item.id}
-                  numColumns={2}
+                  // numColumns={2}
                   ListEmptyComponent={
                     <View style={styles.emptyContainer}>
                       <Text style={styles.emptyMessage}>
@@ -249,7 +250,7 @@ export const HomeScreen = () => {
                     </View>
                   }
                   renderItem={({item, index}) => (
-                    <PlaylistCard
+                    <HomePlaylistCard
                       title={item.title}
                       color={
                         index % 2 === 0

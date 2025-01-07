@@ -42,6 +42,7 @@ export const PlaylistScreen = () => {
 
   const [isShareModalVisible, setIsShareModalVisible] = useState(false);
   const [selectedPlaylistId, setSelectedPlaylistId] = useState('');
+  const [recipientEmail, setRecipientEmail] = useState('');
 
   const {updatePlaylist, isLoading: isUpdating} = useUpdatePlaylist();
   const [editingPlaylist, setEditingPlaylist] = useState<{
@@ -121,6 +122,23 @@ export const PlaylistScreen = () => {
     setIsShareModalVisible(true);
   };
 
+  const handleSubmitShare = async () => {
+    try {
+      await playlistService.sharePlaylist(selectedPlaylistId, recipientEmail);
+      setIsShareModalVisible(false);
+      setRecipientEmail('');
+      Toast.show({
+        type: 'success',
+        text1: 'Playlist shared successfully',
+      });
+    } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Failed to share playlist',
+      });
+    }
+  };
+
   const {isRefreshing, refresh, top} = usePullRefresh(loadPlaylists);
 
   return (
@@ -167,11 +185,23 @@ export const PlaylistScreen = () => {
           <TouchableOpacity
             style={styles.sharedButton}
             onPress={() => navigation.navigate('SharedPlaylistsScreen')}>
-            <Icon name="share-social" size={24} color={globalColors.primary} />
-            <Text style={styles.sharedButtonText}>Shared Playlists</Text>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Icon
+                name="share-social"
+                size={24}
+                color={globalColors.primary}
+              />
+              <Text style={styles.sharedButtonText}>Shared Playlists</Text>
+            </View>
+            <Icon
+              name="chevron-forward-outline"
+              color={globalColors.primary}
+              style={{marginLeft: 'auto'}}
+              size={25}
+            />
           </TouchableOpacity>
 
-          <View>
+          <View style={{marginBottom: 150}}>
             <FlatList
               data={playlists}
               keyExtractor={item => item.id}
@@ -234,6 +264,9 @@ export const PlaylistScreen = () => {
             visible={isShareModalVisible}
             onClose={() => setIsShareModalVisible(false)}
             playlistId={selectedPlaylistId}
+            recipientEmail={recipientEmail}
+            setRecipientEmail={setRecipientEmail}
+            onSubmit={handleSubmitShare}
           />
         </ScrollView>
       </KeyboardAvoidingView>
