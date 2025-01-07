@@ -112,8 +112,9 @@ const styles = StyleSheet.create({
   },
   playlistCardText: {
     color: globalColors.light,
-    paddingHorizontal: 5,
-    fontSize: 20,
+    paddingHorizontal: 10,
+    fontSize: 18,
+    fontWeight: '400',
   },
   containerIcons: {
     padding: 10,

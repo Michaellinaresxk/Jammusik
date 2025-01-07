@@ -20,7 +20,6 @@ import {CategoryView} from '../../../views/CategoryView';
 import {usePlaylistService} from '../../../context/PlaylistServiceContext';
 import {auth} from '../../../infra/api/firebaseConfig';
 import {PlaylistView} from '../../../views/PlaylistView';
-import {PlaylistCard} from '../../components/shared/cards/PlaylistCard';
 import {HomePlaylistCard} from '../../components/shared/cards/HomePlaylistCard';
 import {usePullRefresh} from '../../../hooks/usePullRefresing';
 import Toast from 'react-native-toast-message';

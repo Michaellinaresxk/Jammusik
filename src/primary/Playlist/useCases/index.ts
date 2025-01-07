@@ -7,6 +7,9 @@ import {GetPlaylistSongsUseCase} from './GetPlaylistSongsUseCase';
 import {RemoveSongFromPlaylistUseCase} from './RemoveSongFromPlaylistUseCase';
 import {DeletePlaylistUseCase} from './DeletePlaylistUseCase';
 import {SharePlaylistUseCase} from './SharePlaylistUseCase';
+import {AcceptSharedPlaylistUseCase} from './AcceptSharedPlaylistUseCase';
+import {RejectSharedPlaylistUseCase} from './RejectSharedPlaylistUseCase';
+
 import {GetSharedPlaylistsUseCase} from './GetSharedPlaylistsUseCase';
 
 import type {PlaylistView} from '../../../views/PlaylistView';
@@ -21,6 +24,9 @@ export class PlaylistService {
   private removeSongFromPlaylistUseCase: RemoveSongFromPlaylistUseCase;
   private sharePlaylistUseCase: SharePlaylistUseCase;
   private getSharedPlaylistsUseCase: GetSharedPlaylistsUseCase;
+  private acceptSharedPlaylistUseCase: AcceptSharedPlaylistUseCase;
+  private rejectSharedPlaylistUseCase: RejectSharedPlaylistUseCase;
+
   private deletePlaylistUseCase: DeletePlaylistUseCase;
 
   constructor(private readonly playlistResource: PlaylistResource) {
@@ -28,6 +34,12 @@ export class PlaylistService {
     this.getPlaylistUseCase = new GetPlaylistUseCase(playlistResource);
     this.updatePlaylistUseCase = new UpdatePlaylistUseCase(playlistResource);
     this.sharePlaylistUseCase = new SharePlaylistUseCase(playlistResource);
+    this.acceptSharedPlaylistUseCase = new AcceptSharedPlaylistUseCase(
+      playlistResource,
+    );
+    this.rejectSharedPlaylistUseCase = new RejectSharedPlaylistUseCase(
+      playlistResource,
+    );
     this.getSharedPlaylistsUseCase = new GetSharedPlaylistsUseCase(
       playlistResource,
     );
@@ -95,6 +107,14 @@ export class PlaylistService {
 
   async getSharedPlaylists(userId: string): Promise<PlaylistView[]> {
     return await this.getSharedPlaylistsUseCase.execute(userId);
+  }
+
+  async acceptSharedPlaylist(sharedPlaylistId: string): Promise<void> {
+    return await this.acceptSharedPlaylistUseCase.execute(sharedPlaylistId);
+  }
+
+  async rejectSharedPlaylist(sharedPlaylistId: string): Promise<void> {
+    return await this.rejectSharedPlaylistUseCase.execute(sharedPlaylistId);
   }
 
   async deletePlaylist(playlistId: string): Promise<void> {

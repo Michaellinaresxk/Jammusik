@@ -31,11 +31,11 @@ export const SharePlaylistModal = ({
           <Text style={styles.title}>Share with</Text>
 
           <View style={styles.inputContainer}>
-            <Icon name="mail" size={20} color={globalColors.secondary} />
+            <Icon name="mail" size={20} color={globalColors.primary} />
             <TextInput
               style={styles.input}
               placeholder="Enter email address"
-              placeholderTextColor={globalColors.secondary}
+              placeholderTextColor={globalColors.terceary}
               value={recipientEmail}
               onChangeText={setRecipientEmail}
               autoCapitalize="none"
