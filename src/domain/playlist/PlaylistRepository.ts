@@ -22,5 +22,8 @@ export default interface PlaylistRepository {
     songId: string,
   ): Promise<void>;
   sharePlaylist(playlistId: string, recipientEmail: string): Promise<void>;
+  getSharedPlaylists(userId: string): Promise<Playlist[]>;
+  acceptSharedPlaylist(sharedPlaylistId: string): Promise<void>;
+  rejectSharedPlaylist(sharedPlaylistId: string): Promise<void>;
   deletePlaylist(playlistId: string): Promise<void>;
 }

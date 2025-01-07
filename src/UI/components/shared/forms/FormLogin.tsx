@@ -136,15 +136,15 @@ const styles = StyleSheet.create({
   inputError: {
     borderColor: 'red',
   },
+
   passwordContainer: {
     position: 'relative',
     marginTop: 16,
   },
+
   eyeIconContainer: {
     position: 'absolute',
     right: 10,
-    top: '50%',
-    transform: [{translateY: -12}],
     padding: 4,
   },
   errorContainer: {

@@ -1,6 +1,5 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {SharedPlaylistCardProps} from '../../../../types/songTypes';
-import {globalColors} from '../../../theme/Theme';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 export const SharedPlaylistCard = ({
@@ -16,7 +15,7 @@ export const SharedPlaylistCard = ({
       <View style={styles.textContainer}>
         <Text style={styles.title}>{playlist.title}</Text>
         <View style={styles.sharedByContainer}>
-          <Icon name="person-outline" size={16} color="#fff" />
+          <Icon name="person-outline" size={20} color="#fff" />
           <Text style={styles.sharedBy}>{playlist.sharedBy}</Text>
         </View>
         <Text style={styles.date}>
@@ -81,8 +80,8 @@ const styles = StyleSheet.create({
   },
   sharedBy: {
     marginLeft: 4,
-    fontSize: 14,
-    color: 'rgba(255,255,255,0.8)',
+    fontSize: 20,
+    color: '#fff',
   },
   date: {
     fontSize: 12,
