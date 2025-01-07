@@ -7,12 +7,17 @@ import {
   View,
 } from 'react-native';
 import {globalColors} from '../../../theme/Theme';
-// import {SharePlaylistModalProps} from '../../../../types/songTypes';
+import {SharePlaylistModalProps} from '../../../../types/songTypes';
 import {useState} from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-// SharePlaylistModal.tsx
-export const SharePlaylistModal = ({visible, onClose, playlistId}) => {
+export const SharePlaylistModal = ({
+  visible,
+  onClose,
+  recipientEmail,
+  setRecipientEmail,
+  onSubmit,
+}: SharePlaylistModalProps) => {
   const [email, setEmail] = useState('');
 
   return (
@@ -23,23 +28,22 @@ export const SharePlaylistModal = ({visible, onClose, playlistId}) => {
         onPress={onClose}>
         <TouchableOpacity style={styles.modalContent} activeOpacity={1}>
           <View style={styles.handle} />
-
           <Text style={styles.title}>Share with</Text>
 
           <View style={styles.inputContainer}>
-            <Icon name="mail" size={25} color={globalColors.primary} />
+            <Icon name="mail" size={20} color={globalColors.secondary} />
             <TextInput
               style={styles.input}
               placeholder="Enter email address"
-              placeholderTextColor={globalColors.terceary}
-              value={email}
-              onChangeText={setEmail}
+              placeholderTextColor={globalColors.secondary}
+              value={recipientEmail}
+              onChangeText={setRecipientEmail}
               autoCapitalize="none"
               keyboardType="email-address"
             />
           </View>
 
-          <TouchableOpacity style={styles.shareButton}>
+          <TouchableOpacity style={styles.shareButton} onPress={onSubmit}>
             <Text style={styles.shareText}>Share</Text>
             <Icon name="arrow-forward" size={20} color="#fff" />
           </TouchableOpacity>

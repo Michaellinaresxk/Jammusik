@@ -19,6 +19,8 @@ export interface SongDetailsProperties {
 export type PlaylistProperties = {
   id: string;
   title: string;
+  sharedWith: string[];
+  ownerId: string;
 };
 
 export type CategoryProperties = {

@@ -9,7 +9,7 @@ import {images} from '../../../assets/img/Images';
 
 export const SharedPlaylistsScreen = () => {
   const image = {
-    uri: images?.loginBackground || '', // Validación para evitar undefined
+    uri: images?.loginBackground || '',
   };
 
   const [sharedPlaylists] = useState([

@@ -26,7 +26,7 @@ export class PlaylistResource implements PlaylistRepository {
       artist: string;
       categoryId: string;
       originalSongId: string;
-    }
+    },
   ): Promise<void> {
     return await this.playlistCaller.addSongToPlaylist(playlistId, songData);
   }
@@ -41,22 +41,37 @@ export class PlaylistResource implements PlaylistRepository {
 
   async getPlaylistSongs(playlistId: string): Promise<Song[]> {
     const apiSongs = await this.playlistCaller.getPlaylistSongs(playlistId);
-    return apiSongs.map(apiSong =>
-      new Song(
-        apiSong.id,         // id
-        apiSong.categoryId, // categoryId
-        apiSong.title,      // title
-        apiSong.artist,     // artist
-        false,             // isDone - por defecto false
-        apiSong.originalSongId // originalSongId opcional
-      )
+    return apiSongs.map(
+      apiSong =>
+        new Song(
+          apiSong.id, // id
+          apiSong.categoryId, // categoryId
+          apiSong.title, // title
+          apiSong.artist, // artist
+          false, // isDone - por defecto false
+          apiSong.originalSongId, // originalSongId opcional
+        ),
     );
   }
 
-  async removeSongFromPlaylist(userId: string, playlistId: string, songId: string): Promise<void> {
-    return await this.playlistCaller.removeSongFromPlaylist(userId, playlistId, songId);
+  async removeSongFromPlaylist(
+    userId: string,
+    playlistId: string,
+    songId: string,
+  ): Promise<void> {
+    return await this.playlistCaller.removeSongFromPlaylist(
+      userId,
+      playlistId,
+      songId,
+    );
   }
 
+  async sharePlaylist(
+    playlistId: string,
+    recipientEmail: string,
+  ): Promise<void> {
+    return await this.playlistCaller.sharePlaylist(playlistId, recipientEmail);
+  }
 
   async deletePlaylist(playlistId: string) {
     return await this.playlistCaller.deletePlaylist(playlistId);
