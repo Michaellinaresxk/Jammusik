@@ -23,37 +23,23 @@ import {PlaylistView} from '../../../views/PlaylistView';
 import {HomePlaylistCard} from '../../components/shared/cards/HomePlaylistCard';
 import {usePullRefresh} from '../../../hooks/usePullRefresing';
 import Toast from 'react-native-toast-message';
-import {useUpdatePlaylist} from '../../../hooks/useUpdatePlaylist';
 import {PrimaryButton} from '../../components/shared/PrimaryButton';
-import {FormCreatePlaylist} from '../../components/shared/forms/FormCreatePlaylist';
 import {useEnhancedOnboarding} from '../../../hooks/useEnhancedOnboarding';
 import {OnboardingModal} from '../../components/shared/onBoarding/OnboardingModal';
 import {useSongService} from '../../../context/SongServiceContext';
 import Icon from 'react-native-vector-icons/Ionicons';
-// import {KeyboardGestureArea} from 'react-native-keyboard-controller';
 import {FormCreateSong} from '../../components/shared/forms/FormCreateSong';
 import {Separator} from '../../components/shared/Separator';
 import {SliderQuotes} from '../../components/shared/SliderQuotes';
 
 export const HomeScreen = () => {
   const navigation = useNavigation();
-  const {
-    isFirstLogin,
-    currentStep,
-    selectedGenres,
-    handleGenreSelect,
-    completeOnboarding,
-    setCurrentStep,
-    userName,
-  } = useEnhancedOnboarding();
+  const {isFirstLogin, completeOnboarding, userName} = useEnhancedOnboarding();
 
   const categoryService = useCategoryService();
   const playlistService = usePlaylistService();
   const [categories, setCategories] = useState<CategoryView[]>([]);
   const [playlists, setPlaylists] = useState<PlaylistView[]>([]);
-  const [triggerUpdate, setTriggerUpdate] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const {updatePlaylist, isLoading: isUpdating} = useUpdatePlaylist();
 
   const songService = useSongService();
   const [isSongModalVisible, setIsSongModalVisible] = useState(false);
@@ -93,13 +79,6 @@ export const HomeScreen = () => {
     }
   };
 
-  const [editingPlaylist, setEditingPlaylist] = useState<{
-    id: string;
-    title: string;
-  } | null>(null);
-  const [title, setTitle] = useState('');
-  const [isVisible, setIsVisible] = useState(false);
-
   const loadData = useCallback(async () => {
     const user = auth.currentUser;
     const userId = user?.uid as string;
@@ -121,33 +100,6 @@ export const HomeScreen = () => {
       loadData();
     }, [loadData]),
   );
-
-  const showToast = () => {
-    Toast.show({
-      type: 'success',
-      text1: 'Playlist Deleted successfully. 👋',
-    });
-  };
-
-  const showUpdatedToast = () => {
-    Toast.show({
-      type: 'success',
-      text1: 'Playlist Updated successfully. 👋',
-    });
-  };
-
-  const startEditingPlaylist = (playlist: {id: string; title: string}) => {
-    setEditingPlaylist(playlist);
-    setTitle(playlist.title);
-    setIsVisible(true);
-    showUpdatedToast();
-  };
-
-  const handleDeletePlaylist = async (playlistId: string) => {
-    await playlistService.deletePlaylist(playlistId);
-    setTriggerUpdate(prev => !prev); // Trigger the update
-    showToast();
-  };
 
   const {isRefreshing, refresh, top} = usePullRefresh(loadData);
 
@@ -188,7 +140,6 @@ export const HomeScreen = () => {
             </View>
             <Separator color={globalColors.terceary} />
             <View style={styles.categoryCardContainer}>
-              {/* <Text style={styles.subTitle}>My Music Categories:</Text> */}
               <View style={styles.sectionHeader}>
                 <Text style={styles.sectionTitle}>Your Categories</Text>
                 <TouchableOpacity
@@ -239,7 +190,6 @@ export const HomeScreen = () => {
                       <TouchableOpacity
                         style={styles.createPlaylistButton}
                         onPress={() => {
-                          console.log('Navigating to PlaylistScreen');
                           navigation.navigate('Playlists');
                         }}>
                         <Text style={styles.createPlaylistButtonText}>
@@ -262,10 +212,6 @@ export const HomeScreen = () => {
                           title: item.title,
                         })
                       }
-                      onEdit={() =>
-                        startEditingPlaylist({id: item.id, title: item.title})
-                      }
-                      onDelete={() => handleDeletePlaylist(item.id)}
                     />
                   )}
                 />
@@ -276,54 +222,9 @@ export const HomeScreen = () => {
               </View>
             </View>
           </View>
-          <Modal
-            visible={isVisible}
-            animationType="slide"
-            presentationStyle="formSheet">
-            <View style={styles.modalBtnContainer}>
-              <Text style={styles.modalFormHeaderTitle}>Edit Playlist</Text>
-              <PrimaryButton
-                label="Close"
-                btnFontSize={20}
-                colorText={globalColors.light}
-                onPress={() => {
-                  setIsVisible(false);
-                  setEditingPlaylist(null);
-                }}
-              />
-            </View>
-            <FormCreatePlaylist
-              title={title}
-              setTitle={setTitle}
-              onCreatePlaylist={async values => {
-                if (editingPlaylist) {
-                  await updatePlaylist(editingPlaylist.id, values.title);
-
-                  // Update local state
-                  setPlaylists(currentPlaylists =>
-                    currentPlaylists.map(playlist =>
-                      playlist.id === editingPlaylist.id
-                        ? {...playlist, title: values.title}
-                        : playlist,
-                    ),
-                  );
-
-                  setEditingPlaylist(null);
-                  setIsVisible(false);
-                }
-              }}
-              isLoading={isLoading}
-              isEditing={!!editingPlaylist}
-              playlistId={editingPlaylist?.id}
-            />
-          </Modal>
           <OnboardingModal
             visible={isFirstLogin}
             userName={userName}
-            selectedGenres={selectedGenres || []}
-            handleGenreSelect={handleGenreSelect}
-            currentStep={currentStep}
-            setCurrentStep={setCurrentStep}
             completeOnboarding={completeOnboarding}
           />
           {/* Modal to create songs */}
@@ -331,7 +232,6 @@ export const HomeScreen = () => {
             visible={isSongModalVisible}
             animationType="slide"
             presentationStyle="formSheet">
-            {/* <KeyboardGestureArea interpolator="ios" style={{flex: 1}}> */}
             <ScrollView horizontal={false} style={{flex: 1}}>
               <View style={styles.modalBtnContainer}>
                 <Text style={styles.modalFormHeaderTitle}>Create New Song</Text>
@@ -349,7 +249,6 @@ export const HomeScreen = () => {
                 isEditing={false}
               />
             </ScrollView>
-            {/* </KeyboardGestureArea> */}
           </Modal>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -364,7 +263,6 @@ const styles = StyleSheet.create({
     color: globalColors.primaryDark,
   },
   seeAllButton: {
-    // color: '#18998B', // primary
     color: globalColors.terceary,
     fontSize: 16,
   },

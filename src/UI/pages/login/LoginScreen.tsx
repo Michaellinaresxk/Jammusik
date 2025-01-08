@@ -25,7 +25,7 @@ export const LoginScreen = () => {
   const userService = useUserService();
   const navigation = useNavigation();
   const image = {
-    uri: images?.loginBackground || '', // Validación para evitar undefined
+    uri: images?.loginBackground || '', // Validation to avoid undefined
   };
 
   const handleLogin = async ({email, password}) => {
@@ -38,10 +38,8 @@ export const LoginScreen = () => {
       }
 
       await userService.loginUser(email, password);
-      // Navega al HomeScreen si el login es exitoso
       navigation.navigate('HomeScreen');
     } catch (error) {
-      // Manejo de errores robusto
       const errorMessage =
         error?.code === 'auth/invalid-credential'
           ? 'Invalid credentials'
