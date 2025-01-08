@@ -18,23 +18,32 @@ export class CategoryCaller {
       throw new Error('userId is undefined!');
     }
 
+    // Check if a category with the same title already exists for this user
+    const categoriesRef = collection(this.db, 'categories');
+    const q = query(
+      categoriesRef,
+      where('title', '==', title),
+      where('userId', '==', userId),
+    );
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+      throw new Error('A category with this title already exists!');
+    }
+
+    // Create the category if it doesn't exist
     const categoryData = {
       title: title,
       userId: userId,
     };
 
-    // Save data in firestore
-    const categoryRef = await addDoc(
-      collection(this.db, 'categories'),
-      categoryData,
-    );
+    const categoryRef = await addDoc(categoriesRef, categoryData);
 
     return {
       id: categoryRef.id,
       ...categoryData,
     };
   }
-
   async getCategories(userId: string): Promise<Category[]> {
     try {
       const categoriesRef = collection(this.db, 'categories');
