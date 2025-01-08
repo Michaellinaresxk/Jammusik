@@ -4,6 +4,7 @@ import {
   ImageBackground,
   KeyboardAvoidingView,
   Platform,
+  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -15,7 +16,6 @@ import {BrandLogo} from '../../components/shared/BrandLogo';
 import {FormRegister} from '../../components/shared/forms/FormRegister';
 import {LinkLoginRegister} from '../../components/shared/LinkLoginRegister';
 import {useUserService} from '../../../context/UserServiceContext';
-// import {KeyboardStickyView} from 'react-native-keyboard-controller';
 
 export const RegisterScreen = () => {
   const [email, setEmail] = useState('');
@@ -64,54 +64,63 @@ export const RegisterScreen = () => {
 
   const offset = {closed: 0, opened: 100};
   return (
-    <ImageBackground
-      source={image}
-      style={styles.containerImage}
-      resizeMode="cover"
-      alt="Imagen de fondo">
-      <View style={globalStyles.overlay}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-          <ScrollView showsVerticalScrollIndicator={false} horizontal={false}>
-            {/* <KeyboardStickyView
-              offset={offset}
-              style={styles.containerLoginScreen}> */}
-            <View style={styles.containerLogo}>
-              <BrandLogo />
-            </View>
-            <Text style={styles.labelTitle}>Register</Text>
-            <View style={{marginBottom: 50}}>
-              <FormRegister
-                email={email}
-                setEmail={setEmail}
-                userName={userName}
-                setUserName={setUserName}
-                password={password}
-                setPassword={setPassword}
-                isLoading={isLoading}
-                onRegister={handleRegister}
-                error={error}
-                setError={setError}
-                showPassword={showPassword}
-                toggleShowPassword={toggleShowPassword}
-              />
-              <LinkLoginRegister
-                text="Have an account?"
-                link="Login"
-                goTo="LoginScreen"
-              />
-            </View>
-            {/* </KeyboardStickyView> */}
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </View>
-    </ImageBackground>
+    <SafeAreaView style={styles.safeArea}>
+      <ImageBackground
+        source={image}
+        style={styles.container}
+        resizeMode="cover"
+        alt="Imagen de fondo">
+        <View style={globalStyles.overlay}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              horizontal={false}
+              style={styles.scrollContent}>
+              <View style={styles.containerLogo}>
+                <BrandLogo />
+              </View>
+              <Text style={styles.labelTitle}>Register</Text>
+              <View style={{marginBottom: 50}}>
+                <FormRegister
+                  email={email}
+                  setEmail={setEmail}
+                  userName={userName}
+                  setUserName={setUserName}
+                  password={password}
+                  setPassword={setPassword}
+                  isLoading={isLoading}
+                  onRegister={handleRegister}
+                  error={error}
+                  setError={setError}
+                  showPassword={showPassword}
+                  toggleShowPassword={toggleShowPassword}
+                />
+                <LinkLoginRegister
+                  text="Have an account?"
+                  link="Login"
+                  goTo="LoginScreen"
+                />
+              </View>
+            </ScrollView>
+          </KeyboardAvoidingView>
+        </View>
+      </ImageBackground>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  containerImage: {
+  safeArea: {
     flex: 1,
+  },
+  container: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
+  },
+  containerImage: {
     justifyContent: 'center',
   },
   containerLoginScreen: {

@@ -6,7 +6,6 @@ type Props = {
   title: string;
   onPress: () => void;
   color: string;
-  onShare: () => void;
 };
 
 export const HomePlaylistCard = ({title, onPress, color}: Props) => {

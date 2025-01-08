@@ -3,29 +3,11 @@ import {Modal, View, StyleSheet} from 'react-native';
 import OnboardingFlow from './OnboardingFlow';
 import {globalColors} from '../../../theme/Theme';
 
-export const OnboardingModal = ({
-  visible,
-  userName,
-  selectedGenres = [],
-  handleGenreSelect,
-  currentStep,
-  setCurrentStep,
-  completeOnboarding,
-}) => {
-  console.log('OnboardingModal - Current step:', currentStep);
-  console.log('OnboardingModal - Selected genres:', selectedGenres);
-
+export const OnboardingModal = ({visible, userName, completeOnboarding}) => {
   return (
     <Modal visible={visible} animationType="slide" transparent={false}>
       <View style={styles.container}>
-        <OnboardingFlow
-          userName={userName}
-          selectedGenres={selectedGenres}
-          onGenreSelect={handleGenreSelect}
-          currentStep={currentStep}
-          setCurrentStep={setCurrentStep}
-          onComplete={completeOnboarding}
-        />
+        <OnboardingFlow userName={userName} onComplete={completeOnboarding} />
       </View>
     </Modal>
   );

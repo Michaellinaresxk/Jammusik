@@ -47,43 +47,12 @@ export const useEnhancedOnboarding = () => {
       const user = auth.currentUser;
       if (!user) return;
 
-      console.log('Starting category creation with genres:', selectedGenres);
-
-      // Create the categories one by one
-      const createdCategories = await Promise.all(
-        selectedGenres.map(async genre => {
-          const newCategory = await categoryService.createCategory(
-            user.uid,
-            genre.name,
-          );
-          console.log('Created category:', newCategory);
-          return {
-            id: newCategory.id,
-            name: genre.name,
-          };
-        }),
-      );
-
-      console.log('All categories created:', createdCategories);
-
-      Toast.show({
-        type: 'success',
-        text1: 'Setup Complete!',
-        text2:
-          'You can now create songs in your categories from the Home screen',
-      });
-
-      // Inmediatamente después de crear las categorías, finalizamos el onboarding
-      setIsFirstLogin(false);
-      setCurrentStep(ONBOARDING_STEPS.WELCOME);
+      console.log('Onboarding complete. Redirecting to Home...');
+      setIsFirstLogin(false); // Close the modal
     } catch (error) {
-      console.error('Error creating categories:', error);
-      Toast.show({
-        type: 'error',
-        text1: 'Error creating categories',
-      });
+      console.error('Error completing onboarding:', error);
     }
-  }, [categoryService, selectedGenres]);
+  }, []);
 
   return {
     isFirstLogin,
