@@ -112,12 +112,18 @@ export const CategoriesScreen = () => {
         text1: 'Category created successfully',
       });
       setIsVisible(false);
-    } catch (error) {
-      console.error('Error creating category:', error);
-      Toast.show({
-        type: 'error',
-        text1: 'Failed to create category',
-      });
+    } catch (error: any) {
+      if (error.message === 'A category with this title already exists!') {
+        Toast.show({
+          type: 'error',
+          text1: 'Category already exists!',
+        });
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: 'Failed to create category',
+        });
+      }
     } finally {
       setIsLoading(false);
     }
