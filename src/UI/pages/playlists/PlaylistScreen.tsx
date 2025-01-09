@@ -174,7 +174,7 @@ export const PlaylistScreen = () => {
                   color={globalColors.primary}
                   size={30}
                 />
-                <Text style={styles.title}>Playlists</Text>
+                <Text style={styles.title}>Create New Playlist</Text>
               </View>
               <TouchableOpacity
                 onPress={() => setIsVisible(true)}
@@ -202,7 +202,9 @@ export const PlaylistScreen = () => {
               size={25}
             />
           </TouchableOpacity>
-
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Your Playlists</Text>
+          </View>
           <View style={{marginBottom: 150}}>
             <FlatList
               data={playlists}
@@ -233,6 +235,7 @@ export const PlaylistScreen = () => {
               )}
             />
           </View>
+          <View style={{marginBottom: 150}}></View>
           <Modal
             visible={isVisible}
             animationType="slide"
@@ -282,6 +285,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 5,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 15,
+    paddingHorizontal: 30,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: globalColors.primaryDark,
   },
   openModalBtn: {
     backgroundColor: globalColors.primaryAlt,
@@ -335,7 +350,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: globalColors.primaryAlt,
-    padding: 15,
+    padding: 20,
     borderRadius: 8,
     margin: 20,
     marginBottom: 50,
