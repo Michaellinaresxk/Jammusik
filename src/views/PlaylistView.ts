@@ -4,12 +4,12 @@ export class PlaylistView {
   private constructor(
     public readonly id: string,
     public readonly title: string,
-    public readonly sharedWith: string[],
-    public readonly ownerId: string,
+    public readonly originalPlaylistId?: string,
+    public readonly sharedBy?: string,
   ) {}
 
   static fromDomain(playlist: Playlist) {
-    const {id, title, sharedWith, ownerId} = playlist;
-    return new PlaylistView(id, title, sharedWith, ownerId);
+    const {id, title, originalPlaylistId, sharedBy} = playlist;
+    return new PlaylistView(id, title, originalPlaylistId, sharedBy);
   }
 }

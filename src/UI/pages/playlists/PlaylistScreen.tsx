@@ -63,8 +63,10 @@ export const PlaylistScreen = () => {
 
   useEffect(() => {
     // Load playlist when the component mounts
-    loadPlaylists();
-  }, [loadPlaylists]);
+    loadPlaylists().then(() => {
+      console.log('Playlists loaded:', playlists.length);
+    });
+  }, [loadPlaylists, playlists.length]);
 
   useEffect(() => {
     //  Load playlist when triggerUpdate changes

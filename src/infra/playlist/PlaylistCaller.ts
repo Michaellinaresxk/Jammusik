@@ -19,7 +19,6 @@ import {
   setDoc,
 } from '@firebase/firestore';
 import {ApiSong} from '../song/ApiSong';
-import Playlist from '../../domain/playlist/Playlist';
 
 export class PlaylistCaller {
   private db = getFirestore();
@@ -49,27 +48,74 @@ export class PlaylistCaller {
   }
 
   // Get all the user's playlists
+
   async getPlaylists(userId: string): Promise<ApiPlaylist[]> {
     if (!userId) {
       throw new Error('userId is undefined!');
     }
 
     try {
+      // 1. Get user's own playlists
       const playlistsQuery = query(
         collection(this.db, 'playlists'),
         where('userId', '==', userId),
       );
 
       const querySnapshot = await getDocs(playlistsQuery);
-      return querySnapshot.docs.map(
-        doc =>
-          ({
-            id: doc.id,
-            ...doc.data(),
-          } as ApiPlaylist),
+      const ownPlaylists = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as ApiPlaylist[];
+
+      // 2. Get shared playlists that were accepted
+      const sharedPlaylistsQuery = query(
+        collection(this.db, 'sharedPlaylists'),
+        where('sharedWith', '==', userId),
+        where('status', '==', 'accepted'),
       );
+
+      const sharedSnapshot = await getDocs(sharedPlaylistsQuery);
+
+      console.log('Shared playlists found:', sharedSnapshot.docs.length);
+
+      const sharedPlaylistsPromises = sharedSnapshot.docs.map(
+        async docSnapshot => {
+          const sharedData = docSnapshot.data();
+          const originalPlaylistRef = doc(
+            this.db,
+            'playlists',
+            sharedData.originalPlaylistId,
+          );
+
+          try {
+            const originalPlaylistDoc = await getDoc(originalPlaylistRef);
+
+            if (originalPlaylistDoc.exists()) {
+              return {
+                id: originalPlaylistDoc.id,
+                ...originalPlaylistDoc.data(),
+                isShared: true,
+                sharedBy: sharedData.sharedBy,
+              } as unknown as ApiPlaylist;
+            }
+          } catch (error) {
+            console.error('Error fetching original playlist:', error);
+          }
+          return null;
+        },
+      );
+
+      const sharedPlaylists = await Promise.all(sharedPlaylistsPromises);
+      const validSharedPlaylists = sharedPlaylists.filter(
+        (playlist): playlist is ApiPlaylist => playlist !== null,
+      );
+
+      console.log('Own playlists:', ownPlaylists.length);
+      console.log('Valid shared playlists:', validSharedPlaylists.length);
+
+      return [...ownPlaylists, ...validSharedPlaylists];
     } catch (error) {
-      console.error('Error fetching playlists:', error);
+      console.error('Error details:', error);
       throw error;
     }
   }
@@ -331,10 +377,22 @@ export class PlaylistCaller {
   }
 
   async acceptSharedPlaylist(sharedPlaylistId: string): Promise<void> {
-    const sharedRef = doc(this.db, 'sharedPlaylists', sharedPlaylistId);
-    await updateDoc(sharedRef, {
-      status: 'accepted',
-    });
+    if (!sharedPlaylistId) {
+      throw new Error('sharedPlaylistId is required');
+    }
+
+    try {
+      const sharedRef = doc(this.db, 'sharedPlaylists', sharedPlaylistId);
+      await updateDoc(sharedRef, {
+        status: 'accepted',
+        acceptedAt: serverTimestamp(),
+      });
+
+      console.log('Shared playlist accepted successfully:', sharedPlaylistId);
+    } catch (error) {
+      console.error('Error accepting shared playlist:', error);
+      throw error;
+    }
   }
 
   async rejectSharedPlaylist(sharedPlaylistId: string): Promise<void> {
