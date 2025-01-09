@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     padding: 20,
     paddingTop: 12,
-    height: '50%', // Add this
+    height: '80%', // Add this
   },
   handle: {
     width: 40,
