@@ -1,37 +1,34 @@
-// components/TopTrackCard.tsx
 import React from 'react';
-import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
+import type {Track} from '../../../../types/tracksTypes';
 import {globalColors} from '../../../theme/Theme';
 
-interface TopTrackCardProps {
-  name: string;
-  artist: string;
-  imageUrl: string | null;
+interface TrackCardProps {
+  track: Track;
   onPress: () => void;
 }
 
-export const TopTrackCard: React.FC<TopTrackCardProps> = ({
-  name,
-  artist,
-  imageUrl,
-  onPress,
-}) => {
-  const defaultImageUrl = 'https://via.placeholder.com/60';
-
+export const TopTrackCard: React.FC<TrackCardProps> = ({track, onPress}) => {
   return (
-    <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.7}>
-      <Image
-        source={{
-          uri: imageUrl || defaultImageUrl,
-        }}
-        style={styles.image}
-      />
-      <View style={styles.textContainer}>
-        <Text style={styles.trackName} numberOfLines={1}>
-          {name}
+    <TouchableOpacity style={styles.container} onPress={onPress}>
+      {track.image ? (
+        <Image
+          source={{uri: track.image}}
+          style={styles.image}
+          resizeMode="cover"
+        />
+      ) : (
+        <View style={[styles.image, styles.imagePlaceholder]} />
+      )}
+      <View style={styles.info}>
+        <Text style={styles.title} numberOfLines={1}>
+          {track.name}
         </Text>
-        <Text style={styles.artistName} numberOfLines={1}>
-          {artist}
+        <Text style={styles.artist} numberOfLines={1}>
+          {track.artist}
+        </Text>
+        <Text style={styles.album} numberOfLines={1}>
+          {track.album}
         </Text>
       </View>
     </TouchableOpacity>
@@ -39,33 +36,48 @@ export const TopTrackCard: React.FC<TopTrackCardProps> = ({
 };
 
 const styles = StyleSheet.create({
-  card: {
-    backgroundColor: '#ffffff',
-    borderRadius: 12,
-    padding: 12,
+  container: {
     flexDirection: 'row',
-    alignItems: 'center',
-    marginHorizontal: 8,
-    width: 250, // Fixed width for consistency
+    padding: 12,
+    borderRadius: 8,
+    marginHorizontal: 16,
+    marginVertical: 6,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   image: {
     width: 60,
     height: 60,
-    borderRadius: 8,
-    backgroundColor: globalColors.primary,
+    borderRadius: 4,
   },
-  textContainer: {
-    marginLeft: 12,
+  imagePlaceholder: {
+    backgroundColor: globalColors.primaryDark1,
+  },
+  info: {
     flex: 1,
+    marginLeft: 12,
+    justifyContent: 'center',
   },
-  trackName: {
+  title: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#1a1a1a',
+    color: globalColors.primaryaryAlt4,
+    marginBottom: 4,
   },
-  artistName: {
+  artist: {
     fontSize: 14,
-    color: '#666666',
-    marginTop: 4,
+    color: globalColors.terceary,
+    marginBottom: 2,
+  },
+  album: {
+    fontSize: 12,
+    color: globalColors.terceary,
+    opacity: 0.8,
   },
 });

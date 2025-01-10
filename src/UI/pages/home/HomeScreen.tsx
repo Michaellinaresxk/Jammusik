@@ -122,7 +122,6 @@ export const HomeScreen = () => {
           }>
           <View>
             <GlobalHeader headerTitle="Home" hideBackButton={true} />
-
             <View style={styles.containerHeader}>
               <View style={styles.titleContent}>
                 <Icon

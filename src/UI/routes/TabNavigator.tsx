@@ -6,16 +6,18 @@ import {HomeScreen} from '../pages/home/HomeScreen';
 import {CategoriesScreen} from '../pages/categories/CategoriesScreen';
 import {PlaylistScreen} from '../pages/playlists/PlaylistScreen';
 import {SettingsScreen} from '../pages/settings/SettingsScreen';
+import {ExploreScreen} from '../pages/explore/ExploreScreen';
 import {globalColors} from '../theme/Theme';
 
 const Tab = createBottomTabNavigator();
 
-// Tipos mejorados para mejor type safety
+// Improved types for better type safety
 export type TabNavigatorParamsList = {
   Home: undefined;
   Categories: undefined;
   Playlists: undefined;
   Settings: undefined;
+  ExploreScreen: undefined;
   CategorySelectedScreen: {id: string; title: string};
   PlaylistSelectedScreen: {id: string; title: string};
   SongSelectedScreen: {title: string; artist: string};
@@ -27,7 +29,7 @@ interface TabBarIconProps {
   name: string;
 }
 
-// Componente para el icono del tab con animaciones
+// Component for tab icon with animations
 const AnimatedTabBarIcon: React.FC<TabBarIconProps> = ({
   focused,
   color,
@@ -70,7 +72,7 @@ const AnimatedTabBarIcon: React.FC<TabBarIconProps> = ({
   );
 };
 
-// Componente para el fondo con efecto glassmorphism
+// Background component with glassmorphism effect
 const GlassmorphicBackground: React.FC = () => (
   <View style={styles.tabBarBackground}>
     <View style={styles.glassEffect} />
@@ -95,6 +97,19 @@ export const TabNavigator = () => {
         options={{
           tabBarIcon: ({color, focused}) => (
             <AnimatedTabBarIcon focused={focused} color={color} name="home" />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Explore"
+        component={ExploreScreen}
+        options={{
+          tabBarIcon: ({color, focused}) => (
+            <AnimatedTabBarIcon
+              focused={focused}
+              color={color}
+              name="compass"
+            />
           ),
         }}
       />
@@ -141,10 +156,10 @@ const styles = StyleSheet.create({
   tabBar: {
     position: 'absolute',
     bottom: Platform.OS === 'ios' ? 34 : 24,
-    left: 20,
-    right: 20,
+    left: 10,
+    right: 10,
     height: 65,
-    borderRadius: 15,
+    borderRadius: 10,
     backgroundColor: 'transparent',
     borderTopWidth: 0,
     elevation: 0,
@@ -157,7 +172,7 @@ const styles = StyleSheet.create({
     left: 10,
     right: 10,
     bottom: 0,
-    borderRadius: 20,
+    borderRadius: 15,
     backgroundColor: `${globalColors.secondary}`,
   },
   glassEffect: {
@@ -168,10 +183,10 @@ const styles = StyleSheet.create({
   },
   tabBarLabel: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: '400',
     marginBottom: Platform.OS === 'ios' ? 0 : 4,
     marginTop: 8,
-    letterSpacing: 0.5,
+    letterSpacing: 0.3,
   },
   iconContainer: {
     width: 50,
