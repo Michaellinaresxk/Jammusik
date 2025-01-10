@@ -14,11 +14,7 @@ import {
 } from 'react-native';
 import {GlobalHeader} from '../../components/shared/GlobalHeader';
 import {FloatingActionButton} from '../../components/shared/FloatingActionButton';
-import {
-  NavigationProp,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import {useRoute} from '@react-navigation/native';
 import {Text} from 'react-native';
 import {PrimaryIcon} from '../../components/shared/PrimaryIcon';
 import {globalColors} from '../../theme/Theme';
@@ -31,11 +27,7 @@ import {useSongDetailsService} from '../../../context/SongDetailsServiceContext'
 import {SongDetailsView} from '../../../views/SongDetailsView';
 import {useGetCategoryTitle} from '../../../hooks/useGetCategoryTitle';
 import {LyricsView} from '../../components/shared/LyricsView';
-import {TabNavigatorParamsList} from '../../routes/TabNavigator';
-// import useAnimationKeyboard from '../../../hooks/useAnimationKeyboard';
 export const SongSelectedScreen = () => {
-  const navigation = useNavigation<NavigationProp<TabNavigatorParamsList>>();
-
   const params = useRoute().params;
   const [isVisible, setIsVisible] = useState(false);
   const [songDetails, setSongDetails] = useState<SongDetailsView[]>();
@@ -52,7 +44,6 @@ export const SongSelectedScreen = () => {
   const songId = params.songId;
   const categoryId = params.categoryId;
   const songDetailsService = useSongDetailsService();
-  // const {height, scale} = useAnimationKeyboard();
 
   const [isLyricsModalVisible, setIsLyricsModalVisible] = useState(false);
   const [hasLyrics, setHasLyrics] = useState(false);
@@ -169,7 +160,6 @@ export const SongSelectedScreen = () => {
     }
   }, []);
 
-  const offset = {closed: 0, opened: 250};
   return (
     <>
       <KeyboardAvoidingView
@@ -225,14 +215,6 @@ export const SongSelectedScreen = () => {
               horizontal
             />
           </View>
-          {/* <View style={styles.linksContent}>
-            <View style={{...styles.container, marginBottom: 30}}>
-              <Text style={styles.title}>Lyric link:</Text>
-              <Pressable onPress={() => handleOpenLink(lyricLink)}>
-                <Text style={styles.links}>{lyricLink}</Text>
-              </Pressable>
-            </View>
-          </View> */}
           <View style={styles.linksContent}>
             <View style={{...styles.container, marginBottom: 30}}>
               <Text style={styles.title}>Lyrics:</Text>
@@ -263,7 +245,6 @@ export const SongSelectedScreen = () => {
         presentationStyle="formSheet"
         style={{flex: 1}}>
         <ScrollView showsVerticalScrollIndicator={false} horizontal={false}>
-          {/* <KeyboardStickyView offset={offset}> */}
           <View style={styles.modalBtnContainer}>
             <Text style={styles.modalFormHeaderTitle}>Add Song Details</Text>
             <PrimaryButton
@@ -286,10 +267,9 @@ export const SongSelectedScreen = () => {
             setTabLink={setTabLink}
             onCreateSongDetails={onCreateSongDetails}
           />
-          {/* </KeyboardStickyView> */}
         </ScrollView>
       </Modal>
-      {/* Modal de letras */}
+      {/* Modal of lyrics */}
       <Modal
         visible={isLyricsModalVisible}
         animationType="slide"
@@ -300,8 +280,6 @@ export const SongSelectedScreen = () => {
           title={params.title}
           onClose={() => {
             setIsLyricsModalVisible(false);
-            // Si estás usando navigate en lugar de goBack:
-            // navigation.navigate('SongSelected', params);
           }}
           onLyricsLoaded={success => setHasLyrics(success)}
         />

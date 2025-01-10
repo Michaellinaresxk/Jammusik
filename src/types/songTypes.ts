@@ -82,3 +82,5 @@ export interface SharedPlaylist {
   status: 'pending' | 'accepted' | 'rejected';
   sharedAt: string;
 }
+
+

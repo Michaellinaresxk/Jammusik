@@ -9,10 +9,10 @@ interface CachedLyrics {
 }
 
 class LyricsService {
-  // Cache usando Map
+  // Cache using Map
   private cache: Map<string, CachedLyrics> = new Map();
 
-  // Tiempo de expiración: 24 horas en milisegundos
+  // Time to expiration: 24 hours in milliseconds
   private CACHE_EXPIRY = 24 * 60 * 60 * 1000;
 
   private getCacheKey(artist: string, title: string): string {
@@ -32,17 +32,17 @@ class LyricsService {
     }
 
     try {
-      // Verificar caché
+      // Verify cache
       const cacheKey = this.getCacheKey(artist, title);
       const cached = this.cache.get(cacheKey);
 
-      // Si existe en caché y no ha expirado, retornarlo
+      // If it exists in cache and has not expired, return it
       if (cached && !this.isExpired(cached.timestamp)) {
         console.log('Returning lyrics from cache');
         return cached.lyrics;
       }
 
-      // Si no está en caché o expiró, hacer la petición
+      // If it is not cached or expired, make the request
       console.log(`Fetching lyrics for ${artist} - ${title}`);
       const response = await axios.get(
         `${BASE_URL}/${encodeURIComponent(artist)}/${encodeURIComponent(
@@ -57,7 +57,7 @@ class LyricsService {
         throw new Error('No lyrics found in response');
       }
 
-      // Procesar la letra
+      // Process the letter
       const lines = response.data.lyrics
         .split('\n')
         .filter(line => line.trim())
@@ -71,7 +71,7 @@ class LyricsService {
         throw new Error('No lyrics content found');
       }
 
-      // Guardar en caché
+      // Save in cache
       this.cache.set(cacheKey, {
         lyrics: lines,
         timestamp: Date.now(),
@@ -105,13 +105,13 @@ class LyricsService {
     }
   }
 
-  // Método para limpiar el caché si es necesario
+  // Method to clear the cache if necessary
   clearCache(): void {
     this.cache.clear();
     console.log('Cache cleared');
   }
 
-  // Método para ver el estado actual del caché (útil para debugging)
+  // Method to view the current cache status (useful for debugging)
   getCacheState(): {size: number; entries: string[]} {
     return {
       size: this.cache.size,

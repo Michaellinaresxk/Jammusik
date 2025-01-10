@@ -14,7 +14,7 @@ import {CategorySelectedScreen} from '../pages/categories/CategorySelectedScreen
 import {PlaylistSelectedScreen} from '../pages/playlists/PlaylistSelectedScreen';
 import {SharedPlaylistsScreen} from '../pages/playlists/SharedPlaylistsScreen';
 import {SongSelectedScreen} from '../pages/songs/SongSelectedScreen';
-import {ExploreScreen} from '../pages/explore/ExploreScreen';
+import {TrackDetailsScreen} from '../pages/explore/TrackDetailsScreen';
 import {StyleSheet, Text, View} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -29,6 +29,7 @@ export type RootStackParamsList = {
   ExploreScreen: undefined;
   DeleteAccountScreen: undefined;
   SharedPlaylistsScreen: undefined;
+  TrackDetailsScreen: {trackId: string};
   CategorySelectedScreen: {id: string; title: string};
   PlaylistSelectedScreen: {id: string; title: string};
   SongSelectedScreen: {title: string; artist: string};
@@ -117,6 +118,11 @@ export const AppNavigator = () => {
             options={{headerShown: false}}
           />
           <Stack.Screen
+            name="TrackDetailsScreen"
+            component={TrackDetailsScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
             name="SharedPlaylistsScreen"
             component={SharedPlaylistsScreen}
             options={{
@@ -127,18 +133,12 @@ export const AppNavigator = () => {
                   <Text style={styles.headerTitle}>Shared Playlist</Text>
                 </View>
               ),
-              headerTitleAlign: 'center', // Optional: Align title to the center
+              headerTitleAlign: 'center',
               headerStyle: {
-                backgroundColor: '#000', // Customize header background
+                backgroundColor: '#000',
               },
-              headerTintColor: '#18998B', // Customize back button and icon color
+              headerTintColor: '#18998B',
             }}
-          />
-
-          <Stack.Screen
-            name="ExploreScreen"
-            component={ExploreScreen}
-            options={{headerShown: false}}
           />
         </>
       ) : (

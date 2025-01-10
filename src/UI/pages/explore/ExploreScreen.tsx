@@ -1,24 +1,39 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   View,
   Text,
   ScrollView,
-  Image,
   TouchableOpacity,
   StyleSheet,
   Dimensions,
+  Alert,
 } from 'react-native';
 import {globalColors} from '../../theme/Theme';
+import {useTopTracks} from '../../../hooks/useTopTracks';
+import {API_BASE_URL} from '../../../infra/api/spotifyBaseUrl';
+import {Track} from '../../../types/tracksTypes';
+import {HorizontalTopTracks} from '../../components/shared/HorizontalTopTracks';
+import {PrimaryIcon} from '../../components/shared/PrimaryIcon';
+import {useNavigation} from '@react-navigation/native';
 
 const {width} = Dimensions.get('window');
 
 export const ExploreScreen = () => {
-  // Mock data
-  const topSongs = [
-    {id: 1, title: 'Song Name', artist: 'Artist', plays: '1.2M'},
-    {id: 2, title: 'Another Song', artist: 'Artist 2', plays: '900K'},
-    // Agrega más canciones según necesites
-  ];
+  const {tracks, isLoading, error} = useTopTracks();
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    const testConnection = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/test`);
+        const data = await response.json();
+        console.log('Test endpoint response:', data);
+      } catch (error) {
+        console.error('Test connection failed:', error);
+      }
+    };
+    testConnection();
+  }, []);
 
   const featuredArtists = [
     {id: 1, name: 'Artist Name', genre: 'Pop'},
@@ -31,6 +46,14 @@ export const ExploreScreen = () => {
     {id: 2, name: 'Tuner', icon: '🎸'},
     // Más herramientas
   ];
+
+  const handleTrackPress = (track: Track) => {
+    console.log('Track selected:', track); // Para debugging
+    // navigation.navigate('TrackDetailsScreen', {
+    //   trackId: track.id,
+    // });
+    Alert.alert('Song details soon...');
+  };
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -57,24 +80,44 @@ export const ExploreScreen = () => {
       </View>
 
       {/* Top 10 This Week Section */}
-      <View style={styles.section}>
+      {/* <View style={styles.section}>
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Top 10 This Week</Text>
           <TouchableOpacity>
             <Text style={styles.seeAllButton}>See All</Text>
           </TouchableOpacity>
-        </View>
-        {topSongs.slice(0, 3).map((song, index) => (
+        </View> */}
+      {/* {tracks.slice(0, 3).map((song, index) => (
           <TouchableOpacity key={song.id} style={styles.songRow}>
             <Text style={styles.songRank}>{index + 1}</Text>
             <View style={styles.songImagePlaceholder} />
             <View style={styles.songInfo}>
-              <Text style={styles.songTitle}>{song.title}</Text>
+              <Text style={styles.songTitle}>{song.name}</Text>
               <Text style={styles.songArtist}>{song.artist}</Text>
             </View>
             <Text style={styles.songPlays}>{song.plays}</Text>
           </TouchableOpacity>
+        ))} */}
+      {/* {tracks.map((track, index) => (
+          <TopTrackCard
+            key={track.id}
+            track={track}
+            onPress={() => handleTrackPress(track)}
+          />
         ))}
+      </View> */}
+      <View style={styles.section}>
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>Top 10 This Week</Text>
+          {/* <TouchableOpacity>
+            <Text style={styles.seeAllButton}>See All</Text>
+          </TouchableOpacity> */}
+          <PrimaryIcon
+            name={'chevron-forward-sharp'}
+            color={globalColors.light}
+          />
+        </View>
+        <HorizontalTopTracks tracks={tracks} onTrackPress={handleTrackPress} />
       </View>
 
       {/* Music Tools Section */}
@@ -106,6 +149,7 @@ export const ExploreScreen = () => {
           ))}
         </ScrollView>
       </View>
+      <View style={{marginBottom: 150}}></View>
     </ScrollView>
   );
 };
@@ -132,7 +176,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 15,
+    marginBottom: 10,
   },
   sectionTitle: {
     fontSize: 22,
