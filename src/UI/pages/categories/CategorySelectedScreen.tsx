@@ -39,6 +39,7 @@ import type {SongData} from '../../../types/songTypes';
 import {useSongDetailsService} from '../../../context/SongDetailsServiceContext';
 import {SongFilter} from '../../components/shared/SongFilter';
 import {TabNavigatorParamsList} from '../../routes/TabNavigator';
+import spotifyConfig from '../../../infra/api/spotifyConfig';
 
 interface ExtendedSongView extends SongView {
   songKey?: string;
@@ -88,6 +89,10 @@ export const CategorySelectedScreen = () => {
   // Add this reference for the current Swipeable
   const swipeableRef = useRef<{[key: string]: Swipeable | null}>({});
   const currentlyOpenSwipeable = useRef<string | null>(null);
+
+  const [showOpeners, setShowOpeners] = useState(false);
+
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   const closeSwipeable = (songId: string) => {
     if (
@@ -219,6 +224,30 @@ export const CategorySelectedScreen = () => {
         ...new Set(songsWithDetails.map(song => song.songKey).filter(Boolean)),
       ];
       setAvailableKeys(uniqueKeys);
+
+      // Enriquecer con datos de Spotify
+      const songsWithOpenerInfo = await Promise.all(
+        fetchedSongs.map(async song => {
+          try {
+            const openerInfo = await spotifyConfig.getTrackDetails(
+              song.title,
+              song.artist,
+            );
+            return {
+              ...song,
+              isGoodOpener: openerInfo?.isGoodOpener || false,
+            };
+          } catch (error) {
+            console.error(
+              `Error getting opener info for ${song.title}:`,
+              error,
+            );
+            return song;
+          }
+        }),
+      );
+
+      setSongList(songsWithOpenerInfo);
     } catch (error) {
       console.error('Failed to fetch song lists:', error);
       Alert.alert('Error', 'Failed to load songs. Please try again.');
@@ -386,6 +415,60 @@ export const CategorySelectedScreen = () => {
     });
   };
 
+  const handleOpeningSongsAnalysis = async () => {
+    try {
+      setIsAnalyzing(true);
+
+      // Tomar tus canciones actuales
+      const analyzedResults = await Promise.all(
+        songList.map(async song => {
+          const analysis = await spotifyConfig.analyzeTrack(
+            song.title,
+            song.artist,
+          );
+          return {
+            ...song,
+            spotifyAnalysis: analysis,
+          };
+        }),
+      );
+
+      // Filtrar solo las que obtuvieron análisis y ordenar por energía/tempo
+      const bestOpeners = analyzedResults
+        .filter(song => song.spotifyAnalysis?.analysis)
+        .sort((a, b) => {
+          const scoreA = a.spotifyAnalysis.analysis.energy || 0;
+          const scoreB = b.spotifyAnalysis.analysis.energy || 0;
+          return scoreB - scoreA;
+        })
+        .slice(0, 3);
+
+      if (bestOpeners.length > 0) {
+        setSongList(bestOpeners);
+        Toast.show({
+          type: 'success',
+          text1: 'Análisis completado',
+          text2: 'Mostrando las mejores canciones para abrir',
+        });
+      } else {
+        Toast.show({
+          type: 'info',
+          text1: 'No se encontraron coincidencias',
+          text2: 'Intenta con otras canciones',
+        });
+      }
+    } catch (error) {
+      console.error('Error en análisis:', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Error al analizar',
+        text2: 'No se pudieron analizar las canciones',
+      });
+    } finally {
+      setIsAnalyzing(false);
+    }
+  };
+
   const {isRefreshing, refresh, top} = usePullRefresh(loadSongList);
 
   return (
@@ -414,11 +497,17 @@ export const CategorySelectedScreen = () => {
               availableKeys={availableKeys}
               onSearchChange={handleSearch}
               onFilterByKey={handleKeyFilter}
+              isAnalyzing={isAnalyzing}
+              onAnalyzeOpeners={handleOpeningSongsAnalysis}
             />
             <View style={styles.songCardContainer}>
               <SongCounter songCounter={songList.length} />
               <FlatList
-                data={songList}
+                data={
+                  showOpeners
+                    ? songList.filter(song => song.isGoodOpener)
+                    : songList
+                }
                 keyExtractor={item => item.id}
                 renderItem={({item, index}) => (
                   <Swipeable
