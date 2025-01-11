@@ -67,7 +67,6 @@ const AnimatedTabBarIcon: React.FC<TabBarIconProps> = ({
         color={focused ? globalColors.primary : color}
         size={24}
       />
-      {focused && <View style={styles.activeIndicator} />}
     </Animated.View>
   );
 };
@@ -88,7 +87,16 @@ export const TabNavigator = () => {
         tabBarStyle: styles.tabBar,
         tabBarActiveTintColor: globalColors.primary,
         tabBarInactiveTintColor: globalColors.terceary,
-        tabBarLabelStyle: styles.tabBarLabel,
+        tabBarLabelStyle: {
+          fontSize: 10,
+          fontWeight: '400',
+          marginTop: 2, // Reduced space between icon and label
+        },
+        tabBarItemStyle: {
+          height: Platform.OS === 'ios' ? 50 : 60,
+          paddingTop: 8, // Reduced top padding to move icons up
+          paddingBottom: Platform.OS === 'ios' ? 20 : 8,
+        },
         tabBarBackground: () => <GlassmorphicBackground />,
       }}>
       <Tab.Screen
@@ -105,11 +113,7 @@ export const TabNavigator = () => {
         component={ExploreScreen}
         options={{
           tabBarIcon: ({color, focused}) => (
-            <AnimatedTabBarIcon
-              focused={focused}
-              color={color}
-              name="compass"
-            />
+            <AnimatedTabBarIcon focused={focused} color={color} name="rocket" />
           ),
         }}
       />
@@ -155,45 +159,36 @@ export const TabNavigator = () => {
 const styles = StyleSheet.create({
   tabBar: {
     position: 'absolute',
-    bottom: Platform.OS === 'ios' ? 34 : 24,
-    left: 10,
-    right: 10,
-    height: 65,
-    borderRadius: 10,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: Platform.OS === 'ios' ? 85 : 60,
     backgroundColor: 'transparent',
     borderTopWidth: 0,
     elevation: 0,
-    paddingBottom: 0,
-    overflow: 'hidden',
+    paddingBottom: Platform.OS === 'ios' ? 20 : 0,
   },
   tabBarBackground: {
     position: 'absolute',
     top: 0,
-    left: 10,
-    right: 10,
+    left: 0,
+    right: 0,
     bottom: 0,
-    borderRadius: 15,
-    backgroundColor: `${globalColors.secondary}`,
+    backgroundColor:
+      Platform.OS === 'ios'
+        ? 'rgba(20, 20, 20, 0.95)'
+        : 'rgba(20, 20, 20, 0.90)',
+    borderTopColor: 'rgba(255, 255, 255, 0.1)',
+    borderTopWidth: 0.5,
   },
   glassEffect: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    borderRadius: 25,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
-  },
-  tabBarLabel: {
-    fontSize: 12,
-    fontWeight: '400',
-    marginBottom: Platform.OS === 'ios' ? 0 : 4,
-    marginTop: 8,
-    letterSpacing: 0.3,
   },
   iconContainer: {
-    width: 50,
-    height: 50,
+    width: 30,
+    height: 30,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 15,
-    marginTop: 15,
   },
 });
