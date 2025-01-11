@@ -7,24 +7,29 @@ import {
   Text,
   Modal,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {globalColors} from '../../theme/Theme';
 
 interface SongFilterProps {
-  onSearchChange: (text: string) => void;
-  onFilterByKey: (key: string | null) => void;
   searchText: string;
   selectedKey: string | null;
   availableKeys: string[];
+  onSearchChange: (text: string) => void;
+  onFilterByKey: (key: string | null) => void;
+  isAnalyzing?: boolean; // nuevo
+  onAnalyzeOpeners?: () => void;
 }
 
 export const SongFilter: React.FC<SongFilterProps> = ({
-  onSearchChange,
-  onFilterByKey,
   searchText,
   selectedKey,
   availableKeys,
+  onSearchChange,
+  onFilterByKey,
+  isAnalyzing = false,
+  onAnalyzeOpeners,
 }) => {
   const [showKeyModal, setShowKeyModal] = React.useState(false);
 
@@ -69,6 +74,36 @@ export const SongFilter: React.FC<SongFilterProps> = ({
                 color={globalColors.terceary}
               />
             </TouchableOpacity>
+          )}
+        </TouchableOpacity>
+
+        {/* Botón de análisis para canciones de apertura */}
+        <TouchableOpacity
+          style={[styles.filterChip, isAnalyzing && styles.filterChipActive]}
+          onPress={onAnalyzeOpeners}
+          disabled={isAnalyzing}>
+          {isAnalyzing ? (
+            <ActivityIndicator
+              size="small"
+              color={globalColors.light}
+              style={styles.loader}
+            />
+          ) : (
+            <>
+              <Icon
+                name="rocket"
+                size={16}
+                color={isAnalyzing ? globalColors.light : globalColors.primary}
+                style={styles.filterIcon}
+              />
+              <Text
+                style={[
+                  styles.filterChipText,
+                  isAnalyzing && styles.filterChipTextActive,
+                ]}>
+                Para Abrir
+              </Text>
+            </>
           )}
         </TouchableOpacity>
       </View>
@@ -206,6 +241,42 @@ const styles = StyleSheet.create({
   closeButtonText: {
     color: globalColors.light,
     fontSize: 16,
+    fontWeight: '500',
+  },
+
+  openingSongsChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+  },
+  chipIcon: {
+    marginRight: 4,
+  },
+
+  filterChipActive: {
+    backgroundColor: globalColors.primary,
+  },
+  filterChipTextActive: {
+    color: globalColors.light,
+  },
+
+  filterChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 20,
+    backgroundColor: globalColors.light,
+    marginRight: 8,
+    borderWidth: 1,
+    borderColor: globalColors.primary,
+  },
+  filterIcon: {
+    marginRight: 4,
+  },
+  filterChipText: {
+    fontSize: 14,
+    color: globalColors.primary,
     fontWeight: '500',
   },
 });

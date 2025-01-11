@@ -56,6 +56,27 @@ const spotifyConfig = {
       throw error;
     }
   },
+
+  analyzeTrack: async (title: string, artist: string) => {
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/tracks/analyze?title=${encodeURIComponent(
+          title,
+        )}&artist=${encodeURIComponent(artist)}`,
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Analysis error:', errorData);
+        return null;
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error analyzing track:', error);
+      return null;
+    }
+  },
 };
 
 export default spotifyConfig;
