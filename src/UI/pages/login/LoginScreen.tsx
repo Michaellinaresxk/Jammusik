@@ -20,7 +20,6 @@ import {useUserService} from '../../../context/UserServiceContext';
 import {useNavigation} from '@react-navigation/native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ForgotPasswordModal} from '../../components/shared/modals/ForgotPasswordModal';
-import {auth} from '../../../infra/api/firebaseConfig';
 
 export const LoginScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -33,20 +32,6 @@ export const LoginScreen = () => {
   const navigation = useNavigation();
   const image = {
     uri: images?.loginBackground || '', // Validation to avoid undefined
-  };
-
-  // Auxiliary function to handle error messages
-  const getErrorMessage = (error: any): string => {
-    switch (error?.code) {
-      case 'auth/user-not-found':
-        return 'No account found with this email address';
-      case 'auth/invalid-email':
-        return 'Invalid email address';
-      case 'auth/too-many-requests':
-        return 'Too many attempts. Please try again later';
-      default:
-        return error?.message || 'An unexpected error occurred';
-    }
   };
 
   const handleLogin = async ({email, password}) => {
@@ -78,12 +63,29 @@ export const LoginScreen = () => {
       }
 
       await userService.forgotPassword(email);
-      // The operation was successful
-      setIsForgotPasswordVisible(false); // We close the modal
-      Alert.alert('Success', 'Password reset link has been sent to your email');
+
+      // Quiet success for safety
+      Alert.alert(
+        'Check your email',
+        'If the email is registered in our system, you will receive a link to reset your password. Please check your inbox or spam folder.',
+        [
+          {
+            text: 'OK',
+            onPress: () => {
+              setIsForgotPasswordVisible(false);
+            },
+          },
+        ],
+      );
     } catch (error: any) {
-      // Instead of launching a new error, we handle the error here
-      Alert.alert('Error', getErrorMessage(error));
+      // Same message even if there is an error so as not to reveal if the email exists
+      Alert.alert(
+        'Check your email',
+        'If the email is registered in our system, you will receive a link to reset your password. Please check your inbox or spam folder.',
+      );
+    } finally {
+      // Make sure to close the modal in any case
+      setIsForgotPasswordVisible(false);
     }
   };
 
