@@ -27,4 +27,9 @@ export class UserResource implements UserRepository {
   async deleteAccount(userId: string): Promise<void> {
     await this.userCaller.deleteAccount(userId);
   }
+
+  async forgotPassword(email: string): Promise<User> {
+    const user = await this.userCaller.forgotPassword(email);
+    return User.fromProperties(user);
+  }
 }

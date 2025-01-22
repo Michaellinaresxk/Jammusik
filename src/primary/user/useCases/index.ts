@@ -4,6 +4,7 @@ import {LoginUserUseCase} from './LoginUserUseCase';
 import {GetCurrentUserUseCase} from './GetCurrentUserUseCase';
 import {LogoutUserUseCase} from './LogoutUserUseCase';
 import {DeleteUserUseCase} from './DeleteUserUseCase';
+import ForgotPasswordUseCase from './ForgotPasswordUseCase';
 
 export class UserService {
   static logout() {
@@ -14,6 +15,7 @@ export class UserService {
   private getCurrentUserUseCase: GetCurrentUserUseCase;
   private logoutUserUseCase: LogoutUserUseCase;
   private deleteUserUseCase: DeleteUserUseCase;
+  private forgotPasswordUseCase: ForgotPasswordUseCase;
 
   constructor(private readonly userResource: UserResource) {
     this.createUserUseCase = new CreateUserUseCase(userResource);
@@ -21,6 +23,7 @@ export class UserService {
     this.getCurrentUserUseCase = new GetCurrentUserUseCase(userResource);
     this.logoutUserUseCase = new LogoutUserUseCase(userResource);
     this.deleteUserUseCase = new DeleteUserUseCase(userResource);
+    this.forgotPasswordUseCase = new ForgotPasswordUseCase(userResource);
   }
 
   async registerUser(email: string, password: string, userName: string) {
@@ -37,5 +40,9 @@ export class UserService {
   }
   async deleteUser(userId: string): Promise<void> {
     await this.deleteUserUseCase.execute(userId);
+  }
+
+  async forgotPassword(email: string) {
+    return await this.forgotPasswordUseCase.execute(email);
   }
 }
