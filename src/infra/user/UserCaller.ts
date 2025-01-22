@@ -123,9 +123,13 @@ export class UserCaller {
     try {
       const auth = getAuth();
       await sendPasswordResetEmail(auth, email);
-      console.log('Reset email sent successfully');
-    } catch (error) {
-      console.error('Error sending reset email:', error);
+      return;
+    } catch (error: any) {
+      // If the error is user not found, we do not treat it as an error.
+      if (error.code === 'auth/user-not-found') {
+        return;
+      }
+      console.error('Error in forgotPassword:', error);
       throw error;
     }
   }
