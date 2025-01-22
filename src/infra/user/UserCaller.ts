@@ -6,6 +6,7 @@ import type {
   CollectionReference,
 } from '@firebase/firestore';
 import {addDoc, collection} from '@firebase/firestore';
+import {sendPasswordResetEmail} from '../api/firebaseConfig';
 import {auth, db, signInWithEmailAndPassword} from '../api/firebaseConfig';
 import {
   createUserWithEmailAndPassword,
@@ -115,6 +116,17 @@ export class UserCaller {
       }
     } else {
       console.error('No authenticated user found or user ID does not match');
+    }
+  }
+
+  async forgotPassword(email: string): Promise<void> {
+    try {
+      const auth = getAuth();
+      await sendPasswordResetEmail(auth, email);
+      console.log('Reset email sent successfully');
+    } catch (error) {
+      console.error('Error sending reset email:', error);
+      throw error;
     }
   }
 }
