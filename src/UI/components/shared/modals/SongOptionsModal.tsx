@@ -23,7 +23,7 @@ type SongOptionsModalProps = {
   onToggleFavorite: () => void;
 };
 
-export const ForgotPasswordModalSongOptionsModal = ({
+export const SongOptionsModal = ({
   isVisible,
   onClose,
   onEdit,
