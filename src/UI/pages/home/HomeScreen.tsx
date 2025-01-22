@@ -12,7 +12,11 @@ import {
   View,
 } from 'react-native';
 import {CategoryCardLight} from '../../components/shared/cards/CategoryCardLight';
-import {useNavigation, useFocusEffect} from '@react-navigation/native';
+import {
+  useNavigation,
+  useFocusEffect,
+  useRoute,
+} from '@react-navigation/native';
 import {GlobalHeader} from '../../components/shared/GlobalHeader';
 import {globalColors} from '../../theme/Theme';
 import {useCategoryService} from '../../../context/CategoryServiceContext';
@@ -20,7 +24,6 @@ import {CategoryView} from '../../../views/CategoryView';
 import {usePlaylistService} from '../../../context/PlaylistServiceContext';
 import {auth} from '../../../infra/api/firebaseConfig';
 import {PlaylistView} from '../../../views/PlaylistView';
-import {HomePlaylistCard} from '../../components/shared/cards/HomePlaylistCard';
 import {usePullRefresh} from '../../../hooks/usePullRefresing';
 import Toast from 'react-native-toast-message';
 import {PrimaryButton} from '../../components/shared/PrimaryButton';
@@ -31,6 +34,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {FormCreateSong} from '../../components/shared/forms/FormCreateSong';
 import {Separator} from '../../components/shared/Separator';
 import {SliderQuotes} from '../../components/shared/SliderQuotes';
+import {PlaylistCard} from '../../components/shared/cards/PlaylistCard';
 
 export const HomeScreen = () => {
   const navigation = useNavigation();
@@ -198,7 +202,7 @@ export const HomeScreen = () => {
                     </View>
                   }
                   renderItem={({item, index}) => (
-                    <HomePlaylistCard
+                    <PlaylistCard
                       title={item.title}
                       color={
                         index % 2 === 0
@@ -211,6 +215,7 @@ export const HomeScreen = () => {
                           title: item.title,
                         })
                       }
+                      isHomeScreen={true}
                     />
                   )}
                 />

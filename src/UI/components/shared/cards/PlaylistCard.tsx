@@ -10,6 +10,7 @@ type Props = {
   onShare: () => void;
   onEdit?: (playlistId: string, title: string) => void;
   onDelete: (playlistId: string) => void;
+  isHomeScreen: boolean;
 };
 
 export const PlaylistCard = ({
@@ -19,6 +20,7 @@ export const PlaylistCard = ({
   color,
   onEdit,
   onShare,
+  isHomeScreen,
 }: Props) => {
   const deleteConfirmation = () =>
     Alert.alert('Are you sure?', 'Do you want to remove this playlist?', [
@@ -67,35 +69,45 @@ export const PlaylistCard = ({
       style={[styles.playlistCard, {backgroundColor: color}]}
       onPress={onPress}>
       <Text style={styles.playlistCardText}>{title}</Text>
-      <View style={styles.containerIcons}>
-        <Icon
-          name="pencil-sharp"
-          color={globalColors.light}
-          onPress={event => {
-            event.stopPropagation();
-            editConfirmation();
-          }}
-          size={20}
-        />
-        <Icon
-          name="share-social-sharp"
-          color={globalColors.light}
-          onPress={event => {
-            event.stopPropagation();
-            shareConfirmation();
-          }}
-          size={20}
-        />
-        <Icon
-          name="trash-sharp"
-          color={globalColors.light}
-          onPress={event => {
-            event.stopPropagation();
-            deleteConfirmation();
-          }}
-          size={20}
-        />
-      </View>
+
+      {/* Mostrar los botones solo si no está en HomeScreen */}
+      {!isHomeScreen && (
+        <View style={styles.containerIcons}>
+          {onEdit && (
+            <Icon
+              name="pencil-sharp"
+              color={globalColors.light}
+              onPress={event => {
+                event.stopPropagation();
+                editConfirmation();
+              }}
+              size={20}
+            />
+          )}
+          {onShare && (
+            <Icon
+              name="share-social-sharp"
+              color={globalColors.light}
+              onPress={event => {
+                event.stopPropagation();
+                shareConfirmation();
+              }}
+              size={20}
+            />
+          )}
+          {onDelete && (
+            <Icon
+              name="trash-sharp"
+              color={globalColors.light}
+              onPress={event => {
+                event.stopPropagation();
+                deleteConfirmation();
+              }}
+              size={20}
+            />
+          )}
+        </View>
+      )}
     </TouchableOpacity>
   );
 };

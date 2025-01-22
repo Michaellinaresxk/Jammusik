@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   statCard: {
-    backgroundColor: globalColors.secondary,
+    backgroundColor: globalColors.primaryAlt,
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',

@@ -29,7 +29,6 @@ import Toast from 'react-native-toast-message';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {useResetSongsState} from '../../../store/useResetSongsState';
 import {FloatingActionButton} from '../../components/shared/FloatingActionButton';
-// import {KeyboardGestureArea} from 'react-native-keyboard-controller';
 import {PrimaryButton} from '../../components/shared/PrimaryButton';
 import {FormCreateSong} from '../../components/shared/forms/FormCreateSong';
 import {SongOptionsModal} from '../../components/shared/modals/SongOptionsModal';
@@ -39,6 +38,7 @@ import type {SongData} from '../../../types/songTypes';
 import {useSongDetailsService} from '../../../context/SongDetailsServiceContext';
 import {SongFilter} from '../../components/shared/SongFilter';
 import {TabNavigatorParamsList} from '../../routes/TabNavigator';
+import {StatsOverview} from '../../components/shared/StatsOverview';
 
 interface ExtendedSongView extends SongView {
   songKey?: string;
@@ -405,9 +405,15 @@ export const CategorySelectedScreen = () => {
               onRefresh={refresh}
             />
           }>
-          <View>
+          <View style={{marginBottom: 150}}>
             <GlobalHeader headerTitle={categoryTitle} />
             <FloatingActionButton onPress={openModal} />
+            {/* <View style={{marginTop: 30}}>
+              <StatsOverview
+                totalSongs={undefined}
+                completedSongs={undefined}
+              />
+            </View> */}
             <SongFilter
               searchText={searchText}
               selectedKey={selectedKey}
@@ -455,7 +461,6 @@ export const CategorySelectedScreen = () => {
         visible={isVisible}
         animationType="slide"
         presentationStyle="formSheet">
-        {/* <KeyboardGestureArea interpolator="ios" style={{flex: 1}}> */}
         <ScrollView horizontal={false} style={{flex: 1}}>
           <View style={styles.modalBtnContainer}>
             <Text style={styles.modalFormHeaderTitle}>Add Song Info</Text>
@@ -475,7 +480,6 @@ export const CategorySelectedScreen = () => {
             isEditing={false}
           />
         </ScrollView>
-        {/* </KeyboardGestureArea> */}
       </Modal>
       {/* Modal to edit an existing song */}
       <Modal
@@ -484,8 +488,7 @@ export const CategorySelectedScreen = () => {
         presentationStyle="formSheet"
         onRequestClose={closeEditModal}>
         {' '}
-        {/* Add this handler */}
-        {/* <KeyboardGestureArea interpolator="ios" style={{flex: 1}}> */}
+
         <ScrollView horizontal={false} style={{flex: 1}}>
           <View style={styles.modalBtnContainer}>
             <Text style={styles.modalFormHeaderTitle}>Edit Song</Text>
@@ -518,7 +521,6 @@ export const CategorySelectedScreen = () => {
             />
           )}
         </ScrollView>
-        {/* </KeyboardGestureArea> */}
       </Modal>
       <SongOptionsModal
         isVisible={isOptionsVisible}
@@ -621,15 +623,6 @@ const styles = StyleSheet.create({
   deleteIcon: {
     color: globalColors.light,
   },
-  // editButtonContent: {
-  //   backgroundColor: globalColors.info,
-  //   borderRadius: 10,
-  //   height: 85,
-  //   width: 80,
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  // },
-
   overlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
