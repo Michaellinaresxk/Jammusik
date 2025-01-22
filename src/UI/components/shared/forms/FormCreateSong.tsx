@@ -16,7 +16,6 @@ import {auth} from '../../../../infra/api/firebaseConfig';
 import {PrimaryIcon} from '../PrimaryIcon';
 import {DEFAULT_CATEGORIES} from '../../../../constants/defaultCategories';
 import {StyleSheet} from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
 
 export const FormCreateSong = ({
   categoryId,
@@ -251,34 +250,35 @@ export const FormCreateSong = ({
               </Text>
             </View>
           )}
-
-          <View style={styles.categoryInputContainer}>
-            <Text style={styles.subTitle}>Or create your own:</Text>
-            <TextInput
-              style={[
-                styles.customCategoryInput,
-                customCategoryTitle && styles.activeInput,
-              ]}
-              placeholder="Jazz, Rock, Party..."
-              value={customCategoryTitle}
-              onChangeText={text => {
-                setCustomCategoryTitle(text);
-                setSelectedCategory(null);
-              }}
-              placeholderTextColor="#838282"
-              autoCapitalize="words"
-              editable={!isCreatingCategory}
-            />
-            {customCategoryTitle && (
-              <View style={styles.inputIcon}>
-                <PrimaryIcon
-                  name="checkmark-circle"
-                  size={24}
-                  color={globalColors.primary}
-                />
-              </View>
-            )}
-          </View>
+          {isLibraryOrHome && (
+            <View style={styles.categoryInputContainer}>
+              <Text style={styles.subTitle}>Or create your own:</Text>
+              <TextInput
+                style={[
+                  styles.customCategoryInput,
+                  customCategoryTitle && styles.activeInput,
+                ]}
+                placeholder="Jazz, Rock, Party..."
+                value={customCategoryTitle}
+                onChangeText={text => {
+                  setCustomCategoryTitle(text);
+                  setSelectedCategory(null);
+                }}
+                placeholderTextColor="#838282"
+                autoCapitalize="words"
+                editable={!isCreatingCategory}
+              />
+              {customCategoryTitle && (
+                <View style={styles.inputIcon}>
+                  <PrimaryIcon
+                    name="checkmark-circle"
+                    size={24}
+                    color={globalColors.primary}
+                  />
+                </View>
+              )}
+            </View>
+          )}
 
           <View style={{marginTop: 20, marginBottom: 100}}>
             <PrimaryButton
