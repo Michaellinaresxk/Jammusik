@@ -16,6 +16,24 @@ import {
 import type {ApiUser} from './ApiUser';
 import {deleteDoc, doc} from 'firebase/firestore';
 import {Alert} from 'react-native';
+import {
+  GoogleSignin,
+  isErrorWithCode,
+  isSuccessResponse,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+import {IOS_CLIENT_ID, WEB_CLIENT_ID} from '../../constants/singin';
+import {GoogleResponse} from '../../types/google';
+
+GoogleSignin.configure({
+  webClientId: WEB_CLIENT_ID, // client ID of type WEB for your server. Required to get the `idToken` on the user object, and for offline access.
+  scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
+  offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
+  hostedDomain: '', // specifies a hosted domain restriction
+  iosClientId: IOS_CLIENT_ID, // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
+  googleServicePlistPath: '', // [iOS] if you renamed your GoogleService-Info file, new name here, e.g. "GoogleService-Info-Staging"
+});
+
 export class UserCaller {
   constructor(
     public readonly collection: (
@@ -77,6 +95,31 @@ export class UserCaller {
       throw error;
     }
   }
+
+  async loginWithGoogle(): Promise<GoogleResponse> {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const response = await GoogleSignin.signIn();
+
+      if (isSuccessResponse(response)) {
+        return {userInfo: response.data};
+      }
+      return {};
+    } catch (error) {
+      if (isErrorWithCode(error)) {
+        switch (error.code) {
+          case statusCodes.IN_PROGRESS:
+            throw new Error('Sign in already in progress');
+          case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
+            throw new Error('Play services not available');
+          default:
+            throw error;
+        }
+      }
+      throw error;
+    }
+  }
+
   async getCurrentUser(userId: string): Promise<ApiUser | null> {
     const auth = getAuth();
     const user = auth.currentUser;
@@ -91,6 +134,22 @@ export class UserCaller {
       return null;
     }
   }
+
+  async forgotPassword(email: string): Promise<void> {
+    try {
+      const auth = getAuth();
+      await sendPasswordResetEmail(auth, email);
+      return;
+    } catch (error: any) {
+      // If the error is user not found, we do not treat it as an error.
+      if (error.code === 'auth/user-not-found') {
+        return;
+      }
+      console.error('Error in forgotPassword:', error);
+      throw error;
+    }
+  }
+
   async logout(): Promise<void> {
     await auth.signOut();
   }
@@ -116,21 +175,6 @@ export class UserCaller {
       }
     } else {
       console.error('No authenticated user found or user ID does not match');
-    }
-  }
-
-  async forgotPassword(email: string): Promise<void> {
-    try {
-      const auth = getAuth();
-      await sendPasswordResetEmail(auth, email);
-      return;
-    } catch (error: any) {
-      // If the error is user not found, we do not treat it as an error.
-      if (error.code === 'auth/user-not-found') {
-        return;
-      }
-      console.error('Error in forgotPassword:', error);
-      throw error;
     }
   }
 }

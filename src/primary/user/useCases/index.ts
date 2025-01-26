@@ -5,6 +5,7 @@ import {GetCurrentUserUseCase} from './GetCurrentUserUseCase';
 import {LogoutUserUseCase} from './LogoutUserUseCase';
 import {DeleteUserUseCase} from './DeleteUserUseCase';
 import ForgotPasswordUseCase from './ForgotPasswordUseCase';
+import {LoginWithGoogleUseCase} from './LoginWithGoogleUseCase';
 
 export class UserService {
   static logout() {
@@ -16,6 +17,7 @@ export class UserService {
   private logoutUserUseCase: LogoutUserUseCase;
   private deleteUserUseCase: DeleteUserUseCase;
   private forgotPasswordUseCase: ForgotPasswordUseCase;
+  private loginWithGoogleUseCase: LoginWithGoogleUseCase;
 
   constructor(private readonly userResource: UserResource) {
     this.createUserUseCase = new CreateUserUseCase(userResource);
@@ -24,6 +26,7 @@ export class UserService {
     this.logoutUserUseCase = new LogoutUserUseCase(userResource);
     this.deleteUserUseCase = new DeleteUserUseCase(userResource);
     this.forgotPasswordUseCase = new ForgotPasswordUseCase(userResource);
+    this.loginWithGoogleUseCase = new LoginWithGoogleUseCase(userResource);
   }
 
   async registerUser(email: string, password: string, userName: string) {
@@ -40,6 +43,10 @@ export class UserService {
   }
   async deleteUser(userId: string): Promise<void> {
     await this.deleteUserUseCase.execute(userId);
+  }
+
+  async loginWithGoogle() {
+    return await this.loginWithGoogleUseCase.execute();
   }
 
   async forgotPassword(email: string) {

@@ -24,12 +24,18 @@ export class UserResource implements UserRepository {
   async logout(): Promise<void> {
     await this.userCaller.logout();
   }
-  async deleteAccount(userId: string): Promise<void> {
-    await this.userCaller.deleteAccount(userId);
+
+  async loginWithGoogle(): Promise<User> {
+    const apiUser = await this.userCaller.loginWithGoogle();
+    return User.fromProperties(apiUser);
   }
 
   async forgotPassword(email: string): Promise<User> {
     const user = await this.userCaller.forgotPassword(email);
     return User.fromProperties(user);
+  }
+
+  async deleteAccount(userId: string): Promise<void> {
+    await this.userCaller.deleteAccount(userId);
   }
 }

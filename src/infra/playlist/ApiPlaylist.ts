@@ -1,1 +1,1 @@
-export type ApiPlaylist = { id: string; title: string };
+export type ApiPlaylist = {id: string; title: string};
