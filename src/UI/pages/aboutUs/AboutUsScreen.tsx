@@ -1,76 +1,66 @@
 import React from 'react';
-import {RefreshControl, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {BrandLogo} from '../../components/shared/BrandLogo';
-import {globalColors, globalStyles} from '../../theme/Theme';
+import {globalColors} from '../../theme/Theme';
 import {ScrollView} from 'react-native';
 import {usePullRefresh} from '../../../hooks/usePullRefresing';
 
 export const AboutUsScreen = () => {
+  const FeatureSection = ({title, description}) => (
+    <View style={styles.containerTextos}>
+      <Text style={styles.title}>{title}</Text>
+      <Text style={styles.textos}>{description}</Text>
+    </View>
+  );
+
+  const features = [
+    {
+      title: 'Smart Music Organization',
+      description:
+        'We are a sophisticated tool for musicians, offering features focused on playlist management and song organization for both rehearsals and live performances. Our AI-powered features and Spotify integration keep you at the forefront of music trends.',
+    },
+    {
+      title: 'Playlist Creation and Management',
+      description:
+        'Create custom playlists and add songs with ease. Songs are displayed on interactive cards for easy visualization and tracking. Share your playlists with other users for seamless collaboration.',
+    },
+    {
+      title: 'Advanced Song Features',
+      description:
+        'Access instant lyrics, AI-generated chord progressions, and detailed song information. Add custom notes, tablature links, and mark songs as played during performances.',
+    },
+    {
+      title: 'Smart Filtering and Updates',
+      description:
+        'Find songs quickly using multiple filters: by genre, name, or musical key. Stay updated with our weekly top 10 releases from Spotify, keeping your repertoire fresh and current.',
+    },
+    {
+      title: 'Collaborative Features',
+      description:
+        'Share playlists with other musicians, making band rehearsals and coordination effortless. Create collaborative setlists and share song arrangements with your team.',
+    },
+  ];
+
   const {isRefreshing, refresh, top} = usePullRefresh();
   return (
     <>
-      <ScrollView
-        refreshControl={
-          <RefreshControl
-            refreshing={isRefreshing}
-            progressViewOffset={top}
-            colors={[
-              globalColors.primary,
-              globalColors.terceary,
-              globalColors.primary,
-            ]}
-            onRefresh={refresh}
-          />
-        }>
-        <View style={[globalStyles.container, {padding: 24}]}>
-          <View style={styles.containerLogo}>
-            <BrandLogo />
-          </View>
-          <View style={styles.containerTextos}>
-            <Text style={styles.textos}>
-              We are a useful and well thought out tool for musicians. Offering
-              a number of features focused on the organization and management of
-              playlists and songs, both for rehearsals and live performances.
-            </Text>
-          </View>
-          <View style={styles.containerTextos}>
-            <Text style={styles.title}>Playlist Creation and Management:</Text>
-            <Text style={styles.textos}>
-              Allows users to create custom playlists and add songs to them.
-              These songs are displayed on cards that facilitate the
-              visualization and tracking of played and pending songs.
-            </Text>
-          </View>
-          <View style={styles.containerTextos}>
-            <Text style={styles.title}>Marking Songs:</Text>
-            <Text style={styles.textos}>
-              Song cards can be marked as they are played, which helps musicians
-              keep clear track of their setlist during a performance or
-              rehearsal.
-            </Text>
-          </View>
-          <View style={styles.containerTextos}>
-            <Text style={styles.title}> Detailed Information by Song:</Text>
-            <Text style={styles.textos}>
-              For each selected song, users can add useful information such as
-              chords, key, notes, tablature links and lyrics. This is
-              particularly useful during rehearsals.
-            </Text>
-          </View>
-          <View style={styles.containerTextos}>
-            <Text style={styles.title}>Categorization by Music Genre:</Text>
-            <Text style={styles.textos}>
-              The application includes a categories section that allows users to
-              filter songs by musical genre, making it easy to search for songs
-              by musical category or genre.
-            </Text>
-            <Text style={{...styles.textos, marginBottom: 100}}>
-              It is important to note that, in this version, the app does not
-              play music; its main focus is the management and organization of
-              playlists for musicians.
-            </Text>
-          </View>
+      <ScrollView style={styles.container}>
+        <View style={styles.containerLogo}>
+          <BrandLogo />
         </View>
+        {features.map((feature, index) => (
+          <FeatureSection
+            key={index}
+            title={feature.title}
+            description={feature.description}
+          />
+        ))}
+        <Text style={{...styles.textos, marginBottom: 100}}>
+          While this version doesn't play music directly, it provides
+          comprehensive tools for playlist management, song organization, and
+          musician collaboration, enhanced with AI features and music trend
+          integration.
+        </Text>
       </ScrollView>
     </>
   );
@@ -81,19 +71,23 @@ const styles = StyleSheet.create({
     marginVertical: 80,
   },
 
+  container: {
+    flex: 1,
+    padding: 20,
+  },
   containerTextos: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 20,
-    marginBottom: 20,
+    marginVertical: 15,
   },
   title: {
+    fontSize: 22,
+    fontWeight: '700',
     color: globalColors.primaryDark,
-    fontWeight: '900',
-    fontSize: 18,
+    marginBottom: 8,
   },
   textos: {
+    fontSize: 16,
     color: globalColors.primaryDark,
-    fontSize: 18,
+    lineHeight: 24,
+    marginBottom: 10,
   },
 });
