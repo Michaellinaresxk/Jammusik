@@ -20,6 +20,7 @@ import {useUserService} from '../../../context/UserServiceContext';
 import {useNavigation} from '@react-navigation/native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ForgotPasswordModal} from '../../components/shared/modals/ForgotPasswordModal';
+import {GoogleSigninButton} from '@react-native-google-signin/google-signin';
 
 export const LoginScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -51,6 +52,19 @@ export const LoginScreen = () => {
           ? 'Invalid credentials'
           : error?.message || 'An unexpected error occurred.';
       setError(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleLoginWithGoogle = async () => {
+    try {
+      setIsLoading(true);
+      setError('');
+      await userService.loginWithGoogle();
+      navigation.navigate('HomeScreen');
+    } catch (error) {
+      setError('Failed to sign in with Google');
     } finally {
       setIsLoading(false);
     }
@@ -116,6 +130,14 @@ export const LoginScreen = () => {
                   setError={setError}
                   showPassword={showPassword}
                   toggleShowPassword={toggleShowPassword}
+                />
+                <GoogleSigninButton
+                  size={GoogleSigninButton.Size.Wide}
+                  color={GoogleSigninButton.Color.Dark}
+                  onPress={() => {
+                    handleLoginWithGoogle();
+                  }}
+                  disabled={false}
                 />
                 <View style={styles.containerLink}>
                   <Pressable
