@@ -10,21 +10,35 @@ export const FaqsScreen = () => {
       id: 0,
       ask: 'What kind of additional information can I add to each song?',
       answer:
-        'For each song, you can add details such as chords, key, notes, tablature links and lyrics, which is especially useful during rehearsals.',
+        'For each song, you can add details such as chords, key, notes, tablature links and lyrics. Our AI-powered feature can also automatically generate chord progressions to help you learn songs faster. You can access instant lyrics for any song in our database.',
       state: false,
     },
     {
       id: 1,
-      ask: 'How does the categorization of songs by musical genre work in Jammusik?',
+      ask: 'How does the categorization and filtering of songs work in Jammusik?',
       answer:
-        'The application has a categories section where you can filter songs by musical genre. This allows you to easily find all songs of a specific genre....',
+        'The application offers multiple ways to find your songs: filter by musical genre, search by song name, or filter by musical key. This comprehensive filtering system makes it easy to organize and find songs for any situation.',
       state: false,
     },
     {
       id: 2,
+      ask: 'How do you keep the platform updated with current music trends?',
+      answer:
+        'We integrate with Spotify to provide weekly updates of the top 10 new releases. This keeps you informed about trending songs and helps you stay current with the latest music.',
+      state: false,
+    },
+    {
+      id: 3,
+      ask: 'Can I collaborate with other musicians through Jammusik?',
+      answer:
+        'Yes! You can share your playlists with other Jammusik users, making it perfect for band rehearsals or collaborative performances. This feature allows for seamless coordination between band members.',
+      state: false,
+    },
+    {
+      id: 4,
       ask: 'Does Jammusik play music?',
       answer:
-        'No, in this version, Jammusik focuses on managing and organizing playlists and not on playing music.',
+        'No, in this version, Jammusik focuses on managing and organizing playlists and not on playing music. However, we provide rich features like AI-generated chords, instant lyrics, and integration with music trends.',
       state: false,
     },
   ]);

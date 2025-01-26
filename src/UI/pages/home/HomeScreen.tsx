@@ -12,11 +12,7 @@ import {
   View,
 } from 'react-native';
 import {CategoryCardLight} from '../../components/shared/cards/CategoryCardLight';
-import {
-  useNavigation,
-  useFocusEffect,
-  useRoute,
-} from '@react-navigation/native';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {GlobalHeader} from '../../components/shared/GlobalHeader';
 import {globalColors} from '../../theme/Theme';
 import {useCategoryService} from '../../../context/CategoryServiceContext';
