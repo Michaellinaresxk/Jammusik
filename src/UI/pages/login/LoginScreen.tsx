@@ -20,7 +20,7 @@ import {useUserService} from '../../../context/UserServiceContext';
 import {useNavigation} from '@react-navigation/native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ForgotPasswordModal} from '../../components/shared/modals/ForgotPasswordModal';
-import {GoogleSigninButton} from '@react-native-google-signin/google-signin';
+// import {GoogleSigninButton} from '@react-native-google-signin/google-signin';
 
 export const LoginScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -57,18 +57,18 @@ export const LoginScreen = () => {
     }
   };
 
-  const handleLoginWithGoogle = async () => {
-    try {
-      setIsLoading(true);
-      setError('');
-      await userService.loginWithGoogle();
-      navigation.navigate('HomeScreen');
-    } catch (error) {
-      setError('Failed to sign in with Google');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // const handleLoginWithGoogle = async () => {
+  //   try {
+  //     setIsLoading(true);
+  //     setError('');
+  //     await userService.loginWithGoogle();
+  //     navigation.navigate('HomeScreen');
+  //   } catch (error) {
+  //     setError('Failed to sign in with Google');
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   const handleForgotPassword = async (email: string) => {
     try {
@@ -131,14 +131,14 @@ export const LoginScreen = () => {
                   showPassword={showPassword}
                   toggleShowPassword={toggleShowPassword}
                 />
-                <GoogleSigninButton
+                {/* <GoogleSigninButton
                   size={GoogleSigninButton.Size.Wide}
                   color={GoogleSigninButton.Color.Dark}
                   onPress={() => {
                     handleLoginWithGoogle();
                   }}
                   disabled={false}
-                />
+                /> */}
                 <View style={styles.containerLink}>
                   <Pressable
                     onPress={() => setIsForgotPasswordVisible(true)} // ✅ Open the modal
