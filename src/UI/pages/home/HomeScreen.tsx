@@ -174,7 +174,14 @@ export const HomeScreen = () => {
                 )}
               />
               <View style={styles.playlistContainer}>
-                <Text style={styles.sectionTitle}>Your Playlists</Text>
+                <View style={styles.sectionHeader}>
+                  <Text style={styles.sectionTitle}>Your Playlists</Text>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('Playlists')}>
+                    <Text style={styles.seeAllButton}>See All</Text>
+                  </TouchableOpacity>
+                </View>
+
                 <FlatList
                   horizontal={true}
                   data={playlists}
