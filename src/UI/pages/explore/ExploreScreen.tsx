@@ -55,7 +55,7 @@ export const ExploreScreen = () => {
         error={releasesError}
       />
 
-      <View style={styles.section}>
+      {/* <View style={styles.section}>
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Top 10 This Week</Text>
           <PrimaryIcon
@@ -64,10 +64,10 @@ export const ExploreScreen = () => {
           />
         </View>
         <HorizontalTopTracks tracks={tracks} onTrackPress={handleTrackPress} />
-      </View>
+      </View> */}
 
       {/* Music Tools Section */}
-      <View style={styles.section}>
+      {/* <View style={styles.section}>
         <Text style={styles.sectionTitle}>Music Tools</Text>
         <View style={styles.toolsGrid}>
           {tools.map(tool => (
@@ -77,10 +77,10 @@ export const ExploreScreen = () => {
             </TouchableOpacity>
           ))}
         </View>
-      </View>
+      </View> */}
 
       {/* Featured Artists */}
-      <View style={styles.section}>
+      {/* <View style={styles.section}>
         <Text style={styles.sectionTitle}>Featured Artists</Text>
         <ScrollView
           horizontal
@@ -94,7 +94,7 @@ export const ExploreScreen = () => {
             </TouchableOpacity>
           ))}
         </ScrollView>
-      </View>
+      </View> */}
       <View style={{marginBottom: 150}}></View>
     </ScrollView>
   );
