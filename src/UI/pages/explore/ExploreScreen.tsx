@@ -6,20 +6,17 @@ import {
   TouchableOpacity,
   StyleSheet,
   Dimensions,
-  Alert,
 } from 'react-native';
 import {globalColors} from '../../theme/Theme';
-import {useTopTracks} from '../../../hooks/useTopTracks';
-import {Track} from '../../../types/tracksTypes';
 import {HorizontalTopTracks} from '../../components/shared/HorizontalTopTracks';
 import {PrimaryIcon} from '../../components/shared/PrimaryIcon';
 import {useNewReleases} from '../../../hooks/useNewReleases';
 import {NewReleasesContent} from '../../components/shared/NewReleasesContent';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const {width} = Dimensions.get('window');
 
 export const ExploreScreen = () => {
-  const {tracks, isLoading, error} = useTopTracks();
   const {
     newReleases,
     isLoading: releasesLoading,
@@ -36,10 +33,26 @@ export const ExploreScreen = () => {
     {id: 2, name: 'Tuner', icon: '🎸'},
   ];
 
-  const handleTrackPress = (track: Track) => {
-    console.log('Track selected:', track);
-    Alert.alert('Song details soon...');
-  };
+  const comingSoonFeatures = [
+    {
+      id: 1,
+      title: 'Top Charts',
+      description: 'Discover the most popular songs in your region',
+      icon: 'stats-chart',
+    },
+    {
+      id: 2,
+      title: 'Music Tools',
+      description: 'Professional tools for musicians coming soon',
+      icon: 'construct',
+    },
+    {
+      id: 3,
+      title: 'Featured Artists',
+      description: 'Connect with your favorite artists',
+      icon: 'people',
+    },
+  ];
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -95,6 +108,31 @@ export const ExploreScreen = () => {
           ))}
         </ScrollView>
       </View> */}
+
+      <View style={styles.comingSoonSection}>
+        <Text style={styles.comingSoonTitle}>Coming Soon</Text>
+        <Text style={styles.comingSoonSubtitle}>
+          Exciting new features on the way!
+        </Text>
+
+        <View style={styles.featuresContainer}>
+          {comingSoonFeatures.map(feature => (
+            <View key={feature.id} style={styles.featureCard}>
+              <View style={styles.iconContainer}>
+                <Icon
+                  name={feature.icon}
+                  size={24}
+                  color={globalColors.primary}
+                />
+              </View>
+              <Text style={styles.featureTitle}>{feature.title}</Text>
+              <Text style={styles.featureDescription}>
+                {feature.description}
+              </Text>
+            </View>
+          ))}
+        </View>
+      </View>
       <View style={{marginBottom: 150}}></View>
     </ScrollView>
   );
@@ -115,178 +153,49 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: globalColors.secondary,
   },
-  section: {
+  comingSoonSection: {
     padding: 20,
+    marginTop: 20,
   },
-  sectionHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  sectionTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#F0F7EE',
-    marginBottom: 15,
-  },
-  seeAllButton: {
-    color: globalColors.primary,
-    fontSize: 16,
-  },
-  horizontalScroll: {
-    marginHorizontal: -20,
-    paddingHorizontal: 20,
-  },
-
-  songRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
-    backgroundColor: '#184945',
-    padding: 12,
-    borderRadius: 8,
-  },
-  songRank: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#6ADEC9',
-    width: 30,
-  },
-  songImagePlaceholder: {
-    width: 50,
-    height: 50,
-    backgroundColor: '#186D65',
-    borderRadius: 4,
-    marginRight: 12,
-  },
-  songInfo: {
-    flex: 1,
-  },
-  songTitle: {
-    color: '#F0F7EE',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  songArtist: {
-    color: '#838282',
-    fontSize: 14,
-  },
-  songPlays: {
-    color: '#6ADEC9',
-    fontSize: 12,
-  },
-  toolsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    gap: 15,
-  },
-  toolCard: {
-    width: '48%',
-    backgroundColor: '#186D65',
-    borderRadius: 12,
-    padding: 20,
-    alignItems: 'center',
-  },
-  toolIcon: {
+  comingSoonTitle: {
     fontSize: 24,
+    fontWeight: 'bold',
+    color: globalColors.light,
     marginBottom: 8,
   },
-  toolName: {
-    color: '#F0F7EE',
+  comingSoonSubtitle: {
     fontSize: 16,
-    fontWeight: '600',
+    color: globalColors.terceary,
+    marginBottom: 24,
   },
-  artistCard: {
-    marginRight: 15,
-    width: width * 0.35,
+  featuresContainer: {
+    gap: 16,
   },
-  artistImagePlaceholder: {
-    width: width * 0.35,
-    height: width * 0.35,
-    backgroundColor: '#186D65',
-    borderRadius: 100,
-    marginBottom: 8,
+  featureCard: {
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    borderRadius: 12,
+    padding: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
   },
-  artistName: {
-    color: '#F0F7EE',
-    fontSize: 16,
-    fontWeight: '600',
-    textAlign: 'center',
-  },
-  artistGenre: {
-    color: '#838282',
-    fontSize: 14,
-    textAlign: 'center',
-  },
-  imageContainer: {
-    position: 'relative',
-    width: '100%',
-    aspectRatio: 1,
-  },
-
-  playButton: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: [{translateX: -20}, {translateY: -20}],
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(0,0,0,0.6)',
+  iconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: 'rgba(255,255,255,0.1)',
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
   },
-
-  previewBadge: {
-    position: 'absolute',
-    bottom: 8,
-    right: 8,
-    backgroundColor: globalColors.primary,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-  },
-
-  previewText: {
-    color: globalColors.light,
-    fontSize: 10,
+  featureTitle: {
+    fontSize: 18,
     fontWeight: '600',
+    color: globalColors.light,
+    marginBottom: 4,
   },
-
-  recentCard: {
-    // Actualizar el estilo existente
-    position: 'relative',
-    width: 150,
-    marginRight: 16,
-  },
-
-  recentImagePlaceholder: {
-    // Actualizar para que coincida con imageContainer
-    width: '100%',
-    aspectRatio: 1,
-    borderRadius: 8,
-  },
-
-  recentTitle: {
-    marginTop: 8,
+  featureDescription: {
     fontSize: 14,
-    fontWeight: '600',
-    color: globalColors.light,
-  },
-
-  recentSubtitle: {
-    marginTop: 4,
-    fontSize: 12,
     color: globalColors.terceary,
+    flex: 1,
   },
 });

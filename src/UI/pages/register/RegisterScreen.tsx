@@ -113,22 +113,34 @@ export const RegisterScreen = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
+    backgroundColor: 'black', // Previene flashes blancos
+  },
+  mainContainer: {
+    flex: 1,
+  },
+  backgroundImage: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)', // Ajusta la opacidad según necesites
   },
   container: {
     flex: 1,
   },
   scrollContent: {
     flexGrow: 1,
-  },
-  containerImage: {
-    justifyContent: 'center',
+    minHeight: '100%',
   },
   containerLoginScreen: {
-    marginTop: 90,
     flex: 1,
+    paddingHorizontal: 20,
+    justifyContent: 'flex-start',
   },
   containerLogo: {
-    paddingTop: 20,
+    paddingTop: Platform.OS === 'ios' ? 60 : 40,
     marginBottom: 80,
     justifyContent: 'center',
     alignItems: 'center',
@@ -136,13 +148,13 @@ const styles = StyleSheet.create({
   labelText: {
     fontSize: 24,
     color: globalColors.light,
+    textAlign: 'center',
   },
   labelTitle: {
     fontSize: 25,
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 30,
-    marginTop: -30,
     color: globalColors.light,
   },
 });
