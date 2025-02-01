@@ -176,16 +176,28 @@ export const LoginScreen = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
+    backgroundColor: 'black', // This ensures no white flash when transitioning
   },
-  container: {
+  imageBackground: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)', // Adjust opacity as needed
+  },
+  keyboardView: {
     flex: 1,
   },
   scrollContent: {
     flexGrow: 1,
+    justifyContent: 'center', // Centers content vertically
+    paddingHorizontal: 20,
   },
   containerLogo: {
     alignItems: 'center',
-    marginTop: 60,
+    marginTop: Platform.OS === 'ios' ? 60 : 40,
   },
   labelTitle: {
     fontSize: 25,
@@ -195,23 +207,23 @@ const styles = StyleSheet.create({
     marginTop: 50,
   },
   containerForm: {
-    marginBottom: 150,
+    width: '100%',
+    marginTop: 30,
   },
-
   containerLink: {
-    marginHorizontal: 10,
     marginTop: 10,
-    color: globalColors.light,
+    alignItems: 'center',
   },
   link: {
     color: globalColors.primary,
     fontSize: 18,
-    marginBottom: 50,
+    marginBottom: 20,
   },
   errorText: {
     color: 'red',
     fontSize: 12,
     marginTop: 5,
+    textAlign: 'center',
   },
 });
 
