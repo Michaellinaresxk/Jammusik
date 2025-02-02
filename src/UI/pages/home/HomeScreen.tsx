@@ -119,7 +119,17 @@ export const HomeScreen = () => {
               ]}
               onRefresh={refresh}
             />
-          }>
+          }
+          showsVerticalScrollIndicator={false} // Hides the scroll bar
+          decelerationRate="normal" // Controls the deceleration speed
+          scrollEventThrottle={16} // Improves softness
+          bounces={true} // Bounce-back effect at the limits
+          contentContainerStyle={{
+            flexGrow: 1,
+            paddingBottom: 150, // Unifica el padding bottom
+          }}
+          overScrollMode="never" // Avoid the over-scroll effect in Android.
+        >
           <View>
             <GlobalHeader headerTitle="Home" hideBackButton={true} />
             <View style={styles.containerHeader}>

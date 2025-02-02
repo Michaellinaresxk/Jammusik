@@ -113,10 +113,14 @@ export const LoginScreen = () => {
         style={styles.container}>
         <View style={globalStyles.overlay}>
           <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-            style={styles.container}>
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 50 : 20}
+            style={{flex: 1}}>
             <ScrollView
+              keyboardShouldPersistTaps="handled"
+              keyboardDismissMode="on-drag"
               showsVerticalScrollIndicator={false}
+              bounces={false}
               contentContainerStyle={styles.scrollContent}>
               <View style={styles.containerLogo}>
                 <BrandLogo />
@@ -174,6 +178,9 @@ export const LoginScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   safeArea: {
     flex: 1,
     backgroundColor: 'black', // This ensures no white flash when transitioning
@@ -194,6 +201,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'center', // Centers content vertically
     paddingHorizontal: 20,
+    paddingBottom: 20,
   },
   containerLogo: {
     alignItems: 'center',
