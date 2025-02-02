@@ -28,6 +28,7 @@ import Toast from 'react-native-toast-message';
 import {useUpdatePlaylist} from '../../../hooks/useUpdatePlaylist';
 import {RootStackParamsList} from '../../routes/AppNavigator';
 import {SharePlaylistModal} from '../../components/shared/modals/SharedPlaylistModal';
+import {AnimatedSharedButton} from '../../components/shared/AnimatedSharedButton';
 
 export const PlaylistScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
@@ -49,6 +50,29 @@ export const PlaylistScreen = () => {
     id: string;
     title: string;
   } | null>(null);
+
+  const [hasSharedPlaylists, setHasSharedPlaylists] = useState(false);
+
+  const checkSharedPlaylists = useCallback(async () => {
+    if (!auth.currentUser) return;
+
+    try {
+      const playlists = await playlistService.getSharedPlaylists(
+        auth.currentUser.uid,
+      );
+      setHasSharedPlaylists(playlists.length > 0);
+    } catch (error) {
+      console.error('Error checking shared playlists:', error);
+    }
+  }, [auth.currentUser, playlistService]);
+
+  // Agregar el efecto para verificar periódicamente
+  useEffect(() => {
+    checkSharedPlaylists();
+    const interval = setInterval(checkSharedPlaylists, 30000); // Verificar cada 30 segundos
+
+    return () => clearInterval(interval);
+  }, [checkSharedPlaylists]);
 
   const loadPlaylists = useCallback(async () => {
     const user = auth.currentUser;
@@ -184,24 +208,14 @@ export const PlaylistScreen = () => {
             </View>
           </View>
           <Separator color={globalColors.terceary} />
-          <TouchableOpacity
-            style={styles.sharedButton}
-            onPress={() => navigation.navigate('SharedPlaylistsScreen')}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Icon
-                name="share-social"
-                size={24}
-                color={globalColors.primary}
-              />
-              <Text style={styles.sharedButtonText}>Shared Playlists</Text>
-            </View>
-            <Icon
-              name="chevron-forward-outline"
-              color={globalColors.primary}
-              style={{marginLeft: 'auto'}}
-              size={25}
+          <View style={styles.sharedButtonContainer}>
+            <AnimatedSharedButton
+              navigation={navigation}
+              hasSharedPlaylists={hasSharedPlaylists}
+              style={styles.sharedButton}
+              buttonTextStyle={styles.sharedButtonText}
             />
-          </TouchableOpacity>
+          </View>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Your Playlists</Text>
           </View>
@@ -291,6 +305,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 15,
+    marginTop: 20,
     paddingHorizontal: 30,
   },
   sectionTitle: {
@@ -346,19 +361,23 @@ const styles = StyleSheet.create({
     color: globalColors.light,
   },
 
+  sharedButtonContainer: {
+    padding: 20,
+  },
+
   sharedButton: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 15,
     backgroundColor: globalColors.primaryAlt,
-    padding: 20,
     borderRadius: 8,
-    margin: 20,
-    marginBottom: 50,
+    marginVertical: 10,
   },
   sharedButtonText: {
-    marginLeft: 8,
-    fontSize: 16,
     color: globalColors.primary,
+    fontSize: 16,
+    marginLeft: 10,
     fontWeight: '500',
   },
 });
