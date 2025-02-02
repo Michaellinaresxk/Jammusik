@@ -72,11 +72,15 @@ export const RegisterScreen = () => {
         alt="Imagen de fondo">
         <View style={globalStyles.overlay}>
           <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : 20}
+            style={{flex: 1}}>
             <ScrollView
+              keyboardShouldPersistTaps="handled"
+              keyboardDismissMode="on-drag"
               showsVerticalScrollIndicator={false}
-              horizontal={false}
-              style={styles.scrollContent}>
+              bounces={false}
+              contentContainerStyle={styles.scrollContent}>
               <View style={styles.containerLogo}>
                 <BrandLogo />
               </View>

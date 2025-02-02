@@ -38,7 +38,8 @@ export const FeedbackScreen = () => {
       resizeMode="cover"
       alt="Imagen de fondo">
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : 20}>
         <View style={globalStyles.overlay}>
           {/* <KeyboardGestureArea interpolator="ios"> */}
           <ScrollView
@@ -55,7 +56,10 @@ export const FeedbackScreen = () => {
                 ]}
                 onRefresh={refresh}
               />
-            }>
+            }
+            keyboardShouldPersistTaps="handled"
+            keyboardDismissMode="on-drag"
+            bounces={false}>
             <View style={styles.logoContainer}>
               <BrandLogo />
             </View>

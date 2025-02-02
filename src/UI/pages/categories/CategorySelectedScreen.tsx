@@ -404,7 +404,17 @@ export const CategorySelectedScreen = () => {
               ]}
               onRefresh={refresh}
             />
-          }>
+          }
+          showsVerticalScrollIndicator={false} // Hides the scroll bar
+          decelerationRate="normal" // Controls the deceleration speed
+          scrollEventThrottle={16} // Improves softness
+          bounces={true} // Bounce-back effect at the limits
+          contentContainerStyle={{
+            flexGrow: 1,
+            paddingBottom: 150, // Unifica el padding bottom
+          }}
+          overScrollMode="never" // Avoid the over-scroll effect in Android.
+        >
           <View style={{marginBottom: 150}}>
             <GlobalHeader headerTitle={categoryTitle} />
             <FloatingActionButton onPress={openModal} />
@@ -488,7 +498,6 @@ export const CategorySelectedScreen = () => {
         presentationStyle="formSheet"
         onRequestClose={closeEditModal}>
         {' '}
-
         <ScrollView horizontal={false} style={{flex: 1}}>
           <View style={styles.modalBtnContainer}>
             <Text style={styles.modalFormHeaderTitle}>Edit Song</Text>
