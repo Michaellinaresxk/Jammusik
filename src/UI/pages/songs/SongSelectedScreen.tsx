@@ -12,6 +12,7 @@ import {
   Linking,
   Pressable,
   ActivityIndicator,
+  Image,
 } from 'react-native';
 import {GlobalHeader} from '../../components/shared/GlobalHeader';
 import {FloatingActionButton} from '../../components/shared/FloatingActionButton';
@@ -202,42 +203,6 @@ export const SongSelectedScreen = () => {
             <GlobalHeader headerTitle={params.title} artist={params.artist} />
             <FloatingActionButton onPress={() => setIsVisible(true)} />
           </View>
-          {loadingTrackInfo ? (
-            <View style={styles.loadingContainer}>
-              <ActivityIndicator size="large" color={globalColors.primary} />
-            </View>
-          ) : trackError ? (
-            <View style={styles.errorContainer}>
-              <Text style={styles.errorText}>Failed to load track info</Text>
-            </View>
-          ) : (
-            trackInfo && (
-              <View style={styles.trackInfoContent}>
-                <View style={styles.trackInfoTitleWrapper}>
-                  <Text style={styles.title}>Album:</Text>
-                  <Text style={styles.trackInfoText}>
-                    {trackInfo.album.name}
-                  </Text>
-                </View>
-                <View style={styles.trackInfoTitleWrapper}>
-                  <Text style={styles.title}>Release Date:</Text>
-                  <Text style={styles.trackInfoText}>
-                    {trackInfo.album.release_date}
-                  </Text>
-                </View>
-                {trackInfo.preview_url && (
-                  <PrimaryButton
-                    label="Preview Track"
-                    onPress={() => handleOpenLink(trackInfo.preview_url)}
-                    btnFontSize={18}
-                    colorText={globalColors.light}
-                    bgColor={globalColors.primary}
-                    borderRadius={5}
-                  />
-                )}
-              </View>
-            )
-          )}
           <View style={styles.layout}>
             <View style={styles.titleContainer}>
               <Text style={styles.title}>Category:</Text>
@@ -259,6 +224,101 @@ export const SongSelectedScreen = () => {
               </View>
             </View>
           </View>
+          {loadingTrackInfo ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color={globalColors.primary} />
+            </View>
+          ) : trackError ? (
+            <View style={styles.errorContainer}>
+              <Text style={styles.errorText}>Failed to load track info</Text>
+            </View>
+          ) : (
+            trackInfo && (
+              <View style={styles.trackInfoContent}>
+                {/* Album Image */}
+                {trackInfo.album.image && (
+                  <View style={styles.albumImageContainer}>
+                    <Image
+                      source={{uri: trackInfo.album.image}}
+                      style={styles.albumImage}
+                      resizeMode="cover"
+                    />
+                  </View>
+                )}
+                <View style={styles.trackInfoTitleWrapper}>
+                  <Text style={styles.title}>Album:</Text>
+                  <Text style={styles.trackInfoText}>
+                    {trackInfo.album.name}
+                  </Text>
+                </View>
+                <View style={styles.trackInfoTitleWrapper}>
+                  <Text style={styles.title}>Release Date:</Text>
+                  <Text style={styles.trackInfoText}>
+                    {trackInfo.album.release_date}
+                  </Text>
+                </View>
+                {/* Preview Track Button */}
+                {trackInfo.preview_url && (
+                  <PrimaryButton
+                    label="Preview Track"
+                    onPress={() => handleOpenLink(trackInfo.preview_url)}
+                    btnFontSize={18}
+                    colorText={globalColors.light}
+                    bgColor={globalColors.primary}
+                    borderRadius={5}
+                  />
+                )}
+
+                {/* Spotify Link Button */}
+                {trackInfo.external_url && (
+                  <PrimaryButton
+                    label="Open in Spotify"
+                    onPress={() => {
+                      Alert.alert(
+                        '🎵 Open in Spotify',
+                        `Do you want to listen to "${trackInfo.name}" on Spotify?`,
+                        [
+                          {
+                            text: 'Cancel',
+                            style: 'cancel',
+                          },
+                          {
+                            text: 'Open',
+                            onPress: async () => {
+                              try {
+                                const supported = await Linking.canOpenURL(
+                                  trackInfo.external_url,
+                                );
+                                if (supported) {
+                                  await Linking.openURL(trackInfo.external_url);
+                                } else {
+                                  Alert.alert(
+                                    'Error',
+                                    'Unable to open Spotify on this device',
+                                  );
+                                }
+                              } catch (error) {
+                                Alert.alert(
+                                  'Error',
+                                  'An error occurred while trying to open Spotify',
+                                );
+                              }
+                            },
+                          },
+                        ],
+                      );
+                    }}
+                    btnFontSize={18}
+                    colorText={globalColors.light}
+                    bgColor={globalColors.primary}
+                    borderRadius={5}
+                    icon="logo-spotify"
+                  />
+                )}
+              </View>
+            )
+          )}
+
           <View style={styles.notesContent}>
             <Text style={styles.title}>Notes:</Text>
             <Text style={{...styles.category, marginTop: 10}}>{notes}</Text>
@@ -346,6 +406,7 @@ export const SongSelectedScreen = () => {
 };
 const styles = StyleSheet.create({
   layout: {
+    marginTop: 20,
     padding: 30,
     width: '100%',
     flexDirection: 'row',
@@ -478,5 +539,20 @@ const styles = StyleSheet.create({
   errorText: {
     color: 'red',
     fontSize: 16,
+  },
+  albumImageContainer: {
+    width: '100%',
+    height: 200,
+    marginBottom: 20,
+    borderRadius: 10,
+    overflow: 'hidden',
+  },
+  albumImage: {
+    width: '100%',
+    height: '100%',
+  },
+  buttonContainer: {
+    marginTop: 15,
+    gap: 10,
   },
 });
