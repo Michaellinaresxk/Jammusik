@@ -1,12 +1,7 @@
 import axios, {AxiosError} from 'axios';
 import {LyricLine} from '../../types/songTypes';
-
-const OVH_BASE_URL = 'https://api.lyrics.ovh/v1';
-
-interface CachedLyrics {
-  lyrics: LyricLine[];
-  timestamp: number;
-}
+import {OVH_BASE_URL} from '../../constants/ovhBaseUrl';
+import { CachedLyrics } from '../../types/lyric';
 
 class LyricsService {
   // Cache using Map
