@@ -11,6 +11,7 @@ export const useTrackInfo = () => {
     setError(null);
     try {
       const data = await spotifyConfig.getTrackInfo(title, artist);
+      // Asegúrate de que estás guardando toda la información que necesitas
       setTrackInfo(data.track_info);
       return data.track_info;
     } catch (err) {

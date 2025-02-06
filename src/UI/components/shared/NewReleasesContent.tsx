@@ -27,15 +27,15 @@ export const NewReleasesContent: React.FC<NewReleasesProps> = ({
 }) => {
   const openInSpotify = async (release: NewRelease) => {
     Alert.alert(
-      '🎵 Abrir Spotify',
-      `¿Deseas escuchar "${release.name}" en Spotify?`,
+      '🎵 Open in Spotify',
+      `¿Do you want to listen to "${release.name}" on Spotify?`,
       [
         {
-          text: 'Cancelar',
+          text: 'Cancel',
           style: 'cancel',
         },
         {
-          text: 'Abrir',
+          text: 'Open',
           onPress: async () => {
             try {
               const supported = await Linking.canOpenURL(release.external_url);
@@ -43,15 +43,12 @@ export const NewReleasesContent: React.FC<NewReleasesProps> = ({
               if (supported) {
                 await Linking.openURL(release.external_url);
               } else {
-                Alert.alert(
-                  'Error',
-                  'No se puede abrir Spotify en este dispositivo',
-                );
+                Alert.alert('Error', 'Unable to open Spotify on this device');
               }
             } catch (error) {
               Alert.alert(
                 'Error',
-                'Ocurrió un error al intentar abrir Spotify',
+                'An error occurred while trying to open Spotify',
               );
             }
           },
