@@ -1,12 +1,7 @@
 import axios, {AxiosError} from 'axios';
 import {LyricLine} from '../../types/songTypes';
-
-const BASE_URL = 'https://api.lyrics.ovh/v1';
-
-interface CachedLyrics {
-  lyrics: LyricLine[];
-  timestamp: number;
-}
+import {OVH_BASE_URL} from '../../constants/ovhBaseUrl';
+import { CachedLyrics } from '../../types/lyric';
 
 class LyricsService {
   // Cache using Map
@@ -45,7 +40,7 @@ class LyricsService {
       // If it is not cached or expired, make the request
       console.log(`Fetching lyrics for ${artist} - ${title}`);
       const response = await axios.get(
-        `${BASE_URL}/${encodeURIComponent(artist)}/${encodeURIComponent(
+        `${OVH_BASE_URL}/${encodeURIComponent(artist)}/${encodeURIComponent(
           title,
         )}`,
         {
