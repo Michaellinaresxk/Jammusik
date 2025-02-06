@@ -11,6 +11,7 @@ import {
   FlatList,
   Linking,
   Pressable,
+  ActivityIndicator,
 } from 'react-native';
 import {GlobalHeader} from '../../components/shared/GlobalHeader';
 import {FloatingActionButton} from '../../components/shared/FloatingActionButton';
@@ -27,6 +28,8 @@ import {useSongDetailsService} from '../../../context/SongDetailsServiceContext'
 import {SongDetailsView} from '../../../views/SongDetailsView';
 import {useGetCategoryTitle} from '../../../hooks/useGetCategoryTitle';
 import {LyricsView} from '../../components/shared/LyricsView';
+import {useTrackInfo} from '../../../hooks/useTrackInfo';
+import {useRelatedTracks} from '../../../hooks/useRelatedTracks';
 export const SongSelectedScreen = () => {
   const params = useRoute().params;
   const [isVisible, setIsVisible] = useState(false);
@@ -47,6 +50,24 @@ export const SongSelectedScreen = () => {
 
   const [isLyricsModalVisible, setIsLyricsModalVisible] = useState(false);
   const [hasLyrics, setHasLyrics] = useState(false);
+
+  const {
+    trackInfo,
+    loading: loadingTrackInfo,
+    error: trackError,
+    fetchTrackInfo,
+  } = useTrackInfo();
+
+  // Fetch track info when component mounts
+  useEffect(() => {
+    const loadTrackInfo = async () => {
+      if (params.title && params.artist) {
+        await fetchTrackInfo(params.title, params.artist);
+      }
+    };
+
+    loadTrackInfo();
+  }, [params.title, params.artist, fetchTrackInfo]);
 
   const closeModal = () => {
     setIsVisible(false);
@@ -181,6 +202,42 @@ export const SongSelectedScreen = () => {
             <GlobalHeader headerTitle={params.title} artist={params.artist} />
             <FloatingActionButton onPress={() => setIsVisible(true)} />
           </View>
+          {loadingTrackInfo ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator size="large" color={globalColors.primary} />
+            </View>
+          ) : trackError ? (
+            <View style={styles.errorContainer}>
+              <Text style={styles.errorText}>Failed to load track info</Text>
+            </View>
+          ) : (
+            trackInfo && (
+              <View style={styles.trackInfoContent}>
+                <View style={styles.trackInfoTitleWrapper}>
+                  <Text style={styles.title}>Album:</Text>
+                  <Text style={styles.trackInfoText}>
+                    {trackInfo.album.name}
+                  </Text>
+                </View>
+                <View style={styles.trackInfoTitleWrapper}>
+                  <Text style={styles.title}>Release Date:</Text>
+                  <Text style={styles.trackInfoText}>
+                    {trackInfo.album.release_date}
+                  </Text>
+                </View>
+                {trackInfo.preview_url && (
+                  <PrimaryButton
+                    label="Preview Track"
+                    onPress={() => handleOpenLink(trackInfo.preview_url)}
+                    btnFontSize={18}
+                    colorText={globalColors.light}
+                    bgColor={globalColors.primary}
+                    borderRadius={5}
+                  />
+                )}
+              </View>
+            )
+          )}
           <View style={styles.layout}>
             <View style={styles.titleContainer}>
               <Text style={styles.title}>Category:</Text>
@@ -290,10 +347,13 @@ export const SongSelectedScreen = () => {
 const styles = StyleSheet.create({
   layout: {
     padding: 30,
-    marginTop: 40,
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  trackInfoTitleWrapper: {
+    flexDirection: 'row',
+    marginBottom: 10,
   },
   container: {
     flexDirection: 'column',
@@ -391,5 +451,32 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     gap: 10,
+  },
+
+  trackInfoContainer: {
+    padding: 30,
+    marginHorizontal: 20,
+    marginTop: 40,
+  },
+  trackInfoContent: {
+    marginTop: 15,
+    gap: 10,
+    padding: 30,
+  },
+  trackInfoText: {
+    fontSize: 16,
+    color: globalColors.primary,
+  },
+  loadingContainer: {
+    padding: 30,
+    alignItems: 'center',
+  },
+  errorContainer: {
+    padding: 30,
+    alignItems: 'center',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 16,
   },
 });
