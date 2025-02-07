@@ -31,6 +31,7 @@ import {useGetCategoryTitle} from '../../../hooks/useGetCategoryTitle';
 import {LyricsView} from '../../components/shared/LyricsView';
 import {useTrackInfo} from '../../../hooks/useTrackInfo';
 import {useTabFinder} from '../../../hooks/useTabFinder';
+import {ChordGenerator} from '../../components/shared/ChordGenerator';
 export const SongSelectedScreen = () => {
   const params = useRoute().params;
   const [isVisible, setIsVisible] = useState(false);
@@ -237,6 +238,23 @@ export const SongSelectedScreen = () => {
     }
   }, []);
 
+  const handleChordsGenerated = chordData => {
+    // Update status with new chords
+    setChordList(chordData.chords);
+    setSongKey(chordData.key);
+
+    // Optional: save in the database
+    onCreateSongDetails({
+      songKey: chordData.key,
+      chordList: chordData.chords,
+      notes: `Generated with AI\nRecommended strumming: ${chordData.recommendations.strumming.join(
+        ', ',
+      )}\nCapo suggestion: Position ${chordData.recommendations.capo.position}`,
+      lyricLink,
+      tabLink,
+    });
+  };
+
   return (
     <>
       <KeyboardAvoidingView
@@ -392,6 +410,12 @@ export const SongSelectedScreen = () => {
               />
             </View>
           )}
+          <ChordGenerator
+            title={params.title}
+            artist={params.artist}
+            onChordsGenerated={handleChordsGenerated}
+            style={styles.chordGenerator}
+          />
           <View style={styles.linksContent}>
             <View style={{...styles.container, marginBottom: 30}}>
               <Text style={styles.title}>Lyrics:</Text>
@@ -642,5 +666,8 @@ const styles = StyleSheet.create({
     gap: 10,
     width: '100%',
     alignItems: 'center',
+  },
+  chordGenerator: {
+    marginTop: 20,
   },
 });

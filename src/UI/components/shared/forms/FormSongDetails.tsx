@@ -190,23 +190,23 @@ export const FormSongDetails = ({
           autoCorrect={false}
         />
 
-        <TextInput
+        {/* <TextInput
           style={styles.input}
           placeholder="Lyric link"
           placeholderTextColor="#999"
           value={lyricLink}
           onChangeText={setLyricLink}
           autoCorrect={false}
-        />
+        /> */}
 
-        <TextInput
+        {/* <TextInput
           style={styles.input}
           placeholder="Tab link"
           placeholderTextColor="#999"
           value={tabLink}
           onChangeText={setTabLink}
           autoCorrect={false}
-        />
+        /> */}
 
         <TouchableOpacity style={styles.saveButton} onPress={handleSubmit}>
           <Text style={styles.saveButtonText}>Save song details</Text>

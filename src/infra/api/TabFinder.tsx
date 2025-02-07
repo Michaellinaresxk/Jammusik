@@ -10,7 +10,7 @@ export class TabFinderService {
       songsterr: `https://www.songsterr.com/a/wa/search?pattern=${encodedTitle}+${encodedArtist}`,
       // E-Chords
       echords: `https://www.e-chords.com/search?q=${encodedTitle}+${encodedArtist}`,
-      // Cifra Club (para canciones en portugués/español)
+      // Cifra Club (for songs in Portuguese/Spanish)
       cifraClub: `https://www.cifraclub.com.br/${this.slugify(
         artist,
       )}/${this.slugify(title)}`,
@@ -28,7 +28,7 @@ export class TabFinderService {
   static async findBestTabUrl(artist, title) {
     const searchUrls = this.getSearchUrls(artist, title);
 
-    // Retornamos el URL de Ultimate Guitar por defecto ya que suele tener la mejor colección
+    // We return the default Ultimate Guitar URL as it usually has the best collection
     return searchUrls.ultimateGuitar;
   }
 }

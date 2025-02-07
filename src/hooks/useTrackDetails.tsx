@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react';
 import axios from 'axios';
-import {API_CONFIG} from '../infra/api/apikeyLastFM';
+import {API_CONFIG} from '../constants/apikeyLastFM';
 
 interface TrackDetails {
   name: string;
