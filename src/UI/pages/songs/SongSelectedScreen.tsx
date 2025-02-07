@@ -30,7 +30,7 @@ import {SongDetailsView} from '../../../views/SongDetailsView';
 import {useGetCategoryTitle} from '../../../hooks/useGetCategoryTitle';
 import {LyricsView} from '../../components/shared/LyricsView';
 import {useTrackInfo} from '../../../hooks/useTrackInfo';
-import {useRelatedTracks} from '../../../hooks/useRelatedTracks';
+import {useTabFinder} from '../../../hooks/useTabFinder';
 export const SongSelectedScreen = () => {
   const params = useRoute().params;
   const [isVisible, setIsVisible] = useState(false);
@@ -51,6 +51,50 @@ export const SongSelectedScreen = () => {
 
   const [isLyricsModalVisible, setIsLyricsModalVisible] = useState(false);
   const [hasLyrics, setHasLyrics] = useState(false);
+
+  const {findTab, loading: tabLoading} = useTabFinder();
+  const [tabUrls, setTabUrls] = useState(null);
+
+  const handleFindTabs = async () => {
+    try {
+      const searchUrls = {
+        ultimateGuitar: `https://www.ultimate-guitar.com/search.php?search_type=title&value=${encodeURIComponent(
+          params.title,
+        )}+${encodeURIComponent(params.artist)}`,
+        songsterr: `https://www.songsterr.com/a/wa/search?pattern=${encodeURIComponent(
+          params.title,
+        )}+${encodeURIComponent(params.artist)}`,
+        echords: `https://www.e-chords.com/search?q=${encodeURIComponent(
+          params.title,
+        )}+${encodeURIComponent(params.artist)}`,
+      };
+
+      Alert.alert('Available Tabs', 'Select where you want to find the tabs:', [
+        {
+          text: 'Ultimate Guitar',
+          onPress: () => {
+            console.log('Opening Ultimate Guitar:', searchUrls.ultimateGuitar); // Para debugging
+            handleOpenLink(searchUrls.ultimateGuitar);
+          },
+        },
+        {
+          text: 'Songsterr',
+          onPress: () => handleOpenLink(searchUrls.songsterr),
+        },
+        {
+          text: 'E-Chords',
+          onPress: () => handleOpenLink(searchUrls.echords),
+        },
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+      ]);
+    } catch (error) {
+      console.error('Error in handleFindTabs:', error);
+      Alert.alert('Error', 'Failed to generate tab URLs');
+    }
+  };
 
   const {
     trackInfo,
@@ -172,13 +216,24 @@ export const SongSelectedScreen = () => {
     </View>
   );
 
-  const handleOpenLink = useCallback(async (url: string) => {
-    const supported = await Linking.canOpenURL(url);
+  const handleOpenLink = useCallback(async url => {
+    if (!url) {
+      console.log('No URL provided');
+      return;
+    }
 
-    if (supported) {
-      await Linking.openURL(url);
-    } else {
-      Alert.alert(`Unable to open URL: ${url}`);
+    try {
+      console.log('Attempting to open URL:', url); // Para debugging
+      const supported = await Linking.canOpenURL(url);
+
+      if (supported) {
+        await Linking.openURL(url);
+      } else {
+        Alert.alert('Error', `Cannot open this URL: ${url}`);
+      }
+    } catch (error) {
+      console.error('Error opening URL:', error);
+      Alert.alert('Error', 'Failed to open the link');
     }
   }, []);
 
@@ -319,19 +374,24 @@ export const SongSelectedScreen = () => {
             )
           )}
 
-          <View style={styles.notesContent}>
-            <Text style={styles.title}>Notes:</Text>
-            <Text style={{...styles.category, marginTop: 10}}>{notes}</Text>
-          </View>
-          <View style={styles.chordLayout}>
-            <Text style={styles.title}>Chords:</Text>
-            <FlatList
-              data={chordList}
-              renderItem={renderChordItem}
-              keyExtractor={(item, index) => index.toString()}
-              horizontal
-            />
-          </View>
+          {notes && (
+            <View style={styles.notesContent}>
+              <Text style={styles.title}>Notes:</Text>
+              <Text style={{...styles.category, marginTop: 10}}>{notes}</Text>
+            </View>
+          )}
+
+          {chordList && chordList.length > 0 && (
+            <View style={styles.chordLayout}>
+              <Text style={styles.title}>Your Custom Chords:</Text>
+              <FlatList
+                data={chordList}
+                renderItem={renderChordItem}
+                keyExtractor={(item, index) => index.toString()}
+                horizontal
+              />
+            </View>
+          )}
           <View style={styles.linksContent}>
             <View style={{...styles.container, marginBottom: 30}}>
               <Text style={styles.title}>Lyrics:</Text>
@@ -346,11 +406,33 @@ export const SongSelectedScreen = () => {
                 />
               </View>
             </View>
+          </View>
+          <View style={styles.linksContent}>
             <View style={styles.container}>
-              <Text style={styles.title}>Tab link:</Text>
-              <Pressable onPress={() => handleOpenLink(tabLink)}>
-                <Text style={styles.links}>{tabLink}</Text>
-              </Pressable>
+              <Text style={styles.title}>Explore Tabs for This Song:</Text>
+              <View style={styles.tabButtonsContainer}>
+                {/* Existing button for the saved tab link */}
+                {tabLink && (
+                  <PrimaryButton
+                    label="Open Saved Tab"
+                    onPress={() => handleOpenLink(tabLink)}
+                    btnFontSize={18}
+                    colorText={globalColors.light}
+                    bgColor={globalColors.primary}
+                    borderRadius={5}
+                  />
+                )}
+
+                {/* New button to search for tabs */}
+                <PrimaryButton
+                  label="Search Tabs Online"
+                  onPress={handleFindTabs}
+                  btnFontSize={18}
+                  colorText={globalColors.light}
+                  bgColor={globalColors.primary}
+                  borderRadius={5}
+                />
+              </View>
             </View>
           </View>
         </ScrollView>
@@ -554,5 +636,11 @@ const styles = StyleSheet.create({
   buttonContainer: {
     marginTop: 15,
     gap: 10,
+  },
+  tabButtonsContainer: {
+    marginTop: 15,
+    gap: 10,
+    width: '100%',
+    alignItems: 'center',
   },
 });
