@@ -1,1 +1,1 @@
-export const OVH_BASE_URL = 'https://api.lyrics.ovh/v1';
+export const OVH_BASE_URL = process.env.OVH_BASE_URL;
