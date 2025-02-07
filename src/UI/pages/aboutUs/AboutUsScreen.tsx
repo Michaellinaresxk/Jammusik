@@ -52,7 +52,7 @@ export const AboutUsScreen = () => {
         bounces={true} // Bounce-back effect at the limits
         contentContainerStyle={{
           flexGrow: 1,
-          paddingBottom: 150, // Unifica el padding bottom
+          paddingBottom: 150,
         }}
         overScrollMode="never" // Avoid the over-scroll effect in Android.
       >

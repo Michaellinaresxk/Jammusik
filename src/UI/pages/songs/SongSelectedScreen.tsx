@@ -270,7 +270,7 @@ export const SongSelectedScreen = () => {
                 )}
 
                 {/* Spotify Link Button */}
-                {trackInfo.external_url && (
+                {/* {trackInfo.external_url && (
                   <PrimaryButton
                     label="Open in Spotify"
                     onPress={() => {
@@ -314,7 +314,7 @@ export const SongSelectedScreen = () => {
                     borderRadius={5}
                     icon="logo-spotify"
                   />
-                )}
+                )} */}
               </View>
             )
           )}
