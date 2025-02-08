@@ -55,6 +55,8 @@ export const SongSelectedScreen = () => {
   const {findTab, loading: tabLoading} = useTabFinder();
   const [tabUrls, setTabUrls] = useState(null);
 
+  const [loading, setLoading] = useState(false);
+
   const handleFindTabs = async () => {
     try {
       const searchUrls = {
@@ -107,7 +109,24 @@ export const SongSelectedScreen = () => {
   useEffect(() => {
     const loadTrackInfo = async () => {
       if (params.title && params.artist) {
-        await fetchTrackInfo(params.title, params.artist);
+        setLoading(true);
+        try {
+          const info = await fetchTrackInfo(params.title, params.artist);
+
+          // Verificamos si la información recuperada coincide con lo que buscamos
+          if (
+            info &&
+            (!info.name.toLowerCase().includes(params.title.toLowerCase()) ||
+              !info.artist.toLowerCase().includes(params.artist.toLowerCase()))
+          ) {
+            setError('Unable to find exact match for this song');
+          }
+        } catch (error) {
+          setError('Error loading track information');
+          console.error('Track info error:', error);
+        } finally {
+          setLoading(false);
+        }
       }
     };
 
@@ -325,51 +344,61 @@ export const SongSelectedScreen = () => {
                 )}
 
                 {/* Spotify Link Button */}
-                {/* {trackInfo.external_url && (
-                  <PrimaryButton
-                    label="Open in Spotify"
-                    onPress={() => {
-                      Alert.alert(
-                        '🎵 Open in Spotify',
-                        `Do you want to listen to "${trackInfo.name}" on Spotify?`,
-                        [
-                          {
-                            text: 'Cancel',
-                            style: 'cancel',
-                          },
-                          {
-                            text: 'Open',
-                            onPress: async () => {
-                              try {
-                                const supported = await Linking.canOpenURL(
-                                  trackInfo.external_url,
-                                );
-                                if (supported) {
-                                  await Linking.openURL(trackInfo.external_url);
-                                } else {
+                {trackInfo.external_url && (
+                  <View style={styles.spotifyButtonContainer}>
+                    <Pressable
+                      onPress={() => {
+                        Alert.alert(
+                          '🎵 Open in Spotify',
+                          `Do you want to listen to "${trackInfo.name}" on Spotify?`,
+                          [
+                            {
+                              text: 'Cancel',
+                              style: 'cancel',
+                            },
+                            {
+                              text: 'Open',
+                              onPress: async () => {
+                                try {
+                                  const supported = await Linking.canOpenURL(
+                                    trackInfo.external_url,
+                                  );
+                                  if (supported) {
+                                    await Linking.openURL(
+                                      trackInfo.external_url,
+                                    );
+                                  } else {
+                                    Alert.alert(
+                                      'Error',
+                                      'Unable to open Spotify on this device',
+                                    );
+                                  }
+                                } catch (error) {
                                   Alert.alert(
                                     'Error',
-                                    'Unable to open Spotify on this device',
+                                    'An error occurred while trying to open Spotify',
                                   );
                                 }
-                              } catch (error) {
-                                Alert.alert(
-                                  'Error',
-                                  'An error occurred while trying to open Spotify',
-                                );
-                              }
+                              },
                             },
-                          },
-                        ],
-                      );
-                    }}
-                    btnFontSize={18}
-                    colorText={globalColors.light}
-                    bgColor={globalColors.primary}
-                    borderRadius={5}
-                    icon="logo-spotify"
-                  />
-                )} */}
+                          ],
+                        );
+                      }}
+                      style={({pressed}) => [
+                        styles.spotifyButton,
+                        pressed && styles.spotifyButtonPressed,
+                      ]}>
+                      <PrimaryIcon
+                        name="play-circle-sharp"
+                        size={30}
+                        color={globalColors.primary}
+                      />
+                      <Text style={styles.spotifyButtonText}>
+                        Open in Spotify
+                      </Text>
+                    </Pressable>
+                  </View>
+                )}
               </View>
             )
           )}
@@ -392,47 +421,68 @@ export const SongSelectedScreen = () => {
               />
             </View>
           )}
-          <View style={styles.linksContent}>
-            <View style={{...styles.container, marginBottom: 30}}>
-              <Text style={styles.title}>Lyrics:</Text>
-              <View style={styles.lyricsContainer}>
-                <PrimaryButton
-                  label={hasLyrics ? 'View Lyrics' : 'Generate Lyrics'}
-                  onPress={() => setIsLyricsModalVisible(true)}
-                  btnFontSize={18}
-                  colorText={globalColors.light}
-                  bgColor={globalColors.primary}
-                  borderRadius={5}
-                />
-              </View>
-            </View>
-          </View>
-          <View style={styles.linksContent}>
-            <View style={styles.container}>
-              <Text style={styles.title}>Explore Tabs for This Song:</Text>
-              <View style={styles.tabButtonsContainer}>
-                {/* Existing button for the saved tab link */}
-                {tabLink && (
-                  <PrimaryButton
-                    label="Open Saved Tab"
-                    onPress={() => handleOpenLink(tabLink)}
-                    btnFontSize={18}
-                    colorText={globalColors.light}
-                    bgColor={globalColors.primary}
-                    borderRadius={5}
-                  />
-                )}
 
-                {/* New button to search for tabs */}
-                <PrimaryButton
-                  label="Search Tabs Online"
-                  onPress={handleFindTabs}
-                  btnFontSize={18}
-                  colorText={globalColors.light}
-                  bgColor={globalColors.primary}
-                  borderRadius={5}
-                />
-              </View>
+          <View style={styles.toolsSection}>
+            <Text style={styles.title}>Tools</Text>
+            <View style={styles.toolsGrid}>
+              <Pressable
+                style={({pressed}) => [
+                  styles.toolCard,
+                  pressed && styles.toolCardPressed,
+                ]}
+                onPress={() => setIsLyricsModalVisible(true)}>
+                <View style={styles.toolIconContainer}>
+                  <PrimaryIcon
+                    name="text"
+                    size={24}
+                    color={globalColors.primaryDark}
+                  />
+                </View>
+                <Text style={styles.toolText}>
+                  {hasLyrics ? 'View Lyrics' : 'Generate Lyrics'}
+                </Text>
+                <Text style={styles.toolSubText}>
+                  {hasLyrics ? 'See saved lyrics' : 'Create new lyrics'}
+                </Text>
+              </Pressable>
+
+              <Pressable
+                style={({pressed}) => [
+                  styles.toolCard,
+                  pressed && styles.toolCardPressed,
+                ]}
+                onPress={handleFindTabs}>
+                <View style={styles.toolIconContainer}>
+                  <PrimaryIcon
+                    name="document-text"
+                    size={24}
+                    color={globalColors.primaryDark}
+                  />
+                </View>
+                <Text style={styles.toolText}>Find Tabs</Text>
+                <Text style={styles.toolSubText}>
+                  Search online tab sources
+                </Text>
+              </Pressable>
+
+              {tabLink && (
+                <Pressable
+                  style={({pressed}) => [
+                    styles.toolCard,
+                    pressed && styles.toolCardPressed,
+                  ]}
+                  onPress={() => handleOpenLink(tabLink)}>
+                  <View style={styles.toolIconContainer}>
+                    <PrimaryIcon
+                      name="bookmark"
+                      size={24}
+                      color={globalColors.primary}
+                    />
+                  </View>
+                  <Text style={styles.toolText}>Saved Tab</Text>
+                  <Text style={styles.toolSubText}>Open your saved tab</Text>
+                </Pressable>
+              )}
             </View>
           </View>
         </ScrollView>
@@ -486,6 +536,7 @@ export const SongSelectedScreen = () => {
     </>
   );
 };
+
 const styles = StyleSheet.create({
   layout: {
     marginTop: 20,
@@ -497,10 +548,6 @@ const styles = StyleSheet.create({
   trackInfoTitleWrapper: {
     flexDirection: 'row',
     marginBottom: 10,
-  },
-  container: {
-    flexDirection: 'column',
-    alignItems: 'center',
   },
   titleContainer: {},
   title: {
@@ -548,28 +595,6 @@ const styles = StyleSheet.create({
     padding: 30,
     width: '90%',
   },
-  notesText: {
-    color: globalColors.primary,
-  },
-  linksContent: {
-    marginBottom: 30,
-    padding: 30,
-  },
-  links: {
-    color: globalColors.primary,
-  },
-  openModalBtn: {
-    backgroundColor: globalColors.primaryAlt,
-    padding: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    marginRight: 10,
-  },
-  openModalBtnText: {
-    color: globalColors.primary,
-    fontSize: 30,
-    fontWeight: '300',
-  },
   modalBtnContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -580,26 +605,6 @@ const styles = StyleSheet.create({
   modalFormHeaderTitle: {
     fontSize: 20,
     color: globalColors.light,
-  },
-  absoluteFill: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
-  lyricsContainer: {
-    marginLeft: 10,
-    marginTop: 20,
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: 10,
-  },
-
-  trackInfoContainer: {
-    padding: 30,
-    marginHorizontal: 20,
-    marginTop: 40,
   },
   trackInfoContent: {
     marginTop: 15,
@@ -633,14 +638,82 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  buttonContainer: {
-    marginTop: 15,
+  spotifyButtonContainer: {
+    width: '100%',
+    marginVertical: 10,
+  },
+  spotifyButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: globalColors.secondary,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 5,
     gap: 10,
   },
-  tabButtonsContainer: {
+  spotifyButtonPressed: {
+    opacity: 0.8,
+  },
+  spotifyButtonText: {
+    color: globalColors.light,
+    fontSize: 18,
+    fontWeight: '500',
+  },
+  toolsSection: {
+    marginVertical: 20,
+    padding: 30,
+  },
+  toolsGrid: {
+    flexDirection: 'row',
+    // flexWrap: 'wrap',
+    justifyContent: 'center',
+    gap: 5,
     marginTop: 15,
-    gap: 10,
-    width: '100%',
+  },
+  toolCard: {
+    width: 160,
+    backgroundColor:
+      Platform.OS === 'ios' ? 'rgba(255, 255, 255, 0.95)' : globalColors.light,
+    padding: 20,
+    borderRadius: 16,
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(230, 230, 230, 0.5)',
+    elevation: Platform.OS === 'android' ? 3 : 0,
+  },
+  toolCardPressed: {
+    transform: [{scale: 0.98}],
+    backgroundColor:
+      Platform.OS === 'ios' ? 'rgba(255, 255, 255, 0.9)' : globalColors.light,
+  },
+  toolIconContainer: {
+    width: 50,
+    height: 50,
+    borderRadius: 15,
+    backgroundColor: `${globalColors.primaryAlt}80`,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  toolText: {
+    fontSize: 15,
+    color: globalColors.terceary,
+    fontWeight: '600',
+    textAlign: 'center',
+    marginTop: 8,
+  },
+  toolSubText: {
+    fontSize: 12,
+    color: `${globalColors.terceary}90`,
+    marginTop: 4,
+    textAlign: 'center',
   },
 });
