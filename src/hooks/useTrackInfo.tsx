@@ -10,12 +10,12 @@ export const useTrackInfo = () => {
     setLoading(true);
     setError(null);
     try {
-      // Agregamos logs para debugging
+      // Logs for debugging
       console.log('Fetching track info for:', {title, artist});
 
       const data = await spotifyConfig.getTrackInfo(title, artist);
 
-      // Verificamos que la información coincida
+      // Verify that the information matches
       if (data.track_info) {
         const isMatch =
           data.track_info.name.toLowerCase().includes(title.toLowerCase()) &&
