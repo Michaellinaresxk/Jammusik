@@ -94,10 +94,10 @@ export const PlaylistScreen = () => {
     }
   }, [auth.currentUser, playlistService]);
 
-  // Agregar el efecto para verificar periódicamente
+  // Add effect to check periodically
   useEffect(() => {
     checkSharedPlaylists();
-    const interval = setInterval(checkSharedPlaylists, 30000); // Verificar cada 30 segundos
+    const interval = setInterval(checkSharedPlaylists, 30000);
 
     return () => clearInterval(interval);
   }, [checkSharedPlaylists]);
