@@ -340,10 +340,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: globalColors.primaryAlt,
     borderRadius: 8,
-    paddingVertical: 12, // Cambiado para controlar mejor la altura
-    paddingHorizontal: 15, // Para mantener un espacio uniforme en los lados
+    paddingVertical: 12,
+    paddingHorizontal: 15,
     fontSize: 16,
-    paddingRight: 40, // Espacio para el ícono
+    paddingRight: 40,
   },
 
   activeInput: {
@@ -355,8 +355,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 10,
     top: '50%',
-    transform: [{translateY: -12}], // Mantiene el ícono centrado si su altura es de 24px
-    justifyContent: 'center', // Asegura que el ícono esté centrado si hay algún desbordamiento
+    transform: [{translateY: -12}],
+    justifyContent: 'center',
     alignItems: 'center',
   },
   suggestedSection: {
