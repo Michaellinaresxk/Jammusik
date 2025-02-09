@@ -31,6 +31,7 @@ import {useGetCategoryTitle} from '../../../hooks/useGetCategoryTitle';
 import {LyricsView} from '../../components/shared/LyricsView';
 import {useTrackInfo} from '../../../hooks/useTrackInfo';
 import {useTabFinder} from '../../../hooks/useTabFinder';
+// import {ChordGenerator} from '../../components/shared/ChordGenerator';
 export const SongSelectedScreen = () => {
   const params = useRoute().params;
   const [isVisible, setIsVisible] = useState(false);
@@ -75,7 +76,7 @@ export const SongSelectedScreen = () => {
         {
           text: 'Ultimate Guitar',
           onPress: () => {
-            console.log('Opening Ultimate Guitar:', searchUrls.ultimateGuitar); // Para debugging
+            console.log('Opening Ultimate Guitar:', searchUrls.ultimateGuitar);
             handleOpenLink(searchUrls.ultimateGuitar);
           },
         },
@@ -98,6 +99,23 @@ export const SongSelectedScreen = () => {
     }
   };
 
+  // const handleChordsGenerated = chordData => {
+  //   // Update status with new chords
+  //   setChordList(chordData.chords);
+  //   setSongKey(chordData.key);
+
+  //   // Optional: save in the database
+  //   onCreateSongDetails({
+  //     songKey: chordData.key,
+  //     chordList: chordData.chords,
+  //     notes: `Generated with AI\nRecommended strumming: ${chordData.recommendations.strumming.join(
+  //       ', ',
+  //     )}\nCapo suggestion: Position ${chordData.recommendations.capo.position}`,
+  //     lyricLink,
+  //     tabLink,
+  //   });
+  // };
+
   const {
     trackInfo,
     loading: loadingTrackInfo,
@@ -113,7 +131,7 @@ export const SongSelectedScreen = () => {
         try {
           const info = await fetchTrackInfo(params.title, params.artist);
 
-          // Verificamos si la información recuperada coincide con lo que buscamos
+          // Check if the information retrieved matches what we are looking for.
           if (
             info &&
             (!info.name.toLowerCase().includes(params.title.toLowerCase()) ||
@@ -242,7 +260,7 @@ export const SongSelectedScreen = () => {
     }
 
     try {
-      console.log('Attempting to open URL:', url); // Para debugging
+      console.log('Attempting to open URL:', url);
       const supported = await Linking.canOpenURL(url);
 
       if (supported) {
@@ -485,6 +503,15 @@ export const SongSelectedScreen = () => {
               )}
             </View>
           </View>
+          {/*
+          <View style={{padding: 30}}>
+            <ChordGenerator
+              title={params.title}
+              artist={params.artist}
+              onChordsGenerated={handleChordsGenerated}
+              style={styles.chordGenerator}
+            />
+          </View> */}
         </ScrollView>
       </KeyboardAvoidingView>
 
@@ -666,7 +693,6 @@ const styles = StyleSheet.create({
   },
   toolsGrid: {
     flexDirection: 'row',
-    // flexWrap: 'wrap',
     justifyContent: 'center',
     gap: 5,
     marginTop: 15,
@@ -715,5 +741,9 @@ const styles = StyleSheet.create({
     color: `${globalColors.terceary}90`,
     marginTop: 4,
     textAlign: 'center',
+  },
+
+  chordGenerator: {
+    marginTop: 20,
   },
 });

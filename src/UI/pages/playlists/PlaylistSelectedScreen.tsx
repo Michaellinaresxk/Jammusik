@@ -218,7 +218,7 @@ export const PlaylistSelectedScreen = () => {
           }
           showsVerticalScrollIndicator={false} // Hides the scroll bar
           decelerationRate="normal" // Controls the deceleration speed
-          scrollEventThrottle={16}  // Improves softness
+          scrollEventThrottle={16} // Improves softness
           bounces={true} // Bounce-back effect at the limits
           contentContainerStyle={{
             flexGrow: 1,
@@ -270,13 +270,13 @@ export const PlaylistSelectedScreen = () => {
                 </Swipeable>
               )}
             />
-            <View>
+            {/* <View>
               <TouchableOpacity
                 style={styles.resetBtn}
                 onPress={handleResetSongs}>
                 <Text style={styles.resetBtnText}>RESET SONGS</Text>
               </TouchableOpacity>
-            </View>
+            </View> */}
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
