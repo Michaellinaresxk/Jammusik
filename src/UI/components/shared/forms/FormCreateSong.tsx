@@ -334,24 +334,30 @@ const styles = StyleSheet.create({
     position: 'relative',
     marginTop: 20,
   },
+
   customCategoryInput: {
     backgroundColor: globalColors.light,
     borderWidth: 1,
     borderColor: globalColors.primaryAlt,
     borderRadius: 8,
-    padding: 12,
+    paddingVertical: 12, // Cambiado para controlar mejor la altura
+    paddingHorizontal: 15, // Para mantener un espacio uniforme en los lados
     fontSize: 16,
-    paddingRight: 40,
+    paddingRight: 40, // Espacio para el ícono
   },
+
   activeInput: {
     borderColor: globalColors.primary,
     borderWidth: 1.5,
   },
+
   inputIcon: {
     position: 'absolute',
     right: 10,
     top: '50%',
-    transform: [{translateY: -12}],
+    transform: [{translateY: -12}], // Mantiene el ícono centrado si su altura es de 24px
+    justifyContent: 'center', // Asegura que el ícono esté centrado si hay algún desbordamiento
+    alignItems: 'center',
   },
   suggestedSection: {
     marginTop: 15,

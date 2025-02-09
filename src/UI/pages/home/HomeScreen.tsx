@@ -1,5 +1,7 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect, useRef} from 'react';
 import {
+  Animated,
+  Easing,
   FlatList,
   KeyboardAvoidingView,
   Modal,
@@ -31,6 +33,7 @@ import {FormCreateSong} from '../../components/shared/forms/FormCreateSong';
 import {Separator} from '../../components/shared/Separator';
 import {SliderQuotes} from '../../components/shared/SliderQuotes';
 import {PlaylistCard} from '../../components/shared/cards/PlaylistCard';
+import {PrimaryIcon} from '../../components/shared/PrimaryIcon';
 
 export const HomeScreen = () => {
   const navigation = useNavigation();
@@ -44,6 +47,32 @@ export const HomeScreen = () => {
   const songService = useSongService();
   const [isSongModalVisible, setIsSongModalVisible] = useState(false);
   const [isLoadingNewSong, setIsLoadingNewSong] = useState(false);
+
+  const musicIconScale = useRef(new Animated.Value(1)).current;
+
+  // Animation for the music icon
+  useEffect(() => {
+    const pulseAnimation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(musicIconScale, {
+          toValue: 1.2,
+          duration: 800,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(musicIconScale, {
+          toValue: 1,
+          duration: 800,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ]),
+    );
+
+    pulseAnimation.start();
+
+    return () => pulseAnimation.stop();
+  }, []);
 
   // Function to create songs
   const handleCreateSong = async (values: {
@@ -86,6 +115,7 @@ export const HomeScreen = () => {
     try {
       const [fetchedCategories, fetchedPlaylists] = await Promise.all([
         categoryService.getCategories(userId),
+        playlistService.getPlaylists(userId),
         playlistService.getPlaylists(userId),
       ]);
       setCategories(fetchedCategories);
@@ -134,13 +164,16 @@ export const HomeScreen = () => {
             <GlobalHeader headerTitle="Home" hideBackButton={true} />
             <View style={styles.containerHeader}>
               <View style={styles.titleContent}>
-                <Icon
-                  name="musical-notes-sharp"
-                  color={globalColors.primary}
-                  size={30}
-                />
+                <Animated.View style={{transform: [{scale: musicIconScale}]}}>
+                  <Icon
+                    name="musical-notes-sharp"
+                    color={globalColors.primary}
+                    size={30}
+                  />
+                </Animated.View>
                 <Text style={styles.title}>Create new song!</Text>
               </View>
+
               <TouchableOpacity
                 onPress={() => setIsSongModalVisible(true)}
                 style={styles.openModalBtn}>
@@ -153,7 +186,14 @@ export const HomeScreen = () => {
                 <Text style={styles.sectionTitle}>Your Categories</Text>
                 <TouchableOpacity
                   onPress={() => navigation.navigate('Categories')}>
-                  <Text style={styles.seeAllButton}>See All</Text>
+                  <View style={styles.SeeAllContent}>
+                    <Text style={styles.seeAllButton}>See All</Text>
+                    <PrimaryIcon
+                      name={'chevron-forward-sharp'}
+                      color={globalColors.terceary}
+                      size={20}
+                    />
+                  </View>
                 </TouchableOpacity>
               </View>
               <FlatList
@@ -188,7 +228,14 @@ export const HomeScreen = () => {
                   <Text style={styles.sectionTitle}>Your Playlists</Text>
                   <TouchableOpacity
                     onPress={() => navigation.navigate('Playlists')}>
-                    <Text style={styles.seeAllButton}>See All</Text>
+                    <View style={styles.SeeAllContent}>
+                      <Text style={styles.seeAllButton}>See All</Text>
+                      <PrimaryIcon
+                        name={'chevron-forward-sharp'}
+                        color={globalColors.terceary}
+                        size={20}
+                      />
+                    </View>
                   </TouchableOpacity>
                 </View>
 
@@ -278,6 +325,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: globalColors.primaryDark,
+  },
+  SeeAllContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
   },
   seeAllButton: {
     color: globalColors.terceary,

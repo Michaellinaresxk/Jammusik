@@ -180,8 +180,13 @@ export const SongSelectedScreen = () => {
 
       showToast();
       closeModal();
+
+      // ✅ Wait for the modal to close before reloading the data.
+      setTimeout(async () => {
+        await loadSongDetails();
+      }, 300); // Gives you a small margin for the modal animation to finish.
+
       setHasSavedData(true);
-      setTriggerUpdate(true);
     } catch (error) {
       console.error(error);
       Alert.alert('Error', 'Failed to save song details. Please try again.');
@@ -246,7 +251,6 @@ export const SongSelectedScreen = () => {
     }
   }, [categoryId]);
 
-  const {isRefreshing, refresh, top} = usePullRefresh(loadSongDetails);
   const renderChordItem = ({item}: {item: string}) => (
     <View style={styles.chordConntent}>
       <Text style={styles.chord}>{item}</Text>
@@ -274,6 +278,8 @@ export const SongSelectedScreen = () => {
     }
   }, []);
 
+  const {isRefreshing, refresh, top} = usePullRefresh(loadSongDetails);
+
   return (
     <>
       <KeyboardAvoidingView
@@ -290,7 +296,17 @@ export const SongSelectedScreen = () => {
               ]}
               onRefresh={refresh}
             />
-          }>
+          }
+          showsVerticalScrollIndicator={false} // Hides the scroll bar
+          decelerationRate="normal" // Controls the deceleration speed
+          scrollEventThrottle={16} // Improves softness
+          bounces={true} // Bounce-back effect at the limits
+          contentContainerStyle={{
+            flexGrow: 1,
+            paddingBottom: 150, // Unifica el padding bottom
+          }}
+          overScrollMode="never" // Avoid the over-scroll effect in Android.
+        >
           <View>
             <GlobalHeader headerTitle={params.title} artist={params.artist} />
             <FloatingActionButton onPress={() => setIsVisible(true)} />

@@ -1,5 +1,7 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useRef} from 'react';
 import {
+  Animated,
+  Easing,
   FlatList,
   KeyboardAvoidingView,
   Modal,
@@ -52,6 +54,32 @@ export const PlaylistScreen = () => {
   } | null>(null);
 
   const [hasSharedPlaylists, setHasSharedPlaylists] = useState(false);
+
+  const musicIconScale = useRef(new Animated.Value(1)).current;
+
+  // Animation for the music icon
+  useEffect(() => {
+    const pulseAnimation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(musicIconScale, {
+          toValue: 1.2,
+          duration: 800,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(musicIconScale, {
+          toValue: 1,
+          duration: 800,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ]),
+    );
+
+    pulseAnimation.start();
+
+    return () => pulseAnimation.stop();
+  }, []);
 
   const checkSharedPlaylists = useCallback(async () => {
     if (!auth.currentUser) return;
@@ -157,6 +185,8 @@ export const PlaylistScreen = () => {
         type: 'success',
         text1: 'Playlist shared successfully',
       });
+      // 🚀 Update status of shared playlists immediately
+      await checkSharedPlaylists();
     } catch (error) {
       Toast.show({
         type: 'error',
@@ -203,11 +233,13 @@ export const PlaylistScreen = () => {
             }}>
             <View style={styles.containerHeader}>
               <View style={styles.titleContent}>
-                <Icon
-                  name="musical-notes-sharp"
-                  color={globalColors.primary}
-                  size={30}
-                />
+                <Animated.View style={{transform: [{scale: musicIconScale}]}}>
+                  <Icon
+                    name="musical-notes-sharp"
+                    color={globalColors.primary}
+                    size={30}
+                  />
+                </Animated.View>
                 <Text style={styles.title}>Create New Playlist</Text>
               </View>
               <TouchableOpacity

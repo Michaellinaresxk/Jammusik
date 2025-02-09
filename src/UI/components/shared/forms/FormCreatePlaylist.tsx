@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import {globalColors, globalFormStyles} from '../../../theme/Theme';
 import {PrimaryButton} from '../PrimaryButton';
+import {SliderQuotes} from '../SliderQuotes';
 
 export const FormCreatePlaylist = ({
   initialTitle = '',
@@ -70,6 +71,7 @@ export const FormCreatePlaylist = ({
           disabled={isLoading}
         />
       </View>
+      <SliderQuotes />
     </View>
   );
 };

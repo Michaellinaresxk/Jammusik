@@ -38,7 +38,6 @@ import type {SongData} from '../../../types/songTypes';
 import {useSongDetailsService} from '../../../context/SongDetailsServiceContext';
 import {SongFilter} from '../../components/shared/SongFilter';
 import {TabNavigatorParamsList} from '../../routes/TabNavigator';
-import {StatsOverview} from '../../components/shared/StatsOverview';
 
 interface ExtendedSongView extends SongView {
   songKey?: string;
@@ -285,16 +284,16 @@ export const CategorySelectedScreen = () => {
         artist: values.artist,
         categoryId: values.categoryId || categoryId,
       });
-
       await loadSongList();
-      setIsEditModalVisible(false);
-      setSelectedSongId(null);
-
       Toast.show({
         type: 'success',
         text1: 'Song updated successfully',
         topOffset: 90,
       });
+
+      setSelectedSongId(null);
+      setIsUpdating(false);
+      setIsEditModalVisible(false);
     } catch (error) {
       console.error('Failed to update song:', error);
       Toast.show({
@@ -326,7 +325,7 @@ export const CategorySelectedScreen = () => {
   const handleDeleteSong = async (songId: string) => {
     try {
       await songService.deleteSong(userId, songId);
-      await loadSongList(); // Refresh list after deletion
+      await loadSongList();
       Toast.show({
         type: 'success',
         text1: 'Song Deleted successfully',
@@ -411,19 +410,13 @@ export const CategorySelectedScreen = () => {
           bounces={true} // Bounce-back effect at the limits
           contentContainerStyle={{
             flexGrow: 1,
-            paddingBottom: 150, // Unifica el padding bottom
+            paddingBottom: 150,
           }}
           overScrollMode="never" // Avoid the over-scroll effect in Android.
         >
           <View style={{marginBottom: 150}}>
             <GlobalHeader headerTitle={categoryTitle} />
             <FloatingActionButton onPress={openModal} />
-            {/* <View style={{marginTop: 30}}>
-              <StatsOverview
-                totalSongs={undefined}
-                completedSongs={undefined}
-              />
-            </View> */}
             <SongFilter
               searchText={searchText}
               selectedKey={selectedKey}
@@ -470,7 +463,8 @@ export const CategorySelectedScreen = () => {
       <Modal
         visible={isVisible}
         animationType="slide"
-        presentationStyle="formSheet">
+        presentationStyle="formSheet"
+        onRequestClose={closeEditModal}>
         <ScrollView horizontal={false} style={{flex: 1}}>
           <View style={styles.modalBtnContainer}>
             <Text style={styles.modalFormHeaderTitle}>Add Song Info</Text>
@@ -497,7 +491,6 @@ export const CategorySelectedScreen = () => {
         animationType="slide"
         presentationStyle="formSheet"
         onRequestClose={closeEditModal}>
-        {' '}
         <ScrollView horizontal={false} style={{flex: 1}}>
           <View style={styles.modalBtnContainer}>
             <Text style={styles.modalFormHeaderTitle}>Edit Song</Text>
@@ -511,9 +504,12 @@ export const CategorySelectedScreen = () => {
 
           {selectedSongId && (
             <FormCreateSong
+              key={selectedSongId}
               categoryId={categoryId}
               categoryTitle={categoryTitle}
-              onSubmit={handleUpdateSong}
+              onSubmit={async values => {
+                await handleUpdateSong(values);
+              }}
               isLoading={isUpdating}
               isEditing={true}
               initialValues={
