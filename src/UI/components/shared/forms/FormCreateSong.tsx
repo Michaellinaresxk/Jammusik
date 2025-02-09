@@ -334,24 +334,30 @@ const styles = StyleSheet.create({
     position: 'relative',
     marginTop: 20,
   },
+
   customCategoryInput: {
     backgroundColor: globalColors.light,
     borderWidth: 1,
     borderColor: globalColors.primaryAlt,
     borderRadius: 8,
-    padding: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 15,
     fontSize: 16,
     paddingRight: 40,
   },
+
   activeInput: {
     borderColor: globalColors.primary,
     borderWidth: 1.5,
   },
+
   inputIcon: {
     position: 'absolute',
     right: 10,
     top: '50%',
     transform: [{translateY: -12}],
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   suggestedSection: {
     marginTop: 15,

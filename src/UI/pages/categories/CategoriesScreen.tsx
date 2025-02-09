@@ -10,13 +10,15 @@ import {
   Platform,
   Modal,
   RefreshControl,
+  Animated,
+  Easing,
 } from 'react-native';
 import {globalColors, globalStyles} from '../../theme/Theme';
 import {images} from '../../../assets/img/Images';
 import {CategoryCard} from '../../components/shared/cards/CategoryCard';
 import {type NavigationProp, useNavigation} from '@react-navigation/native';
 import {useCategoryService} from '../../../context/CategoryServiceContext';
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {CategoryView} from '../../../views/CategoryView';
 import {PrimaryButton} from '../../components/shared/PrimaryButton';
 import {FormCreateCategory} from '../../components/shared/forms/FormCreateCategory';
@@ -45,6 +47,32 @@ export const CategoriesScreen = () => {
     id: string;
     title: string;
   } | null>(null);
+
+  const musicIconScale = useRef(new Animated.Value(1)).current;
+
+  // Animation for the music icon
+  useEffect(() => {
+    const pulseAnimation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(musicIconScale, {
+          toValue: 1.2,
+          duration: 800,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(musicIconScale, {
+          toValue: 1,
+          duration: 800,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ]),
+    );
+
+    pulseAnimation.start();
+
+    return () => pulseAnimation.stop();
+  }, []);
 
   const loadCategories = useCallback(async () => {
     const user = auth.currentUser;
@@ -195,11 +223,13 @@ export const CategoriesScreen = () => {
               }}>
               <View style={styles.containerHeader}>
                 <View style={styles.titleContent}>
-                  <Icon
-                    name="musical-notes-sharp"
-                    color={globalColors.primary}
-                    size={30}
-                  />
+                  <Animated.View style={{transform: [{scale: musicIconScale}]}}>
+                    <Icon
+                      name="musical-notes-sharp"
+                      color={globalColors.primary}
+                      size={30}
+                    />
+                  </Animated.View>
                   <Text style={styles.title}>Categories</Text>
                 </View>
                 <TouchableOpacity

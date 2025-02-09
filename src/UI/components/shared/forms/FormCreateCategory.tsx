@@ -11,6 +11,7 @@ import {
 import {globalColors, globalFormStyles} from '../../../theme/Theme';
 import {PrimaryButton} from '../PrimaryButton';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {SliderQuotes} from '../SliderQuotes';
 
 export const FormCreateCategory = ({
   initialTitle = '',
@@ -138,6 +139,7 @@ export const FormCreateCategory = ({
           disabled={isLoading}
         />
       </View>
+      <SliderQuotes />
     </View>
   );
 };
