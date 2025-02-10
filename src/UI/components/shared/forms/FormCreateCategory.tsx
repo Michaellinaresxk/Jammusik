@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   Text,
@@ -14,7 +14,8 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {SliderQuotes} from '../SliderQuotes';
 
 export const FormCreateCategory = ({
-  initialTitle = '',
+  title: initialTitle = '',
+  setTitle: setParentTitle,
   onCreateCategory,
   isLoading,
   isEditing = false,
@@ -24,13 +25,29 @@ export const FormCreateCategory = ({
   const [isFocused, setIsFocused] = useState(false);
   const [labelAnim] = useState(new Animated.Value(title ? 1 : 0));
 
-  const animateLabel = toValue => {
-    Animated.timing(labelAnim, {
-      toValue,
-      duration: 200,
-      useNativeDriver: false,
-    }).start();
+  const handleTitleChange = text => {
+    setTitle(text);
+    setParentTitle(text);
+    setError('');
   };
+
+  useEffect(() => {
+    if (initialTitle) {
+      setTitle(initialTitle);
+      animateLabel(1); // Animate the label if there is an initial value
+    }
+  }, [initialTitle]);
+
+  const animateLabel = useCallback(
+    toValue => {
+      Animated.timing(labelAnim, {
+        toValue,
+        duration: 200,
+        useNativeDriver: false,
+      }).start();
+    },
+    [labelAnim],
+  );
 
   const handleFocus = () => {
     setIsFocused(true);
@@ -81,6 +98,13 @@ export const FormCreateCategory = ({
     }),
   };
 
+  useEffect(() => {
+    // Manages the initial animation
+    if (title) {
+      animateLabel(1);
+    }
+  }, []); // Only executed when the component is mounted
+
   return (
     <View style={globalFormStyles.containerForm}>
       <View style={globalFormStyles.form}>
@@ -99,9 +123,11 @@ export const FormCreateCategory = ({
             onFocus={handleFocus}
             onBlur={handleBlur}
             onChangeText={text => {
+              handleTitleChange;
               setTitle(text);
               setError('');
             }}
+            placeholder=""
           />
           {title.length > 0 && (
             <Icon

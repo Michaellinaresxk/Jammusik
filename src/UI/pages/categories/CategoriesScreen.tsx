@@ -212,7 +212,7 @@ export const CategoriesScreen = () => {
             bounces={true} // Bounce-back effect at the limits
             contentContainerStyle={{
               flexGrow: 1,
-              paddingBottom: 150, // Unifica el padding bottom
+              paddingBottom: 150,
             }}
             overScrollMode="never" // Avoid the over-scroll effect in Android.
           >
@@ -289,6 +289,7 @@ export const CategoriesScreen = () => {
                     onPress={() => {
                       closeModal();
                       setEditingCategory(null);
+                      setTitle('');
                     }}
                   />
                 </View>
@@ -303,6 +304,7 @@ export const CategoriesScreen = () => {
                   isLoading={isLoading}
                   isEditing={!!editingCategory}
                   categoryId={editingCategory?.id}
+                  initialValue={editingCategory?.title}
                 />
               </Modal>
             </View>

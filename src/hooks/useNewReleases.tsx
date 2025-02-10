@@ -1,4 +1,4 @@
-import {useEffect, useState, useCallback} from 'react';
+import {useState, useCallback, useEffect} from 'react';
 import spotifyConfig from '../infra/api/spotifyConfig';
 import {NewRelease} from '../types/tracksTypes';
 
@@ -12,28 +12,31 @@ export const useNewReleases = () => {
       setIsLoading(true);
       setError(null);
 
-      console.log('🚀 Iniciando fetch de new releases...');
+      console.log('🚀 Fetching new releases...');
       const data = await spotifyConfig.getNewReleases();
 
       if (!Array.isArray(data)) {
-        throw new Error('La respuesta no es un array');
+        throw new Error('Invalid response format: expected an array');
       }
 
-      // Log específico para los nuevos campos
-      console.log('📦 Primer item con detalles:', {
-        name: data[0]?.name,
-        duration: data[0]?.duration_ms,
-        popularity: data[0]?.popularity,
+      // Basic data validation
+      const validatedData = data.filter(release => {
+        const isValid = release.id && release.name && release.external_url;
+        if (!isValid) {
+          console.warn('⚠️ Invalid release data:', release);
+        }
+        return isValid;
       });
 
-      setNewReleases(data);
-    } catch (err: any) {
-      console.error('❌ Error en useNewReleases:', {
+      setNewReleases(validatedData);
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to fetch new releases';
+      console.error('❌ Error in useNewReleases:', {
         error: err,
-        message: err?.message,
-        stack: err?.stack,
+        message: errorMessage,
       });
-      setError(err?.message || 'Failed to fetch new releases');
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
