@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   KeyboardAvoidingView,
   Modal,
@@ -13,6 +13,8 @@ import {
   Pressable,
   ActivityIndicator,
   Image,
+  Animated,
+  Easing,
 } from 'react-native';
 import {GlobalHeader} from '../../components/shared/GlobalHeader';
 import {FloatingActionButton} from '../../components/shared/FloatingActionButton';
@@ -31,6 +33,7 @@ import {useGetCategoryTitle} from '../../../hooks/useGetCategoryTitle';
 import {LyricsView} from '../../components/shared/LyricsView';
 import {useTrackInfo} from '../../../hooks/useTrackInfo';
 import {useTabFinder} from '../../../hooks/useTabFinder';
+import {ChordModal} from '../../components/shared/modals/ChordModal';
 // import {ChordGenerator} from '../../components/shared/ChordGenerator';
 export const SongSelectedScreen = () => {
   const params = useRoute().params;
@@ -53,10 +56,38 @@ export const SongSelectedScreen = () => {
   const [isLyricsModalVisible, setIsLyricsModalVisible] = useState(false);
   const [hasLyrics, setHasLyrics] = useState(false);
 
+  const [isChordModalVisible, setIsChordModalVisible] = useState(false);
+
   const {findTab, loading: tabLoading} = useTabFinder();
   const [tabUrls, setTabUrls] = useState(null);
 
   const [loading, setLoading] = useState(false);
+
+  const musicIconScale = useRef(new Animated.Value(1)).current;
+
+  // Animation for the music icon
+  useEffect(() => {
+    const pulseAnimation = Animated.loop(
+      Animated.sequence([
+        Animated.timing(musicIconScale, {
+          toValue: 1.2,
+          duration: 800,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(musicIconScale, {
+          toValue: 1,
+          duration: 800,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ]),
+    );
+
+    pulseAnimation.start();
+
+    return () => pulseAnimation.stop();
+  }, []);
 
   const handleFindTabs = async () => {
     try {
@@ -355,10 +386,11 @@ export const SongSelectedScreen = () => {
                 )}
                 <View style={styles.trackInfoTitleWrapper}>
                   <Text style={styles.title}>Album:</Text>
-                  <Text style={styles.trackInfoText}>
+                  <Text style={[styles.trackInfoText, {flexWrap: 'wrap'}]}>
                     {trackInfo.album.name}
                   </Text>
                 </View>
+
                 <View style={styles.trackInfoTitleWrapper}>
                   <Text style={styles.title}>Release Date:</Text>
                   <Text style={styles.trackInfoText}>
@@ -422,11 +454,14 @@ export const SongSelectedScreen = () => {
                         styles.spotifyButton,
                         pressed && styles.spotifyButtonPressed,
                       ]}>
-                      <PrimaryIcon
-                        name="play-circle-sharp"
-                        size={30}
-                        color={globalColors.primary}
-                      />
+                      <Animated.View
+                        style={{transform: [{scale: musicIconScale}]}}>
+                        <PrimaryIcon
+                          name="play-circle-sharp"
+                          color={globalColors.primary}
+                          size={30}
+                        />
+                      </Animated.View>
                       <Text style={styles.spotifyButtonText}>
                         Open in Spotify
                       </Text>
@@ -444,7 +479,7 @@ export const SongSelectedScreen = () => {
             </View>
           )}
 
-          {chordList && chordList.length > 0 && (
+          {/* {chordList && chordList.length > 0 && (
             <View style={styles.chordLayout}>
               <Text style={styles.title}>Your Custom Chords:</Text>
               <FlatList
@@ -454,7 +489,7 @@ export const SongSelectedScreen = () => {
                 horizontal
               />
             </View>
-          )}
+          )} */}
 
           <View style={styles.toolsSection}>
             <Text style={styles.title}>Tools</Text>
@@ -497,6 +532,23 @@ export const SongSelectedScreen = () => {
                 <Text style={styles.toolSubText}>
                   Search online tab sources
                 </Text>
+              </Pressable>
+
+              <Pressable
+                style={({pressed}) => [
+                  styles.toolCard,
+                  pressed && styles.toolCardPressed,
+                ]}
+                onPress={() => setIsChordModalVisible(true)}>
+                <View style={styles.toolIconContainer}>
+                  <PrimaryIcon
+                    name="musical-notes"
+                    size={24}
+                    color={globalColors.primaryDark}
+                  />
+                </View>
+                <Text style={styles.toolText}>View Chords</Text>
+                <Text style={styles.toolSubText}>See chord progression</Text>
               </Pressable>
 
               {tabLink && (
@@ -576,6 +628,15 @@ export const SongSelectedScreen = () => {
           onLyricsLoaded={success => setHasLyrics(success)}
         />
       </Modal>
+
+      <ChordModal
+        visible={isChordModalVisible}
+        onClose={() => setIsChordModalVisible(false)}
+        chordList={chordList}
+        songKey={songKey}
+        title={params.title}
+        artist={params.artist}
+      />
     </>
   );
 };
@@ -590,15 +651,23 @@ const styles = StyleSheet.create({
   },
   trackInfoTitleWrapper: {
     flexDirection: 'row',
-    marginBottom: 10,
+    marginBottom: 5,
+    flexWrap: 'wrap',
+    alignItems: 'center',
   },
-  titleContainer: {},
   title: {
     fontSize: 16,
     marginRight: 10,
     fontWeight: 'bold',
     color: globalColors.primaryDark,
   },
+  trackInfoText: {
+    fontSize: 16,
+    color: globalColors.primary,
+    flex: 1,
+    flexShrink: 1,
+  },
+  titleContainer: {},
   titleContent: {
     flexDirection: 'row',
     gap: 5,
@@ -654,10 +723,7 @@ const styles = StyleSheet.create({
     gap: 10,
     padding: 30,
   },
-  trackInfoText: {
-    fontSize: 16,
-    color: globalColors.primary,
-  },
+
   loadingContainer: {
     padding: 30,
     alignItems: 'center',
@@ -703,23 +769,26 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '500',
   },
+
   toolsSection: {
     marginVertical: 20,
-    padding: 30,
+    padding: 20,
   },
   toolsGrid: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 5,
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
     marginTop: 15,
+    gap: 10,
   },
   toolCard: {
     width: 160,
     backgroundColor:
       Platform.OS === 'ios' ? 'rgba(255, 255, 255, 0.95)' : globalColors.light,
-    padding: 20,
-    borderRadius: 16,
+    padding: 15,
+    borderRadius: 10,
     alignItems: 'center',
+    marginBottom: 10,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -739,7 +808,7 @@ const styles = StyleSheet.create({
   toolIconContainer: {
     width: 50,
     height: 50,
-    borderRadius: 15,
+    borderRadius: 10,
     backgroundColor: `${globalColors.primaryAlt}80`,
     justifyContent: 'center',
     alignItems: 'center',
@@ -757,6 +826,7 @@ const styles = StyleSheet.create({
     color: `${globalColors.terceary}90`,
     marginTop: 4,
     textAlign: 'center',
+    marginBottom: 5,
   },
 
   chordGenerator: {

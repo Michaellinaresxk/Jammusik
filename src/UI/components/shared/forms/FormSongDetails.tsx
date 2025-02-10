@@ -67,21 +67,29 @@ export const FormSongDetails = ({
     'G7',
   ];
 
+  const MAX_CHORDS = 24;
+
   const handleAddChord = chord => {
     const trimmedChord = chord.trim();
-    if (!trimmedChord) return;
-
-    if (chordList.length >= 12) {
-      Alert.alert('Maximum Chords', 'You can only add up to 12 chords');
+    if (!trimmedChord) {
+      return;
+    }
+    if (chordList.length >= MAX_CHORDS) {
+      Alert.alert(
+        'Chord Limit',
+        `        You have reached the maximum limit of ${MAX_CHORDS} chords in the progression,`,
+        [
+          {
+            text: 'OK',
+            onPress: () => console.log('Chord limit reached'),
+          },
+        ],
+      );
       return;
     }
 
-    if (chordList.includes(trimmedChord)) {
-      Alert.alert('Duplicate Chord', 'This chord is already in the list');
-      return;
-    }
-
-    setChordList([...chordList, trimmedChord]);
+    // Add the chord to the list
+    setChordList(prevChords => [...prevChords, trimmedChord]);
     setChordInput('');
   };
 
@@ -118,7 +126,7 @@ export const FormSongDetails = ({
       bounces={true} // Bounce-back effect at the limits
       contentContainerStyle={{
         flexGrow: 1,
-        paddingBottom: 150, // Unifica el padding bottom
+        paddingBottom: 150,
       }}
       overScrollMode="never" // Avoid the over-scroll effect in Android.
     >
@@ -152,9 +160,9 @@ export const FormSongDetails = ({
             showsHorizontalScrollIndicator={false}
             style={styles.commonChordsScroll}>
             <View style={styles.commonChordsContainer}>
-              {commonChords.map(chord => (
+              {commonChords.map((chord, index) => (
                 <TouchableOpacity
-                  key={chord}
+                  key={`${chord}-${index}`}
                   style={styles.commonChordButton}
                   onPress={() => handleAddChord(chord)}>
                   <Text style={styles.commonChordText}>{chord}</Text>
@@ -237,24 +245,25 @@ const styles = StyleSheet.create({
   inputSection: {
     flexDirection: 'row',
     marginBottom: 16,
-    alignItems: 'center',
+    alignItems: 'stretch',
+    height: 48,
   },
   input: {
     flex: 1,
+    height: '100%',
     borderWidth: 1,
     borderColor: globalColors.primaryAlt,
     borderRadius: 8,
-    padding: 12,
-    marginBottom: 16,
+    paddingHorizontal: 12,
+    marginRight: 8,
+    fontSize: 16,
     color: globalColors.primaryDark,
-    height: 45,
   },
   addButton: {
+    width: 48,
+    height: '100%',
     backgroundColor: globalColors.primary,
-    width: 45,
-    height: 45,
     borderRadius: 8,
-    marginLeft: 8,
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -117,7 +117,7 @@ export const RegisterScreen = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: 'black', // Previene flashes blancos
+    backgroundColor: 'black',
   },
   mainContainer: {
     flex: 1,
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)', // Ajusta la opacidad según necesites
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   container: {
     flex: 1,
