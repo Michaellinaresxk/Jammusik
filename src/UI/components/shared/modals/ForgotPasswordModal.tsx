@@ -48,7 +48,11 @@ export const ForgotPasswordModal = ({
     }
   };
   return (
-    <Modal visible={visible} animationType="fade" transparent={true}>
+    <Modal
+      visible={visible}
+      animationType="fade"
+      presentationStyle="pageSheet"
+      transparent={true}>
       <TouchableOpacity
         style={styles.overlay}
         activeOpacity={1}

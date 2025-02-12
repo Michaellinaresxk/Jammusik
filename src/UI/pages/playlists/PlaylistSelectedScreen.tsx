@@ -7,7 +7,6 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   Platform,
-  Text,
   TouchableOpacity,
   RefreshControl,
   useWindowDimensions,
@@ -147,22 +146,22 @@ export const PlaylistSelectedScreen = () => {
       setIsLoading(false);
     }
   };
-  const handleResetSongs = async () => {
-    try {
-      setIsLoading(true);
-      await resetAllSongs(playlistId);
-      setIsDone(false);
-      setTriggerUpdate(true);
-      setIsLoading(false);
-    } catch (error) {
-      console.error('Fallo al resetear las canciones:', error);
-      Alert.alert(
-        'Error',
-        'Fallo al resetear las canciones. Por favor intente de nuevo.',
-      );
-      setIsLoading(false);
-    }
-  };
+  // const handleResetSongs = async () => {
+  //   try {
+  //     setIsLoading(true);
+  //     await resetAllSongs(playlistId);
+  //     setIsDone(false);
+  //     setTriggerUpdate(true);
+  //     setIsLoading(false);
+  //   } catch (error) {
+  //     console.error('Fallo al resetear las canciones:', error);
+  //     Alert.alert(
+  //       'Error',
+  //       'Fallo al resetear las canciones. Por favor intente de nuevo.',
+  //     );
+  //     setIsLoading(false);
+  //   }
+  // };
 
   const handleShare = async () => {
     Alert.alert('Error', 'Functionality comming soon...');
@@ -222,7 +221,7 @@ export const PlaylistSelectedScreen = () => {
           bounces={true} // Bounce-back effect at the limits
           contentContainerStyle={{
             flexGrow: 1,
-            paddingBottom: 150, // Unifica el padding bottom
+            paddingBottom: 150,
           }}
           overScrollMode="never" // Avoid the over-scroll effect in Android.
         >

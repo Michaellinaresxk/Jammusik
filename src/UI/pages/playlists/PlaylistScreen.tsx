@@ -31,6 +31,7 @@ import {useUpdatePlaylist} from '../../../hooks/useUpdatePlaylist';
 import {RootStackParamsList} from '../../routes/AppNavigator';
 import {SharePlaylistModal} from '../../components/shared/modals/SharedPlaylistModal';
 import {AnimatedSharedButton} from '../../components/shared/AnimatedSharedButton';
+import {useFocusEffect} from '@react-navigation/native';
 
 export const PlaylistScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
@@ -106,6 +107,7 @@ export const PlaylistScreen = () => {
     const user = auth.currentUser;
     const userId = user?.uid as string;
     try {
+      setIsLoading(true);
       const fetchedPlaylists = await playlistService.getPlaylists(userId);
       setPlaylists(fetchedPlaylists);
     } catch (error) {
@@ -127,6 +129,12 @@ export const PlaylistScreen = () => {
       setTriggerUpdate(false);
     }
   }, [triggerUpdate, loadPlaylists]);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadPlaylists();
+    }, [loadPlaylists]),
+  );
 
   const closeModal = () => {
     setIsVisible(!isVisible);
@@ -221,7 +229,7 @@ export const PlaylistScreen = () => {
           bounces={true} // Bounce-back effect at the limits
           contentContainerStyle={{
             flexGrow: 1,
-            paddingBottom: 150, // Unifica el padding bottom
+            paddingBottom: 150,
           }}
           overScrollMode="never" // Avoid the over-scroll effect in Android.
         >
@@ -295,7 +303,7 @@ export const PlaylistScreen = () => {
           <Modal
             visible={isVisible}
             animationType="slide"
-            presentationStyle="formSheet">
+            presentationStyle="pageSheet">
             <View style={styles.modalBtnContainer}>
               <Text style={styles.modalFormHeaderTitle}>
                 {editingPlaylist ? 'Edit Playlist' : 'Add Playlist'}

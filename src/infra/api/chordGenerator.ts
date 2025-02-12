@@ -5,7 +5,6 @@ export const chordGeneratorService = {
     try {
       console.log('Requesting chords for:', {title, artist});
       const response = await fetch(`${API_BASE_URL}/api/chords/generate`, {
-        // Nota el /api/chords/generate
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

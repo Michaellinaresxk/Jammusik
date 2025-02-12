@@ -60,4 +60,22 @@ export class SongDetailsResource implements SongDetailsRepository {
   async getSongKeys(): Promise<{id: string; key: string; order: number}[]> {
     return this.songDetailsCaller.getSongKeys();
   }
+
+  async updateSongDetails(
+    userId: string,
+    songId: string,
+    updateData: Partial<{
+      key: string;
+      chordList: string[];
+      notes: string;
+      lyricLink: string;
+      tabLink: string;
+    }>,
+  ): Promise<SongDetails> {
+    await this.songDetailsCaller.updateSongDetails(userId, songId, updateData);
+
+    // After updating, fetch the latest data
+    const updatedDetails = await this.getCurrentSongInfo(userId, songId);
+    return updatedDetails;
+  }
 }

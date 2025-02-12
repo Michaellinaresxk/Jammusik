@@ -2,12 +2,15 @@ import {Platform} from 'react-native';
 import {API_BASE_URL} from '../../constants/spotifyBaseUrl';
 
 const spotifyConfig = {
-  getNewReleases: async () => {
+  getNewReleases: async (forceRefresh = false) => {
     try {
       console.log('Running on:', Platform.OS);
-      console.log('Fetching from:', `${API_BASE_URL}/browse/new-releases`);
+      const url = forceRefresh
+        ? `${API_BASE_URL}/browse/new-releases?refresh=true`
+        : `${API_BASE_URL}/browse/new-releases`;
+      console.log('Fetching from:', url);
 
-      const response = await fetch(`${API_BASE_URL}/browse/new-releases`);
+      const response = await fetch(url);
 
       if (!response.ok) {
         const errorText = await response.text();

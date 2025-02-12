@@ -2,14 +2,21 @@ import type {SongDetailsResource} from '../../infra/songDetails/SongDetailsResou
 import {SetSongDetailsUseCase} from './SetSongDetailsUseCase';
 import {GetSongDetailsUseCase} from './GetSongDetailsUseCase';
 import {GetSongKeysUseCase} from './GetSongKeysUseCase';
+import {UpdateSongDetailsUseCase} from './UpdateSongDetailsUseCase';
+import {SongDetailsView} from '../../views/SongDetailsView';
+
 export class SongDetailsService {
   private setSongDetailsUseCase: SetSongDetailsUseCase;
   private getSongDetailsUseCase: GetSongDetailsUseCase;
   private getSongKeysUseCase: GetSongKeysUseCase;
+  private updateSongDetailsUseCase: UpdateSongDetailsUseCase;
   constructor(private readonly songDetailsResource: SongDetailsResource) {
     this.setSongDetailsUseCase = new SetSongDetailsUseCase(songDetailsResource);
     this.getSongDetailsUseCase = new GetSongDetailsUseCase(songDetailsResource);
     this.getSongKeysUseCase = new GetSongKeysUseCase(songDetailsResource);
+    this.updateSongDetailsUseCase = new UpdateSongDetailsUseCase(
+      songDetailsResource,
+    );
   }
   async setSongDetails(
     userId: string,
@@ -35,5 +42,22 @@ export class SongDetailsService {
   }
   async getSongDetails(userId: string, songId: string) {
     return await this.getSongDetailsUseCase.execute(userId, songId);
+  }
+  async updateSongDetails(
+    userId: string,
+    songId: string,
+    updateData: Partial<{
+      key: string;
+      chordList: string[];
+      notes: string;
+      lyricLink: string;
+      tabLink: string;
+    }>,
+  ): Promise<SongDetailsView> {
+    return await this.updateSongDetailsUseCase.execute(
+      userId,
+      songId,
+      updateData,
+    );
   }
 }

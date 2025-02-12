@@ -92,6 +92,7 @@ export const TabNavigator = () => {
           fontWeight: '400',
           marginTop: 2, // Reduced space between icon and label
         },
+
         tabBarItemStyle: {
           height: Platform.OS === 'ios' ? 50 : 60,
           paddingTop: 8, // Reduced top padding to move icons up
