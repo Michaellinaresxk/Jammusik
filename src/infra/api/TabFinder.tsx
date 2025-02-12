@@ -28,7 +28,7 @@ export class TabFinderService {
   static async findBestTabUrl(artist, title) {
     const searchUrls = this.getSearchUrls(artist, title);
 
-    // Retornamos el URL de Ultimate Guitar por defecto ya que suele tener la mejor colección
+    // Return the default Ultimate Guitar URL as it usually has the best collection.
     return searchUrls.ultimateGuitar;
   }
 }

@@ -1,6 +1,14 @@
 import {getDocs, query, where} from 'firebase/firestore';
 import type {ApiSongDetails} from './ApiSongDetails';
-import {getFirestore, addDoc, collection, orderBy} from '@firebase/firestore';
+import {
+  getFirestore,
+  addDoc,
+  collection,
+  orderBy,
+  updateDoc,
+  doc,
+  serverTimestamp,
+} from '@firebase/firestore';
 
 export class SongDetailsCaller {
   private db = getFirestore();
@@ -92,6 +100,34 @@ export class SongDetailsCaller {
       }));
     } catch (error) {
       console.error('Error fetching song keys:', error);
+      throw error;
+    }
+  }
+
+  async updateSongDetails(
+    userId: string,
+    songId: string,
+    updateData: Partial<{
+      key: string;
+      chordList: string[];
+      notes: string;
+      lyricLink: string;
+      tabLink: string;
+    }>,
+  ): Promise<void> {
+    if (!userId || !songId) {
+      throw new Error('userId and songId are required!');
+    }
+
+    try {
+      const songDetailsRef = doc(this.db, 'songDetails', `${userId}_${songId}`);
+
+      await updateDoc(songDetailsRef, {
+        ...updateData,
+        updatedAt: serverTimestamp(),
+      });
+    } catch (error) {
+      console.error('Error updating song details:', error);
       throw error;
     }
   }

@@ -109,7 +109,7 @@ export const ChordModal: React.FC<ChordModalProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: globalColors.light,
+    // backgroundColor: globalColors.light,
   },
   header: {
     flexDirection: 'row',
@@ -175,17 +175,17 @@ const styles = StyleSheet.create({
     padding: 16,
     minWidth: 80,
     alignItems: 'center',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: {width: 0, height: 2},
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 3,
-      },
-    }),
+    // ...Platform.select({
+    //   ios: {
+    //     shadowColor: '#000',
+    //     shadowOffset: {width: 0, height: 2},
+    //     shadowOpacity: 0.1,
+    //     shadowRadius: 4,
+    //   },
+    //   android: {
+    //     elevation: 3,
+    //   },
+    // }),
   },
   chordPressed: {
     opacity: 0.8,

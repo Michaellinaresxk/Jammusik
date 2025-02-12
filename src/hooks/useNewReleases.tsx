@@ -7,19 +7,20 @@ export const useNewReleases = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchNewReleases = useCallback(async () => {
+  const fetchNewReleases = useCallback(async (forceRefresh = false) => {
     try {
       setIsLoading(true);
       setError(null);
 
-      console.log('🚀 Fetching new releases...');
-      const data = await spotifyConfig.getNewReleases();
+      console.log(
+        `🚀 Fetching new releases... ${forceRefresh ? '(force refresh)' : ''}`,
+      );
+      const data = await spotifyConfig.getNewReleases(forceRefresh);
 
       if (!Array.isArray(data)) {
         throw new Error('Invalid response format: expected an array');
       }
 
-      // Basic data validation
       const validatedData = data.filter(release => {
         const isValid = release.id && release.name && release.external_url;
         if (!isValid) {
@@ -46,10 +47,16 @@ export const useNewReleases = () => {
     fetchNewReleases();
   }, [fetchNewReleases]);
 
+  // Función específica para forzar actualización
+  const forceRefresh = useCallback(() => {
+    return fetchNewReleases(true);
+  }, [fetchNewReleases]);
+
   return {
     newReleases,
     isLoading,
     error,
     refreshNewReleases: fetchNewReleases,
+    forceRefresh, // Nueva función expuesta
   };
 };

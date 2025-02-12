@@ -34,6 +34,7 @@ import {LyricsView} from '../../components/shared/LyricsView';
 import {useTrackInfo} from '../../../hooks/useTrackInfo';
 import {useTabFinder} from '../../../hooks/useTabFinder';
 import {ChordModal} from '../../components/shared/modals/ChordModal';
+import {useUpdateSongDetails} from '../../../hooks/useUpdateSongDetails';
 // import {ChordGenerator} from '../../components/shared/ChordGenerator';
 export const SongSelectedScreen = () => {
   const params = useRoute().params;
@@ -47,7 +48,8 @@ export const SongSelectedScreen = () => {
   const [triggerUpdate, setTriggerUpdate] = useState(false);
   const [hasSavedData, setHasSavedData] = useState(false);
   const [category, setCategory] = useState('');
-
+  const {updateSongDetails, isLoading: isUpdating} = useUpdateSongDetails();
+  const [editingSongDetails, setEditingSongDetails] = useState(null);
   const userId = auth.currentUser ? auth.currentUser.uid : '';
   const songId = params.songId;
   const categoryId = params.categoryId;
@@ -62,6 +64,12 @@ export const SongSelectedScreen = () => {
   const [tabUrls, setTabUrls] = useState(null);
 
   const [loading, setLoading] = useState(false);
+  const {
+    trackInfo,
+    loading: loadingTrackInfo,
+    error: trackError,
+    fetchTrackInfo,
+  } = useTrackInfo();
 
   const musicIconScale = useRef(new Animated.Value(1)).current;
 
@@ -147,13 +155,6 @@ export const SongSelectedScreen = () => {
   //   });
   // };
 
-  const {
-    trackInfo,
-    loading: loadingTrackInfo,
-    error: trackError,
-    fetchTrackInfo,
-  } = useTrackInfo();
-
   // Fetch track info when component mounts
   useEffect(() => {
     const loadTrackInfo = async () => {
@@ -191,7 +192,7 @@ export const SongSelectedScreen = () => {
       text1: 'Updated song Info successfully!',
     });
   };
-  const onCreateSongDetails = async (details: {
+  const handleCreateSongDetails = async (details: {
     songKey: string;
     chordList: string[];
     notes: string;
@@ -282,12 +283,6 @@ export const SongSelectedScreen = () => {
     }
   }, [categoryId]);
 
-  const renderChordItem = ({item}: {item: string}) => (
-    <View style={styles.chordConntent}>
-      <Text style={styles.chord}>{item}</Text>
-    </View>
-  );
-
   const handleOpenLink = useCallback(async url => {
     if (!url) {
       console.log('No URL provided');
@@ -308,6 +303,40 @@ export const SongSelectedScreen = () => {
       Alert.alert('Error', 'Failed to open the link');
     }
   }, []);
+
+  const handleUpdateSongDetails = async (details: {
+    songKey: string;
+    chordList: string[];
+    notes: string;
+    lyricLink: string;
+    tabLink: string;
+  }) => {
+    if (editingSongDetails) {
+      try {
+        await updateSongDetails(
+          userId,
+          songId,
+          {
+            key: details.songKey,
+            chordList: details.chordList,
+            notes: details.notes,
+            lyricLink: details.lyricLink,
+            tabLink: details.tabLink,
+          },
+          setSongDetails,
+        );
+
+        setEditingSongDetails(null);
+        closeModal();
+      } catch (error) {
+        console.error('Error updating song details:', error);
+        Alert.alert(
+          'Error',
+          'Failed to update song details. Please try again.',
+        );
+      }
+    }
+  };
 
   const {isRefreshing, refresh, top} = usePullRefresh(loadSongDetails);
 
@@ -334,7 +363,7 @@ export const SongSelectedScreen = () => {
           bounces={true} // Bounce-back effect at the limits
           contentContainerStyle={{
             flexGrow: 1,
-            paddingBottom: 150, // Unifica el padding bottom
+            paddingBottom: 150,
           }}
           overScrollMode="never" // Avoid the over-scroll effect in Android.
         >
@@ -587,31 +616,41 @@ export const SongSelectedScreen = () => {
         visible={isVisible}
         animationType="slide"
         presentationStyle="formSheet"
-        style={{flex: 1}}>
-        <ScrollView showsVerticalScrollIndicator={false} horizontal={false}>
-          <View style={styles.modalBtnContainer}>
-            <Text style={styles.modalFormHeaderTitle}>Add Song Details</Text>
-            <PrimaryButton
-              label="Close"
-              btnFontSize={20}
-              colorText={globalColors.light}
-              onPress={() => closeModal()}
-            />
-          </View>
-          <FormSongDetails
-            songKey={songKey}
-            setSongKey={setSongKey}
-            chordList={chordList}
-            setChordList={setChordList}
-            notes={notes}
-            setNotes={setNotes}
-            lyricLink={lyricLink}
-            setLyricLink={setLyricLink}
-            tabLink={tabLink}
-            setTabLink={setTabLink}
-            onCreateSongDetails={onCreateSongDetails}
+        onDismiss={() => {
+          loadSongDetails();
+        }}>
+        <View style={styles.modalBtnContainer}>
+          <Text style={styles.modalFormHeaderTitle}>
+            {editingSongDetails ? 'Edit Song Details' : 'Add Song Details'}
+          </Text>
+          <PrimaryButton
+            label="Close"
+            btnFontSize={20}
+            colorText={globalColors.light}
+            onPress={() => {
+              closeModal();
+              setEditingSongDetails(null);
+            }}
           />
-        </ScrollView>
+        </View>
+        <FormSongDetails
+          songKey={songKey}
+          setSongKey={setSongKey}
+          chordList={chordList}
+          setChordList={setChordList}
+          notes={notes}
+          setNotes={setNotes}
+          lyricLink={lyricLink}
+          setLyricLink={setLyricLink}
+          tabLink={tabLink}
+          setTabLink={setTabLink}
+          onCreateSongDetails={
+            editingSongDetails
+              ? handleUpdateSongDetails
+              : handleCreateSongDetails
+          }
+          isEditing={!!editingSongDetails}
+        />
       </Modal>
       {/* Modal of lyrics */}
       <Modal

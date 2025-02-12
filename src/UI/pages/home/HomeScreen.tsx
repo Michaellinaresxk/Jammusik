@@ -295,7 +295,7 @@ export const HomeScreen = () => {
           <Modal
             visible={isSongModalVisible}
             animationType="slide"
-            presentationStyle="formSheet">
+            presentationStyle="pageSheet">
             <ScrollView horizontal={false} style={{flex: 1}}>
               <View style={styles.modalBtnContainer}>
                 <Text style={styles.modalFormHeaderTitle}>Create New Song</Text>

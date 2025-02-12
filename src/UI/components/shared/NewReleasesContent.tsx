@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   Image,
   Linking,
+  RefreshControl,
 } from 'react-native';
 import {PrimaryIcon} from './PrimaryIcon';
 import {globalColors} from '../../theme/Theme';
@@ -18,12 +19,14 @@ interface NewReleasesProps {
   newReleases: NewRelease[];
   isLoading: boolean;
   error: string | null;
+  onRefresh?: () => void;
 }
 
 export const NewReleasesContent: React.FC<NewReleasesProps> = ({
   newReleases,
   isLoading,
   error,
+  onRefresh,
 }) => {
   const openInSpotify = async (release: NewRelease) => {
     Alert.alert(
@@ -74,7 +77,17 @@ export const NewReleasesContent: React.FC<NewReleasesProps> = ({
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          style={styles.horizontalScroll}>
+          style={styles.horizontalScroll}
+          refreshControl={
+            onRefresh ? (
+              <RefreshControl
+                refreshing={isLoading}
+                onRefresh={onRefresh}
+                colors={[globalColors.primary]}
+                tintColor={globalColors.primary}
+              />
+            ) : undefined
+          }>
           {newReleases.map(release => (
             <TouchableOpacity
               key={release.id}

@@ -38,6 +38,7 @@ import type {SongData} from '../../../types/songTypes';
 import {useSongDetailsService} from '../../../context/SongDetailsServiceContext';
 import {SongFilter} from '../../components/shared/SongFilter';
 import {TabNavigatorParamsList} from '../../routes/TabNavigator';
+import {useSongUpdates} from '../../../hooks/useUpdateSong';
 
 interface ExtendedSongView extends SongView {
   songKey?: string;
@@ -69,6 +70,7 @@ export const CategorySelectedScreen = () => {
     useState(false);
 
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [selectedSong, setSelectedSong] = useState<SongView | null>(null);
   const [selectedSongId, setSelectedSongId] = useState<string | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
 
@@ -158,41 +160,31 @@ export const CategorySelectedScreen = () => {
   };
 
   const loadSongList = useCallback(async () => {
+    if (!auth.currentUser?.uid) {
+      console.error('No user ID found');
+      return;
+    }
+
     setIsLoading(true);
     try {
-      // Verificar userId al inicio
-      const currentUser = auth.currentUser;
-      if (!currentUser?.uid) {
-        console.error('No user ID found');
-        return;
-      }
-      const userId = currentUser.uid;
+      const userId = auth.currentUser.uid;
 
-      // Get songs by category
-      let fetchedSongs;
-      if (isLibraryCategory) {
-        fetchedSongs = await categoryService.getAllSongsByUserId(userId);
-      } else {
-        fetchedSongs = await categoryService.getSongListByCategory(
-          userId,
-          categoryId,
-        );
-      }
+      // Obtener canciones según el tipo de categoría
+      const fetchedSongs = isLibraryCategory
+        ? await categoryService.getAllSongsByUserId(userId)
+        : await categoryService.getSongListByCategory(userId, categoryId);
 
       if (!Array.isArray(fetchedSongs)) {
-        console.error('Fetched songs is not an array:', fetchedSongs);
-        return;
+        throw new Error('Invalid response format');
       }
 
-      // Get the details for each song with mejor manejo de errores
+      // Obtener detalles de cada canción
       const songsWithDetails = await Promise.all(
         fetchedSongs.map(async song => {
           try {
             const [isDone, songDetails] = await Promise.all([
-              getIsDone(song.id).catch(() => false),
-              songDetailsService
-                .getSongDetails(userId, song.id)
-                .catch(() => null),
+              getIsDone(song.id),
+              songDetailsService.getSongDetails(userId, song.id),
             ]);
 
             return {
@@ -200,8 +192,11 @@ export const CategorySelectedScreen = () => {
               isDone: isDone || false,
               songKey: songDetails?.key || '',
             };
-          } catch (error) {
-            console.error(`Error fetching details for song ${song.id}:`, error);
+          } catch (detailsError) {
+            console.warn(
+              `Error fetching details for song ${song.id}:`,
+              detailsError,
+            );
             return {
               ...song,
               isDone: false,
@@ -211,6 +206,7 @@ export const CategorySelectedScreen = () => {
         }),
       );
 
+      // Actualizar estados
       setLibrarySongs(songsWithDetails);
       setSongList(songsWithDetails);
 
@@ -219,21 +215,28 @@ export const CategorySelectedScreen = () => {
       ];
       setAvailableKeys(uniqueKeys);
     } catch (error) {
-      console.error('Failed to fetch song lists:', error);
-      Alert.alert('Error', 'Failed to load songs. Please try again.');
+      console.error('Error in loadSongList:', error);
+      // Solo mostrar Toast si es un error real de carga
+      if (!songList.length) {
+        Toast.show({
+          type: 'error',
+          text1: 'Failed to load songs',
+          text2: 'Please try again',
+        });
+      }
     } finally {
       setIsLoading(false);
     }
   }, [
-    auth.currentUser,
+    auth.currentUser.uid,
     isLibraryCategory,
     categoryService,
     categoryId,
     songDetailsService,
+    songList.length,
   ]);
 
-  // Make sure that the filterSongs function is well defined.
-  const filterSongs = (
+  const filterSongs = async (
     songs: ExtendedSongView[],
     search: string,
     key: string | null,
@@ -249,6 +252,7 @@ export const CategorySelectedScreen = () => {
     }
 
     if (key) {
+      await loadSongList();
       filtered = filtered.filter(song => song.songKey === key);
     }
 
@@ -259,7 +263,8 @@ export const CategorySelectedScreen = () => {
     filterSongs(librarySongs, text, selectedKey);
   };
 
-  const handleKeyFilter = (key: string | null) => {
+  const handleKeyFilter = async (key: string | null) => {
+    await loadSongList();
     setSelectedKey(key);
     filterSongs(librarySongs, searchText, key);
   };
@@ -267,54 +272,62 @@ export const CategorySelectedScreen = () => {
   const closeModal = () => setIsVisible(false);
   const openModal = () => setIsVisible(true);
 
+  const handleUpdateSuccess = useCallback(() => {
+    setIsEditModalVisible(false);
+    setSelectedSongId(null);
+    loadSongList();
+  }, [loadSongList]);
+
+  // Pasamos el setter al hook
+  const {updateSong} = useSongUpdates({
+    userId,
+    onSuccess: handleUpdateSuccess,
+    setIsUpdating,
+  });
+
   const handleUpdateSong = async (values: {
     title: string;
     artist: string;
     categoryId?: string;
   }) => {
     if (!selectedSongId || !userId) {
-      console.error('No song selected or user not authenticated');
+      closeEditModal();
+      Toast.show({
+        type: 'error',
+        text1: 'Update failed',
+        text2: 'Missing required information',
+        topOffset: 90,
+      });
       return;
     }
 
-    setIsUpdating(true);
-    try {
-      await songService.updateSong(userId, selectedSongId, {
-        title: values.title,
-        artist: values.artist,
-        categoryId: values.categoryId || categoryId,
-      });
-      await loadSongList();
-      Toast.show({
-        type: 'success',
-        text1: 'Song updated successfully',
-        topOffset: 90,
-      });
+    await updateSong(selectedSongId, {
+      title: values.title,
+      artist: values.artist,
+      categoryId: values.categoryId || categoryId,
+    });
+    closeEditModal();
+    updatedSongNotification();
+  };
 
-      setSelectedSongId(null);
-      setIsUpdating(false);
-      setIsEditModalVisible(false);
-    } catch (error) {
-      console.error('Failed to update song:', error);
-      Toast.show({
-        type: 'error',
-        text1: 'Failed to update song',
-        text2: 'Please try again',
-        topOffset: 90,
-      });
-    } finally {
-      setIsUpdating(false);
-    }
+  const updatedSongNotification = () => {
+    Toast.show({
+      type: 'success',
+      text1: 'Song Uptated successfuly',
+      topOffset: 90,
+    });
   };
 
   const closeEditModal = () => {
     setIsEditModalVisible(false);
     setSelectedSongId(null);
+    setSelectedSong(null);
   };
 
   const handleEdit = () => {
     const song = songList.find(s => s.id === selectedSongId);
     if (song) {
+      setSelectedSong(song); // Save the selected song
       setIsOptionsVisible(false);
       setTimeout(() => {
         setIsEditModalVisible(true);
@@ -352,8 +365,12 @@ export const CategorySelectedScreen = () => {
     <TouchableOpacity
       style={styles.editButtonContent}
       onPress={() => {
-        setSelectedSongId(songId);
-        setIsOptionsVisible(true);
+        const song = songList.find(s => s.id === songId);
+        if (song) {
+          setSelectedSongId(songId);
+          setSelectedSong(song);
+          setIsOptionsVisible(true);
+        }
         swipeableRef.current[songId]?.close();
       }}>
       <Icon
@@ -363,11 +380,10 @@ export const CategorySelectedScreen = () => {
       />
     </TouchableOpacity>
   );
-
   // Effects
   useEffect(() => {
     loadSongList();
-  }, [loadSongList]);
+  }, []);
 
   useEffect(() => {
     // If categoryId is "Library", the user can select a category
@@ -463,7 +479,7 @@ export const CategorySelectedScreen = () => {
       <Modal
         visible={isVisible}
         animationType="slide"
-        presentationStyle="formSheet"
+        presentationStyle="pageSheet"
         onRequestClose={closeEditModal}>
         <ScrollView horizontal={false} style={{flex: 1}}>
           <View style={styles.modalBtnContainer}>
@@ -489,11 +505,19 @@ export const CategorySelectedScreen = () => {
       <Modal
         visible={isEditModalVisible}
         animationType="slide"
-        presentationStyle="formSheet"
-        onRequestClose={closeEditModal}>
+        presentationStyle="pageSheet"
+        onRequestClose={closeEditModal}
+        onDismiss={() => {
+          loadSongList();
+        }}>
         <ScrollView horizontal={false} style={{flex: 1}}>
           <View style={styles.modalBtnContainer}>
-            <Text style={styles.modalFormHeaderTitle}>Edit Song</Text>
+            <Text
+              style={styles.modalFormHeaderTitle}
+              numberOfLines={1}
+              ellipsizeMode="tail">
+              Editing: {selectedSong?.title}
+            </Text>
             <PrimaryButton
               label="Close"
               btnFontSize={20}
@@ -502,27 +526,19 @@ export const CategorySelectedScreen = () => {
             />
           </View>
 
-          {selectedSongId && (
+          {selectedSong && (
             <FormCreateSong
-              key={selectedSongId}
+              key={selectedSong.id}
               categoryId={categoryId}
               categoryTitle={categoryTitle}
-              onSubmit={async values => {
-                await handleUpdateSong(values);
-              }}
+              onSubmit={handleUpdateSong}
               isLoading={isUpdating}
               isEditing={true}
-              initialValues={
-                songList.find(s => s.id === selectedSongId)
-                  ? {
-                      title: songList.find(s => s.id === selectedSongId)!.title,
-                      artist: songList.find(s => s.id === selectedSongId)!
-                        .artist,
-                      categoryId: songList.find(s => s.id === selectedSongId)!
-                        .categoryId,
-                    }
-                  : undefined
-              }
+              initialValues={{
+                title: selectedSong.title,
+                artist: selectedSong.artist,
+                categoryId: selectedSong.categoryId,
+              }}
             />
           )}
         </ScrollView>
@@ -606,12 +622,17 @@ const styles = StyleSheet.create({
   modalBtnContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     backgroundColor: globalColors.primary,
-    paddingLeft: 35,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    width: '100%',
   },
   modalFormHeaderTitle: {
     fontSize: 20,
     color: globalColors.light,
+    flex: 1,
+    marginRight: 12,
   },
   brandLogo: {
     marginBottom: 40,

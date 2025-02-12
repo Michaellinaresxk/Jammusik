@@ -36,7 +36,7 @@ export const PlaylistSelectorModal: React.FC<PlaylistSelectorModalProps> = ({
   const auth = getAuth();
   const playlistService = usePlaylistService();
 
-  // Función para ordenar alfabéticamente
+  // Alphabetical sorting
   const sortPlaylists = useCallback(
     (playlistsToSort: PlaylistView[]): PlaylistView[] => {
       return [...playlistsToSort].sort((a, b) =>
@@ -57,7 +57,7 @@ export const PlaylistSelectorModal: React.FC<PlaylistSelectorModalProps> = ({
       const fetchedPlaylists = await playlistService.getPlaylists(
         auth.currentUser.uid,
       );
-      // Ordenar las playlists antes de guardarlas en el estado
+      // Sort playlists before saving them in the status
       const sortedPlaylists = sortPlaylists(fetchedPlaylists);
       setPlaylists(sortedPlaylists);
     } catch (error) {
@@ -109,7 +109,7 @@ export const PlaylistSelectorModal: React.FC<PlaylistSelectorModalProps> = ({
     <Modal
       visible={isVisible}
       animationType="slide"
-      presentationStyle="formSheet">
+      presentationStyle="pageSheet">
       <ScrollView horizontal={false} style={{flex: 1}}>
         <View style={styles.modalBtnContainer}>
           <Text style={styles.modalFormHeaderTitle}>Add to a Playlist</Text>

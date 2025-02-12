@@ -21,6 +21,7 @@ export const ExploreScreen = () => {
     newReleases,
     isLoading: releasesLoading,
     error: releasesError,
+    forceRefresh,
   } = useNewReleases();
 
   const featuredArtists = [
@@ -66,6 +67,7 @@ export const ExploreScreen = () => {
         newReleases={newReleases}
         isLoading={releasesLoading}
         error={releasesError}
+        
       />
 
       {/* <View style={styles.section}>
