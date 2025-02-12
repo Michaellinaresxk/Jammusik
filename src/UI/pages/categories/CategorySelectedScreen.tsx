@@ -70,9 +70,7 @@ export const CategorySelectedScreen = () => {
     useState(false);
 
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
-  const selectedSong = selectedSongId
-    ? songList.find(s => s.id === selectedSongId)
-    : null;
+  const [selectedSong, setSelectedSong] = useState<SongView | null>(null);
   const [selectedSongId, setSelectedSongId] = useState<string | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
 
@@ -323,11 +321,13 @@ export const CategorySelectedScreen = () => {
   const closeEditModal = () => {
     setIsEditModalVisible(false);
     setSelectedSongId(null);
+    setSelectedSong(null);
   };
 
   const handleEdit = () => {
     const song = songList.find(s => s.id === selectedSongId);
     if (song) {
+      setSelectedSong(song); // Save the selected song
       setIsOptionsVisible(false);
       setTimeout(() => {
         setIsEditModalVisible(true);
@@ -365,8 +365,12 @@ export const CategorySelectedScreen = () => {
     <TouchableOpacity
       style={styles.editButtonContent}
       onPress={() => {
-        setSelectedSongId(songId);
-        setIsOptionsVisible(true);
+        const song = songList.find(s => s.id === songId);
+        if (song) {
+          setSelectedSongId(songId);
+          setSelectedSong(song);
+          setIsOptionsVisible(true);
+        }
         swipeableRef.current[songId]?.close();
       }}>
       <Icon
@@ -376,7 +380,6 @@ export const CategorySelectedScreen = () => {
       />
     </TouchableOpacity>
   );
-
   // Effects
   useEffect(() => {
     loadSongList();
@@ -509,7 +512,12 @@ export const CategorySelectedScreen = () => {
         }}>
         <ScrollView horizontal={false} style={{flex: 1}}>
           <View style={styles.modalBtnContainer}>
-            <Text style={styles.modalFormHeaderTitle}>Edit Song</Text>
+            <Text
+              style={styles.modalFormHeaderTitle}
+              numberOfLines={1}
+              ellipsizeMode="tail">
+              Editing: {selectedSong?.title}
+            </Text>
             <PrimaryButton
               label="Close"
               btnFontSize={20}
@@ -518,25 +526,19 @@ export const CategorySelectedScreen = () => {
             />
           </View>
 
-          {selectedSongId && (
+          {selectedSong && (
             <FormCreateSong
-              key={selectedSongId}
+              key={selectedSong.id}
               categoryId={categoryId}
               categoryTitle={categoryTitle}
-              onSubmit={async values => {
-                await handleUpdateSong(values);
-              }}
+              onSubmit={handleUpdateSong}
               isLoading={isUpdating}
               isEditing={true}
-              initialValues={
-                selectedSong
-                  ? {
-                      title: selectedSong.title,
-                      artist: selectedSong.artist,
-                      categoryId: selectedSong.categoryId,
-                    }
-                  : undefined
-              }
+              initialValues={{
+                title: selectedSong.title,
+                artist: selectedSong.artist,
+                categoryId: selectedSong.categoryId,
+              }}
             />
           )}
         </ScrollView>
@@ -620,12 +622,17 @@ const styles = StyleSheet.create({
   modalBtnContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     backgroundColor: globalColors.primary,
-    paddingLeft: 35,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    width: '100%',
   },
   modalFormHeaderTitle: {
     fontSize: 20,
     color: globalColors.light,
+    flex: 1,
+    marginRight: 12,
   },
   brandLogo: {
     marginBottom: 40,
