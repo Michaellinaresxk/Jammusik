@@ -21,12 +21,9 @@ export const useUpdateSongDetails = () => {
           userId,
           songId,
         );
-        if (details) {
-          setCurrentDetails(details as SongDetailsView);
-        }
+        setCurrentDetails(details as SongDetailsView);
         return details;
       } catch (error) {
-        console.error('Failed to load current song details:', error);
         Toast.show({
           type: 'error',
           text1: 'Error loading details',
@@ -47,59 +44,61 @@ export const useUpdateSongDetails = () => {
       setSongDetails?: Dispatch<SetStateAction<SongDetailsView[] | undefined>>,
       onSuccess?: () => void,
     ) => {
-      if (!userId?.trim() || !songId?.trim()) {
-        Toast.show({
-          type: 'error',
-          text1: 'Error',
-          text2: 'User ID and Song ID are required',
-        });
-        return null;
-      }
+      if (!userId?.trim() || !songId?.trim()) return null;
 
       setIsLoading(true);
 
       try {
-        // Obtener los datos actuales
+        // Solo actualizamos los campos que han cambiado
         const current = await songDetailsService.getCurrentSongInfo(
           userId,
           songId,
         );
 
-        if (!current) {
-          throw new Error('No existing details found');
+        if (!current) throw new Error('No existing details found');
+
+        // Solo incluimos los campos que realmente han cambiado
+        const fieldsToUpdate = Object.entries(updatedFields).reduce(
+          (acc, [key, value]) => {
+            if (value !== undefined && value !== current[key]) {
+              acc[key] = value;
+            }
+            return acc;
+          },
+          {},
+        );
+
+        // Si no hay cambios, no hacemos la actualización
+        if (Object.keys(fieldsToUpdate).length === 0) {
+          Toast.show({
+            type: 'info',
+            text1: 'No changes detected',
+          });
+          return current;
         }
 
-        // Combinar datos actuales con actualizaciones
-        const updatedDetails = {
-          key: updatedFields.key ?? current.key,
-          chordList: updatedFields.chordList ?? current.chordList,
-          notes: updatedFields.notes ?? current.notes,
-          lyricLink: updatedFields.lyricLink ?? current.lyricLink,
-          tabLink: updatedFields.tabLink ?? current.tabLink,
-        };
-
-        // Actualizar solo con los campos combinados
+        // Actualizar solo los campos modificados
         await songDetailsService.updateSongDetails(
           userId,
           songId,
-          updatedDetails.key,
-          updatedDetails.chordList,
-          updatedDetails.notes,
-          updatedDetails.lyricLink,
-          updatedDetails.tabLink,
+          updatedFields.key,
+          updatedFields.chordList,
+          updatedFields.notes,
+          updatedFields.lyricLink,
+          updatedFields.tabLink,
         );
 
-        // Obtener los datos actualizados
+        // Obtener datos actualizados
         const refreshedDetails = await songDetailsService.getCurrentSongInfo(
           userId,
           songId,
         );
 
         if (refreshedDetails) {
+          setCurrentDetails(refreshedDetails as SongDetailsView);
           if (setSongDetails) {
             setSongDetails([refreshedDetails] as SongDetailsView[]);
           }
-          setCurrentDetails(refreshedDetails as SongDetailsView);
         }
 
         Toast.show({
@@ -110,7 +109,6 @@ export const useUpdateSongDetails = () => {
         onSuccess?.();
         return refreshedDetails;
       } catch (error) {
-        console.error('Error updating song details:', error);
         Toast.show({
           type: 'error',
           text1: 'Update Failed',

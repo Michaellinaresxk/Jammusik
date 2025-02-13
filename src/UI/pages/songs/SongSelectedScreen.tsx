@@ -218,17 +218,16 @@ export const SongSelectedScreen = () => {
       );
 
       showToast();
-      closeModal();
-
-      // ✅ Wait for the modal to close before reloading the data.
-      setTimeout(async () => {
-        await loadSongDetails();
-      }, 300); // Gives you a small margin for the modal animation to finish.
-
+      handleCloseModal();
+      await loadSongDetails(); // Recargar los datos inmediatamente
       setHasSavedData(true);
     } catch (error) {
       console.error(error);
-      Alert.alert('Error', 'Failed to save song details. Please try again.');
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Failed to save song details',
+      });
     }
   };
   const loadSongDetails = useCallback(async () => {
@@ -324,24 +323,45 @@ export const SongSelectedScreen = () => {
     clearCurrentDetails(); // Limpiar los detalles al cerrar
   }, [clearCurrentDetails]);
 
-  const handleUpdateSongDetails = async (
-    updates: Partial<UpdateSongDetailsParams>,
-  ) => {
+  const handleUpdateSongDetails = async (formData: {
+    songKey: string;
+    chordList: string[];
+    notes: string;
+    lyricLink: string;
+    tabLink: string;
+  }) => {
     if (!userId || !songId) return;
 
     try {
-      await updateSongDetails(
-        userId,
-        songId,
-        updates, // Solo envía los campos que quieres actualizar
-        setSongDetails,
-        () => {
-          handleCloseModal();
-          loadSongDetails();
-        },
-      );
+      if (currentDetails) {
+        // Si estamos editando
+        await updateSongDetails(
+          userId,
+          songId,
+          {
+            key: formData.songKey,
+            chordList: formData.chordList,
+            notes: formData.notes,
+            lyricLink: formData.lyricLink,
+            tabLink: formData.tabLink,
+          },
+          setSongDetails,
+          () => {
+            handleCloseModal();
+            loadSongDetails(); // Recargar los datos
+          },
+        );
+      } else {
+        // Si estamos creando nuevo
+        await handleCreateSongDetails(formData);
+      }
     } catch (error) {
-      console.error('Error updating song details:', error);
+      console.error('Error handling song details:', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Failed to save changes',
+      });
     }
   };
 
@@ -381,7 +401,7 @@ export const SongSelectedScreen = () => {
         >
           <View>
             <GlobalHeader headerTitle={params.title} artist={params.artist} />
-            <FloatingActionButton onPress={() => handleOpenModal()} />
+            <FloatingActionButton onPress={() => handleOpenModal(true)} />
           </View>
           <View style={styles.layout}>
             <View style={styles.titleContainer}>
@@ -646,15 +666,35 @@ export const SongSelectedScreen = () => {
             <ActivityIndicator size="large" color={globalColors.primary} />
           </View>
         ) : (
-          <FormSongDetails
-            songKey={currentDetails?.key || ''}
-            chordList={currentDetails?.chordList || []}
-            notes={currentDetails?.notes || ''}
-            lyricLink={currentDetails?.lyricLink || ''}
-            tabLink={currentDetails?.tabLink || ''}
-            onCreateSongDetails={handleUpdateSongDetails}
-            isEditing={!!currentDetails}
-          />
+          <>
+            {/* Mostrar los detalles actuales */}
+            {currentDetails && (
+              <View style={styles.currentInfoContainer}>
+                <Text style={styles.currentInfoTitle}>
+                  Current Information:
+                </Text>
+                <View style={styles.currentInfoContent}>
+                  <Text>Key: {currentDetails.key || 'Not set'}</Text>
+                  {currentDetails.chordList?.length > 0 && (
+                    <Text>Chords: {currentDetails.chordList.join(', ')}</Text>
+                  )}
+                  {currentDetails.notes && (
+                    <Text>Notes: {currentDetails.notes}</Text>
+                  )}
+                </View>
+              </View>
+            )}
+
+            <FormSongDetails
+              songKey={currentDetails?.key || ''}
+              chordList={currentDetails?.chordList || []}
+              notes={currentDetails?.notes || ''}
+              lyricLink={currentDetails?.lyricLink || ''}
+              tabLink={currentDetails?.tabLink || ''}
+              onCreateSongDetails={handleUpdateSongDetails}
+              isEditing={!!currentDetails}
+            />
+          </>
         )}
       </Modal>
       {/* Modal of lyrics */}
@@ -875,5 +915,47 @@ const styles = StyleSheet.create({
 
   chordGenerator: {
     marginTop: 20,
+  },
+
+  currentInfoContainer: {
+    backgroundColor: globalColors.primaryAlt,
+    margin: 16,
+    padding: 16,
+    borderRadius: 8,
+  },
+  currentInfoTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: globalColors.primaryDark,
+    marginBottom: 8,
+  },
+  currentInfoContent: {
+    gap: 8,
+  },
+
+  infoItem: {
+    fontSize: 16,
+    color: globalColors.primaryDark,
+  },
+  infoValue: {
+    color: globalColors.primary,
+    fontWeight: '500',
+  },
+  chordList: {
+    marginTop: 8,
+  },
+  chordContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginTop: 4,
+  },
+  chordTag: {
+    backgroundColor: globalColors.primary,
+    color: globalColors.light,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 4,
+    fontSize: 14,
   },
 });
