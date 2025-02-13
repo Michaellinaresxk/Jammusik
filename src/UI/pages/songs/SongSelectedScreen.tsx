@@ -34,6 +34,7 @@ import {useTrackInfo} from '../../../hooks/useTrackInfo';
 import {useTabFinder} from '../../../hooks/useTabFinder';
 import {ChordModal} from '../../components/shared/modals/ChordModal';
 import {useUpdateSongDetails} from '../../../hooks/useUpdateSongDetails';
+import {UpdateSongDetailsParams} from '../../../types/songTypes';
 // import {ChordGenerator} from '../../components/shared/ChordGenerator';
 export const SongSelectedScreen = () => {
   const params = useRoute().params;
@@ -47,7 +48,6 @@ export const SongSelectedScreen = () => {
   const [triggerUpdate, setTriggerUpdate] = useState(false);
   const [hasSavedData, setHasSavedData] = useState(false);
   const [category, setCategory] = useState('');
-  const {updateSongDetails, isLoading: isUpdating} = useUpdateSongDetails();
   const [editingSongDetails, setEditingSongDetails] = useState(null);
   const userId = auth.currentUser ? auth.currentUser.uid : '';
   const songId = params.songId;
@@ -69,6 +69,8 @@ export const SongSelectedScreen = () => {
     error: trackError,
     fetchTrackInfo,
   } = useTrackInfo();
+
+  const {updateSongDetails, isLoading, error} = useUpdateSongDetails();
 
   const musicIconScale = useRef(new Animated.Value(1)).current;
 
@@ -303,39 +305,35 @@ export const SongSelectedScreen = () => {
     }
   }, []);
 
-  const handleUpdateSongDetails = async (details: {
-    songKey: string;
-    chordList: string[];
-    notes: string;
-    lyricLink: string;
-    tabLink: string;
-  }) => {
-    if (editingSongDetails) {
-      try {
-        await updateSongDetails(
-          userId,
-          songId,
-          {
-            key: details.songKey,
-            chordList: details.chordList,
-            notes: details.notes,
-            lyricLink: details.lyricLink,
-            tabLink: details.tabLink,
-          },
-          setSongDetails,
-        );
+  const handleUpdateSongDetails = async (details: UpdateSongDetailsParams) => {
+    if (!userId || !songId) return;
 
-        setEditingSongDetails(null);
-        closeModal();
-      } catch (error) {
-        console.error('Error updating song details:', error);
-        Alert.alert(
-          'Error',
-          'Failed to update song details. Please try again.',
-        );
-      }
+    try {
+      await updateSongDetails(
+        userId,
+        songId,
+        {
+          key: details.key,
+          chordList: details.chordList,
+          notes: details.notes,
+          lyricLink: details.lyricLink,
+          tabLink: details.tabLink,
+        },
+        setSongDetails,
+        () => {
+          setEditingSongDetails(null);
+          closeModal();
+        },
+      );
+    } catch (error) {
+      console.error('Error updating song details:', error);
     }
   };
+
+  // Mostrar loading state
+  if (isLoading) {
+    return <ActivityIndicator />;
+  }
 
   const {isRefreshing, refresh, top} = usePullRefresh(loadSongDetails);
 

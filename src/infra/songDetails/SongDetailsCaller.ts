@@ -1,17 +1,39 @@
-import {getDocs, query, where} from 'firebase/firestore';
-import type {ApiSongDetails} from './ApiSongDetails';
 import {
   getFirestore,
-  addDoc,
   collection,
-  orderBy,
-  updateDoc,
   doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+  orderBy,
+  setDoc,
+  updateDoc,
   serverTimestamp,
-} from '@firebase/firestore';
+} from 'firebase/firestore';
+import type {ApiSongDetails} from './ApiSongDetails';
 
 export class SongDetailsCaller {
   private db = getFirestore();
+
+  private getDocumentId(userId: string, songId: string): string {
+    return `${userId}_${songId}`;
+  }
+
+  private getDocumentRef(userId: string, songId: string) {
+    const docId = this.getDocumentId(userId, songId);
+    return doc(this.db, 'songDetails', docId);
+  }
+
+  private cleanUndefinedValues(data: Record<string, any>): Record<string, any> {
+    return Object.entries(data).reduce(
+      (acc, [key, value]) => ({
+        ...acc,
+        [key]: value === undefined ? null : value,
+      }),
+      {},
+    );
+  }
 
   async setCurrentInfo(
     userId: string,
@@ -26,7 +48,10 @@ export class SongDetailsCaller {
       throw new Error('User ID and Song Id must be provided!');
     }
 
-    const songData: any = {
+    const docRef = this.getDocumentRef(userId, songId);
+    const timestamp = serverTimestamp();
+
+    const songData = this.cleanUndefinedValues({
       userId,
       songId,
       key,
@@ -34,31 +59,15 @@ export class SongDetailsCaller {
       notes,
       lyricLink,
       tabLink,
-    };
+      createdAt: timestamp,
+      updatedAt: timestamp,
+    });
 
-    function cleanObject(obj: any) {
-      const cleanObj: any = {};
-      for (const [key, value] of Object.entries(obj)) {
-        if (value !== undefined) {
-          cleanObj[key] = value;
-        } else {
-          cleanObj[key] = null;
-        }
-      }
-      return cleanObj;
-    }
-
-    const cleanedSongData = cleanObject(songData);
-
-    // Save data in firestore
-    const songDetailsRef = await addDoc(
-      collection(this.db, 'songDetails'),
-      cleanedSongData,
-    );
+    await setDoc(docRef, songData);
 
     return {
-      id: songDetailsRef.id,
-      ...cleanedSongData,
+      id: docRef.id,
+      ...songData,
     };
   }
 
@@ -69,19 +78,38 @@ export class SongDetailsCaller {
     if (!userId || !songId) {
       throw new Error('User ID and Song ID must be provided!');
     }
+
     try {
+      // Primero intentamos obtener el documento directamente
+      const docRef = this.getDocumentRef(userId, songId);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        return {
+          id: docSnap.id,
+          ...docSnap.data(),
+        } as ApiSongDetails;
+      }
+
+      // Si no encontramos el documento con el ID compuesto, buscamos con query
       const songDetailsCollection = collection(this.db, 'songDetails');
       const songDetailsQuery = query(
         songDetailsCollection,
         where('userId', '==', userId),
         where('songId', '==', songId),
       );
+
       const querySnapshot = await getDocs(songDetailsQuery);
+
       if (querySnapshot.empty) {
         return null;
       }
+
       const doc = querySnapshot.docs[0];
-      return {id: doc.id, ...doc.data()} as unknown as ApiSongDetails;
+      return {
+        id: doc.id,
+        ...doc.data(),
+      } as ApiSongDetails;
     } catch (error) {
       console.error('Error fetching song details:', error);
       throw error;
@@ -107,27 +135,77 @@ export class SongDetailsCaller {
   async updateSongDetails(
     userId: string,
     songId: string,
-    updateData: Partial<{
-      key: string;
-      chordList: string[];
-      notes: string;
-      lyricLink: string;
-      tabLink: string;
-    }>,
+    key?: string,
+    chordList?: string[],
+    notes?: string,
+    lyricLink?: string,
+    tabLink?: string,
   ): Promise<void> {
     if (!userId || !songId) {
       throw new Error('userId and songId are required!');
     }
 
     try {
-      const songDetailsRef = doc(this.db, 'songDetails', `${userId}_${songId}`);
+      // Primero verificamos si existe el documento
+      const existingDetails = await this.getCurrentSongInfo(userId, songId);
 
-      await updateDoc(songDetailsRef, {
-        ...updateData,
+      if (!existingDetails) {
+        // Si no existe, creamos uno nuevo
+        await this.setCurrentInfo(
+          userId,
+          songId,
+          key,
+          chordList,
+          notes,
+          lyricLink,
+          tabLink,
+        );
+        return;
+      }
+
+      // Si existe, actualizamos el documento existente
+      const docRef = this.getDocumentRef(userId, songId);
+      const updateData = this.cleanUndefinedValues({
+        key,
+        chordList,
+        notes,
+        lyricLink,
+        tabLink,
         updatedAt: serverTimestamp(),
       });
+
+      await updateDoc(docRef, updateData);
     } catch (error) {
       console.error('Error updating song details:', error);
+      throw error;
+    }
+  }
+
+  // Método auxiliar para migrar documentos antiguos al nuevo formato de ID
+  async migrateOldDocuments(userId: string, songId: string): Promise<void> {
+    try {
+      const songDetailsCollection = collection(this.db, 'songDetails');
+      const songDetailsQuery = query(
+        songDetailsCollection,
+        where('userId', '==', userId),
+        where('songId', '==', songId),
+      );
+
+      const querySnapshot = await getDocs(songDetailsQuery);
+
+      if (!querySnapshot.empty) {
+        const oldDoc = querySnapshot.docs[0];
+        const newDocRef = this.getDocumentRef(userId, songId);
+
+        await setDoc(newDocRef, {
+          ...oldDoc.data(),
+          updatedAt: serverTimestamp(),
+        });
+
+        // Opcionalmente, podrías eliminar el documento antiguo aquí
+      }
+    } catch (error) {
+      console.error('Error migrating documents:', error);
       throw error;
     }
   }
