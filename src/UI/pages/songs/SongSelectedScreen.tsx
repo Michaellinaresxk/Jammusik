@@ -70,7 +70,13 @@ export const SongSelectedScreen = () => {
     fetchTrackInfo,
   } = useTrackInfo();
 
-  const {updateSongDetails, isLoading, error} = useUpdateSongDetails();
+  const {
+    updateSongDetails,
+    loadCurrentDetails,
+    currentDetails,
+    clearCurrentDetails,
+    isLoading,
+  } = useUpdateSongDetails();
 
   const musicIconScale = useRef(new Animated.Value(1)).current;
 
@@ -305,24 +311,33 @@ export const SongSelectedScreen = () => {
     }
   }, []);
 
-  const handleUpdateSongDetails = async (details: UpdateSongDetailsParams) => {
+  const handleOpenModal = useCallback(async () => {
+    if (!userId || !songId) return;
+
+    // Cargar los detalles actuales antes de abrir el modal
+    await loadCurrentDetails(userId, songId);
+    setIsVisible(true);
+  }, [userId, songId, loadCurrentDetails]);
+
+  const handleCloseModal = useCallback(() => {
+    setIsVisible(false);
+    clearCurrentDetails(); // Limpiar los detalles al cerrar
+  }, [clearCurrentDetails]);
+
+  const handleUpdateSongDetails = async (
+    updates: Partial<UpdateSongDetailsParams>,
+  ) => {
     if (!userId || !songId) return;
 
     try {
       await updateSongDetails(
         userId,
         songId,
-        {
-          key: details.key,
-          chordList: details.chordList,
-          notes: details.notes,
-          lyricLink: details.lyricLink,
-          tabLink: details.tabLink,
-        },
+        updates, // Solo envía los campos que quieres actualizar
         setSongDetails,
         () => {
-          setEditingSongDetails(null);
-          closeModal();
+          handleCloseModal();
+          loadSongDetails();
         },
       );
     } catch (error) {
@@ -366,7 +381,7 @@ export const SongSelectedScreen = () => {
         >
           <View>
             <GlobalHeader headerTitle={params.title} artist={params.artist} />
-            <FloatingActionButton onPress={() => setIsVisible(true)} />
+            <FloatingActionButton onPress={() => handleOpenModal()} />
           </View>
           <View style={styles.layout}>
             <View style={styles.titleContainer}>
@@ -613,41 +628,34 @@ export const SongSelectedScreen = () => {
         visible={isVisible}
         animationType="slide"
         presentationStyle="formSheet"
-        onDismiss={() => {
-          loadSongDetails();
-        }}>
+        onDismiss={handleCloseModal}>
         <View style={styles.modalBtnContainer}>
           <Text style={styles.modalFormHeaderTitle}>
-            {editingSongDetails ? 'Edit Song Details' : 'Add Song Details'}
+            {currentDetails ? 'Edit Song Details' : 'Add Song Details'}
           </Text>
           <PrimaryButton
             label="Close"
             btnFontSize={20}
             colorText={globalColors.light}
-            onPress={() => {
-              closeModal();
-              setEditingSongDetails(null);
-            }}
+            onPress={handleCloseModal}
           />
         </View>
-        <FormSongDetails
-          songKey={songKey}
-          setSongKey={setSongKey}
-          chordList={chordList}
-          setChordList={setChordList}
-          notes={notes}
-          setNotes={setNotes}
-          lyricLink={lyricLink}
-          setLyricLink={setLyricLink}
-          tabLink={tabLink}
-          setTabLink={setTabLink}
-          onCreateSongDetails={
-            editingSongDetails
-              ? handleUpdateSongDetails
-              : handleCreateSongDetails
-          }
-          isEditing={!!editingSongDetails}
-        />
+
+        {isLoading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={globalColors.primary} />
+          </View>
+        ) : (
+          <FormSongDetails
+            songKey={currentDetails?.key || ''}
+            chordList={currentDetails?.chordList || []}
+            notes={currentDetails?.notes || ''}
+            lyricLink={currentDetails?.lyricLink || ''}
+            tabLink={currentDetails?.tabLink || ''}
+            onCreateSongDetails={handleUpdateSongDetails}
+            isEditing={!!currentDetails}
+          />
+        )}
       </Modal>
       {/* Modal of lyrics */}
       <Modal
