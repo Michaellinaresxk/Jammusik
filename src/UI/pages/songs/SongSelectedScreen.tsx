@@ -8,7 +8,6 @@ import {
   StyleSheet,
   View,
   Alert,
-  FlatList,
   Linking,
   Pressable,
   ActivityIndicator,
@@ -35,6 +34,7 @@ import {useTrackInfo} from '../../../hooks/useTrackInfo';
 import {useTabFinder} from '../../../hooks/useTabFinder';
 import {ChordModal} from '../../components/shared/modals/ChordModal';
 import {useUpdateSongDetails} from '../../../hooks/useUpdateSongDetails';
+import {UpdateSongDetailsParams} from '../../../types/songTypes';
 // import {ChordGenerator} from '../../components/shared/ChordGenerator';
 export const SongSelectedScreen = () => {
   const params = useRoute().params;
@@ -48,7 +48,6 @@ export const SongSelectedScreen = () => {
   const [triggerUpdate, setTriggerUpdate] = useState(false);
   const [hasSavedData, setHasSavedData] = useState(false);
   const [category, setCategory] = useState('');
-  const {updateSongDetails, isLoading: isUpdating} = useUpdateSongDetails();
   const [editingSongDetails, setEditingSongDetails] = useState(null);
   const userId = auth.currentUser ? auth.currentUser.uid : '';
   const songId = params.songId;
@@ -70,6 +69,14 @@ export const SongSelectedScreen = () => {
     error: trackError,
     fetchTrackInfo,
   } = useTrackInfo();
+
+  const {
+    updateSongDetails,
+    loadCurrentDetails,
+    currentDetails,
+    clearCurrentDetails,
+    isLoading,
+  } = useUpdateSongDetails();
 
   const musicIconScale = useRef(new Animated.Value(1)).current;
 
@@ -211,17 +218,16 @@ export const SongSelectedScreen = () => {
       );
 
       showToast();
-      closeModal();
-
-      // ✅ Wait for the modal to close before reloading the data.
-      setTimeout(async () => {
-        await loadSongDetails();
-      }, 300); // Gives you a small margin for the modal animation to finish.
-
+      handleCloseModal();
+      await loadSongDetails();
       setHasSavedData(true);
     } catch (error) {
       console.error(error);
-      Alert.alert('Error', 'Failed to save song details. Please try again.');
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Failed to save song details',
+      });
     }
   };
   const loadSongDetails = useCallback(async () => {
@@ -304,39 +310,61 @@ export const SongSelectedScreen = () => {
     }
   }, []);
 
-  const handleUpdateSongDetails = async (details: {
+  const handleOpenModal = useCallback(async () => {
+    if (!userId || !songId) return;
+
+    await loadCurrentDetails(userId, songId);
+    setIsVisible(true);
+  }, [userId, songId, loadCurrentDetails]);
+
+  const handleCloseModal = useCallback(() => {
+    setIsVisible(false);
+    clearCurrentDetails();
+  }, [clearCurrentDetails]);
+
+  const handleUpdateSongDetails = async (formData: {
     songKey: string;
     chordList: string[];
     notes: string;
     lyricLink: string;
     tabLink: string;
   }) => {
-    if (editingSongDetails) {
-      try {
+    if (!userId || !songId) return;
+
+    try {
+      if (currentDetails) {
         await updateSongDetails(
           userId,
           songId,
           {
-            key: details.songKey,
-            chordList: details.chordList,
-            notes: details.notes,
-            lyricLink: details.lyricLink,
-            tabLink: details.tabLink,
+            key: formData.songKey,
+            chordList: formData.chordList,
+            notes: formData.notes,
+            lyricLink: formData.lyricLink,
+            tabLink: formData.tabLink,
           },
           setSongDetails,
+          () => {
+            handleCloseModal();
+            loadSongDetails();
+          },
         );
-
-        setEditingSongDetails(null);
-        closeModal();
-      } catch (error) {
-        console.error('Error updating song details:', error);
-        Alert.alert(
-          'Error',
-          'Failed to update song details. Please try again.',
-        );
+      } else {
+        await handleCreateSongDetails(formData);
       }
+    } catch (error) {
+      console.error('Error handling song details:', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Failed to save changes',
+      });
     }
   };
+
+  if (isLoading) {
+    return <ActivityIndicator />;
+  }
 
   const {isRefreshing, refresh, top} = usePullRefresh(loadSongDetails);
 
@@ -369,7 +397,7 @@ export const SongSelectedScreen = () => {
         >
           <View>
             <GlobalHeader headerTitle={params.title} artist={params.artist} />
-            <FloatingActionButton onPress={() => setIsVisible(true)} />
+            <FloatingActionButton onPress={() => handleOpenModal(true)} />
           </View>
           <View style={styles.layout}>
             <View style={styles.titleContainer}>
@@ -616,41 +644,54 @@ export const SongSelectedScreen = () => {
         visible={isVisible}
         animationType="slide"
         presentationStyle="formSheet"
-        onDismiss={() => {
-          loadSongDetails();
-        }}>
+        onDismiss={handleCloseModal}>
         <View style={styles.modalBtnContainer}>
           <Text style={styles.modalFormHeaderTitle}>
-            {editingSongDetails ? 'Edit Song Details' : 'Add Song Details'}
+            {currentDetails ? 'Edit Song Details' : 'Add Song Details'}
           </Text>
           <PrimaryButton
             label="Close"
             btnFontSize={20}
             colorText={globalColors.light}
-            onPress={() => {
-              closeModal();
-              setEditingSongDetails(null);
-            }}
+            onPress={handleCloseModal}
           />
         </View>
-        <FormSongDetails
-          songKey={songKey}
-          setSongKey={setSongKey}
-          chordList={chordList}
-          setChordList={setChordList}
-          notes={notes}
-          setNotes={setNotes}
-          lyricLink={lyricLink}
-          setLyricLink={setLyricLink}
-          tabLink={tabLink}
-          setTabLink={setTabLink}
-          onCreateSongDetails={
-            editingSongDetails
-              ? handleUpdateSongDetails
-              : handleCreateSongDetails
-          }
-          isEditing={!!editingSongDetails}
-        />
+
+        {isLoading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color={globalColors.primary} />
+          </View>
+        ) : (
+          <>
+            {/* Show current details */}
+            {currentDetails && (
+              <View style={styles.currentInfoContainer}>
+                <Text style={styles.currentInfoTitle}>
+                  Current Information:
+                </Text>
+                <View style={styles.currentInfoContent}>
+                  <Text>Key: {currentDetails.key || 'Not set'}</Text>
+                  {currentDetails.chordList?.length > 0 && (
+                    <Text>Chords: {currentDetails.chordList.join(', ')}</Text>
+                  )}
+                  {currentDetails.notes && (
+                    <Text>Notes: {currentDetails.notes}</Text>
+                  )}
+                </View>
+              </View>
+            )}
+
+            <FormSongDetails
+              songKey={currentDetails?.key || ''}
+              chordList={currentDetails?.chordList || []}
+              notes={currentDetails?.notes || ''}
+              lyricLink={currentDetails?.lyricLink || ''}
+              tabLink={currentDetails?.tabLink || ''}
+              onCreateSongDetails={handleUpdateSongDetails}
+              isEditing={!!currentDetails}
+            />
+          </>
+        )}
       </Modal>
       {/* Modal of lyrics */}
       <Modal
@@ -870,5 +911,47 @@ const styles = StyleSheet.create({
 
   chordGenerator: {
     marginTop: 20,
+  },
+
+  currentInfoContainer: {
+    backgroundColor: globalColors.primaryAlt,
+    margin: 16,
+    padding: 16,
+    borderRadius: 8,
+  },
+  currentInfoTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: globalColors.primaryDark,
+    marginBottom: 8,
+  },
+  currentInfoContent: {
+    gap: 8,
+  },
+
+  infoItem: {
+    fontSize: 16,
+    color: globalColors.primaryDark,
+  },
+  infoValue: {
+    color: globalColors.primary,
+    fontWeight: '500',
+  },
+  chordList: {
+    marginTop: 8,
+  },
+  chordContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginTop: 4,
+  },
+  chordTag: {
+    backgroundColor: globalColors.primary,
+    color: globalColors.light,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 4,
+    fontSize: 14,
   },
 });

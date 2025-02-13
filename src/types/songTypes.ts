@@ -83,4 +83,26 @@ export interface SharedPlaylist {
   sharedAt: string;
 }
 
+export interface SongDetailsData {
+  songKey: string;
+  chordList: string[];
+  notes: string;
+  lyricLink: string;
+  tabLink: string;
+}
 
+export interface UpdateSongDetailsParams {
+  key?: string;
+  chordList?: string[];
+  notes?: string;
+  lyricLink?: string;
+  tabLink?: string;
+}
+
+export interface SongDetailsView extends SongDetailsData {
+  id: string;
+  userId: string;
+  songId: string;
+  createdAt?: any;
+  updatedAt?: any;
+}

@@ -1,4 +1,4 @@
-import {useCallback, useState} from 'react';
+import {useCallback} from 'react';
 import {songService} from '../services/songService';
 import Toast from 'react-native-toast-message';
 
@@ -11,7 +11,7 @@ interface UpdateSongParams {
 interface UseSongUpdatesProps {
   userId: string;
   onSuccess: () => void;
-  setIsUpdating: (isUpdating: boolean) => void; // Recibimos el setter del estado
+  setIsUpdating: (isUpdating: boolean) => void;
 }
 
 export const useSongUpdates = ({
