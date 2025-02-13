@@ -219,7 +219,7 @@ export const SongSelectedScreen = () => {
 
       showToast();
       handleCloseModal();
-      await loadSongDetails(); // Recargar los datos inmediatamente
+      await loadSongDetails();
       setHasSavedData(true);
     } catch (error) {
       console.error(error);
@@ -313,14 +313,13 @@ export const SongSelectedScreen = () => {
   const handleOpenModal = useCallback(async () => {
     if (!userId || !songId) return;
 
-    // Cargar los detalles actuales antes de abrir el modal
     await loadCurrentDetails(userId, songId);
     setIsVisible(true);
   }, [userId, songId, loadCurrentDetails]);
 
   const handleCloseModal = useCallback(() => {
     setIsVisible(false);
-    clearCurrentDetails(); // Limpiar los detalles al cerrar
+    clearCurrentDetails();
   }, [clearCurrentDetails]);
 
   const handleUpdateSongDetails = async (formData: {
@@ -334,7 +333,6 @@ export const SongSelectedScreen = () => {
 
     try {
       if (currentDetails) {
-        // Si estamos editando
         await updateSongDetails(
           userId,
           songId,
@@ -348,11 +346,10 @@ export const SongSelectedScreen = () => {
           setSongDetails,
           () => {
             handleCloseModal();
-            loadSongDetails(); // Recargar los datos
+            loadSongDetails();
           },
         );
       } else {
-        // Si estamos creando nuevo
         await handleCreateSongDetails(formData);
       }
     } catch (error) {
@@ -365,7 +362,6 @@ export const SongSelectedScreen = () => {
     }
   };
 
-  // Mostrar loading state
   if (isLoading) {
     return <ActivityIndicator />;
   }
@@ -667,7 +663,7 @@ export const SongSelectedScreen = () => {
           </View>
         ) : (
           <>
-            {/* Mostrar los detalles actuales */}
+            {/* Show current details */}
             {currentDetails && (
               <View style={styles.currentInfoContainer}>
                 <Text style={styles.currentInfoTitle}>
