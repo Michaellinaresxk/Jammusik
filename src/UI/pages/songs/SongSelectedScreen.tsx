@@ -8,7 +8,6 @@ import {
   StyleSheet,
   View,
   Alert,
-  FlatList,
   Linking,
   Pressable,
   ActivityIndicator,
