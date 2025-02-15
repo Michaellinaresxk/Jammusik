@@ -4,6 +4,7 @@ export interface SongProperties {
   artist: string;
   categoryId: string;
   isDone: boolean;
+  createdAt: Date;
 }
 
 export interface SongDetailsProperties {

@@ -93,6 +93,7 @@ export const CategorySelectedScreen = () => {
   const currentlyOpenSwipeable = useRef<string | null>(null);
 
   const scrollY = useRef(new Animated.Value(0)).current;
+  const flatListRef = useRef<FlatList>(null);
 
   const closeSwipeable = (songId: string) => {
     if (
@@ -135,8 +136,6 @@ export const CategorySelectedScreen = () => {
     try {
       setIsLoading(true);
 
-      // If we are in “Library”, use the category selected in the form.
-      // If not, use the current category of the route
       const finalCategoryId = isLibraryCategory
         ? values.categoryId
         : categoryId;
@@ -146,15 +145,51 @@ export const CategorySelectedScreen = () => {
         return;
       }
 
-      const result = await songService.createSong(
+      const newSong = await songService.createSong(
         finalCategoryId!,
         values.title,
         values.artist,
         isDone,
       );
-      console.log('Song created:', result);
-      await loadSongList();
+
+      if (!newSong || !newSong.id) {
+        throw new Error('Failed to create song: Invalid response');
+      }
+
+      // Update the song list by adding the new song at the beginning
+      setSongList(prevSongs => {
+        const updatedSongs = [
+          {
+            ...newSong,
+            createdAt: new Date(),
+            isDone: false,
+            songKey: '',
+          },
+          ...prevSongs,
+        ];
+
+        // Sort songs by creation date
+        return updatedSongs.sort((a, b) => {
+          const dateA =
+            a.createdAt instanceof Date ? a.createdAt : new Date(a.createdAt);
+          const dateB =
+            b.createdAt instanceof Date ? b.createdAt : new Date(b.createdAt);
+          return dateB.getTime() - dateA.getTime();
+        });
+      });
+
       closeModal();
+
+      if (flatListRef.current) {
+        flatListRef.current.scrollToOffset({offset: 0, animated: true});
+      }
+
+      Toast.show({
+        type: 'success',
+        text1: 'Song created successfully',
+        text2: 'Your new song is at the top of the list',
+        topOffset: 90,
+      });
     } catch (error) {
       console.error('Failed to create song:', error);
       Alert.alert('Error', 'Failed to create the song. Please try again.');
@@ -162,7 +197,6 @@ export const CategorySelectedScreen = () => {
       setIsLoading(false);
     }
   };
-
   const loadSongList = useCallback(async () => {
     if (!auth.currentUser?.uid) {
       console.error('No user ID found');
@@ -193,6 +227,7 @@ export const CategorySelectedScreen = () => {
               ...song,
               isDone: isDone || false,
               songKey: songDetails?.key || '',
+              createdAt: song.createdAt ? new Date(song.createdAt) : new Date(),
             };
           } catch (detailsError) {
             console.warn(
@@ -203,16 +238,26 @@ export const CategorySelectedScreen = () => {
               ...song,
               isDone: false,
               songKey: '',
+              createdAt: new Date(),
             };
           }
         }),
       );
 
-      setLibrarySongs(songsWithDetails);
-      setSongList(songsWithDetails);
+      // Ensure consistent sorting
+      const sortedSongs = songsWithDetails.sort((a, b) => {
+        const dateA =
+          a.createdAt instanceof Date ? a.createdAt : new Date(a.createdAt);
+        const dateB =
+          b.createdAt instanceof Date ? b.createdAt : new Date(b.createdAt);
+        return dateB.getTime() - dateA.getTime();
+      });
+
+      setLibrarySongs(sortedSongs);
+      setSongList(sortedSongs);
 
       const uniqueKeys = [
-        ...new Set(songsWithDetails.map(song => song.songKey).filter(Boolean)),
+        ...new Set(sortedSongs.map(song => song.songKey).filter(Boolean)),
       ];
       setAvailableKeys(uniqueKeys);
     } catch (error) {
@@ -228,12 +273,11 @@ export const CategorySelectedScreen = () => {
       setIsLoading(false);
     }
   }, [
-    auth.currentUser.uid,
+    auth.currentUser?.uid,
     isLibraryCategory,
     categoryService,
     categoryId,
     songDetailsService,
-    songList.length,
   ]);
 
   const filterSongs = async (
@@ -447,6 +491,7 @@ export const CategorySelectedScreen = () => {
               <SongCounter songCounter={songList.length} />
               <FlatList
                 data={songList}
+                ref={flatListRef}
                 keyExtractor={item => item.id}
                 renderItem={({item, index}) => (
                   <Swipeable
