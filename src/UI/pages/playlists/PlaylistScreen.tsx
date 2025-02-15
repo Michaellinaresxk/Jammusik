@@ -107,11 +107,63 @@ export const PlaylistScreen = () => {
     const userId = user?.uid as string;
     try {
       const fetchedPlaylists = await playlistService.getPlaylists(userId);
-      setPlaylists(fetchedPlaylists);
+      // Sort by creation date, newest first
+      const sortedPlaylists = fetchedPlaylists.sort((a, b) => {
+        const dateA =
+          a.createdAt instanceof Date ? a.createdAt : new Date(a.createdAt);
+        const dateB =
+          b.createdAt instanceof Date ? b.createdAt : new Date(b.createdAt);
+        return dateB.getTime() - dateA.getTime();
+      });
+      setPlaylists(sortedPlaylists);
     } catch (error) {
       console.error('Failed to fetch playlists:', error);
     }
   }, [auth.currentUser, playlistService]);
+
+  const handleCreatePlaylist = async (values: any) => {
+    const {title} = values;
+    setIsLoading(true);
+    try {
+      const newPlaylist = await playlistService.createPlaylist(title);
+
+      // Update the playlists list with the new playlist at the top
+      setPlaylists(prevPlaylists => {
+        const updatedPlaylists = [
+          {
+            ...newPlaylist,
+            createdAt: new Date(), // Ensure we have a Date object
+          },
+          ...prevPlaylists,
+        ];
+        // Sort again to ensure consistency
+        return updatedPlaylists.sort((a, b) => {
+          const dateA =
+            a.createdAt instanceof Date ? a.createdAt : new Date(a.createdAt);
+          const dateB =
+            b.createdAt instanceof Date ? b.createdAt : new Date(b.createdAt);
+          return dateB.getTime() - dateA.getTime();
+        });
+      });
+
+      setTitle('');
+      closeModal();
+
+      Toast.show({
+        type: 'success',
+        text1: 'Playlist created successfully',
+        text2: 'Your new playlist is at the top of the list',
+      });
+    } catch (error) {
+      console.error('Failed to create playlist:', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Failed to create playlist',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     // Load playlist when the component mounts
@@ -137,17 +189,6 @@ export const PlaylistScreen = () => {
       type: 'success',
       text1: 'Playlist Deleted successfully. 👋',
     });
-  };
-
-  const handleCreatePlaylist = async (values: any) => {
-    const {title} = values;
-    setIsLoading(true);
-    await playlistService.createPlaylist(title);
-    setTitle('');
-    setTriggerUpdate(true);
-    setIsLoading(false);
-
-    closeModal();
   };
 
   const handleUpdatePlaylist = async (values: {title: string}) => {

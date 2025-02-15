@@ -30,24 +30,23 @@ export class PlaylistCaller {
       throw new Error('userId is undefined!');
     }
 
+    const now = new Date();
     const playlistData = {
       title,
       userId,
-      createdAt: serverTimestamp(),
+      createdAt: now,
     };
 
-    const playlistRef = await addDoc(
-      collection(this.db, 'playlists'),
-      playlistData,
-    );
+    const playlistRef = await addDoc(collection(this.db, 'playlists'), {
+      ...playlistData,
+      createdAt: serverTimestamp(),
+    });
 
     return {
       id: playlistRef.id,
       ...playlistData,
     };
   }
-
-  // Get all the user's playlists
 
   async getPlaylists(userId: string): Promise<ApiPlaylist[]> {
     if (!userId) {
@@ -62,10 +61,14 @@ export class PlaylistCaller {
       );
 
       const querySnapshot = await getDocs(playlistsQuery);
-      const ownPlaylists = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-      })) as ApiPlaylist[];
+      const ownPlaylists = querySnapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          ...data,
+          createdAt: data.createdAt?.toDate() || new Date(),
+        };
+      }) as ApiPlaylist[];
 
       // 2. Get shared playlists that were accepted
       const sharedPlaylistsQuery = query(
@@ -75,9 +78,6 @@ export class PlaylistCaller {
       );
 
       const sharedSnapshot = await getDocs(sharedPlaylistsQuery);
-
-      console.log('Shared playlists found:', sharedSnapshot.docs.length);
-
       const sharedPlaylistsPromises = sharedSnapshot.docs.map(
         async docSnapshot => {
           const sharedData = docSnapshot.data();
@@ -89,14 +89,15 @@ export class PlaylistCaller {
 
           try {
             const originalPlaylistDoc = await getDoc(originalPlaylistRef);
-
             if (originalPlaylistDoc.exists()) {
+              const data = originalPlaylistDoc.data();
               return {
                 id: originalPlaylistDoc.id,
-                ...originalPlaylistDoc.data(),
+                ...data,
                 isShared: true,
                 sharedBy: sharedData.sharedBy,
-              } as unknown as ApiPlaylist;
+                createdAt: data.createdAt?.toDate() || new Date(),
+              } as ApiPlaylist;
             }
           } catch (error) {
             console.error('Error fetching original playlist:', error);
@@ -110,10 +111,11 @@ export class PlaylistCaller {
         (playlist): playlist is ApiPlaylist => playlist !== null,
       );
 
-      console.log('Own playlists:', ownPlaylists.length);
-      console.log('Valid shared playlists:', validSharedPlaylists.length);
-
-      return [...ownPlaylists, ...validSharedPlaylists];
+      // Combine and sort by creation date (newest first)
+      const allPlaylists = [...ownPlaylists, ...validSharedPlaylists];
+      return allPlaylists.sort(
+        (a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0),
+      );
     } catch (error) {
       console.error('Error details:', error);
       throw error;
@@ -139,7 +141,7 @@ export class PlaylistCaller {
       const songDoc = await getDoc(songRef);
       if (!songDoc.exists()) {
         console.log('Song not found, creating new document');
-        // Si la canción no existe, la creamos con el array playlistIds
+        // If the song does not exist, we create it with the array playlistIds
         await setDoc(songRef, {
           ...songData,
           playlistIds: [playlistId],
@@ -288,9 +290,9 @@ export class PlaylistCaller {
         throw new Error('User not found');
       }
 
-      // Obtener el uid del usuario en lugar del ID del documento
+      // Get user uid instead of document ID
       const recipientData = querySnapshot.docs[0].data();
-      const recipientId = recipientData.uid; // Usar el uid almacenado
+      const recipientId = recipientData.uid;
 
       console.log('Recipient found:', {
         docId: querySnapshot.docs[0].id,
@@ -307,7 +309,7 @@ export class PlaylistCaller {
       const sharedPlaylistData = {
         originalPlaylistId: playlistId,
         sharedBy: auth.currentUser?.uid,
-        sharedWith: recipientId, // Usar el uid del usuario
+        sharedWith: recipientId,
         sharedAt: new Date().toISOString(),
         status: 'pending',
       };

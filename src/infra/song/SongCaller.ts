@@ -30,13 +30,13 @@ export class SongCaller {
       title,
       artist,
       isDone,
-      createdAt: now, // Use actual Date object instead of serverTimestamp
+      createdAt: now,
     };
 
     const songsCollection = collection(this.db, 'songs');
     const docRef = await addDoc(songsCollection, {
       ...songData,
-      createdAt: serverTimestamp(), // Keep serverTimestamp for Firestore
+      createdAt: serverTimestamp(),
     });
 
     return {
