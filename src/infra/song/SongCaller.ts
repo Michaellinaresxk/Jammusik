@@ -23,25 +23,27 @@ export class SongCaller {
       throw new Error('Firestore instance or user ID is undefined!');
     }
 
+    const now = new Date();
     const songData = {
       userId,
       categoryId,
       title,
       artist,
       isDone,
+      createdAt: now, // Use actual Date object instead of serverTimestamp
     };
 
-    console.log('Creating song with data:', songData);
-
     const songsCollection = collection(this.db, 'songs');
-    const docRef = await addDoc(songsCollection, songData);
+    const docRef = await addDoc(songsCollection, {
+      ...songData,
+      createdAt: serverTimestamp(), // Keep serverTimestamp for Firestore
+    });
 
     return {
       id: docRef.id,
       ...songData,
     };
   }
-
   async getSongs(playlistId?: string): Promise<ApiSong[]> {
     const songsCollection = collection(this.db, 'songs');
     let songsQuery;

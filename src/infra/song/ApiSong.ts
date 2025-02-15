@@ -5,5 +5,6 @@ export interface ApiSong {
   categoryId: string;
   originalSongId: string;
   isDone: boolean;
+  createdAt: Date;
   addedAt: Date;
 }
