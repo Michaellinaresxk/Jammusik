@@ -1,7 +1,7 @@
 import React, {useEffect, useRef} from 'react';
 import {TouchableOpacity, Text, View, Animated} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {globalColors} from '../../theme/Theme';
+import {globalColors} from '../../../theme/Theme';
 
 export const AnimatedSharedButton = ({
   navigation,
@@ -13,7 +13,7 @@ export const AnimatedSharedButton = ({
   const shakeAnimation = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    let animationLoop;
+    let animationLoop: Animated.CompositeAnimation;
 
     if (hasSharedPlaylists) {
       // Create the shake animation sequence

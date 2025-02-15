@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   Alert,
+  Animated,
   FlatList,
   KeyboardAvoidingView,
   Modal,
@@ -39,6 +40,7 @@ import {useSongDetailsService} from '../../../context/SongDetailsServiceContext'
 import {SongFilter} from '../../components/shared/SongFilter';
 import {TabNavigatorParamsList} from '../../routes/TabNavigator';
 import {useSongUpdates} from '../../../hooks/useUpdateSong';
+import AnimatedBlurHeader from '../../components/shared/animated/AnimatedBlurHeader';
 
 interface ExtendedSongView extends SongView {
   songKey?: string;
@@ -89,6 +91,8 @@ export const CategorySelectedScreen = () => {
   // Add this reference for the current Swipeable
   const swipeableRef = useRef<{[key: string]: Swipeable | null}>({});
   const currentlyOpenSwipeable = useRef<string | null>(null);
+
+  const scrollY = useRef(new Animated.Value(0)).current;
 
   const closeSwipeable = (songId: string) => {
     if (
@@ -169,7 +173,6 @@ export const CategorySelectedScreen = () => {
     try {
       const userId = auth.currentUser.uid;
 
-      // Obtener canciones según el tipo de categoría
       const fetchedSongs = isLibraryCategory
         ? await categoryService.getAllSongsByUserId(userId)
         : await categoryService.getSongListByCategory(userId, categoryId);
@@ -178,7 +181,6 @@ export const CategorySelectedScreen = () => {
         throw new Error('Invalid response format');
       }
 
-      // Obtener detalles de cada canción
       const songsWithDetails = await Promise.all(
         fetchedSongs.map(async song => {
           try {
@@ -206,7 +208,6 @@ export const CategorySelectedScreen = () => {
         }),
       );
 
-      // Actualizar estados
       setLibrarySongs(songsWithDetails);
       setSongList(songsWithDetails);
 
@@ -216,7 +217,6 @@ export const CategorySelectedScreen = () => {
       setAvailableKeys(uniqueKeys);
     } catch (error) {
       console.error('Error in loadSongList:', error);
-      // Solo mostrar Toast si es un error real de carga
       if (!songList.length) {
         Toast.show({
           type: 'error',
@@ -278,7 +278,6 @@ export const CategorySelectedScreen = () => {
     loadSongList();
   }, [loadSongList]);
 
-  // Pasamos el setter al hook
   const {updateSong} = useSongUpdates({
     userId,
     onSuccess: handleUpdateSuccess,
@@ -407,7 +406,7 @@ export const CategorySelectedScreen = () => {
     <>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <ScrollView
+        <Animated.ScrollView
           refreshControl={
             <RefreshControl
               refreshing={isRefreshing}
@@ -420,6 +419,10 @@ export const CategorySelectedScreen = () => {
               onRefresh={refresh}
             />
           }
+          onScroll={Animated.event(
+            [{nativeEvent: {contentOffset: {y: scrollY}}}],
+            {useNativeDriver: true},
+          )}
           showsVerticalScrollIndicator={false} // Hides the scroll bar
           decelerationRate="normal" // Controls the deceleration speed
           scrollEventThrottle={16} // Improves softness
@@ -474,8 +477,13 @@ export const CategorySelectedScreen = () => {
               />
             </View>
           </View>
-        </ScrollView>
+        </Animated.ScrollView>
       </KeyboardAvoidingView>
+      <AnimatedBlurHeader
+        title={categoryTitle}
+        scrollY={scrollY}
+        scrollThreshold={150}
+      />
       <Modal
         visible={isVisible}
         animationType="slide"

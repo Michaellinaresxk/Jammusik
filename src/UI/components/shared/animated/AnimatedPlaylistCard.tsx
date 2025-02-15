@@ -1,6 +1,6 @@
 import React, {useEffect, useRef} from 'react';
 import {Animated, StyleSheet} from 'react-native';
-import {PlaylistCard} from './cards/PlaylistCard';
+import {PlaylistCard} from '../cards/PlaylistCard';
 
 export const AnimatedPlaylistCard = ({
   index,
@@ -15,7 +15,6 @@ export const AnimatedPlaylistCard = ({
   const opacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    // Agregamos un pequeño retraso basado en el índice para el efecto escalonado
     const delay = index * 100;
 
     Animated.parallel([
