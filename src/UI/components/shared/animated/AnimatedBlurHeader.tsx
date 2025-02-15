@@ -80,8 +80,12 @@ const AnimatedBlurHeader = ({
 
       {/* Contents of the header */}
       <View style={[styles.headerContentContainer, {paddingTop}]}>
-        <View style={styles.headerRow}>
-          {showBackButton && (
+        <View
+          style={[
+            styles.headerRow,
+            !showBackButton && styles.headerRowWithoutBack,
+          ]}>
+          {showBackButton ? (
             <Animated.View style={backButtonAnimation}>
               <TouchableOpacity
                 style={styles.backButton}
@@ -93,13 +97,20 @@ const AnimatedBlurHeader = ({
                 />
               </TouchableOpacity>
             </Animated.View>
+          ) : (
+            <View style={styles.emptySpace} />
           )}
 
-          <Animated.Text style={styles.headerTitle} numberOfLines={1}>
+          <Animated.Text
+            style={[
+              styles.headerTitle,
+              !showBackButton && styles.headerTitleCentered,
+            ]}
+            numberOfLines={1}>
             {title}
           </Animated.Text>
 
-          <View style={styles.rightPlaceholder} />
+          <View style={styles.emptySpace} />
         </View>
       </View>
     </Animated.View>
@@ -145,9 +156,11 @@ const styles = StyleSheet.create({
   headerRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
     height: 60,
+    paddingHorizontal: 16,
+  },
+  headerRowWithoutBack: {
+    justifyContent: 'center', // Center when no back button
   },
   backButton: {
     padding: 8,
@@ -165,10 +178,12 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
     marginHorizontal: 10,
-    position: 'relative',
-    zIndex: 3,
   },
-  rightPlaceholder: {
+  headerTitleCentered: {
+    flex: 0, // Remove flex when centered
+    marginHorizontal: 0, // Remove margins when centered
+  },
+  emptySpace: {
     width: 40,
     height: 40,
   },
