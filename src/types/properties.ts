@@ -20,6 +20,7 @@ export interface SongDetailsProperties {
 export type PlaylistProperties = {
   id: string;
   title: string;
+  createdAt: Date;
   originalPlaylistId?: string;
   sharedBy?: string;
 };
