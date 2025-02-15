@@ -34,6 +34,7 @@ import {Separator} from '../../components/shared/Separator';
 import {SliderQuotes} from '../../components/shared/SliderQuotes';
 import {PlaylistCard} from '../../components/shared/cards/PlaylistCard';
 import {PrimaryIcon} from '../../components/shared/PrimaryIcon';
+import AnimatedBlurHeader from '../../components/shared/animated/AnimatedBlurHeader';
 
 export const HomeScreen = () => {
   const navigation = useNavigation();
@@ -49,6 +50,8 @@ export const HomeScreen = () => {
   const [isLoadingNewSong, setIsLoadingNewSong] = useState(false);
 
   const musicIconScale = useRef(new Animated.Value(1)).current;
+
+  const scrollY = useRef(new Animated.Value(0)).current;
 
   // Animation for the music icon
   useEffect(() => {
@@ -137,7 +140,7 @@ export const HomeScreen = () => {
     <>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <ScrollView
+        <Animated.ScrollView
           refreshControl={
             <RefreshControl
               refreshing={isRefreshing}
@@ -150,6 +153,10 @@ export const HomeScreen = () => {
               onRefresh={refresh}
             />
           }
+          onScroll={Animated.event(
+            [{nativeEvent: {contentOffset: {y: scrollY}}}],
+            {useNativeDriver: true},
+          )}
           showsVerticalScrollIndicator={false} // Hides the scroll bar
           decelerationRate="normal" // Controls the deceleration speed
           scrollEventThrottle={16} // Improves softness
@@ -314,8 +321,14 @@ export const HomeScreen = () => {
               />
             </ScrollView>
           </Modal>
-        </ScrollView>
+        </Animated.ScrollView>
       </KeyboardAvoidingView>
+      <AnimatedBlurHeader
+        title="Home"
+        scrollY={scrollY}
+        scrollThreshold={150}
+        showBackButton={false}
+      />
     </>
   );
 };

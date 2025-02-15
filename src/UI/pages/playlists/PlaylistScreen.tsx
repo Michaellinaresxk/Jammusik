@@ -30,7 +30,7 @@ import Toast from 'react-native-toast-message';
 import {useUpdatePlaylist} from '../../../hooks/useUpdatePlaylist';
 import {RootStackParamsList} from '../../routes/AppNavigator';
 import {SharePlaylistModal} from '../../components/shared/modals/SharedPlaylistModal';
-import {AnimatedSharedButton} from '../../components/shared/AnimatedSharedButton';
+import {AnimatedSharedButton} from '../../components/shared/animated/AnimatedSharedButton';
 
 export const PlaylistScreen = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamsList>>();
