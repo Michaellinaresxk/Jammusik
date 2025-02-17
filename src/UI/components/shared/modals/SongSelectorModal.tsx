@@ -13,14 +13,14 @@ import {getAuth} from 'firebase/auth';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {globalColors} from '../../../theme/Theme';
 import {useCategoryService} from '../../../../context/CategoryServiceContext';
+import {usePlaylistService} from '../../../../context/PlaylistServiceContext';
 import {SongView} from '../../../../views/SongView';
 import {PrimaryButton} from '../PrimaryButton';
-import {ScrollView} from 'react-native-gesture-handler';
 
 interface SongSelectorModalProps {
   isVisible: boolean;
   onClose: () => void;
-  onAddSong: (songData: SongView) => Promise<void>;
+  onAddSong: (songData: SongView[]) => Promise<void>;
   playlistId: string;
 }
 
@@ -28,37 +28,48 @@ export const SongSelectorModal: React.FC<SongSelectorModalProps> = ({
   isVisible,
   onClose,
   onAddSong,
+  playlistId,
 }) => {
   const [songs, setSongs] = useState<SongView[]>([]);
+  const [playlistSongs, setPlaylistSongs] = useState<Set<string>>(new Set());
+  const [selectedSongs, setSelectedSongs] = useState<Set<string>>(new Set());
   const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const auth = getAuth();
   const categoryService = useCategoryService();
+  const playlistService = usePlaylistService();
 
   const sortSongs = useCallback((songsToSort: SongView[]): SongView[] => {
     return [...songsToSort].sort((a, b) => {
-      // First sort by title
       const titleComparison = a.title
         .toLowerCase()
         .localeCompare(b.title.toLowerCase());
-
-      // If titles are the same, sort by artist
-      if (titleComparison === 0) {
-        return a.artist.toLowerCase().localeCompare(b.artist.toLowerCase());
-      }
-
-      return titleComparison;
+      return titleComparison === 0
+        ? a.artist.toLowerCase().localeCompare(b.artist.toLowerCase())
+        : titleComparison;
     });
   }, []);
+
+  const loadPlaylistSongs = useCallback(async () => {
+    try {
+      const currentPlaylistSongs = await playlistService.getPlaylistSongs(
+        playlistId,
+      );
+      setPlaylistSongs(new Set(currentPlaylistSongs.map(song => song.id)));
+    } catch (error) {
+      console.error('Failed to fetch playlist songs:', error);
+    }
+  }, [playlistId, playlistService]);
 
   const loadSongs = useCallback(async () => {
     if (!auth.currentUser?.uid) return;
 
     setIsLoading(true);
     try {
+      await loadPlaylistSongs();
       const fetchedSongs = await categoryService.getAllSongsByUserId(
         auth.currentUser.uid,
       );
-      // Sort the songs before saving them in the state
       const sortedSongs = sortSongs(fetchedSongs);
       setSongs(sortedSongs);
     } catch (error) {
@@ -67,47 +78,119 @@ export const SongSelectorModal: React.FC<SongSelectorModalProps> = ({
     } finally {
       setIsLoading(false);
     }
-  }, [auth.currentUser?.uid, categoryService, sortSongs]);
+  }, [auth.currentUser?.uid, categoryService, sortSongs, loadPlaylistSongs]);
 
   useEffect(() => {
     if (isVisible) {
       loadSongs();
+      setSelectedSongs(new Set()); // Reset selections when modal opens
     }
   }, [isVisible, loadSongs]);
 
-  const handleSongSelection = async (song: SongView) => {
-    setIsLoading(true);
+  const handleSongSelection = (songId: string) => {
+    if (playlistSongs.has(songId)) {
+      return; // No permitir seleccionar canciones que ya están en la playlist
+    }
+
+    setSelectedSongs(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(songId)) {
+        newSet.delete(songId);
+      } else {
+        newSet.add(songId);
+      }
+      return newSet;
+    });
+  };
+
+  const handleAddSelectedSongs = async () => {
+    if (selectedSongs.size === 0) {
+      Alert.alert('Selection Required', 'Please select at least one song');
+      return;
+    }
+
+    setIsSubmitting(true);
     try {
-      await onAddSong({
-        id: song.id,
-        title: song.title,
-        artist: song.artist,
-        categoryId: song.categoryId,
-        isDone: song.isDone,
-      });
+      const selectedSongsData = songs
+        .filter(song => selectedSongs.has(song.id))
+        .map(song => ({
+          id: song.id,
+          title: song.title,
+          artist: song.artist,
+          categoryId: song.categoryId,
+          isDone: song.isDone,
+        }));
+
+      await onAddSong(selectedSongsData);
+      setSelectedSongs(new Set()); // Reset selections after successful addition
+    } catch (error) {
+      console.error('Failed to add songs:', error);
+      Alert.alert('Error', 'Failed to add selected songs to playlist');
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
 
-  const renderSongItem = ({item}: {item: SongView}) => (
-    <TouchableOpacity
-      onPress={() => handleSongSelection(item)}
-      disabled={isLoading}>
-      <View style={styles.container}>
-        <Icon name="musical-note" size={24} color={globalColors.primary} />
-        <View style={styles.songItemContent}>
-          <Text style={styles.songTitle}>{item.title}</Text>
-          <Text style={styles.artistName}>{item.artist}</Text>
-        </View>
+  const renderSongItem = ({item}: {item: SongView}) => {
+    const isSelected = selectedSongs.has(item.id);
+    const isInPlaylist = playlistSongs.has(item.id);
+
+    return (
+      <TouchableOpacity
+        onPress={() => handleSongSelection(item.id)}
+        disabled={isSubmitting || isInPlaylist}
+        style={[
+          styles.container,
+          isSelected && styles.selectedContainer,
+          isInPlaylist && styles.inPlaylistContainer,
+        ]}>
         <Icon
-          name="add-circle-outline"
+          name={
+            isSelected
+              ? 'checkmark-circle'
+              : isInPlaylist
+              ? 'alert-circle'
+              : 'musical-note'
+          }
           size={24}
-          color={globalColors.primary}
-          style={styles.addIcon}
+          color={
+            isSelected
+              ? globalColors.secondary
+              : isInPlaylist
+              ? globalColors.danger
+              : globalColors.primary
+          }
         />
-      </View>
-    </TouchableOpacity>
+        <View style={styles.songItemContent}>
+          <Text
+            style={[styles.songTitle, isInPlaylist && styles.inPlaylistText]}>
+            {item.title}
+          </Text>
+          <Text
+            style={[styles.artistName, isInPlaylist && styles.inPlaylistText]}>
+            {item.artist}
+          </Text>
+          {isInPlaylist && (
+            <Text style={styles.inPlaylistLabel}>Already in playlist</Text>
+          )}
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
+  const renderHeader = () => (
+    <View style={styles.headerContainer}>
+      <Text style={styles.selectionCount}>
+        {selectedSongs.size} songs selected
+      </Text>
+      {selectedSongs.size > 0 && (
+        <TouchableOpacity
+          onPress={() => setSelectedSongs(new Set())}
+          style={styles.clearButton}>
+          <Text style={styles.clearButtonText}>Clear Selection</Text>
+        </TouchableOpacity>
+      )}
+    </View>
   );
 
   return (
@@ -115,7 +198,7 @@ export const SongSelectorModal: React.FC<SongSelectorModalProps> = ({
       visible={isVisible}
       animationType="slide"
       presentationStyle="formSheet">
-      <ScrollView horizontal={false} style={{flex: 1}}>
+      <View style={styles.modalContainer}>
         <View style={styles.modalBtnContainer}>
           <Text style={styles.modalFormHeaderTitle}>Add Songs</Text>
           <PrimaryButton
@@ -123,6 +206,7 @@ export const SongSelectorModal: React.FC<SongSelectorModalProps> = ({
             btnFontSize={20}
             colorText={globalColors.light}
             onPress={onClose}
+            disabled={isSubmitting}
           />
         </View>
 
@@ -143,18 +227,41 @@ export const SongSelectorModal: React.FC<SongSelectorModalProps> = ({
             </Text>
           </View>
         ) : (
-          <FlatList
-            data={songs}
-            renderItem={renderSongItem}
-            keyExtractor={item => item.id}
-            ItemSeparatorComponent={() => <View style={styles.separator} />}
-            contentContainerStyle={styles.listContainer}
-          />
+          <>
+            {renderHeader()}
+            <FlatList
+              data={songs}
+              renderItem={renderSongItem}
+              keyExtractor={item => item.id}
+              ItemSeparatorComponent={() => <View style={styles.separator} />}
+              contentContainerStyle={styles.listContainer}
+            />
+            {selectedSongs.size > 0 && (
+              <View style={styles.bottomContainer}>
+                <TouchableOpacity
+                  style={styles.addButton}
+                  onPress={handleAddSelectedSongs}
+                  disabled={isSubmitting}>
+                  <Icon
+                    name="add-circle"
+                    size={24}
+                    color={globalColors.light}
+                  />
+                  <Text style={styles.addButtonText}>
+                    {isSubmitting
+                      ? 'Adding...'
+                      : `Add ${selectedSongs.size} Songs`}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </>
         )}
-      </ScrollView>
+      </View>
     </Modal>
   );
 };
+
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
@@ -167,28 +274,106 @@ const styles = StyleSheet.create({
     paddingLeft: 35,
     paddingRight: 20,
     justifyContent: 'space-between',
+    paddingVertical: 12,
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: globalColors.terceary + '20',
+  },
+  selectionCount: {
+    fontSize: 16,
+    color: globalColors.primary,
+    fontWeight: '500',
+  },
+  clearButton: {
+    padding: 8,
+  },
+  clearButtonText: {
+    color: globalColors.danger,
+    fontSize: 14,
   },
   modalFormHeaderTitle: {
     fontSize: 20,
     color: globalColors.light,
   },
   listContainer: {
-    padding: 16,
+    flexGrow: 1,
   },
-  playlistItem: {
-    marginVertical: 8,
-    backgroundColor: globalColors.light,
-    borderRadius: 10,
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    backgroundColor: 'white',
+  },
+  selectedContainer: {
+    backgroundColor: globalColors.primary + '10',
+  },
+  inPlaylistContainer: {
+    backgroundColor: globalColors.danger + '05',
+    opacity: 0.8,
+  },
+  songItemContent: {
+    flex: 1,
+    marginLeft: 12,
+  },
+  songTitle: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#000',
+    marginBottom: 4,
+  },
+  artistName: {
+    fontSize: 14,
+    color: '#666',
+  },
+  inPlaylistText: {
+    color: globalColors.terceary,
+  },
+  inPlaylistLabel: {
+    fontSize: 12,
+    color: globalColors.danger,
+    marginTop: 4,
+  },
+  separator: {
+    height: 1,
+    backgroundColor: globalColors.terceary,
+    opacity: 0.2,
+  },
+  bottomContainer: {
+    padding: 16,
+    borderTopWidth: 1,
+    borderTopColor: globalColors.terceary + '20',
+    backgroundColor: 'white',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: -2},
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  addButton: {
+    backgroundColor: globalColors.primary,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+    borderRadius: 12,
     elevation: 2,
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.1,
     shadowRadius: 2,
   },
-  separator: {
-    height: 1,
-    backgroundColor: globalColors.terceary,
-    opacity: 0.2,
+  addButtonText: {
+    color: globalColors.light,
+    fontSize: 16,
+    fontWeight: '600',
+    marginLeft: 8,
   },
   loadingContainer: {
     flex: 1,
@@ -212,32 +397,5 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 8,
     textAlign: 'center',
-  },
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderBottomWidth: 0.5,
-    borderBottomColor: 'rgba(0,0,0,0.1)',
-  },
-  songItemContent: {
-    flex: 1,
-    marginLeft: 12,
-    justifyContent: 'center',
-  },
-  songTitle: {
-    fontSize: 16,
-    fontWeight: '500',
-    marginBottom: 4,
-    color: '#000',
-  },
-  artistName: {
-    fontSize: 14,
-    color: '#666',
-  },
-  addIcon: {
-    marginLeft: 'auto',
-    paddingLeft: 12,
   },
 });

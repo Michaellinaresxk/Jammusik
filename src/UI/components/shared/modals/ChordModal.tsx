@@ -6,7 +6,6 @@ import {
   StyleSheet,
   ScrollView,
   Pressable,
-  Platform,
 } from 'react-native';
 import {PrimaryIcon} from '../PrimaryIcon';
 import {globalColors} from '../../../theme/Theme';
@@ -85,7 +84,7 @@ export const ChordModal: React.FC<ChordModalProps> = ({
               />
               <Text style={styles.emptyStateText}>No chords available yet</Text>
               <Text style={styles.emptyStateSubtext}>
-                Add chords through the song details form
+                Add chords using the floating button with the "+" symbol
               </Text>
             </View>
           )}

@@ -35,6 +35,7 @@ import {useTabFinder} from '../../../hooks/useTabFinder';
 import {ChordModal} from '../../components/shared/modals/ChordModal';
 import {useUpdateSongDetails} from '../../../hooks/useUpdateSongDetails';
 import {UpdateSongDetailsParams} from '../../../types/songTypes';
+import {SliderQuotes} from '../../components/shared/SliderQuotes';
 // import {ChordGenerator} from '../../components/shared/ChordGenerator';
 export const SongSelectedScreen = () => {
   const params = useRoute().params;
@@ -628,6 +629,7 @@ export const SongSelectedScreen = () => {
               )}
             </View>
           </View>
+          <SliderQuotes />
           {/*
           <View style={{padding: 30}}>
             <ChordGenerator
