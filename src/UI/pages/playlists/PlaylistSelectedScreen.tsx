@@ -67,25 +67,33 @@ export const PlaylistSelectedScreen = () => {
     currentlyOpenSwipeable.current = songId;
   };
 
-  const handleAddSongToPlaylist = async (songData: SongView) => {
+  const handleAddSongsToPlaylist = async (songsData: SongView[]) => {
     try {
-      await playlistService.addSongToPlaylist(playlistId, {
-        id: songData.id,
-        title: songData.title,
-        artist: songData.artist,
-        categoryId: songData.categoryId,
-        originalSongId: songData.id,
-      });
+      setIsLoading(true);
+      // Use Promise.all to add all songs concurrently
+      await Promise.all(
+        songsData.map(songData =>
+          playlistService.addSongToPlaylist(playlistId, {
+            id: songData.id,
+            title: songData.title,
+            artist: songData.artist,
+            categoryId: songData.categoryId,
+            originalSongId: songData.id,
+          }),
+        ),
+      );
 
       Toast.show({
         type: 'success',
-        text1: 'Song added to playlist successfully',
+        text1: `${songsData.length} songs added to playlist successfully`,
       });
       setIsSongSelectorVisible(false);
       loadSongList();
     } catch (error) {
-      console.error('Failed to add song to playlist:', error);
-      Alert.alert('Error', 'Failed to add song to playlist');
+      console.error('Failed to add songs to playlist:', error);
+      Alert.alert('Error', 'Failed to add songs to playlist');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -283,7 +291,7 @@ export const PlaylistSelectedScreen = () => {
       <SongSelectorModal
         isVisible={isSongSelectorVisible}
         onClose={() => setIsSongSelectorVisible(false)}
-        onAddSong={handleAddSongToPlaylist}
+        onAddSong={handleAddSongsToPlaylist}
         playlistId={playlistId}
       />
 
