@@ -1,3 +1,4 @@
+// components/ChordGenerator.jsx
 import React from 'react';
 import {View, StyleSheet, Alert} from 'react-native';
 import {useChordGenerator} from '../../../hooks/useChordGenerator';
@@ -8,38 +9,33 @@ export const ChordGenerator = ({title, artist, onChordsGenerated, style}) => {
   const {generateChords, loading} = useChordGenerator();
 
   const handleGenerateChords = async () => {
+    // Primero, verifica que tenemos los datos necesarios
+    console.log('Button pressed with:', {title, artist});
+    Alert.alert(
+      'Debug',
+      `Attempting to generate chords for: ${title} by ${artist}`,
+    );
+
     try {
+      // Verifica que la llamada al servicio funciona
       const chordData = await generateChords(title, artist);
+      console.log('Response:', chordData);
 
       if (chordData) {
-        // Prepare the chords in the format expected by your app
-        const formattedChords = [
-          ...chordData.progressions.verse,
-          ...chordData.progressions.chorus,
-        ];
-
         Alert.alert(
-          'Chords Generated!',
-          `Key: ${chordData.key}\nDifficulty: ${chordData.difficulty}\n\nWould you like to use these chords?`,
+          'Success!',
+          'Chords were generated. Check console for details.',
           [
             {
-              text: 'Cancel',
-              style: 'cancel',
-            },
-            {
-              text: 'Use Chords',
-              onPress: () =>
-                onChordsGenerated({
-                  chords: formattedChords,
-                  key: chordData.key,
-                  recommendations: chordData.recommendations,
-                }),
+              text: 'OK',
+              onPress: () => onChordsGenerated(chordData),
             },
           ],
         );
       }
     } catch (error) {
-      Alert.alert('Error', 'Failed to generate chords');
+      console.error('Error:', error);
+      Alert.alert('Error', error.message || 'Failed to generate chords');
     }
   };
 
@@ -47,7 +43,18 @@ export const ChordGenerator = ({title, artist, onChordsGenerated, style}) => {
     <View style={[styles.container, style]}>
       <PrimaryButton
         label={loading ? 'Generating Chords...' : 'Generate with AI'}
-        onPress={handleGenerateChords}
+        onPress={() => {
+          Alert.alert('Confirm', 'Generate chords?', [
+            {
+              text: 'Cancel',
+              style: 'cancel',
+            },
+            {
+              text: 'Yes',
+              onPress: handleGenerateChords,
+            },
+          ]);
+        }}
         disabled={loading}
         btnFontSize={18}
         colorText={globalColors.light}
@@ -57,7 +64,6 @@ export const ChordGenerator = ({title, artist, onChordsGenerated, style}) => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     marginVertical: 10,

@@ -1,26 +1,41 @@
+import {Alert} from 'react-native';
 import {API_BASE_URL} from '../../constants/spotifyBaseUrl';
 
+// chordGeneratorService.js
 export const chordGeneratorService = {
   async generateChords(title, artist) {
     try {
-      console.log('Requesting chords for:', {title, artist});
-      const response = await fetch(`${API_BASE_URL}/api/chords/generate`, {
+      const url = `${API_BASE_URL}/chords/generate`;
+      console.log('Making request to:', url);
+
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Accept: 'application/json',
         },
-        body: JSON.stringify({title, artist}),
+        body: JSON.stringify({
+          title: title.trim(),
+          artist: artist.trim(),
+        }),
       });
 
+      console.log('Response status:', response.status);
+
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorText = await response.text();
+        console.error('Error response:', errorText);
+        throw new Error(
+          `HTTP error! status: ${response.status}, message: ${errorText}`,
+        );
       }
 
       const data = await response.json();
-      console.log('Received chord data:', data);
+      console.log('Successful response:', data);
       return data;
     } catch (error) {
-      console.error('Chord service error:', error);
+      console.error('Service error:', error);
+      Alert.alert('Service Error', error.message);
       throw error;
     }
   },
