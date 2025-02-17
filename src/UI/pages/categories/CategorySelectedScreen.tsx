@@ -13,7 +13,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {RouteProp, useRoute} from '@react-navigation/native';
+import {RouteProp, useFocusEffect, useRoute} from '@react-navigation/native';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {getAuth} from 'firebase/auth';
 import {Swipeable} from 'react-native-gesture-handler';
@@ -107,6 +107,23 @@ export const CategorySelectedScreen = () => {
   };
 
   const {resetToggle} = resetSongsState;
+
+  useFocusEffect(
+    useCallback(() => {
+      const refreshData = async () => {
+        await loadSongList();
+        // After loading songs, update available keys
+        if (librarySongs.length > 0) {
+          const uniqueKeys = [
+            ...new Set(librarySongs.map(song => song.songKey).filter(Boolean)),
+          ];
+          setAvailableKeys(uniqueKeys);
+        }
+      };
+
+      refreshData();
+    }, []),
+  );
 
   const handleShare = async () => {
     Alert.alert('Error', 'Functionality comming soon...');
@@ -206,7 +223,6 @@ export const CategorySelectedScreen = () => {
     setIsLoading(true);
     try {
       const userId = auth.currentUser.uid;
-
       const fetchedSongs = isLibraryCategory
         ? await categoryService.getAllSongsByUserId(userId)
         : await categoryService.getSongListByCategory(userId, categoryId);
@@ -244,7 +260,6 @@ export const CategorySelectedScreen = () => {
         }),
       );
 
-      // Ensure consistent sorting
       const sortedSongs = songsWithDetails.sort((a, b) => {
         const dateA =
           a.createdAt instanceof Date ? a.createdAt : new Date(a.createdAt);
@@ -254,12 +269,15 @@ export const CategorySelectedScreen = () => {
       });
 
       setLibrarySongs(sortedSongs);
-      setSongList(sortedSongs);
 
+      // Actualizar keys disponibles
       const uniqueKeys = [
         ...new Set(sortedSongs.map(song => song.songKey).filter(Boolean)),
       ];
       setAvailableKeys(uniqueKeys);
+
+      // Aplicar filtros actuales a los nuevos datos
+      filterSongs(sortedSongs, searchText, selectedKey);
     } catch (error) {
       console.error('Error in loadSongList:', error);
       if (!songList.length) {
@@ -278,40 +296,49 @@ export const CategorySelectedScreen = () => {
     categoryService,
     categoryId,
     songDetailsService,
+    searchText,
+    selectedKey,
+    filterSongs,
   ]);
 
-  const filterSongs = async (
-    songs: ExtendedSongView[],
-    search: string,
-    key: string | null,
-  ) => {
-    if (!songs) return;
+  const filterSongs = useCallback(
+    (songs: ExtendedSongView[], search: string, key: string | null) => {
+      if (!songs) return;
 
-    let filtered = [...songs];
+      let filtered = [...songs];
 
-    if (search) {
-      filtered = filtered.filter(song =>
-        song.title.toLowerCase().includes(search.toLowerCase()),
-      );
-    }
+      if (search) {
+        filtered = filtered.filter(song =>
+          song.title.toLowerCase().includes(search.toLowerCase()),
+        );
+      }
 
-    if (key) {
-      await loadSongList();
-      filtered = filtered.filter(song => song.songKey === key);
-    }
+      if (key) {
+        filtered = filtered.filter(song => song.songKey === key);
+      }
 
-    setSongList(filtered);
-  };
-  const handleSearch = (text: string) => {
-    setSearchText(text);
-    filterSongs(librarySongs, text, selectedKey);
-  };
+      setSongList(filtered);
+    },
+    [],
+  );
 
-  const handleKeyFilter = async (key: string | null) => {
-    await loadSongList();
-    setSelectedKey(key);
-    filterSongs(librarySongs, searchText, key);
-  };
+  // 2. Simplificar handleSearch para usar el callback
+  const handleSearch = useCallback(
+    (text: string) => {
+      setSearchText(text);
+      filterSongs(librarySongs, text, selectedKey);
+    },
+    [librarySongs, selectedKey, filterSongs],
+  );
+
+  // 3. Optimizar handleKeyFilter para evitar recargas innecesarias
+  const handleKeyFilter = useCallback(
+    (key: string | null) => {
+      setSelectedKey(key);
+      filterSongs(librarySongs, searchText, key);
+    },
+    [librarySongs, searchText, filterSongs],
+  );
 
   const closeModal = () => setIsVisible(false);
   const openModal = () => setIsVisible(true);
