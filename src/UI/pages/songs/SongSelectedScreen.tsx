@@ -34,9 +34,11 @@ import {useTrackInfo} from '../../../hooks/useTrackInfo';
 import {useTabFinder} from '../../../hooks/useTabFinder';
 import {ChordModal} from '../../components/shared/modals/ChordModal';
 import {useUpdateSongDetails} from '../../../hooks/useUpdateSongDetails';
-import {UpdateSongDetailsParams} from '../../../types/songTypes';
 import {SliderQuotes} from '../../components/shared/SliderQuotes';
-// import {ChordGenerator} from '../../components/shared/ChordGenerator';
+import {ChordDisplay} from '../../components/shared/ChordDisplay';
+import {LinearGradient} from 'react-native-linear-gradient';
+import {ChordGeneratorModal} from '../../components/shared/modals/ChordGeneratorModal';
+// import LinearGradient from 'react-native-svg/lib/typescript/elements/LinearGradient';
 export const SongSelectedScreen = () => {
   const params = useRoute().params;
   const [isVisible, setIsVisible] = useState(false);
@@ -59,11 +61,14 @@ export const SongSelectedScreen = () => {
   const [hasLyrics, setHasLyrics] = useState(false);
 
   const [isChordModalVisible, setIsChordModalVisible] = useState(false);
+  const [isGeneratorModalVisible, setIsGeneratorModalVisible] = useState(false);
+  const [chordData, setChordData] = useState(null);
 
   const {findTab, loading: tabLoading} = useTabFinder();
   const [tabUrls, setTabUrls] = useState(null);
 
   const [loading, setLoading] = useState(false);
+
   const {
     trackInfo,
     loading: loadingTrackInfo,
@@ -146,22 +151,9 @@ export const SongSelectedScreen = () => {
     }
   };
 
-  // const handleChordsGenerated = chordData => {
-  //   // Update status with new chords
-  //   setChordList(chordData.chords);
-  //   setSongKey(chordData.key);
-
-  //   // Optional: save in the database
-  //   onCreateSongDetails({
-  //     songKey: chordData.key,
-  //     chordList: chordData.chords,
-  //     notes: `Generated with AI\nRecommended strumming: ${chordData.recommendations.strumming.join(
-  //       ', ',
-  //     )}\nCapo suggestion: Position ${chordData.recommendations.capo.position}`,
-  //     lyricLink,
-  //     tabLink,
-  //   });
-  // };
+  const handleChordsGenerated = data => {
+    setChordData(data);
+  };
 
   // Fetch track info when component mounts
   useEffect(() => {
@@ -191,9 +183,6 @@ export const SongSelectedScreen = () => {
     loadTrackInfo();
   }, [params.title, params.artist, fetchTrackInfo]);
 
-  const closeModal = () => {
-    setIsVisible(false);
-  };
   const showToast = () => {
     Toast.show({
       type: 'success',
@@ -537,18 +526,6 @@ export const SongSelectedScreen = () => {
             </View>
           )}
 
-          {/* {chordList && chordList.length > 0 && (
-            <View style={styles.chordLayout}>
-              <Text style={styles.title}>Your Custom Chords:</Text>
-              <FlatList
-                data={chordList}
-                renderItem={renderChordItem}
-                keyExtractor={(item, index) => index.toString()}
-                horizontal
-              />
-            </View>
-          )} */}
-
           <View style={styles.toolsSection}>
             <Text style={styles.title}>Tools</Text>
             <View style={styles.toolsGrid}>
@@ -629,16 +606,37 @@ export const SongSelectedScreen = () => {
               )}
             </View>
           </View>
+
+          <View style={styles.aiGeneratorContainer}>
+            <Pressable
+              style={({pressed}) => [
+                styles.aiGeneratorButton,
+                pressed && styles.buttonPressed,
+              ]}
+              onPress={() => setIsGeneratorModalVisible(true)}>
+              <View style={styles.iconContainer}>
+                <PrimaryIcon
+                  name="musical-notes"
+                  size={24}
+                  color={globalColors.primaryDark}
+                />
+              </View>
+              <Text style={styles.aiGeneratorText}>Generate Chords</Text>
+              <Text style={styles.aiGeneratorSubText}>
+                AI Chord Suggestions
+              </Text>
+            </Pressable>
+          </View>
+          {chordData && (
+            <View>
+              <Text>Debug: Chord data received</Text>
+              <Text>{JSON.stringify(chordData, null, 2)}</Text>
+            </View>
+          )}
+
+          <ChordDisplay chordData={chordData} />
+
           <SliderQuotes />
-          {/*
-          <View style={{padding: 30}}>
-            <ChordGenerator
-              title={params.title}
-              artist={params.artist}
-              onChordsGenerated={handleChordsGenerated}
-              style={styles.chordGenerator}
-            />
-          </View> */}
         </ScrollView>
       </KeyboardAvoidingView>
 
@@ -711,6 +709,7 @@ export const SongSelectedScreen = () => {
         />
       </Modal>
 
+      {/* Mantén el ChordModal original */}
       <ChordModal
         visible={isChordModalVisible}
         onClose={() => setIsChordModalVisible(false)}
@@ -718,6 +717,18 @@ export const SongSelectedScreen = () => {
         songKey={songKey}
         title={params.title}
         artist={params.artist}
+      />
+
+      <ChordGeneratorModal
+        visible={isGeneratorModalVisible}
+        onClose={() => {
+          setIsGeneratorModalVisible(false);
+          setChordData(null);
+        }}
+        title={params.title}
+        artist={params.artist}
+        chordData={chordData}
+        onChordsGenerated={handleChordsGenerated}
       />
     </>
   );
@@ -955,5 +966,87 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     borderRadius: 4,
     fontSize: 14,
+  },
+
+  generatorContainer: {
+    padding: 20,
+    marginTop: 10,
+  },
+  gradientBorder: {
+    borderRadius: 15,
+    padding: 2,
+  },
+  generatorButton: {
+    backgroundColor: globalColors.primary,
+    borderRadius: 13,
+    overflow: 'hidden',
+  },
+  generatorButtonPressed: {
+    opacity: 0.9,
+    transform: [{scale: 0.98}],
+  },
+  generatorContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 15,
+  },
+  generatorIconContainer: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  generatorTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: globalColors.light,
+  },
+  generatorSubtext: {
+    fontSize: 14,
+    color: 'rgba(255, 255, 255, 0.8)',
+    marginTop: 2,
+  },
+  generatorTextContainer: {
+    flex: 1,
+    marginLeft: 15,
+  },
+
+  aiGeneratorContainer: {
+    padding: 20,
+    alignItems: 'center',
+  },
+  aiGeneratorButton: {
+    width: '100%',
+    backgroundColor: globalColors.primaryAlt,
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: globalColors.primary,
+  },
+  buttonPressed: {
+    opacity: 0.8,
+    transform: [{scale: 0.98}],
+  },
+  iconContainer: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: globalColors.primary + '20',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  aiGeneratorText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: globalColors.primaryDark,
+  },
+  aiGeneratorSubText: {
+    fontSize: 14,
+    color: globalColors.primary,
+    marginTop: 4,
   },
 });
