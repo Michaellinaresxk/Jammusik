@@ -1258,6 +1258,27 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - react-native-blur (4.4.1):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - react-native-keyboard-controller (1.15.2):
     - DoubleConversion
     - glog
@@ -1721,7 +1742,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNSVG (15.10.1):
+  - RNSVG (15.11.1):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1741,9 +1762,9 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNSVG/common (= 15.10.1)
+    - RNSVG/common (= 15.11.1)
     - Yoga
-  - RNSVG/common (15.10.1):
+  - RNSVG/common (15.11.1):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1827,6 +1848,7 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - React-microtasksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/microtasks`)
+  - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-keyboard-controller (from `../node_modules/react-native-keyboard-controller`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - React-nativeconfig (from `../node_modules/react-native/ReactCommon`)
@@ -1946,6 +1968,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   React-microtasksnativemodule:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/microtasks"
+  react-native-blur:
+    :path: "../node_modules/@react-native-community/blur"
   react-native-keyboard-controller:
     :path: "../node_modules/react-native-keyboard-controller"
   react-native-safe-area-context:
@@ -2060,6 +2084,7 @@ SPEC CHECKSUMS:
   React-logger: 697873f06b8ba436e3cddf28018ab4741e8071b6
   React-Mapbuffer: c174e11bdea12dce07df8669d6c0dc97eb0c7706
   React-microtasksnativemodule: 8a80099ad7391f4e13a48b12796d96680f120dc6
+  react-native-blur: 28b0a731ed804bed3e88757c2414305896e6b47e
   react-native-keyboard-controller: dbd7fb6a233505f937c9242d6d8bb5ebe659ec32
   react-native-safe-area-context: d6406c2adbd41b2e09ab1c386781dc1c81a90919
   React-nativeconfig: f7ab6c152e780b99a8c17448f2d99cf5f69a2311
@@ -2093,7 +2118,7 @@ SPEC CHECKSUMS:
   RNGestureHandler: 0e5ae8d72ef4afb855e98dcdbe60f27d938abe13
   RNGoogleSignin: edec18754ff4af2cfee46072609ec5a7a754291a
   RNScreens: d022507f2b6d76c73335e9e35aedcf7bb2f791b0
-  RNSVG: ec2e9d524612ee95db5df143a54518c5404d93f0
+  RNSVG: ea3e35f0375ac20449384fa89ce056ee0e0690ee
   RNVectorIcons: 07792a9538e8577c1263fcad187712e90d65d8fb
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Yoga: fcc198acd4a55599b3468cfb6ebc526baff5f06e
