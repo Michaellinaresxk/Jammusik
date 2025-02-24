@@ -3,10 +3,15 @@ import {chordGeneratorService} from '../infra/api/chordGenerator';
 
 export const useChordGenerator = () => {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<Error | null>(null);
   const [generatedChords, setGeneratedChords] = useState(null);
 
-  const generateChords = useCallback(async (title, artist) => {
+  const generateChords = useCallback(async (title: string, artist: string) => {
+    if (!title || !artist) {
+      setError(new Error('Title and artist are required'));
+      return null;
+    }
+
     setLoading(true);
     setError(null);
 
@@ -15,8 +20,10 @@ export const useChordGenerator = () => {
       setGeneratedChords(data);
       return data;
     } catch (err) {
-      setError(err.message);
-      return null;
+      const error =
+        err instanceof Error ? err : new Error('Failed to generate chords');
+      setError(error);
+      throw error;
     } finally {
       setLoading(false);
     }

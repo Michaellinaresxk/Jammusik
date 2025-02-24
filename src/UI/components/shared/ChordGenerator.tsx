@@ -1,69 +1,48 @@
-// components/ChordGenerator.jsx
-import React from 'react';
+import React, {useState} from 'react';
 import {View, StyleSheet, Alert} from 'react-native';
 import {useChordGenerator} from '../../../hooks/useChordGenerator';
-import {PrimaryButton} from './PrimaryButton';
+import {PrimaryButton} from '../shared/PrimaryButton';
 import {globalColors} from '../../theme/Theme';
+import {MusicalLoader} from './animated/MusicalLoader';
 
 export const ChordGenerator = ({title, artist, onChordsGenerated, style}) => {
   const {generateChords, loading} = useChordGenerator();
+  const [showLoader, setShowLoader] = useState(false);
 
   const handleGenerateChords = async () => {
-    // Primero, verifica que tenemos los datos necesarios
-    console.log('Button pressed with:', {title, artist});
-    Alert.alert(
-      'Debug',
-      `Attempting to generate chords for: ${title} by ${artist}`,
-    );
-
     try {
-      // Verifica que la llamada al servicio funciona
+      setShowLoader(true);
       const chordData = await generateChords(title, artist);
-      console.log('Response:', chordData);
-
       if (chordData) {
-        Alert.alert(
-          'Success!',
-          'Chords were generated. Check console for details.',
-          [
-            {
-              text: 'OK',
-              onPress: () => onChordsGenerated(chordData),
-            },
-          ],
-        );
+        onChordsGenerated(chordData);
       }
     } catch (error) {
-      console.error('Error:', error);
-      Alert.alert('Error', error.message || 'Failed to generate chords');
+      Alert.alert(
+        'Error',
+        'Unable to generate chords. Please try again later.',
+      );
+    } finally {
+      setShowLoader(false);
     }
   };
 
   return (
     <View style={[styles.container, style]}>
       <PrimaryButton
-        label={loading ? 'Generating Chords...' : 'Generate with AI'}
-        onPress={() => {
-          Alert.alert('Confirm', 'Generate chords?', [
-            {
-              text: 'Cancel',
-              style: 'cancel',
-            },
-            {
-              text: 'Yes',
-              onPress: handleGenerateChords,
-            },
-          ]);
-        }}
-        disabled={loading}
+        label={loading ? 'Generating...' : 'Generate with AI'}
+        onPress={handleGenerateChords}
+        disabled={showLoader}
         btnFontSize={18}
         colorText={globalColors.light}
         bgColor={globalColors.primary}
         borderRadius={5}
       />
+
+      <MusicalLoader visible={showLoader} />
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     marginVertical: 10,

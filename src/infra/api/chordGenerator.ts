@@ -1,7 +1,6 @@
 import {Alert} from 'react-native';
 import {API_BASE_URL} from '../../constants/spotifyBaseUrl';
 
-// chordGeneratorService.js
 export const chordGeneratorService = {
   async generateChords(title, artist) {
     try {

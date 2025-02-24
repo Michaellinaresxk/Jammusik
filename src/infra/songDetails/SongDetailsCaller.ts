@@ -80,7 +80,7 @@ export class SongDetailsCaller {
     }
 
     try {
-      // Primero intentamos obtener el documento directamente
+      // First we try to obtain the document directly
       const docRef = this.getDocumentRef(userId, songId);
       const docSnap = await getDoc(docRef);
 
@@ -91,7 +91,7 @@ export class SongDetailsCaller {
         } as ApiSongDetails;
       }
 
-      // Si no encontramos el documento con el ID compuesto, buscamos con query
+      // If we don't find the document with the compound ID, we search with query
       const songDetailsCollection = collection(this.db, 'songDetails');
       const songDetailsQuery = query(
         songDetailsCollection,
@@ -146,11 +146,9 @@ export class SongDetailsCaller {
     }
 
     try {
-      // Primero verificamos si existe el documento
       const existingDetails = await this.getCurrentSongInfo(userId, songId);
 
       if (!existingDetails) {
-        // Si no existe, creamos uno nuevo
         await this.setCurrentInfo(
           userId,
           songId,
@@ -163,7 +161,7 @@ export class SongDetailsCaller {
         return;
       }
 
-      // Si existe, actualizamos el documento existente
+      // If it exists, we update the existing document
       const docRef = this.getDocumentRef(userId, songId);
       const updateData = this.cleanUndefinedValues({
         key,
@@ -181,7 +179,7 @@ export class SongDetailsCaller {
     }
   }
 
-  // Método auxiliar para migrar documentos antiguos al nuevo formato de ID
+  // Auxiliary method to migrate old documents to the new ID format
   async migrateOldDocuments(userId: string, songId: string): Promise<void> {
     try {
       const songDetailsCollection = collection(this.db, 'songDetails');
@@ -201,8 +199,6 @@ export class SongDetailsCaller {
           ...oldDoc.data(),
           updatedAt: serverTimestamp(),
         });
-
-        // Opcionalmente, podrías eliminar el documento antiguo aquí
       }
     } catch (error) {
       console.error('Error migrating documents:', error);

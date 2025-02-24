@@ -109,7 +109,6 @@ const AnimatedBlurHeader = ({
             numberOfLines={1}>
             {title}
           </Animated.Text>
-
           <View style={styles.emptySpace} />
         </View>
       </View>

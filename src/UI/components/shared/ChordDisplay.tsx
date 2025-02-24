@@ -1,16 +1,30 @@
-// components/ChordDisplay.jsx
-import React from 'react';
+import React, {useMemo} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {globalColors} from '../../theme/Theme';
 
 export const ChordDisplay = ({chordData}) => {
   if (!chordData) return null;
 
-  console.log('Rendering ChordDisplay with data:', chordData);
+  // We memorize the sections to avoid unnecessary re-renderings.
+  const renderChordSection = useMemo(
+    () => (title: string, chords: string[]) =>
+      (
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{title}</Text>
+          <View style={styles.chordRow}>
+            {chords.map((chord, index) => (
+              <Text key={`${title}-${index}`} style={styles.chord}>
+                {chord}
+              </Text>
+            ))}
+          </View>
+        </View>
+      ),
+    [],
+  );
 
   return (
     <View style={styles.container}>
-      {/* Key y Difficulty */}
       <View style={styles.header}>
         <Text style={styles.keyText}>Key: {chordData.key}</Text>
         <Text style={styles.difficultyText}>
@@ -18,45 +32,12 @@ export const ChordDisplay = ({chordData}) => {
         </Text>
       </View>
 
-      {/* Verse Chords */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Verse</Text>
-        <View style={styles.chordRow}>
-          {chordData.progressions.verse.map((chord, index) => (
-            <Text key={`verse-${index}`} style={styles.chord}>
-              {chord}
-            </Text>
-          ))}
-        </View>
-      </View>
+      {renderChordSection('Verse', chordData.progressions.verse)}
+      {renderChordSection('Chorus', chordData.progressions.chorus)}
 
-      {/* Chorus Chords */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Chorus</Text>
-        <View style={styles.chordRow}>
-          {chordData.progressions.chorus.map((chord, index) => (
-            <Text key={`chorus-${index}`} style={styles.chord}>
-              {chord}
-            </Text>
-          ))}
-        </View>
-      </View>
+      {chordData.substitutions?.length > 0 &&
+        renderChordSection('Alternative Chords', chordData.substitutions)}
 
-      {/* Substitutions */}
-      {chordData.substitutions && chordData.substitutions.length > 0 && (
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Alternative Chords</Text>
-          <View style={styles.chordRow}>
-            {chordData.substitutions.map((chord, index) => (
-              <Text key={`sub-${index}`} style={styles.chord}>
-                {chord}
-              </Text>
-            ))}
-          </View>
-        </View>
-      )}
-
-      {/* Strumming Patterns */}
       {chordData.recommendations?.strumming && (
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Strumming Patterns</Text>
@@ -68,7 +49,6 @@ export const ChordDisplay = ({chordData}) => {
         </View>
       )}
 
-      {/* Capo Information */}
       {chordData.recommendations?.capo && (
         <View style={styles.section}>
           <Text style={styles.capoText}>
@@ -93,7 +73,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 16,
     padding: 12,
-    backgroundColor: globalColors.primary + '10', // Usando el color primario con opacidad
+    backgroundColor: globalColors.primary + '10',
     borderRadius: 8,
   },
   keyText: {
@@ -112,7 +92,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 8,
-    // color: globalColors.text,
   },
   chordRow: {
     flexDirection: 'row',
@@ -130,15 +109,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginBottom: 4,
     padding: 8,
-    // backgroundColor: globalColors.background,
     borderRadius: 4,
-    // color: globalColors.text,
   },
   capoText: {
     fontSize: 14,
     color: globalColors.secondary,
     padding: 8,
-    // backgroundColor: globalColors.background,
     borderRadius: 4,
   },
 });
