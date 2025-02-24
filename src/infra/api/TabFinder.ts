@@ -10,7 +10,7 @@ export class TabFinderService {
       songsterr: `https://www.songsterr.com/a/wa/search?pattern=${encodedTitle}+${encodedArtist}`,
       // E-Chords
       echords: `https://www.e-chords.com/search?q=${encodedTitle}+${encodedArtist}`,
-      // Cifra Club (para canciones en portugués/español)
+      // Cifra Club (for songs in Portuguese/Spanish)
       cifraClub: `https://www.cifraclub.com.br/${this.slugify(
         artist,
       )}/${this.slugify(title)}`,

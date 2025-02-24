@@ -36,9 +36,8 @@ import {ChordModal} from '../../components/shared/modals/ChordModal';
 import {useUpdateSongDetails} from '../../../hooks/useUpdateSongDetails';
 import {SliderQuotes} from '../../components/shared/SliderQuotes';
 import {ChordDisplay} from '../../components/shared/ChordDisplay';
-import {LinearGradient} from 'react-native-linear-gradient';
 import {ChordGeneratorModal} from '../../components/shared/modals/ChordGeneratorModal';
-// import LinearGradient from 'react-native-svg/lib/typescript/elements/LinearGradient';
+
 export const SongSelectedScreen = () => {
   const params = useRoute().params;
   const [isVisible, setIsVisible] = useState(false);
@@ -770,24 +769,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginTop: 15,
   },
-  chordLayout: {
-    marginTop: 30,
-    padding: 30,
-    width: '100%',
-  },
-  chordConntent: {
-    flexDirection: 'row',
-    gap: 20,
-    marginTop: 15,
-  },
-  chord: {
-    color: globalColors.primary,
-    backgroundColor: globalColors.primaryAlt,
-    fontSize: 15,
-    padding: 10,
-    marginRight: 10,
-    borderRadius: 5,
-  },
+
   category: {
     color: globalColors.primary,
     fontSize: 18,
@@ -922,10 +904,6 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
 
-  chordGenerator: {
-    marginTop: 20,
-  },
-
   currentInfoContainer: {
     backgroundColor: globalColors.primaryAlt,
     margin: 16,
@@ -940,77 +918,6 @@ const styles = StyleSheet.create({
   },
   currentInfoContent: {
     gap: 8,
-  },
-
-  infoItem: {
-    fontSize: 16,
-    color: globalColors.primaryDark,
-  },
-  infoValue: {
-    color: globalColors.primary,
-    fontWeight: '500',
-  },
-  chordList: {
-    marginTop: 8,
-  },
-  chordContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-    marginTop: 4,
-  },
-  chordTag: {
-    backgroundColor: globalColors.primary,
-    color: globalColors.light,
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 4,
-    fontSize: 14,
-  },
-
-  generatorContainer: {
-    padding: 20,
-    marginTop: 10,
-  },
-  gradientBorder: {
-    borderRadius: 15,
-    padding: 2,
-  },
-  generatorButton: {
-    backgroundColor: globalColors.primary,
-    borderRadius: 13,
-    overflow: 'hidden',
-  },
-  generatorButtonPressed: {
-    opacity: 0.9,
-    transform: [{scale: 0.98}],
-  },
-  generatorContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 15,
-  },
-  generatorIconContainer: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  generatorTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: globalColors.light,
-  },
-  generatorSubtext: {
-    fontSize: 14,
-    color: 'rgba(255, 255, 255, 0.8)',
-    marginTop: 2,
-  },
-  generatorTextContainer: {
-    flex: 1,
-    marginLeft: 15,
   },
 
   aiGeneratorContainer: {

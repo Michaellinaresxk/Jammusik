@@ -1,4 +1,3 @@
-// utils/chordHandlers.js
 export const handleChordsGenerated = (chordData: {
   key: any;
   progressions: {verse: any; chorus: any};
@@ -6,7 +5,6 @@ export const handleChordsGenerated = (chordData: {
   difficulty: any;
 }) => {
   try {
-    // Formatear y procesar los datos recibidos
     const processedData = {
       key: chordData.key,
       chords: {
