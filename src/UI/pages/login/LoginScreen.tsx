@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
+  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -17,10 +18,7 @@ import {images} from '../../../assets/img/Images';
 import {BrandLogo} from '../../components/shared/BrandLogo';
 import {LinkLoginRegister} from '../../components/shared/LinkLoginRegister';
 import {useUserService} from '../../../context/UserServiceContext';
-import {useNavigation} from '@react-navigation/native';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {ForgotPasswordModal} from '../../components/shared/modals/ForgotPasswordModal';
-// import {GoogleSigninButton} from '@react-native-google-signin/google-signin';
 
 export const LoginScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -30,7 +28,6 @@ export const LoginScreen = () => {
   const [isForgotPasswordVisible, setIsForgotPasswordVisible] = useState(false);
 
   const userService = useUserService();
-  const navigation = useNavigation();
   const image = {
     uri: images?.loginBackground || '', // Validation to avoid undefined
   };
@@ -45,13 +42,18 @@ export const LoginScreen = () => {
       }
 
       await userService.loginUser(email, password);
-      navigation.navigate('HomeScreen');
-    } catch (error) {
-      const errorMessage =
-        error?.code === 'auth/invalid-credential'
-          ? 'Invalid credentials'
-          : error?.message || 'An unexpected error occurred.';
-      setError(errorMessage);
+
+      setEmail('');
+      setPassword('');
+    } catch (error: any) {
+      if (error.code === 'auth/invalid-credential') {
+        setError('Invalid credentials');
+      } else {
+        setError(error.message || 'Ocurrió un error inesperado.');
+      }
+      setTimeout(() => {
+        setError('');
+      }, 5000);
     } finally {
       setIsLoading(false);
     }
