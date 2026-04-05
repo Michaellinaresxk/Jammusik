@@ -11,10 +11,10 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		1E14D333FF26FFA931A6499D /* libPods-Jammusik.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A86B1D60EB922C0B3D3D3CBC /* libPods-Jammusik.a */; };
+		27E5C065D69265BE7878256B /* libPods-Jammusik.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4F5D403AB626890440F327C3 /* libPods-Jammusik.a */; };
+		481E909270EF446647876BF7 /* libPods-Jammusik-JammusikTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0380948D7752B28DFDA77454 /* libPods-Jammusik-JammusikTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		916BF706BA76878E245572AE /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
-		DA9469539C1A32D4005DCB7E /* libPods-Jammusik-JammusikTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BC826D7301D77A613CEAFB2E /* libPods-Jammusik-JammusikTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,7 +31,7 @@
 		00E356EE1AD99517003FC87E /* JammusikTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JammusikTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* JammusikTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JammusikTests.m; sourceTree = "<group>"; };
-		0DEECCEDBD860905F7343DE3 /* Pods-Jammusik.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Jammusik.release.xcconfig"; path = "Target Support Files/Pods-Jammusik/Pods-Jammusik.release.xcconfig"; sourceTree = "<group>"; };
+		0380948D7752B28DFDA77454 /* libPods-Jammusik-JammusikTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Jammusik-JammusikTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07F961A680F5B00A75B9A /* Jammusik.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Jammusik.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Jammusik/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = Jammusik/AppDelegate.mm; sourceTree = "<group>"; };
@@ -39,14 +39,14 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Jammusik/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Jammusik/main.m; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = Jammusik/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		3815A40E2C77DA726F508D24 /* Pods-Jammusik-JammusikTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Jammusik-JammusikTests.release.xcconfig"; path = "Target Support Files/Pods-Jammusik-JammusikTests/Pods-Jammusik-JammusikTests.release.xcconfig"; sourceTree = "<group>"; };
+		4F5D403AB626890440F327C3 /* libPods-Jammusik.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Jammusik.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		50BD087D219D15ECA4922D3E /* Pods-Jammusik.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Jammusik.release.xcconfig"; path = "Target Support Files/Pods-Jammusik/Pods-Jammusik.release.xcconfig"; sourceTree = "<group>"; };
 		67BFB7242CD846BA006E5699 /* Ionicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Ionicons.ttf; sourceTree = "<group>"; };
-		6C11C23FA37AD545E3D56587 /* Pods-Jammusik.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Jammusik.debug.xcconfig"; path = "Target Support Files/Pods-Jammusik/Pods-Jammusik.debug.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Jammusik/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		A86B1D60EB922C0B3D3D3CBC /* libPods-Jammusik.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Jammusik.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		BC826D7301D77A613CEAFB2E /* libPods-Jammusik-JammusikTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Jammusik-JammusikTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		C4750E79F03774180384DBD2 /* Pods-Jammusik-JammusikTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Jammusik-JammusikTests.debug.xcconfig"; path = "Target Support Files/Pods-Jammusik-JammusikTests/Pods-Jammusik-JammusikTests.debug.xcconfig"; sourceTree = "<group>"; };
+		93BE197FBAFF58C10ECFACD6 /* Pods-Jammusik-JammusikTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Jammusik-JammusikTests.debug.xcconfig"; path = "Target Support Files/Pods-Jammusik-JammusikTests/Pods-Jammusik-JammusikTests.debug.xcconfig"; sourceTree = "<group>"; };
+		D0A5CC950E50B35D9958B67A /* Pods-Jammusik.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Jammusik.debug.xcconfig"; path = "Target Support Files/Pods-Jammusik/Pods-Jammusik.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		EF83A7A22EB24082566BDB3A /* Pods-Jammusik-JammusikTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Jammusik-JammusikTests.release.xcconfig"; path = "Target Support Files/Pods-Jammusik-JammusikTests/Pods-Jammusik-JammusikTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,7 +54,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DA9469539C1A32D4005DCB7E /* libPods-Jammusik-JammusikTests.a in Frameworks */,
+				481E909270EF446647876BF7 /* libPods-Jammusik-JammusikTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -62,7 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1E14D333FF26FFA931A6499D /* libPods-Jammusik.a in Frameworks */,
+				27E5C065D69265BE7878256B /* libPods-Jammusik.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -104,8 +104,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				A86B1D60EB922C0B3D3D3CBC /* libPods-Jammusik.a */,
-				BC826D7301D77A613CEAFB2E /* libPods-Jammusik-JammusikTests.a */,
+				4F5D403AB626890440F327C3 /* libPods-Jammusik.a */,
+				0380948D7752B28DFDA77454 /* libPods-Jammusik-JammusikTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -153,10 +153,10 @@
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				6C11C23FA37AD545E3D56587 /* Pods-Jammusik.debug.xcconfig */,
-				0DEECCEDBD860905F7343DE3 /* Pods-Jammusik.release.xcconfig */,
-				C4750E79F03774180384DBD2 /* Pods-Jammusik-JammusikTests.debug.xcconfig */,
-				3815A40E2C77DA726F508D24 /* Pods-Jammusik-JammusikTests.release.xcconfig */,
+				D0A5CC950E50B35D9958B67A /* Pods-Jammusik.debug.xcconfig */,
+				50BD087D219D15ECA4922D3E /* Pods-Jammusik.release.xcconfig */,
+				93BE197FBAFF58C10ECFACD6 /* Pods-Jammusik-JammusikTests.debug.xcconfig */,
+				EF83A7A22EB24082566BDB3A /* Pods-Jammusik-JammusikTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -168,12 +168,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "JammusikTests" */;
 			buildPhases = (
-				6D49739BF687DC4E95A37CF2 /* [CP] Check Pods Manifest.lock */,
+				560FA47CBBE7E82315CD0816 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				AC10457D60F7E6FF83DA0E9D /* [CP] Embed Pods Frameworks */,
-				2B2E16490F8892CE7C857A8D /* [CP] Copy Pods Resources */,
+				3B562E680C0B4DC19B13B902 /* [CP] Embed Pods Frameworks */,
+				B97F9D96C3903CE357F28FD3 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -189,14 +189,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Jammusik" */;
 			buildPhases = (
-				A2FD2E8B3690D49F17C91D76 /* [CP] Check Pods Manifest.lock */,
+				4760C21E058E845242F7AE0A /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				670938402CFD9F2B007AE375 /* ShellScript */,
-				0C8D40CDDAB52F68308F94FF /* [CP] Embed Pods Frameworks */,
-				9BFB1FB612B241371AFA63B9 /* [CP] Copy Pods Resources */,
+				4F17F16A6D8B3845E5076EBE /* [CP] Embed Pods Frameworks */,
+				73F26F71E16D2490B36B0087 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -213,7 +213,8 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1210;
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1610;
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
@@ -280,97 +281,24 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"$REACT_NATIVE_PATH/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"$REACT_NATIVE_PATH/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		0C8D40CDDAB52F68308F94FF /* [CP] Embed Pods Frameworks */ = {
+		3B562E680C0B4DC19B13B902 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Jammusik/Pods-Jammusik-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Jammusik-JammusikTests/Pods-Jammusik-JammusikTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Jammusik/Pods-Jammusik-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Jammusik-JammusikTests/Pods-Jammusik-JammusikTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Jammusik/Pods-Jammusik-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Jammusik-JammusikTests/Pods-Jammusik-JammusikTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		2B2E16490F8892CE7C857A8D /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Jammusik-JammusikTests/Pods-Jammusik-JammusikTests-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Jammusik-JammusikTests/Pods-Jammusik-JammusikTests-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Jammusik-JammusikTests/Pods-Jammusik-JammusikTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		670938402CFD9F2B007AE375 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 12;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\n";
-		};
-		6D49739BF687DC4E95A37CF2 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Jammusik-JammusikTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		9BFB1FB612B241371AFA63B9 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Jammusik/Pods-Jammusik-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Jammusik/Pods-Jammusik-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Jammusik/Pods-Jammusik-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		A2FD2E8B3690D49F17C91D76 /* [CP] Check Pods Manifest.lock */ = {
+		4760C21E058E845242F7AE0A /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -392,21 +320,94 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		AC10457D60F7E6FF83DA0E9D /* [CP] Embed Pods Frameworks */ = {
+		4F17F16A6D8B3845E5076EBE /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Jammusik-JammusikTests/Pods-Jammusik-JammusikTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Jammusik/Pods-Jammusik-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Jammusik-JammusikTests/Pods-Jammusik-JammusikTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Jammusik/Pods-Jammusik-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Jammusik-JammusikTests/Pods-Jammusik-JammusikTests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Jammusik/Pods-Jammusik-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		560FA47CBBE7E82315CD0816 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Jammusik-JammusikTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		670938402CFD9F2B007AE375 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 12;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\n";
+		};
+		73F26F71E16D2490B36B0087 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Jammusik/Pods-Jammusik-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Jammusik/Pods-Jammusik-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Jammusik/Pods-Jammusik-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B97F9D96C3903CE357F28FD3 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Jammusik-JammusikTests/Pods-Jammusik-JammusikTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Jammusik-JammusikTests/Pods-Jammusik-JammusikTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Jammusik-JammusikTests/Pods-Jammusik-JammusikTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -442,7 +443,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C4750E79F03774180384DBD2 /* Pods-Jammusik-JammusikTests.debug.xcconfig */;
+			baseConfigurationReference = 93BE197FBAFF58C10ECFACD6 /* Pods-Jammusik-JammusikTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = 5LX5YT5F9X;
@@ -470,7 +471,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3815A40E2C77DA726F508D24 /* Pods-Jammusik-JammusikTests.release.xcconfig */;
+			baseConfigurationReference = EF83A7A22EB24082566BDB3A /* Pods-Jammusik-JammusikTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -495,7 +496,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6C11C23FA37AD545E3D56587 /* Pods-Jammusik.debug.xcconfig */;
+			baseConfigurationReference = D0A5CC950E50B35D9958B67A /* Pods-Jammusik.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -526,7 +527,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0DEECCEDBD860905F7343DE3 /* Pods-Jammusik.release.xcconfig */;
+			baseConfigurationReference = 50BD087D219D15ECA4922D3E /* Pods-Jammusik.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -557,6 +558,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++20";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -586,6 +588,7 @@
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				"EXCLUDED_ARCHS[sdk=*]" = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -637,6 +640,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++20";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -666,6 +670,7 @@
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;

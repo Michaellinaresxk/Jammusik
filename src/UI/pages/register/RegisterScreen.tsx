@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {useNavigation} from '@react-navigation/native';
+
 import {
   ImageBackground,
   KeyboardAvoidingView,
@@ -27,8 +27,6 @@ export const RegisterScreen = () => {
 
   const userService = useUserService();
 
-  const navigation = useNavigation();
-
   const image = {
     uri: images.loginBackground,
   };
@@ -43,7 +41,6 @@ export const RegisterScreen = () => {
       setUserName('');
       setPassword('');
       setIsLoading(false);
-      navigation.navigate('HomeScreen');
     } catch (error) {
       console.log(error.code);
       if (error.code === 'auth/email-already-in-use') {
@@ -52,8 +49,6 @@ export const RegisterScreen = () => {
       setTimeout(() => {
         setError('');
       }, 5000);
-      setIsLoading(false);
-
       setIsLoading(false);
     }
   };

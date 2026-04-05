@@ -1,5 +1,5 @@
 // App.jsx
-import { JSX } from "react";
+import React, { JSX } from "react";
 import {
   BaseToast,
   BaseToastProps,
@@ -32,9 +32,9 @@ export const ToastConfig = {
   ),
 
   info: (props: any) => (
-    <ErrorToast
+    <InfoToast
       {...props}
-      style={{ borderLeftColor: globalColors.danger, height: 100 }}
+      style={{ borderLeftColor: globalColors.info, height: 100 }}
       contentContainerStyle={{ paddingHorizontal: 15 }}
       text1Style={{
         fontSize: 17,
@@ -46,9 +46,9 @@ export const ToastConfig = {
   ),
 
   error: (props: any) => (
-    <InfoToast
+    <ErrorToast
       {...props}
-      style={{ borderLeftColor: globalColors.info, height: 100 }}
+      style={{ borderLeftColor: globalColors.danger, height: 100 }}
       contentContainerStyle={{ paddingHorizontal: 15 }}
       text1Style={{
         fontSize: 17,

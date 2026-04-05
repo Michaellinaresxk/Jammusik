@@ -24,7 +24,7 @@ export const usePlaylistService = (): PlaylistService => {
   const context = useContext(PlaylistServiceContext);
   if (!context)
     throw new Error(
-      "useCategoryService must be used within a CategoryServiceProvider",
+      "usePlaylistService must be used within a PlaylistServiceProvider",
     );
   return context.playlistService;
 };

@@ -23,7 +23,7 @@ export const useSongService = (): SongService => {
   const context = useContext(SongServiceContext);
   if (!context)
     throw new Error(
-      "useCategoryService must be used within a SongServiceProvider",
+      "useSongService must be used within a SongServiceProvider",
     );
   return context.songService;
 };

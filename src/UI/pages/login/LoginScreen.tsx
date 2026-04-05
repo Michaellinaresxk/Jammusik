@@ -15,7 +15,7 @@ import {BrandLogo} from '../../components/shared/BrandLogo';
 import React, {useState} from 'react';
 import {LinkLoginRegister} from '../../components/shared/LinkLoginRegister';
 import {useUserService} from '../../../context/UserServiceContext';
-import {useNavigation} from '@react-navigation/native';
+
 import {KeyboardStickyView} from 'react-native-keyboard-controller';
 
 export const LoginScreen = () => {
@@ -45,7 +45,6 @@ export const LoginScreen = () => {
 
       setEmail('');
       setPassword('');
-      navigation.navigate('HomeScreen');
     } catch (error: any) {
       if (error.code === 'auth/invalid-credential') {
         setError('Invalid credentials');
