@@ -22,8 +22,6 @@ export const SongServiceProvider: React.FC<{
 export const useSongService = (): SongService => {
   const context = useContext(SongServiceContext);
   if (!context)
-    throw new Error(
-      'useCategoryService must be used within a SongServiceProvider',
-    );
+    throw new Error('useSongService must be used within a SongServiceProvider');
   return context.songService;
 };
